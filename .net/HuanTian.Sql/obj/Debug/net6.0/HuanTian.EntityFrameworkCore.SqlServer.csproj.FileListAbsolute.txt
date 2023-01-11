@@ -1,0 +1,14 @@
+D:\Code\HuanTian.Sql\bin\Debug\net6.0\HuanTian.EntityFrameworkCore.SqlServer.deps.json
+D:\Code\HuanTian.Sql\bin\Debug\net6.0\HuanTian.EntityFrameworkCore.SqlServer.runtimeconfig.json
+D:\Code\HuanTian.Sql\bin\Debug\net6.0\HuanTian.EntityFrameworkCore.SqlServer.dll
+D:\Code\HuanTian.Sql\bin\Debug\net6.0\HuanTian.EntityFrameworkCore.SqlServer.pdb
+D:\Code\HuanTian.Sql\obj\Debug\net6.0\HuanTian.EntityFrameworkCore.SqlServer.csproj.AssemblyReference.cache
+D:\Code\HuanTian.Sql\obj\Debug\net6.0\HuanTian.EntityFrameworkCore.SqlServer.GeneratedMSBuildEditorConfig.editorconfig
+D:\Code\HuanTian.Sql\obj\Debug\net6.0\HuanTian.EntityFrameworkCore.SqlServer.AssemblyInfoInputs.cache
+D:\Code\HuanTian.Sql\obj\Debug\net6.0\HuanTian.EntityFrameworkCore.SqlServer.AssemblyInfo.cs
+D:\Code\HuanTian.Sql\obj\Debug\net6.0\HuanTian.EntityFrameworkCore.SqlServer.csproj.CoreCompileInputs.cache
+D:\Code\HuanTian.Sql\obj\Debug\net6.0\HuanTian.EntityFrameworkCore.SqlServer.dll
+D:\Code\HuanTian.Sql\obj\Debug\net6.0\refint\HuanTian.EntityFrameworkCore.SqlServer.dll
+D:\Code\HuanTian.Sql\obj\Debug\net6.0\HuanTian.EntityFrameworkCore.SqlServer.pdb
+D:\Code\HuanTian.Sql\obj\Debug\net6.0\HuanTian.EntityFrameworkCore.SqlServer.genruntimeconfig.cache
+D:\Code\HuanTian.Sql\obj\Debug\net6.0\ref\HuanTian.EntityFrameworkCore.SqlServer.dll

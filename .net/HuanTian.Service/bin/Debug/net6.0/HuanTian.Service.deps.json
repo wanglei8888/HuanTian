@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "HuanTian.Service/1.0.0": {
+        "dependencies": {
+          "HuanTian.Interface": "1.0.0"
+        },
+        "runtime": {
+          "HuanTian.Service.dll": {}
+        }
+      },
+      "HuanTian.Interface/1.0.0": {
+        "runtime": {
+          "HuanTian.Interface.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "HuanTian.Service/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "HuanTian.Interface/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

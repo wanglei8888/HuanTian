@@ -1,0 +1,12 @@
+D:\Code\HuanTian.DtoModel\bin\Debug\net6.0\HuanTian.Common.deps.json
+D:\Code\HuanTian.DtoModel\bin\Debug\net6.0\HuanTian.Common.dll
+D:\Code\HuanTian.DtoModel\bin\Debug\net6.0\HuanTian.Common.pdb
+D:\Code\HuanTian.DtoModel\obj\Debug\net6.0\HuanTian.Common.csproj.AssemblyReference.cache
+D:\Code\HuanTian.DtoModel\obj\Debug\net6.0\HuanTian.Common.GeneratedMSBuildEditorConfig.editorconfig
+D:\Code\HuanTian.DtoModel\obj\Debug\net6.0\HuanTian.Common.AssemblyInfoInputs.cache
+D:\Code\HuanTian.DtoModel\obj\Debug\net6.0\HuanTian.Common.AssemblyInfo.cs
+D:\Code\HuanTian.DtoModel\obj\Debug\net6.0\HuanTian.Common.csproj.CoreCompileInputs.cache
+D:\Code\HuanTian.DtoModel\obj\Debug\net6.0\HuanTian.Common.dll
+D:\Code\HuanTian.DtoModel\obj\Debug\net6.0\refint\HuanTian.Common.dll
+D:\Code\HuanTian.DtoModel\obj\Debug\net6.0\HuanTian.Common.pdb
+D:\Code\HuanTian.DtoModel\obj\Debug\net6.0\ref\HuanTian.Common.dll

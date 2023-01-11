@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Program - 副本.cs" />
+    <Compile Remove="Startup.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HuanTian.Common\HuanTian.Common.csproj" />
+    <ProjectReference Include="..\HuanTian.Domain\HuanTian.Domain.csproj" />
+    <ProjectReference Include="..\HuanTian.DtoModel\HuanTian.DtoModel.csproj" />
+    <ProjectReference Include="..\HuanTian.EntityFrameworkCore.MySql\HuanTian.EntityFrameworkCore.MySql.csproj" />
+    <ProjectReference Include="..\HuanTian.Interface\HuanTian.Interface.csproj" />
+    <ProjectReference Include="..\HuanTian.Service\HuanTian.Service.csproj" />
+    <ProjectReference Include="..\HuanTian.WebCore\HuanTian.WebCore.csproj" />
+  </ItemGroup>
+
+</Project>
