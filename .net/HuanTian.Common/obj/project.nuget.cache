@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "RpUNddoXHNcIOyJYU0oWK/B+1tdV36vnmy82K7j20Zv7Rz/63GoF3jl8eTSKXPqwSkDUwNHFoXzSAKFeGme+7w==",
+  "dgSpecHash": "n2mx5hPHQOcx+TLU8eeaRs7zS7xcknhyY8XDlO4iTfZYGl6aXyMS5REV6p1jR33VJTmPgFX59Nyi0FqpVEjfJw==",
   "success": true,
-  "projectFilePath": "D:\\wanglei\\HuanTian.Common\\HuanTian.Common.csproj",
+  "projectFilePath": "D:\\wanglei\\.net\\HuanTian.Common\\HuanTian.Common.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\wanglei\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.11\\microsoft.aspnetcore.authentication.jwtbearer.6.0.11.nupkg.sha512",
     "C:\\Users\\wanglei\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",

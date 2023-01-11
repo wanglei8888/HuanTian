@@ -142,11 +142,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\wanglei\\HuanTian.DtoModel\\HuanTian.DtoModel.csproj",
+      "projectUniqueName": "D:\\wanglei\\.net\\HuanTian.DtoModel\\HuanTian.DtoModel.csproj",
       "projectName": "HuanTian.DtoModel",
-      "projectPath": "D:\\wanglei\\HuanTian.DtoModel\\HuanTian.DtoModel.csproj",
+      "projectPath": "D:\\wanglei\\.net\\HuanTian.DtoModel\\HuanTian.DtoModel.csproj",
       "packagesPath": "C:\\Users\\wanglei\\.nuget\\packages\\",
-      "outputPath": "D:\\wanglei\\HuanTian.DtoModel\\obj\\",
+      "outputPath": "D:\\wanglei\\.net\\HuanTian.DtoModel\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\wanglei\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -163,8 +163,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\wanglei\\HuanTian.Domain\\HuanTian.Domain.csproj": {
-              "projectPath": "D:\\wanglei\\HuanTian.Domain\\HuanTian.Domain.csproj"
+            "D:\\wanglei\\.net\\HuanTian.Domain\\HuanTian.Domain.csproj": {
+              "projectPath": "D:\\wanglei\\.net\\HuanTian.Domain\\HuanTian.Domain.csproj"
             }
           }
         }

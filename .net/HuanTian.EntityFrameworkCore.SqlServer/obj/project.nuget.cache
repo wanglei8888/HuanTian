@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "+9TXJUNisfz6NnuyS8ywPzYCwUoTp5mwjx8VpXHpUVes2B+DC5zzEGfY35d16/cfgYUEJg18xQ4Mj3TgFumsPg==",
+  "dgSpecHash": "XHR2uggMJSKemQWFJRBm7uxShKq20JaI17omCtpExfq5U1Y76aS4Csh0SljkjLf6tKZ5lnoiFg9Y/97sHl3gzA==",
   "success": true,
-  "projectFilePath": "D:\\wanglei\\HuanTian.EntityFrameworkCore.SqlServer\\HuanTian.EntityFrameworkCore.SqlServer.csproj",
+  "projectFilePath": "D:\\wanglei\\.net\\HuanTian.EntityFrameworkCore.SqlServer\\HuanTian.EntityFrameworkCore.SqlServer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\wanglei\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\wanglei\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",

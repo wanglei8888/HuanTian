@@ -3530,11 +3530,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\wanglei\\HuanTian.EntityFrameworkCore.SqlServer\\HuanTian.EntityFrameworkCore.SqlServer.csproj",
+      "projectUniqueName": "D:\\wanglei\\.net\\HuanTian.EntityFrameworkCore.SqlServer\\HuanTian.EntityFrameworkCore.SqlServer.csproj",
       "projectName": "HuanTian.EntityFrameworkCore.SqlServer",
-      "projectPath": "D:\\wanglei\\HuanTian.EntityFrameworkCore.SqlServer\\HuanTian.EntityFrameworkCore.SqlServer.csproj",
+      "projectPath": "D:\\wanglei\\.net\\HuanTian.EntityFrameworkCore.SqlServer\\HuanTian.EntityFrameworkCore.SqlServer.csproj",
       "packagesPath": "C:\\Users\\wanglei\\.nuget\\packages\\",
-      "outputPath": "D:\\wanglei\\HuanTian.EntityFrameworkCore.SqlServer\\obj\\",
+      "outputPath": "D:\\wanglei\\.net\\HuanTian.EntityFrameworkCore.SqlServer\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\wanglei\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -3551,8 +3551,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\wanglei\\HuanTian.Domain\\HuanTian.Domain.csproj": {
-              "projectPath": "D:\\wanglei\\HuanTian.Domain\\HuanTian.Domain.csproj"
+            "D:\\wanglei\\.net\\HuanTian.Domain\\HuanTian.Domain.csproj": {
+              "projectPath": "D:\\wanglei\\.net\\HuanTian.Domain\\HuanTian.Domain.csproj"
             }
           }
         }

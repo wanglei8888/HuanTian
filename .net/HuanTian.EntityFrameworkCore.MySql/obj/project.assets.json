@@ -1774,11 +1774,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\wanglei\\HuanTian.EntityFrameworkCore.MySql\\HuanTian.EntityFrameworkCore.MySql.csproj",
+      "projectUniqueName": "D:\\wanglei\\.net\\HuanTian.EntityFrameworkCore.MySql\\HuanTian.EntityFrameworkCore.MySql.csproj",
       "projectName": "HuanTian.EntityFrameworkCore.MySql",
-      "projectPath": "D:\\wanglei\\HuanTian.EntityFrameworkCore.MySql\\HuanTian.EntityFrameworkCore.MySql.csproj",
+      "projectPath": "D:\\wanglei\\.net\\HuanTian.EntityFrameworkCore.MySql\\HuanTian.EntityFrameworkCore.MySql.csproj",
       "packagesPath": "C:\\Users\\wanglei\\.nuget\\packages\\",
-      "outputPath": "D:\\wanglei\\HuanTian.EntityFrameworkCore.MySql\\obj\\",
+      "outputPath": "D:\\wanglei\\.net\\HuanTian.EntityFrameworkCore.MySql\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\wanglei\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -1795,8 +1795,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\wanglei\\HuanTian.Domain\\HuanTian.Domain.csproj": {
-              "projectPath": "D:\\wanglei\\HuanTian.Domain\\HuanTian.Domain.csproj"
+            "D:\\wanglei\\.net\\HuanTian.Domain\\HuanTian.Domain.csproj": {
+              "projectPath": "D:\\wanglei\\.net\\HuanTian.Domain\\HuanTian.Domain.csproj"
             }
           }
         }

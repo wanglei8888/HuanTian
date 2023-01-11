@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "JEPTCWK/Rf7oyxnT6cUGp2z44u14Ey3xBYmANum+XTAOIs3kex980O2PLW9w8hzacclZCgfcb2X+8jBbw/D36Q==",
+  "dgSpecHash": "sVWWABuawTcWPaz2wzjqQCIUfV7ynfQoznZ3lvLuK/zEfd5z0uwebHnirb+S14CK/SxsMTqRZx4dv78er6Sj2w==",
   "success": true,
-  "projectFilePath": "D:\\wanglei\\HuanTian.EntityFrameworkCore.MySql\\HuanTian.EntityFrameworkCore.MySql.csproj",
+  "projectFilePath": "D:\\wanglei\\.net\\HuanTian.EntityFrameworkCore.MySql\\HuanTian.EntityFrameworkCore.MySql.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\wanglei\\.nuget\\packages\\enums.net\\4.0.0\\enums.net.4.0.0.nupkg.sha512",
     "C:\\Users\\wanglei\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",

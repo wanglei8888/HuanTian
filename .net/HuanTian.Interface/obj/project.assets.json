@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\wanglei\\HuanTian.Interface\\HuanTian.Interface.csproj",
+      "projectUniqueName": "D:\\wanglei\\.net\\HuanTian.Interface\\HuanTian.Interface.csproj",
       "projectName": "HuanTian.Interface",
-      "projectPath": "D:\\wanglei\\HuanTian.Interface\\HuanTian.Interface.csproj",
+      "projectPath": "D:\\wanglei\\.net\\HuanTian.Interface\\HuanTian.Interface.csproj",
       "packagesPath": "C:\\Users\\wanglei\\.nuget\\packages\\",
-      "outputPath": "D:\\wanglei\\HuanTian.Interface\\obj\\",
+      "outputPath": "D:\\wanglei\\.net\\HuanTian.Interface\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\wanglei\\AppData\\Roaming\\NuGet\\NuGet.Config",

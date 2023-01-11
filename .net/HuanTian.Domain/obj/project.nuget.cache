@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "5jZmvNvIO6BHEz0r3SpTF6eZq/bgUBiHWGdKsLjHkwUILf1LM+MaPlspqVxO0VqKPCDPdBwBWUIXcGbg+bPbpw==",
+  "dgSpecHash": "z+1/xqo8+vddnFTtrKdZKvdpCy26wnnAwQGKTovAzKbnJz6qK3lu6M1FbotJ3jquCfuD3RaYRSqeyKjfmljqpw==",
   "success": true,
-  "projectFilePath": "D:\\wanglei\\HuanTian.Domain\\HuanTian.Domain.csproj",
+  "projectFilePath": "D:\\wanglei\\.net\\HuanTian.Domain\\HuanTian.Domain.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

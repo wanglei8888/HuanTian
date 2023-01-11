@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\wanglei\\HuanTian.Domain\\HuanTian.Domain.csproj": {}
+    "D:\\wanglei\\.net\\HuanTian.Domain\\HuanTian.Domain.csproj": {}
   },
   "projects": {
-    "D:\\wanglei\\HuanTian.Domain\\HuanTian.Domain.csproj": {
+    "D:\\wanglei\\.net\\HuanTian.Domain\\HuanTian.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\wanglei\\HuanTian.Domain\\HuanTian.Domain.csproj",
+        "projectUniqueName": "D:\\wanglei\\.net\\HuanTian.Domain\\HuanTian.Domain.csproj",
         "projectName": "HuanTian.Domain",
-        "projectPath": "D:\\wanglei\\HuanTian.Domain\\HuanTian.Domain.csproj",
+        "projectPath": "D:\\wanglei\\.net\\HuanTian.Domain\\HuanTian.Domain.csproj",
         "packagesPath": "C:\\Users\\wanglei\\.nuget\\packages\\",
-        "outputPath": "D:\\wanglei\\HuanTian.Domain\\obj\\",
+        "outputPath": "D:\\wanglei\\.net\\HuanTian.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\wanglei\\AppData\\Roaming\\NuGet\\NuGet.Config",

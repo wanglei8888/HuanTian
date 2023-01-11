@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\wanglei\\HuanTian.Service\\HuanTian.Service.csproj": {}
+    "D:\\wanglei\\.net\\HuanTian.Service\\HuanTian.Service.csproj": {}
   },
   "projects": {
-    "D:\\wanglei\\HuanTian.Interface\\HuanTian.Interface.csproj": {
+    "D:\\wanglei\\.net\\HuanTian.Interface\\HuanTian.Interface.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\wanglei\\HuanTian.Interface\\HuanTian.Interface.csproj",
+        "projectUniqueName": "D:\\wanglei\\.net\\HuanTian.Interface\\HuanTian.Interface.csproj",
         "projectName": "HuanTian.Interface",
-        "projectPath": "D:\\wanglei\\HuanTian.Interface\\HuanTian.Interface.csproj",
+        "projectPath": "D:\\wanglei\\.net\\HuanTian.Interface\\HuanTian.Interface.csproj",
         "packagesPath": "C:\\Users\\wanglei\\.nuget\\packages\\",
-        "outputPath": "D:\\wanglei\\HuanTian.Interface\\obj\\",
+        "outputPath": "D:\\wanglei\\.net\\HuanTian.Interface\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\wanglei\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -59,14 +59,14 @@
         }
       }
     },
-    "D:\\wanglei\\HuanTian.Service\\HuanTian.Service.csproj": {
+    "D:\\wanglei\\.net\\HuanTian.Service\\HuanTian.Service.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\wanglei\\HuanTian.Service\\HuanTian.Service.csproj",
+        "projectUniqueName": "D:\\wanglei\\.net\\HuanTian.Service\\HuanTian.Service.csproj",
         "projectName": "HuanTian.Service",
-        "projectPath": "D:\\wanglei\\HuanTian.Service\\HuanTian.Service.csproj",
+        "projectPath": "D:\\wanglei\\.net\\HuanTian.Service\\HuanTian.Service.csproj",
         "packagesPath": "C:\\Users\\wanglei\\.nuget\\packages\\",
-        "outputPath": "D:\\wanglei\\HuanTian.Service\\obj\\",
+        "outputPath": "D:\\wanglei\\.net\\HuanTian.Service\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\wanglei\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -83,8 +83,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\wanglei\\HuanTian.Interface\\HuanTian.Interface.csproj": {
-                "projectPath": "D:\\wanglei\\HuanTian.Interface\\HuanTian.Interface.csproj"
+              "D:\\wanglei\\.net\\HuanTian.Interface\\HuanTian.Interface.csproj": {
+                "projectPath": "D:\\wanglei\\.net\\HuanTian.Interface\\HuanTian.Interface.csproj"
               }
             }
           }

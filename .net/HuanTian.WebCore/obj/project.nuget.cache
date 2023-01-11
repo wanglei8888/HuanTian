@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "7+rYHexadPM+ko/vvhHjRszOe1Vi+qPrLT7cWrRhwjXUTSRJE9jX7eCwQ7oPcudoeAFvy2FqiLl3t2+Uv6UxqQ==",
+  "dgSpecHash": "kkbNplQGTR6D3VbMtmwk6J8R02al6lwmA2cpMNDuqfLm9oDpNxXPT7sMIeXjmKpM/NfNSNu5n7N8aDGzBZIRZA==",
   "success": true,
-  "projectFilePath": "D:\\wanglei\\HuanTian.WebCore\\HuanTian.WebCore.csproj",
+  "projectFilePath": "D:\\wanglei\\.net\\HuanTian.WebCore\\HuanTian.WebCore.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\wanglei\\.nuget\\packages\\autofac\\6.4.0\\autofac.6.4.0.nupkg.sha512",
     "C:\\Users\\wanglei\\.nuget\\packages\\autofac.extensions.dependencyinjection\\8.0.0\\autofac.extensions.dependencyinjection.8.0.0.nupkg.sha512",

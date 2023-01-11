@@ -5888,11 +5888,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\wanglei\\HuanTian.WebCore\\HuanTian.WebCore.csproj",
+      "projectUniqueName": "D:\\wanglei\\.net\\HuanTian.WebCore\\HuanTian.WebCore.csproj",
       "projectName": "HuanTian.WebCore",
-      "projectPath": "D:\\wanglei\\HuanTian.WebCore\\HuanTian.WebCore.csproj",
+      "projectPath": "D:\\wanglei\\.net\\HuanTian.WebCore\\HuanTian.WebCore.csproj",
       "packagesPath": "C:\\Users\\wanglei\\.nuget\\packages\\",
-      "outputPath": "D:\\wanglei\\HuanTian.WebCore\\obj\\",
+      "outputPath": "D:\\wanglei\\.net\\HuanTian.WebCore\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\wanglei\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -5909,8 +5909,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\wanglei\\HuanTian.DtoModel\\HuanTian.DtoModel.csproj": {
-              "projectPath": "D:\\wanglei\\HuanTian.DtoModel\\HuanTian.DtoModel.csproj"
+            "D:\\wanglei\\.net\\HuanTian.DtoModel\\HuanTian.DtoModel.csproj": {
+              "projectPath": "D:\\wanglei\\.net\\HuanTian.DtoModel\\HuanTian.DtoModel.csproj"
             }
           }
         }

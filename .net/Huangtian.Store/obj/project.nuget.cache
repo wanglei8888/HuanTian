@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ePnA3vAjSAovYLeKarS7yoc6xBEaFUUpMmb3zTw5ipb1n3kijo4L7v3hQtm8/8zUYqpx3T0G+dfhtDCNQw/vsA==",
+  "dgSpecHash": "7YzuDE3TNPaKspfD1iM1UjTj6s8IrOVYxOODaPEHCsTGDdFFMO905oNj3DxW226RnIHYxhg50V+47v9sG+LzoA==",
   "success": true,
-  "projectFilePath": "D:\\wanglei\\Huangtian.Store\\Huangtian.Store.csproj",
+  "projectFilePath": "D:\\wanglei\\.net\\Huangtian.Store\\Huangtian.Store.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\wanglei\\.nuget\\packages\\autofac\\6.4.0\\autofac.6.4.0.nupkg.sha512",
     "C:\\Users\\wanglei\\.nuget\\packages\\autofac.extensions.dependencyinjection\\8.0.0\\autofac.extensions.dependencyinjection.8.0.0.nupkg.sha512",

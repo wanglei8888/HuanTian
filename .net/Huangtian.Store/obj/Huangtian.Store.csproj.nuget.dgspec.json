@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\wanglei\\Huangtian.Store\\Huangtian.Store.csproj": {}
+    "D:\\wanglei\\.net\\Huangtian.Store\\Huangtian.Store.csproj": {}
   },
   "projects": {
-    "D:\\wanglei\\Huangtian.Store\\Huangtian.Store.csproj": {
+    "D:\\wanglei\\.net\\Huangtian.Store\\Huangtian.Store.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\wanglei\\Huangtian.Store\\Huangtian.Store.csproj",
+        "projectUniqueName": "D:\\wanglei\\.net\\Huangtian.Store\\Huangtian.Store.csproj",
         "projectName": "Huangtian.Store",
-        "projectPath": "D:\\wanglei\\Huangtian.Store\\Huangtian.Store.csproj",
+        "projectPath": "D:\\wanglei\\.net\\Huangtian.Store\\Huangtian.Store.csproj",
         "packagesPath": "C:\\Users\\wanglei\\.nuget\\packages\\",
-        "outputPath": "D:\\wanglei\\Huangtian.Store\\obj\\",
+        "outputPath": "D:\\wanglei\\.net\\Huangtian.Store\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\wanglei\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -28,26 +28,26 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\wanglei\\HuanTian.Common\\HuanTian.Common.csproj": {
-                "projectPath": "D:\\wanglei\\HuanTian.Common\\HuanTian.Common.csproj"
+              "D:\\wanglei\\.net\\HuanTian.Common\\HuanTian.Common.csproj": {
+                "projectPath": "D:\\wanglei\\.net\\HuanTian.Common\\HuanTian.Common.csproj"
               },
-              "D:\\wanglei\\HuanTian.Domain\\HuanTian.Domain.csproj": {
-                "projectPath": "D:\\wanglei\\HuanTian.Domain\\HuanTian.Domain.csproj"
+              "D:\\wanglei\\.net\\HuanTian.Domain\\HuanTian.Domain.csproj": {
+                "projectPath": "D:\\wanglei\\.net\\HuanTian.Domain\\HuanTian.Domain.csproj"
               },
-              "D:\\wanglei\\HuanTian.DtoModel\\HuanTian.DtoModel.csproj": {
-                "projectPath": "D:\\wanglei\\HuanTian.DtoModel\\HuanTian.DtoModel.csproj"
+              "D:\\wanglei\\.net\\HuanTian.DtoModel\\HuanTian.DtoModel.csproj": {
+                "projectPath": "D:\\wanglei\\.net\\HuanTian.DtoModel\\HuanTian.DtoModel.csproj"
               },
-              "D:\\wanglei\\HuanTian.EntityFrameworkCore.MySql\\HuanTian.EntityFrameworkCore.MySql.csproj": {
-                "projectPath": "D:\\wanglei\\HuanTian.EntityFrameworkCore.MySql\\HuanTian.EntityFrameworkCore.MySql.csproj"
+              "D:\\wanglei\\.net\\HuanTian.EntityFrameworkCore.MySql\\HuanTian.EntityFrameworkCore.MySql.csproj": {
+                "projectPath": "D:\\wanglei\\.net\\HuanTian.EntityFrameworkCore.MySql\\HuanTian.EntityFrameworkCore.MySql.csproj"
               },
-              "D:\\wanglei\\HuanTian.Interface\\HuanTian.Interface.csproj": {
-                "projectPath": "D:\\wanglei\\HuanTian.Interface\\HuanTian.Interface.csproj"
+              "D:\\wanglei\\.net\\HuanTian.Interface\\HuanTian.Interface.csproj": {
+                "projectPath": "D:\\wanglei\\.net\\HuanTian.Interface\\HuanTian.Interface.csproj"
               },
-              "D:\\wanglei\\HuanTian.Service\\HuanTian.Service.csproj": {
-                "projectPath": "D:\\wanglei\\HuanTian.Service\\HuanTian.Service.csproj"
+              "D:\\wanglei\\.net\\HuanTian.Service\\HuanTian.Service.csproj": {
+                "projectPath": "D:\\wanglei\\.net\\HuanTian.Service\\HuanTian.Service.csproj"
               },
-              "D:\\wanglei\\HuanTian.WebCore\\HuanTian.WebCore.csproj": {
-                "projectPath": "D:\\wanglei\\HuanTian.WebCore\\HuanTian.WebCore.csproj"
+              "D:\\wanglei\\.net\\HuanTian.WebCore\\HuanTian.WebCore.csproj": {
+                "projectPath": "D:\\wanglei\\.net\\HuanTian.WebCore\\HuanTian.WebCore.csproj"
               }
             }
           }
@@ -96,14 +96,14 @@
         }
       }
     },
-    "D:\\wanglei\\HuanTian.Common\\HuanTian.Common.csproj": {
+    "D:\\wanglei\\.net\\HuanTian.Common\\HuanTian.Common.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\wanglei\\HuanTian.Common\\HuanTian.Common.csproj",
+        "projectUniqueName": "D:\\wanglei\\.net\\HuanTian.Common\\HuanTian.Common.csproj",
         "projectName": "HuanTian.Common",
-        "projectPath": "D:\\wanglei\\HuanTian.Common\\HuanTian.Common.csproj",
+        "projectPath": "D:\\wanglei\\.net\\HuanTian.Common\\HuanTian.Common.csproj",
         "packagesPath": "C:\\Users\\wanglei\\.nuget\\packages\\",
-        "outputPath": "D:\\wanglei\\HuanTian.Common\\obj\\",
+        "outputPath": "D:\\wanglei\\.net\\HuanTian.Common\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\wanglei\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -161,14 +161,14 @@
         }
       }
     },
-    "D:\\wanglei\\HuanTian.Domain\\HuanTian.Domain.csproj": {
+    "D:\\wanglei\\.net\\HuanTian.Domain\\HuanTian.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\wanglei\\HuanTian.Domain\\HuanTian.Domain.csproj",
+        "projectUniqueName": "D:\\wanglei\\.net\\HuanTian.Domain\\HuanTian.Domain.csproj",
         "projectName": "HuanTian.Domain",
-        "projectPath": "D:\\wanglei\\HuanTian.Domain\\HuanTian.Domain.csproj",
+        "projectPath": "D:\\wanglei\\.net\\HuanTian.Domain\\HuanTian.Domain.csproj",
         "packagesPath": "C:\\Users\\wanglei\\.nuget\\packages\\",
-        "outputPath": "D:\\wanglei\\HuanTian.Domain\\obj\\",
+        "outputPath": "D:\\wanglei\\.net\\HuanTian.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\wanglei\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -216,14 +216,14 @@
         }
       }
     },
-    "D:\\wanglei\\HuanTian.DtoModel\\HuanTian.DtoModel.csproj": {
+    "D:\\wanglei\\.net\\HuanTian.DtoModel\\HuanTian.DtoModel.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\wanglei\\HuanTian.DtoModel\\HuanTian.DtoModel.csproj",
+        "projectUniqueName": "D:\\wanglei\\.net\\HuanTian.DtoModel\\HuanTian.DtoModel.csproj",
         "projectName": "HuanTian.DtoModel",
-        "projectPath": "D:\\wanglei\\HuanTian.DtoModel\\HuanTian.DtoModel.csproj",
+        "projectPath": "D:\\wanglei\\.net\\HuanTian.DtoModel\\HuanTian.DtoModel.csproj",
         "packagesPath": "C:\\Users\\wanglei\\.nuget\\packages\\",
-        "outputPath": "D:\\wanglei\\HuanTian.DtoModel\\obj\\",
+        "outputPath": "D:\\wanglei\\.net\\HuanTian.DtoModel\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\wanglei\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -240,8 +240,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\wanglei\\HuanTian.Domain\\HuanTian.Domain.csproj": {
-                "projectPath": "D:\\wanglei\\HuanTian.Domain\\HuanTian.Domain.csproj"
+              "D:\\wanglei\\.net\\HuanTian.Domain\\HuanTian.Domain.csproj": {
+                "projectPath": "D:\\wanglei\\.net\\HuanTian.Domain\\HuanTian.Domain.csproj"
               }
             }
           }
@@ -281,14 +281,14 @@
         }
       }
     },
-    "D:\\wanglei\\HuanTian.EntityFrameworkCore.MySql\\HuanTian.EntityFrameworkCore.MySql.csproj": {
+    "D:\\wanglei\\.net\\HuanTian.EntityFrameworkCore.MySql\\HuanTian.EntityFrameworkCore.MySql.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\wanglei\\HuanTian.EntityFrameworkCore.MySql\\HuanTian.EntityFrameworkCore.MySql.csproj",
+        "projectUniqueName": "D:\\wanglei\\.net\\HuanTian.EntityFrameworkCore.MySql\\HuanTian.EntityFrameworkCore.MySql.csproj",
         "projectName": "HuanTian.EntityFrameworkCore.MySql",
-        "projectPath": "D:\\wanglei\\HuanTian.EntityFrameworkCore.MySql\\HuanTian.EntityFrameworkCore.MySql.csproj",
+        "projectPath": "D:\\wanglei\\.net\\HuanTian.EntityFrameworkCore.MySql\\HuanTian.EntityFrameworkCore.MySql.csproj",
         "packagesPath": "C:\\Users\\wanglei\\.nuget\\packages\\",
-        "outputPath": "D:\\wanglei\\HuanTian.EntityFrameworkCore.MySql\\obj\\",
+        "outputPath": "D:\\wanglei\\.net\\HuanTian.EntityFrameworkCore.MySql\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\wanglei\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -305,8 +305,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\wanglei\\HuanTian.Domain\\HuanTian.Domain.csproj": {
-                "projectPath": "D:\\wanglei\\HuanTian.Domain\\HuanTian.Domain.csproj"
+              "D:\\wanglei\\.net\\HuanTian.Domain\\HuanTian.Domain.csproj": {
+                "projectPath": "D:\\wanglei\\.net\\HuanTian.Domain\\HuanTian.Domain.csproj"
               }
             }
           }
@@ -364,14 +364,14 @@
         }
       }
     },
-    "D:\\wanglei\\HuanTian.Interface\\HuanTian.Interface.csproj": {
+    "D:\\wanglei\\.net\\HuanTian.Interface\\HuanTian.Interface.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\wanglei\\HuanTian.Interface\\HuanTian.Interface.csproj",
+        "projectUniqueName": "D:\\wanglei\\.net\\HuanTian.Interface\\HuanTian.Interface.csproj",
         "projectName": "HuanTian.Interface",
-        "projectPath": "D:\\wanglei\\HuanTian.Interface\\HuanTian.Interface.csproj",
+        "projectPath": "D:\\wanglei\\.net\\HuanTian.Interface\\HuanTian.Interface.csproj",
         "packagesPath": "C:\\Users\\wanglei\\.nuget\\packages\\",
-        "outputPath": "D:\\wanglei\\HuanTian.Interface\\obj\\",
+        "outputPath": "D:\\wanglei\\.net\\HuanTian.Interface\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\wanglei\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -419,14 +419,14 @@
         }
       }
     },
-    "D:\\wanglei\\HuanTian.Service\\HuanTian.Service.csproj": {
+    "D:\\wanglei\\.net\\HuanTian.Service\\HuanTian.Service.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\wanglei\\HuanTian.Service\\HuanTian.Service.csproj",
+        "projectUniqueName": "D:\\wanglei\\.net\\HuanTian.Service\\HuanTian.Service.csproj",
         "projectName": "HuanTian.Service",
-        "projectPath": "D:\\wanglei\\HuanTian.Service\\HuanTian.Service.csproj",
+        "projectPath": "D:\\wanglei\\.net\\HuanTian.Service\\HuanTian.Service.csproj",
         "packagesPath": "C:\\Users\\wanglei\\.nuget\\packages\\",
-        "outputPath": "D:\\wanglei\\HuanTian.Service\\obj\\",
+        "outputPath": "D:\\wanglei\\.net\\HuanTian.Service\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\wanglei\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -443,8 +443,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\wanglei\\HuanTian.Interface\\HuanTian.Interface.csproj": {
-                "projectPath": "D:\\wanglei\\HuanTian.Interface\\HuanTian.Interface.csproj"
+              "D:\\wanglei\\.net\\HuanTian.Interface\\HuanTian.Interface.csproj": {
+                "projectPath": "D:\\wanglei\\.net\\HuanTian.Interface\\HuanTian.Interface.csproj"
               }
             }
           }
@@ -478,14 +478,14 @@
         }
       }
     },
-    "D:\\wanglei\\HuanTian.WebCore\\HuanTian.WebCore.csproj": {
+    "D:\\wanglei\\.net\\HuanTian.WebCore\\HuanTian.WebCore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\wanglei\\HuanTian.WebCore\\HuanTian.WebCore.csproj",
+        "projectUniqueName": "D:\\wanglei\\.net\\HuanTian.WebCore\\HuanTian.WebCore.csproj",
         "projectName": "HuanTian.WebCore",
-        "projectPath": "D:\\wanglei\\HuanTian.WebCore\\HuanTian.WebCore.csproj",
+        "projectPath": "D:\\wanglei\\.net\\HuanTian.WebCore\\HuanTian.WebCore.csproj",
         "packagesPath": "C:\\Users\\wanglei\\.nuget\\packages\\",
-        "outputPath": "D:\\wanglei\\HuanTian.WebCore\\obj\\",
+        "outputPath": "D:\\wanglei\\.net\\HuanTian.WebCore\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\wanglei\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -502,8 +502,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\wanglei\\HuanTian.DtoModel\\HuanTian.DtoModel.csproj": {
-                "projectPath": "D:\\wanglei\\HuanTian.DtoModel\\HuanTian.DtoModel.csproj"
+              "D:\\wanglei\\.net\\HuanTian.DtoModel\\HuanTian.DtoModel.csproj": {
+                "projectPath": "D:\\wanglei\\.net\\HuanTian.DtoModel\\HuanTian.DtoModel.csproj"
               }
             }
           }
