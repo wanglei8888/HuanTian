@@ -5,9 +5,15 @@ namespace HuanTian.DtoModel
 {
     public class LoginInput
     {
-        public string? password { get; set; }
+        /// <summary>
+        /// 用户账号
+        /// </summary>
         public string? username { get; set; }
-         
+        /// <summary>
+        /// 用户密码
+        /// </summary>
+        public string? password { get; set; }
+        
     }
     public class LoginOutput: UserInfoDO
     { 
@@ -16,24 +22,9 @@ namespace HuanTian.DtoModel
     public class LoginProfile : Profile
     {
         public LoginProfile() {
-            CreateMap<DbModel, ViewModel>();
             CreateMap<UserInfoDO, LoginOutput>();
                // .ForMember(x=>x.RoleId,b=> b.MapFrom(q => q.Deleted));
         }
         
-    }
-    public class DbModel
-    {
-        public int Id { get; set; }
-        public string? Name { get; set; }
-        public int Age { get; set; }
-        public DateTime CreatedDate { get; set; }
-    }
-
-    public class ViewModel
-    {
-        public int Id { get; set; }
-        public string? Name { get; set; }
-        public int Age { get; set; }
     }
 }

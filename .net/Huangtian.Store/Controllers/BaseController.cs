@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
 using System.Text;
+using HuanTian.Common;
 
 namespace Huangtian.Store.Controllers
 {
@@ -17,6 +18,18 @@ namespace Huangtian.Store.Controllers
             //    filterContext.Result = new RedirectResult("/Login/Index");
             //    return;
             //}
+            var myResult = (ObjectResult)filterContext.Result;
+            if (myResult != null)
+            {
+                var resultModels = new ResultModels 
+                {
+                    Result = myResult.Value,
+                    Status = 200,
+                    Message = ""
+                };
+                filterContext.Result = Ok(resultModels);
+            }
+            
             Response.Headers.Add("Custom-Header", Guid.NewGuid().ToString());
             base.OnActionExecuted(filterContext);
         }

@@ -27,7 +27,11 @@ namespace Huangtian.Store.Controllers
             _testAutofac = testAutofac;
             _mapper = mapper;
         }
-
+        /// <summary>
+        /// 获取登陆信息
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [HttpPost(Name = "login")]
         public async Task<IEnumerable<WeatherForecast>> Get(LoginInput input)
         {
