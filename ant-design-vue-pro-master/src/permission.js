@@ -16,6 +16,7 @@ const defaultRoutePath = '/dashboard/workplace'
 
 router.beforeEach((to, from, next) => {
   NProgress.start() // start progress bar
+  debugger
   to.meta && typeof to.meta.title !== 'undefined' && setDocumentTitle(`${i18nRender(to.meta.title)} - ${domTitle}`)
   /* has token */
   const token = storage.get(ACCESS_TOKEN)
@@ -30,6 +31,7 @@ router.beforeEach((to, from, next) => {
         store
           .dispatch('GetInfo')
           .then(res => {
+            debugger
             console.log('res', res)
             // 根据用户权限信息生成可访问的路由表
             store.dispatch('GenerateRoutes', { token, ...res }).then(() => {

@@ -12,6 +12,12 @@ namespace HuanTian.EntityFrameworkCore.MySql
     {
         public DbSet<FestivalInfoDO> FestivalInfoDO { get; set; }
         public DbSet<UserInfoDO> UserInfoDO { get; set; }
+        public DbSet<SysMneuRoleDO> SysMneuRoleDO { get; set; }
+        public DbSet<SysRoleInfoDO> SysRoleInfoDO { get; set; }
+        public DbSet<SysUserRoleDO> SysUserRoleDO { get; set; }
+        public DbSet<SysMenuDO> SysMenuDO { get; set; }
+
+        
         #region 
         public MySqlContext()
         {

@@ -38,7 +38,7 @@ public class UserInfoDO
     [Column("user_name")]
     [MaxLength(50)]
     [Description("用户名")]
-    public string? UserName { get; set; }
+    public string UserName { get; set; }
     /// <summary>
     /// 用户密码
     /// </summary>

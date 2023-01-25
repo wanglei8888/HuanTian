@@ -92,11 +92,44 @@ namespace Huangtian.Store
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddSingleton(new Appsettings(builder.Configuration));
             builder.Services.AddEndpointsApiExplorer();
-            
-            builder.Services.AddSwaggerGen(t => {
+
+            builder.Services.AddSwaggerGen(t =>
+            {
                 t.SwaggerDoc("v1", new OpenApiInfo { Title = "皇天商店" });
                 var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 t.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+                t.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "Value: Bearer {token}",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+                t.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {{
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }, Scheme = "oauth2", Name = "Bearer", In = ParameterLocation.Header }, new List<string>()
+                    }
+
+                    });
+            });
+
+            //配置跨域服务
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("cors", p =>
+                {
+                    p.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+
+                });
             });
 
             #region Sql注入
@@ -106,7 +139,7 @@ namespace Huangtian.Store
             #endregion
 
             #region AutoMapper
-            builder.Services.AddAutoMapperService(); 
+            builder.Services.AddAutoMapperService();
             #endregion
 
             #region Autofac
@@ -118,18 +151,23 @@ namespace Huangtian.Store
             #endregion
 
             #region JWT
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters()
                     {
+                        // 验证发布者
                         ValidateIssuer = true,
-                        ValidIssuer = builder.Configuration["JWT:Issuer"],
+                        ValidIssuer = builder.Configuration["JWTAuthentication:Issuer"],
+                        // 验证接收者
                         ValidateAudience = true,
-                        ValidAudience = builder.Configuration["JWT:Audience"],
+                        ValidAudience = builder.Configuration["JWTAuthentication:Audience"],
+                        // 验证是否过期
                         ValidateLifetime = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SecretKey"]))
+                        // 验证私钥
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTAuthentication:SecretKey"]))
                     };
-                }); 
+                });
             #endregion
 
             var app = builder.Build();
@@ -140,9 +178,11 @@ namespace Huangtian.Store
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseCors("cors");
+            app.UseRouting();
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();

@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HuanTian.EntityFrameworkCore.MySql\HuanTian.EntityFrameworkCore.MySql.csproj" />
     <ProjectReference Include="..\HuanTian.Interface\HuanTian.Interface.csproj" />
   </ItemGroup>
 

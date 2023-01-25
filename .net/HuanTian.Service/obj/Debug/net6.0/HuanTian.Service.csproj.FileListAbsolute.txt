@@ -73,3 +73,7 @@ D:\wanglei\.net\HuanTian.Service\obj\Debug\net6.0\HuanTian.Service.dll
 D:\wanglei\.net\HuanTian.Service\obj\Debug\net6.0\refint\HuanTian.Service.dll
 D:\wanglei\.net\HuanTian.Service\obj\Debug\net6.0\HuanTian.Service.pdb
 D:\wanglei\.net\HuanTian.Service\obj\Debug\net6.0\ref\HuanTian.Service.dll
+D:\wanglei\.net\HuanTian.Service\bin\Debug\net6.0\HuanTian.Domain.dll
+D:\wanglei\.net\HuanTian.Service\bin\Debug\net6.0\HuanTian.EntityFrameworkCore.MySql.dll
+D:\wanglei\.net\HuanTian.Service\bin\Debug\net6.0\HuanTian.EntityFrameworkCore.MySql.pdb
+D:\wanglei\.net\HuanTian.Service\bin\Debug\net6.0\HuanTian.Domain.pdb
