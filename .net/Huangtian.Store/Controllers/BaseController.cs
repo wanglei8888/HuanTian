@@ -17,13 +17,13 @@ namespace Huangtian.Store.Controllers
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             var myResult = (ObjectResult)filterContext.Result;
+            var value = myResult.Value == null ? "" : myResult.Value;
             // 返回的类型不是APIResult就对结果进行修改
-            if (myResult != null && ((APIResult)myResult.Value) == null)
+            if (value.GetType().Name != "APIResult")
             {
-
                 var resultModels = new APIResult
                 {
-                    Result = myResult.Value ?? "",
+                    Result = value,
                     Status = true,
                     Message = "",
                     Code = ResultCodeEnum.Success

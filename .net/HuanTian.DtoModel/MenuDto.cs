@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HuanTian.DtoModel
 {
-    public class MenuParent
+    public class MenuOutput
     {
         /// <summary>
         /// 菜单名字
@@ -25,13 +25,16 @@ namespace HuanTian.DtoModel
         /// </summary>
         public string? Redirect { get; set; }
 
-        public string? Component { get; set; }
-        public List<MenuParent> Child { get; set; }
+        public Component Component { get; set; }
+        public List<MenuOutput> Child { get; set; }
         
         public Meta Meta { get; set; }
         
     }
-
+    public class Component 
+    { 
+        public string Name { get; set; }
+    }
     public class Meta 
     {
         /// <summary>

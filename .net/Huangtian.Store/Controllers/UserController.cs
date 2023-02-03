@@ -1,3 +1,5 @@
+using HuanTian.Common;
+using HuanTian.DtoModel;
 using HuanTian.EntityFrameworkCore.MySql;
 using HuanTian.Interface;
 using Microsoft.AspNetCore.Authorization;
@@ -29,17 +31,13 @@ namespace Huangtian.Store.Controllers
             _mneuService = mneuService;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet]
-        public async Task<IEnumerable<WeatherForecast>> Info()
+        public async Task<IEnumerable<MenuOutput>> Info()
         {
-            
             var user = HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sid)?.Value;
-            var saj1 = await _mneuService.GetUserMenu(1);
-            //var userRole = await _mySqlContext.SysUserRoleDO.Where(t => t.UserId == Convert.ToInt32(user)).ToListAsync();
-            //var roleMneu = _mySqlContext.SysMneuRoleDO.Where(t => userRole.Select(s => s.ID).Contains(t.RoleId));
-
-            return null;
+            var menu = await _mneuService.GetUserMenu(1);
+            return menu;
         }
 
     }
