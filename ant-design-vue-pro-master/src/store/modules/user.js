@@ -55,28 +55,32 @@ const user = {
         // 请求后端获取用户信息 /api/user/info
         getInfo().then(response => {
           const { result } = response
-          if (result.role && result.role.permissions.length > 0) {
-            const role = { ...result.role }
-            role.permissions = result.role.permissions.map(permission => {
-              const per = {
-                ...permission,
-                actionList: (permission.actionEntitySet || {}).map(item => item.action)
-               }
-              return per
-            })
-            role.permissionList = role.permissions.map(permission => { return permission.permissionId })
-            // 覆盖响应体的 role, 供下游使用
-            result.role = role
+            // if (result.role && result.role.permissions.length > 0) {
+            // const role = { ...result.role }
+            // role.permissions = result.role.permissions.map(permission => {
+            //   const per = {
+            //     ...permission,
+            //     actionList: (permission.actionEntitySet || {}).map(item => item.action)
+            //    }
+            //   return per
+            // })
+            // role.permissionList = role.permissions.map(permission => { return permission.permissionId })
+            // // 覆盖响应体的 role, 供下游使用
+            // result.role = role
 
-            commit('SET_ROLES', role)
+            commit('SET_ROLES', 'NO Role')
             commit('SET_INFO', result)
             commit('SET_NAME', { name: result.name, welcome: welcome() })
             commit('SET_AVATAR', result.avatar)
+
+            // commit('SET_TOKEN', '')
+            // commit('SET_ROLES', [])
+            // storage.remove(ACCESS_TOKEN)
             // 下游
             resolve(result)
-          } else {
-            reject(new Error('getInfo: roles must be a non-null array !'))
-          }
+          // } else {
+          //   reject(new Error('getInfo: roles must be a non-null array !'))
+          // }
         }).catch(error => {
           reject(error)
         })

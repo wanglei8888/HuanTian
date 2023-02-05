@@ -8,11 +8,23 @@
     ".NETCoreApp,Version=v6.0": {
       "HuanTian.Service/1.0.0": {
         "dependencies": {
+          "HuanTian.DtoModel": "1.0.0",
           "HuanTian.EntityFrameworkCore.MySql": "1.0.0",
           "HuanTian.Interface": "1.0.0"
         },
         "runtime": {
           "HuanTian.Service.dll": {}
+        }
+      },
+      "AutoMapper/12.0.0": {
+        "dependencies": {
+          "Microsoft.CSharp": "4.7.0"
+        },
+        "runtime": {
+          "lib/netstandard2.1/AutoMapper.dll": {
+            "assemblyVersion": "12.0.0.0",
+            "fileVersion": "12.0.0.0"
+          }
         }
       },
       "Enums.NET/4.0.0": {
@@ -31,6 +43,7 @@
           }
         }
       },
+      "Microsoft.CSharp/4.7.0": {},
       "Microsoft.EntityFrameworkCore/6.0.10": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore.Abstractions": "6.0.10",
@@ -423,6 +436,15 @@
           "HuanTian.Domain.dll": {}
         }
       },
+      "HuanTian.DtoModel/1.0.0": {
+        "dependencies": {
+          "AutoMapper": "12.0.0",
+          "HuanTian.Domain": "1.0.0"
+        },
+        "runtime": {
+          "HuanTian.DtoModel.dll": {}
+        }
+      },
       "HuanTian.EntityFrameworkCore.MySql/1.0.0": {
         "dependencies": {
           "HuanTian.Domain": "1.0.0",
@@ -436,6 +458,9 @@
         }
       },
       "HuanTian.Interface/1.0.0": {
+        "dependencies": {
+          "HuanTian.DtoModel": "1.0.0"
+        },
         "runtime": {
           "HuanTian.Interface.dll": {}
         }
@@ -447,6 +472,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "AutoMapper/12.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0Rmg0zI5AFu1O/y//o9VGyhxKjhggWpk9mOA1tp0DEVx40c61bs+lnQv+0jUq8XbniF7FKgIVvI1perqiMtLrA==",
+      "path": "automapper/12.0.0",
+      "hashPath": "automapper.12.0.0.nupkg.sha512"
     },
     "Enums.NET/4.0.0": {
       "type": "package",
@@ -461,6 +493,13 @@
       "sha512": "sha512-LFjukMRatkg9dgRM7U/gM4uKgaWAX7E0lt3fsVDTPdtBIVuh7uPlksDie290br1/tv1a4Ar/Bz9ywCPSL8PhHg==",
       "path": "mathnet.numerics.signed/4.15.0",
       "hashPath": "mathnet.numerics.signed.4.15.0.nupkg.sha512"
+    },
+    "Microsoft.CSharp/4.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-pTj+D3uJWyN3My70i2Hqo+OXixq3Os2D1nJ2x92FFo6sk8fYS1m1WLNTs0Dc1uPaViH0YvEEwvzddQ7y4rhXmA==",
+      "path": "microsoft.csharp/4.7.0",
+      "hashPath": "microsoft.csharp.4.7.0.nupkg.sha512"
     },
     "Microsoft.EntityFrameworkCore/6.0.10": {
       "type": "package",
@@ -708,6 +747,11 @@
       "hashPath": "system.windows.extensions.6.0.0.nupkg.sha512"
     },
     "HuanTian.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "HuanTian.DtoModel/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

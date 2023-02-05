@@ -58,3 +58,8 @@ D:\wanglei\.net\HuanTian.Interface\obj\Debug\net6.0\HuanTian.Interface.dll
 D:\wanglei\.net\HuanTian.Interface\obj\Debug\net6.0\refint\HuanTian.Interface.dll
 D:\wanglei\.net\HuanTian.Interface\obj\Debug\net6.0\HuanTian.Interface.pdb
 D:\wanglei\.net\HuanTian.Interface\obj\Debug\net6.0\ref\HuanTian.Interface.dll
+D:\wanglei\.net\HuanTian.Interface\bin\Debug\net6.0\HuanTian.Domain.dll
+D:\wanglei\.net\HuanTian.Interface\bin\Debug\net6.0\HuanTian.DtoModel.dll
+D:\wanglei\.net\HuanTian.Interface\bin\Debug\net6.0\HuanTian.DtoModel.pdb
+D:\wanglei\.net\HuanTian.Interface\bin\Debug\net6.0\HuanTian.Domain.pdb
+D:\wanglei\.net\HuanTian.Interface\obj\Debug\net6.0\HuanTian.Interface.csproj.CopyComplete

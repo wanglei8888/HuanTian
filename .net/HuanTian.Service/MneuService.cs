@@ -5,6 +5,7 @@ using HuanTian.Interface;
 using MathNet.Numerics.Distributions;
 using Microsoft.EntityFrameworkCore;
 using NPOI.SS.Formula.Functions;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 
@@ -26,13 +27,35 @@ namespace HuanTian.Service
 
             var menuOutput = new List<MenuOutput>();
 
-            var menuModelChild2_1 = new MenuOutput { Path = "/dashboard/analysis/:pageNo([1-9]\\d*)?", Name = "Analysis", Meta = new Meta { Title = "menu.dashboard.analysis", KeepAlive = false } };
-            var menuModelChild2_2 = new MenuOutput { Path = "/dashboard/workplace", Name = "Workplace", Meta = new Meta { Title = "menu.dashboard.workplace", KeepAlive = false } };
+            
+            var menuModelTemplate = new MenuOutput {
+                ParentId = 0,
+                Id = 1,
+                Name = "dashboard", 
+                Meta = new Meta { Title = "menu.dashboard",Icon = "dashboard",Show = true },
+                Redirect = "/dashboard/workplace",
+                Component = "RouteView"
+            };
+            var menuModelTemplate1 = new MenuOutput
+            {
+                ParentId = 1,
+                Id = 7,
+                Name = "workplace",
+                Meta = new Meta { Title = "menu.dashboard.monitor",Show = true },
+                Component = "Workplace"
+            };
+            var menuModelTemplate2 = new MenuOutput
+            {
+                ParentId = 1,
+                Path = "https://www.baidu.com/",
+                Id = 3,
+                Name = "monitor",
+                Meta = new Meta { Title = "menu.dashboard.workplace", Show = true }
+            };
 
-            var menuModelChild = new MenuOutput { Path = "/dashboard", Name = "dashboard", Redirect = "/dashboard/workplace", Component = new Component { Name = "RouteView" }, Meta = new Meta { Title = "menu.dashboard", KeepAlive = true, Icon = "form" },Child = new List<MenuOutput> { menuModelChild2_1 , menuModelChild2_2} };
-           
-            var menuModelTemplate = new MenuOutput { Path = "/", Name = "index", Meta = new Meta { Title = "menu.home" }, Redirect = "/dashboard/workplace",Child = new List<MenuOutput>{ menuModelChild } };
             menuOutput.Add(menuModelTemplate);
+            menuOutput.Add(menuModelTemplate1);
+            menuOutput.Add(menuModelTemplate2);
             return menuOutput;
         }
     }

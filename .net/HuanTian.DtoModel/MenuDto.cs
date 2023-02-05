@@ -16,6 +16,9 @@ namespace HuanTian.DtoModel
         /// </summary>
         public string? Name { get; set; }
 
+        public int ParentId { get; set; }
+        public int Id { get; set; }
+
         /// <summary>
         /// 菜单地址
         /// </summary>
@@ -25,15 +28,10 @@ namespace HuanTian.DtoModel
         /// </summary>
         public string? Redirect { get; set; }
 
-        public Component Component { get; set; }
-        public List<MenuOutput> Child { get; set; }
+        public string? Component { get; set; }
         
         public Meta Meta { get; set; }
         
-    }
-    public class Component 
-    { 
-        public string Name { get; set; }
     }
     public class Meta 
     {
@@ -42,10 +40,7 @@ namespace HuanTian.DtoModel
         /// </summary>
         public string? Title { get; set; }
 
-        /// <summary>
-        /// 是否缓存
-        /// </summary>
-        public bool? KeepAlive { get; set; } = false;
+        public bool? Show { get; set; }
         /// <summary>
         /// 图标
         /// </summary>
