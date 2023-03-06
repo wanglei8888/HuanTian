@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System.Runtime;
 
 namespace HuanTian.Common
 {
@@ -8,6 +9,8 @@ namespace HuanTian.Common
     public class Appsettings
     {
         public static IConfiguration? _configuration { get; set; }
+
+        public static IConfiguration Configuration => _configuration;
         public Appsettings(IConfiguration configuration)
         {
             _configuration = configuration;

@@ -58,3 +58,15 @@ D:\wanglei\.net\HuanTian.Domain\obj\Debug\net6.0\HuanTian.Domain.dll
 D:\wanglei\.net\HuanTian.Domain\obj\Debug\net6.0\refint\HuanTian.Domain.dll
 D:\wanglei\.net\HuanTian.Domain\obj\Debug\net6.0\HuanTian.Domain.pdb
 D:\wanglei\.net\HuanTian.Domain\obj\Debug\net6.0\ref\HuanTian.Domain.dll
+E:\wanglei\.net\HuanTian.Domain\bin\Debug\net6.0\HuanTian.Domain.deps.json
+E:\wanglei\.net\HuanTian.Domain\bin\Debug\net6.0\HuanTian.Domain.dll
+E:\wanglei\.net\HuanTian.Domain\bin\Debug\net6.0\HuanTian.Domain.pdb
+E:\wanglei\.net\HuanTian.Domain\obj\Debug\net6.0\HuanTian.Domain.csproj.AssemblyReference.cache
+E:\wanglei\.net\HuanTian.Domain\obj\Debug\net6.0\HuanTian.Domain.GeneratedMSBuildEditorConfig.editorconfig
+E:\wanglei\.net\HuanTian.Domain\obj\Debug\net6.0\HuanTian.Domain.AssemblyInfoInputs.cache
+E:\wanglei\.net\HuanTian.Domain\obj\Debug\net6.0\HuanTian.Domain.AssemblyInfo.cs
+E:\wanglei\.net\HuanTian.Domain\obj\Debug\net6.0\HuanTian.Domain.csproj.CoreCompileInputs.cache
+E:\wanglei\.net\HuanTian.Domain\obj\Debug\net6.0\HuanTian.Domain.dll
+E:\wanglei\.net\HuanTian.Domain\obj\Debug\net6.0\refint\HuanTian.Domain.dll
+E:\wanglei\.net\HuanTian.Domain\obj\Debug\net6.0\HuanTian.Domain.pdb
+E:\wanglei\.net\HuanTian.Domain\obj\Debug\net6.0\ref\HuanTian.Domain.dll

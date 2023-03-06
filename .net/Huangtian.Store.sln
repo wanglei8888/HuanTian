@@ -15,13 +15,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HuanTian.WebCore", "HuanTia
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HuanTian.Service", "HuanTian.Service\HuanTian.Service.csproj", "{7A26CAC4-6957-4ADE-8563-04B4B0A83982}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Huangtian.Store", "Huangtian.Store\Huangtian.Store.csproj", "{0184B222-7FDC-405D-8CA4-02ED2C166FEE}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HuanTian.EntityFrameworkCore.MySql", "HuanTian.EntityFrameworkCore.MySql\HuanTian.EntityFrameworkCore.MySql.csproj", "{3C8D12DC-4725-408E-B564-366B3DEBD4BD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HuanTian.EntityFrameworkCore.SqlServer", "HuanTian.EntityFrameworkCore.SqlServer\HuanTian.EntityFrameworkCore.SqlServer.csproj", "{4BA36BE4-8C33-47B1-8A93-C0BADE682F7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HuanTian.Common", "HuanTian.Common\HuanTian.Common.csproj", "{38072D67-954E-430C-B8A9-7D2CE21F0A5A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HuanTian.Common", "HuanTian.Common\HuanTian.Common.csproj", "{38072D67-954E-430C-B8A9-7D2CE21F0A5A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HuanTian.Store", "HuanTian.Store\HuanTian.Store.csproj", "{70204262-94CB-434A-B682-6CF984C095F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,10 +49,6 @@ Global
 		{7A26CAC4-6957-4ADE-8563-04B4B0A83982}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A26CAC4-6957-4ADE-8563-04B4B0A83982}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A26CAC4-6957-4ADE-8563-04B4B0A83982}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0184B222-7FDC-405D-8CA4-02ED2C166FEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0184B222-7FDC-405D-8CA4-02ED2C166FEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0184B222-7FDC-405D-8CA4-02ED2C166FEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0184B222-7FDC-405D-8CA4-02ED2C166FEE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3C8D12DC-4725-408E-B564-366B3DEBD4BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3C8D12DC-4725-408E-B564-366B3DEBD4BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C8D12DC-4725-408E-B564-366B3DEBD4BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -65,6 +61,10 @@ Global
 		{38072D67-954E-430C-B8A9-7D2CE21F0A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38072D67-954E-430C-B8A9-7D2CE21F0A5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38072D67-954E-430C-B8A9-7D2CE21F0A5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70204262-94CB-434A-B682-6CF984C095F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70204262-94CB-434A-B682-6CF984C095F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70204262-94CB-434A-B682-6CF984C095F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70204262-94CB-434A-B682-6CF984C095F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

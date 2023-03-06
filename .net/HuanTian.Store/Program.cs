@@ -1,24 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using AutoMapper;
 using HuanTian.Common;
 using HuanTian.EntityFrameworkCore.MySql;
 using HuanTian.WebCore;
-using Microsoft.AspNetCore;
+using HuanTian.WebCore.DynamicApi;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -87,12 +77,13 @@ namespace Huangtian.Store
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddSingleton(new Appsettings(builder.Configuration));
+            builder.Services.AddControllers().AddInject();
+            
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+           
             builder.Services.AddEndpointsApiExplorer();
-
+           
             builder.Services.AddSwaggerGen(t =>
             {
                 t.SwaggerDoc("v1", new OpenApiInfo { Title = "皇天商店" });
@@ -133,7 +124,7 @@ namespace Huangtian.Store
             });
 
             #region Sql注入
-            var ConnectionStrings = Appsettings.GetInfo("ConnectionStrings:MySqlConnection");
+            var ConnectionStrings = Appsettings._configuration["ConnectionStrings:MySqlConnection"];
             builder.Services.AddDbContext<MySqlContext>(options => options.UseMySql(ConnectionStrings,
                 ServerVersion.AutoDetect(ConnectionStrings)));
             #endregion
@@ -170,6 +161,11 @@ namespace Huangtian.Store
                 });
             #endregion
 
+            builder.Services.Configure<MvcOptions>(options =>
+            {
+                // 添加应用模型转换器
+                options.Conventions.Add(new DynamicApiControllerApplicationModelConvention(builder.Services));
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -185,8 +181,11 @@ namespace Huangtian.Store
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapControllers();
-
+            //app.MapControllers();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
             app.Run();
         }
     }
