@@ -1,7 +1,6 @@
-﻿using Autofac.Core;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace HuanTian.WebCore.DynamicApi
+namespace HuanTian.WebCore
 {
     /// <summary>
     /// 应用服务集合拓展类（由框架内部调用）

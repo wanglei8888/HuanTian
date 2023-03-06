@@ -5,7 +5,6 @@ using Autofac.Extensions.DependencyInjection;
 using HuanTian.Common;
 using HuanTian.EntityFrameworkCore.MySql;
 using HuanTian.WebCore;
-using HuanTian.WebCore.DynamicApi;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
