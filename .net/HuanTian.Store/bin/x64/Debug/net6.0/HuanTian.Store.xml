@@ -17,6 +17,18 @@
             </summary>
             <param name="filterContext"></param>
         </member>
+        <member name="M:Huangtian.Store.TestClass.Name">
+            <summary>
+            测试方法
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Huangtian.Store.TestClass1.Name2">
+            <summary>
+            测试方法
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:HuanTian.Store.Properties.Resources">
             <summary>
               一个强类型的资源类，用于查找本地化的字符串等。

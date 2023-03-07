@@ -1,0 +1,15 @@
+E:\wanglei\.net\HuanTian.DtoModel\bin\x64\Debug\net6.0\HuanTian.DtoModel.deps.json
+E:\wanglei\.net\HuanTian.DtoModel\bin\x64\Debug\net6.0\HuanTian.DtoModel.dll
+E:\wanglei\.net\HuanTian.DtoModel\bin\x64\Debug\net6.0\HuanTian.DtoModel.pdb
+E:\wanglei\.net\HuanTian.DtoModel\bin\x64\Debug\net6.0\HuanTian.Domain.dll
+E:\wanglei\.net\HuanTian.DtoModel\bin\x64\Debug\net6.0\HuanTian.Domain.pdb
+E:\wanglei\.net\HuanTian.DtoModel\obj\x64\Debug\net6.0\HuanTian.DtoModel.csproj.AssemblyReference.cache
+E:\wanglei\.net\HuanTian.DtoModel\obj\x64\Debug\net6.0\HuanTian.DtoModel.GeneratedMSBuildEditorConfig.editorconfig
+E:\wanglei\.net\HuanTian.DtoModel\obj\x64\Debug\net6.0\HuanTian.DtoModel.AssemblyInfoInputs.cache
+E:\wanglei\.net\HuanTian.DtoModel\obj\x64\Debug\net6.0\HuanTian.DtoModel.AssemblyInfo.cs
+E:\wanglei\.net\HuanTian.DtoModel\obj\x64\Debug\net6.0\HuanTian.DtoModel.csproj.CoreCompileInputs.cache
+E:\wanglei\.net\HuanTian.DtoModel\obj\x64\Debug\net6.0\HuanTian.DtoModel.csproj.CopyComplete
+E:\wanglei\.net\HuanTian.DtoModel\obj\x64\Debug\net6.0\HuanTian.DtoModel.dll
+E:\wanglei\.net\HuanTian.DtoModel\obj\x64\Debug\net6.0\refint\HuanTian.DtoModel.dll
+E:\wanglei\.net\HuanTian.DtoModel\obj\x64\Debug\net6.0\HuanTian.DtoModel.pdb
+E:\wanglei\.net\HuanTian.DtoModel\obj\x64\Debug\net6.0\ref\HuanTian.DtoModel.dll

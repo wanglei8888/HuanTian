@@ -1,0 +1,17 @@
+E:\wanglei\.net\HuanTian.Interface\bin\x64\Debug\net6.0\HuanTian.Interface.deps.json
+E:\wanglei\.net\HuanTian.Interface\bin\x64\Debug\net6.0\HuanTian.Interface.dll
+E:\wanglei\.net\HuanTian.Interface\bin\x64\Debug\net6.0\HuanTian.Interface.pdb
+E:\wanglei\.net\HuanTian.Interface\bin\x64\Debug\net6.0\HuanTian.Domain.dll
+E:\wanglei\.net\HuanTian.Interface\bin\x64\Debug\net6.0\HuanTian.DtoModel.dll
+E:\wanglei\.net\HuanTian.Interface\bin\x64\Debug\net6.0\HuanTian.DtoModel.pdb
+E:\wanglei\.net\HuanTian.Interface\bin\x64\Debug\net6.0\HuanTian.Domain.pdb
+E:\wanglei\.net\HuanTian.Interface\obj\x64\Debug\net6.0\HuanTian.Interface.csproj.AssemblyReference.cache
+E:\wanglei\.net\HuanTian.Interface\obj\x64\Debug\net6.0\HuanTian.Interface.GeneratedMSBuildEditorConfig.editorconfig
+E:\wanglei\.net\HuanTian.Interface\obj\x64\Debug\net6.0\HuanTian.Interface.AssemblyInfoInputs.cache
+E:\wanglei\.net\HuanTian.Interface\obj\x64\Debug\net6.0\HuanTian.Interface.AssemblyInfo.cs
+E:\wanglei\.net\HuanTian.Interface\obj\x64\Debug\net6.0\HuanTian.Interface.csproj.CoreCompileInputs.cache
+E:\wanglei\.net\HuanTian.Interface\obj\x64\Debug\net6.0\HuanTian.Interface.csproj.CopyComplete
+E:\wanglei\.net\HuanTian.Interface\obj\x64\Debug\net6.0\HuanTian.Interface.dll
+E:\wanglei\.net\HuanTian.Interface\obj\x64\Debug\net6.0\refint\HuanTian.Interface.dll
+E:\wanglei\.net\HuanTian.Interface\obj\x64\Debug\net6.0\HuanTian.Interface.pdb
+E:\wanglei\.net\HuanTian.Interface\obj\x64\Debug\net6.0\ref\HuanTian.Interface.dll

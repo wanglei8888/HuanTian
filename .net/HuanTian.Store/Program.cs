@@ -160,11 +160,6 @@ namespace Huangtian.Store
                 });
             #endregion
 
-            builder.Services.Configure<MvcOptions>(options =>
-            {
-                // 添加应用模型转换器
-                options.Conventions.Add(new DynamicApiControllerApplicationModelConvention(builder.Services));
-            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

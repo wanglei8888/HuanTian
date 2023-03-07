@@ -1,11 +1,6 @@
+E:\wanglei\.net\HuanTian.Store\bin\Debug\net6.0\HuanTian.Store.exe
 E:\wanglei\.net\HuanTian.Store\bin\Debug\net6.0\appsettings.Development.json
 E:\wanglei\.net\HuanTian.Store\bin\Debug\net6.0\appsettings.json
-E:\wanglei\.net\HuanTian.Store\bin\Debug\net6.0\HuanTian.Store.exe
-E:\wanglei\.net\HuanTian.Store\bin\Debug\net6.0\HuanTian.Store.deps.json
-E:\wanglei\.net\HuanTian.Store\bin\Debug\net6.0\HuanTian.Store.runtimeconfig.json
-E:\wanglei\.net\HuanTian.Store\bin\Debug\net6.0\HuanTian.Store.dll
-E:\wanglei\.net\HuanTian.Store\bin\Debug\net6.0\HuanTian.Store.pdb
-E:\wanglei\.net\HuanTian.Store\bin\Debug\net6.0\HuanTian.Store.xml
 E:\wanglei\.net\HuanTian.Store\bin\Debug\net6.0\Autofac.dll
 E:\wanglei\.net\HuanTian.Store\bin\Debug\net6.0\Autofac.Extensions.DependencyInjection.dll
 E:\wanglei\.net\HuanTian.Store\bin\Debug\net6.0\Autofac.Extras.DynamicProxy.dll
@@ -97,5 +92,3 @@ E:\wanglei\.net\HuanTian.Store\obj\Debug\net6.0\HuanTian.Store.dll
 E:\wanglei\.net\HuanTian.Store\obj\Debug\net6.0\refint\HuanTian.Store.dll
 E:\wanglei\.net\HuanTian.Store\obj\Debug\net6.0\HuanTian.Store.xml
 E:\wanglei\.net\HuanTian.Store\obj\Debug\net6.0\HuanTian.Store.pdb
-E:\wanglei\.net\HuanTian.Store\obj\Debug\net6.0\HuanTian.Store.genruntimeconfig.cache
-E:\wanglei\.net\HuanTian.Store\obj\Debug\net6.0\ref\HuanTian.Store.dll
