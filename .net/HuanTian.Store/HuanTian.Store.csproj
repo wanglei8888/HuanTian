@@ -26,6 +26,7 @@
     <ProjectReference Include="..\HuanTian.Domain\HuanTian.Domain.csproj" />
     <ProjectReference Include="..\HuanTian.DtoModel\HuanTian.DtoModel.csproj" />
     <ProjectReference Include="..\HuanTian.EntityFrameworkCore.MySql\HuanTian.EntityFrameworkCore.MySql.csproj" />
+    <ProjectReference Include="..\HuanTian.EntityFrameworkCore.SqlServer\HuanTian.EntityFrameworkCore.SqlServer.csproj" />
     <ProjectReference Include="..\HuanTian.Interface\HuanTian.Interface.csproj" />
     <ProjectReference Include="..\HuanTian.Service\HuanTian.Service.csproj" />
     <ProjectReference Include="..\HuanTian.WebCore\HuanTian.WebCore.csproj" />

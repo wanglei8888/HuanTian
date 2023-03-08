@@ -4,6 +4,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using HuanTian.Common;
 using HuanTian.EntityFrameworkCore.MySql;
+using HuanTian.EntityFrameworkCore.SqlServer;
 using HuanTian.WebCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -123,9 +124,13 @@ namespace Huangtian.Store
             });
 
             #region Sql注入
-            var ConnectionStrings = Appsettings._configuration["ConnectionStrings:MySqlConnection"];
-            builder.Services.AddDbContext<MySqlContext>(options => options.UseMySql(ConnectionStrings,
-                ServerVersion.AutoDetect(ConnectionStrings)));
+            var ConnectionStrings = Appsettings._configuration["ConnectionStrings:SqlServerConnection"];
+            // my sql
+            //builder.Services.AddDbContext<SqlServerContext>(options => options.UseMySql(ConnectionStrings,
+            //    ServerVersion.AutoDetect(ConnectionStrings)));
+
+            // sql server
+            builder.Services.AddDbContext<SqlServerContext>(options => options.UseSqlServer(ConnectionStrings));
             #endregion
 
             #region AutoMapper

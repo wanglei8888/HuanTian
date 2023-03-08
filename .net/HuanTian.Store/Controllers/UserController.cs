@@ -35,9 +35,11 @@ namespace Huangtian.Store.Controllers
         [HttpGet]
         public async Task<IEnumerable<MenuOutput>> Info()
         {
-            var user = HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sid)?.Value;
-            var menu = await _mneuService.GetUserMenu(1);
-            return menu;
+            _logger.LogInformation("test");
+            return null;
+            //var user = HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sid)?.Value;
+            //var menu = await _mneuService.GetUserMenu(1);
+            //return menu;
         }
 
     }
