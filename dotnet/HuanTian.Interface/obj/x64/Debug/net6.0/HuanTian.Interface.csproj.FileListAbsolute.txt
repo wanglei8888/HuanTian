@@ -1,0 +1,17 @@
+E:\furion-test\.net123\HuanTian.Interface\bin\x64\Debug\net6.0\HuanTian.Interface.deps.json
+E:\furion-test\.net123\HuanTian.Interface\bin\x64\Debug\net6.0\HuanTian.Interface.dll
+E:\furion-test\.net123\HuanTian.Interface\bin\x64\Debug\net6.0\HuanTian.Interface.pdb
+E:\furion-test\.net123\HuanTian.Interface\bin\x64\Debug\net6.0\HuanTian.Domain.dll
+E:\furion-test\.net123\HuanTian.Interface\bin\x64\Debug\net6.0\HuanTian.DtoModel.dll
+E:\furion-test\.net123\HuanTian.Interface\bin\x64\Debug\net6.0\HuanTian.DtoModel.pdb
+E:\furion-test\.net123\HuanTian.Interface\bin\x64\Debug\net6.0\HuanTian.Domain.pdb
+E:\furion-test\.net123\HuanTian.Interface\obj\x64\Debug\net6.0\HuanTian.Interface.csproj.AssemblyReference.cache
+E:\furion-test\.net123\HuanTian.Interface\obj\x64\Debug\net6.0\HuanTian.Interface.GeneratedMSBuildEditorConfig.editorconfig
+E:\furion-test\.net123\HuanTian.Interface\obj\x64\Debug\net6.0\HuanTian.Interface.AssemblyInfoInputs.cache
+E:\furion-test\.net123\HuanTian.Interface\obj\x64\Debug\net6.0\HuanTian.Interface.AssemblyInfo.cs
+E:\furion-test\.net123\HuanTian.Interface\obj\x64\Debug\net6.0\HuanTian.Interface.csproj.CoreCompileInputs.cache
+E:\furion-test\.net123\HuanTian.Interface\obj\x64\Debug\net6.0\HuanTian.Interface.csproj.CopyComplete
+E:\furion-test\.net123\HuanTian.Interface\obj\x64\Debug\net6.0\HuanTian.Interface.dll
+E:\furion-test\.net123\HuanTian.Interface\obj\x64\Debug\net6.0\refint\HuanTian.Interface.dll
+E:\furion-test\.net123\HuanTian.Interface\obj\x64\Debug\net6.0\HuanTian.Interface.pdb
+E:\furion-test\.net123\HuanTian.Interface\obj\x64\Debug\net6.0\ref\HuanTian.Interface.dll
