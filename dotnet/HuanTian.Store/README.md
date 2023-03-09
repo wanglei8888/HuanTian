@@ -7,7 +7,7 @@
        例如：
        public DbSet<NewTableDO> NewTable { get; set; }
 
-    3、打开【程序包管理控制台】，默认项目选为 Suncere.AirAnalysis.EntityFrameworkCore.DbMigrations
+    3、打开【程序包管理控制台】，默认项目选为 Suncere.AirAnalysis.EntityFrameworkCore.Mysql / SqlServer
 
     4、在【程序包管理控制台】中输入添加数据库迁移命令 "Add-Migration"
        可以简单写英文描述进行记录   例如：

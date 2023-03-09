@@ -31,7 +31,7 @@ namespace Huangtian.Store.Controllers
             _mneuService = mneuService;
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         public async Task<IEnumerable<MenuOutput>> Info()
         {

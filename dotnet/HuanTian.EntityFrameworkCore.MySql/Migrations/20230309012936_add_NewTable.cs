@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HuanTian.EntityFrameworkCore.MySql.Migrations
 {
-    public partial class add_all_table : Migration
+    public partial class add_NewTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

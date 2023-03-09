@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HuanTian.EntityFrameworkCore.MySql.Migrations
 {
     [DbContext(typeof(MySqlContext))]
-    [Migration("20230118161647_add_all_table")]
-    partial class add_all_table
+    [Migration("20230309012936_add_NewTable")]
+    partial class add_NewTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

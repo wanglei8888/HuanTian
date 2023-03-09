@@ -9,8 +9,10 @@ using HuanTian.WebCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using NPOI.HPSF;
 
 namespace Huangtian.Store
 {
@@ -124,12 +126,13 @@ namespace Huangtian.Store
             });
 
             #region Sql注入
-            var ConnectionStrings = Appsettings._configuration["ConnectionStrings:SqlServerConnection"];
             // my sql
+            var ConnectionStrings = Appsettings._configuration["ConnectionStrings:MySqlConnection"];
             builder.Services.AddDbContext<MySqlContext>(options => options.UseMySql(ConnectionStrings,
                 ServerVersion.AutoDetect(ConnectionStrings)));
 
             // sql server
+            // var ConnectionStrings = Appsettings._configuration["ConnectionStrings:SqlServerConnection"];
             // builder.Services.AddDbContext<SqlServerContext>(options => options.UseSqlServer(ConnectionStrings));
             #endregion
 
@@ -146,24 +149,16 @@ namespace Huangtian.Store
             #endregion
 
             #region JWT
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        // 验证发布者
-                        ValidateIssuer = true,
-                        ValidIssuer = builder.Configuration["JWTAuthentication:Issuer"],
-                        // 验证接收者
-                        ValidateAudience = true,
-                        ValidAudience = builder.Configuration["JWTAuthentication:Audience"],
-                        // 验证是否过期
-                        ValidateLifetime = true,
-                        // 验证私钥
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTAuthentication:SecretKey"]))
-                    };
-                });
+            builder.Services.AddJwt();
             #endregion
+
+            //builder.Host.ConfigureLogging(loggingBuilder =>
+            //{
+            //    loggingBuilder.ClearProviders();
+            //    loggingBuilder.AddConsole();
+            //    //一行代码即可引入
+            //    loggingBuilder.AddFile();
+            //});
 
             var app = builder.Build();
 
@@ -173,6 +168,7 @@ namespace Huangtian.Store
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+           
             app.UseCors("cors");
             app.UseRouting();
             app.UseHttpsRedirection();

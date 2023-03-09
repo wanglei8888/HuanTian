@@ -70,3 +70,15 @@ E:\furion-test\HuanTian.Common\obj\Debug\net6.0\HuanTian.Common.dll
 E:\furion-test\HuanTian.Common\obj\Debug\net6.0\refint\HuanTian.Common.dll
 E:\furion-test\HuanTian.Common\obj\Debug\net6.0\HuanTian.Common.pdb
 E:\furion-test\HuanTian.Common\obj\Debug\net6.0\ref\HuanTian.Common.dll
+E:\wanglei\dotnet\HuanTian.Common\bin\Debug\net6.0\HuanTian.Common.deps.json
+E:\wanglei\dotnet\HuanTian.Common\bin\Debug\net6.0\HuanTian.Common.dll
+E:\wanglei\dotnet\HuanTian.Common\bin\Debug\net6.0\HuanTian.Common.pdb
+E:\wanglei\dotnet\HuanTian.Common\obj\Debug\net6.0\HuanTian.Common.csproj.AssemblyReference.cache
+E:\wanglei\dotnet\HuanTian.Common\obj\Debug\net6.0\HuanTian.Common.GeneratedMSBuildEditorConfig.editorconfig
+E:\wanglei\dotnet\HuanTian.Common\obj\Debug\net6.0\HuanTian.Common.AssemblyInfoInputs.cache
+E:\wanglei\dotnet\HuanTian.Common\obj\Debug\net6.0\HuanTian.Common.AssemblyInfo.cs
+E:\wanglei\dotnet\HuanTian.Common\obj\Debug\net6.0\HuanTian.Common.csproj.CoreCompileInputs.cache
+E:\wanglei\dotnet\HuanTian.Common\obj\Debug\net6.0\HuanTian.Common.dll
+E:\wanglei\dotnet\HuanTian.Common\obj\Debug\net6.0\refint\HuanTian.Common.dll
+E:\wanglei\dotnet\HuanTian.Common\obj\Debug\net6.0\HuanTian.Common.pdb
+E:\wanglei\dotnet\HuanTian.Common\obj\Debug\net6.0\ref\HuanTian.Common.dll

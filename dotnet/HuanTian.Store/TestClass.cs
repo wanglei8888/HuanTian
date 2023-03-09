@@ -1,4 +1,5 @@
 ﻿using HuanTian.WebCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Huangtian.Store
@@ -10,6 +11,7 @@ namespace Huangtian.Store
         /// 测试方法
         /// </summary>
         /// <returns></returns>
+        [Authorize]
         [HttpGet]
         public string Name()
         {
