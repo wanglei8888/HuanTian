@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\HuanTian.Store.props" />
-</Project>

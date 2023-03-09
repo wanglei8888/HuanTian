@@ -1,10 +1,5 @@
-﻿.net/.vs
-*.dll
+﻿*.dll
 *.pdb
-*.cache
-.net/HuanTian.WebCore/obj/Debug
-.net/HuanTian.WebCore/obj
-.net/HuanTian.DtoModel/bin
-.net/Huangtian.Store/bin
-.net/Huangtian.Store/obj
-*/.vs
+*Debug
+*obj
+*vs
