@@ -13,8 +13,8 @@ namespace HuanTian.Service
 {
     public class MneuService : IMneuService
     {
-        private readonly MySqlContext _mySqlContext;
-        public MneuService(MySqlContext mySqlContext)
+        private readonly EfSqlContext _mySqlContext;
+        public MneuService(EfSqlContext mySqlContext)
         {
             _mySqlContext = mySqlContext;
         }
@@ -27,12 +27,13 @@ namespace HuanTian.Service
 
             var menuOutput = new List<MenuOutput>();
 
-            
-            var menuModelTemplate = new MenuOutput {
+
+            var menuModelTemplate = new MenuOutput
+            {
                 ParentId = 0,
                 Id = 1,
-                Name = "dashboard", 
-                Meta = new Meta { Title = "menu.dashboard",Icon = "dashboard",Show = true },
+                Name = "dashboard",
+                Meta = new Meta { Title = "menu.dashboard", Icon = "dashboard", Show = true },
                 Redirect = "/dashboard/workplace",
                 Component = "RouteView"
             };
@@ -41,7 +42,7 @@ namespace HuanTian.Service
                 ParentId = 1,
                 Id = 7,
                 Name = "workplace",
-                Meta = new Meta { Title = "menu.dashboard.monitor",Show = true },
+                Meta = new Meta { Title = "menu.dashboard.monitor", Show = true },
                 Component = "Workplace"
             };
             var menuModelTemplate2 = new MenuOutput

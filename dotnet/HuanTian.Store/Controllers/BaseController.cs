@@ -34,13 +34,5 @@ namespace Huangtian.Store.Controllers
             Response.Headers.Add("Custom-Header", Guid.NewGuid().ToString());
             base.OnActionExecuted(filterContext);
         }
-
-        //byte[] result;
-        //filterContext.HttpContext.Session.TryGetValue("UserID", out result);
-        //if (result == null)
-        //{
-        //    filterContext.Result = new RedirectResult("/Login/Index");
-        //    return;
-        //}
     }
 }

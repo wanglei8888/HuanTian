@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HuanTian.EntityFrameworkCore.MySql
 {
-    public class MySqlContext : DbContext
+    public class EfSqlContext : DbContext
     {
         public DbSet<FestivalInfoDO> FestivalInfoDO { get; set; }
         public DbSet<UserInfoDO> UserInfoDO { get; set; }
@@ -19,12 +19,12 @@ namespace HuanTian.EntityFrameworkCore.MySql
 
         
         #region 
-        public MySqlContext()
+        public EfSqlContext()
         {
 
         }
 
-        public MySqlContext(DbContextOptions<MySqlContext> options) : base(options)
+        public EfSqlContext(DbContextOptions<EfSqlContext> options) : base(options)
         {
 
         }

@@ -1,14 +1,8 @@
-using HuanTian.Common;
 using HuanTian.DtoModel;
 using HuanTian.EntityFrameworkCore.MySql;
 using HuanTian.Interface;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http;
-using System.Security.Claims;
 
 namespace Huangtian.Store.Controllers
 {
@@ -18,12 +12,12 @@ namespace Huangtian.Store.Controllers
     {
 
         private readonly ILogger<UserController> _logger;
-        private readonly MySqlContext _mySqlContext;
+        private readonly EfSqlContext _mySqlContext;
         private readonly IMneuService _mneuService;
 
         public UserController(
             ILogger<UserController> logger,
-            MySqlContext mySqlContext,
+            EfSqlContext mySqlContext,
             IMneuService mneuService)
         {
             _logger = logger;

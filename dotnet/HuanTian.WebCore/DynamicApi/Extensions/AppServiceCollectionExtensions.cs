@@ -15,7 +15,8 @@ namespace HuanTian.WebCore
         /// <returns>IMvcBuilder</returns>
         public static IMvcBuilder AddInject(this IMvcBuilder mvcBuilder)
         {
-            mvcBuilder.Services.AddDynamicApiControllers();
+            mvcBuilder.Services.AddDynamicApiControllers(); 
+            mvcBuilder.Services.AddSwaggerService();
             return mvcBuilder;
         }
     }
