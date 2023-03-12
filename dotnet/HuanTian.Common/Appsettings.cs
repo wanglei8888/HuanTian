@@ -8,21 +8,13 @@ namespace HuanTian.Common
     /// </summary>
     public class Appsettings
     {
-        public static IConfiguration? _configuration { get; set; }
-
-        public static IConfiguration Configuration => _configuration;
-        public Appsettings(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
         /// <summary>
         /// 获取键值信息
         /// </summary>
-        /// <param name="path">例如ConnectionStrings:MySqlConnection</param>
-        /// <returns></returns>
-        public static string GetInfo(string path) 
+        public static IConfiguration Configuration { get; set; }
+        public Appsettings(IConfiguration configuration)
         {
-            return _configuration[path];
+            Configuration = configuration;
         }
     }
 }

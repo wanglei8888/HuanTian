@@ -33,7 +33,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace HuanTian.WebCore
 {
-    public static class JWTAuthorizationServiceCollectionExtensions
+    public static class JWTAuthorizationExtensions
     {
         /// <summary>
         /// 添加 JWT 授权

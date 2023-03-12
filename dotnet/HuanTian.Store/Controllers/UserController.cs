@@ -3,6 +3,7 @@ using HuanTian.EntityFrameworkCore.MySql;
 using HuanTian.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Huangtian.Store.Controllers
 {
@@ -29,11 +30,10 @@ namespace Huangtian.Store.Controllers
         [HttpGet]
         public async Task<IEnumerable<MenuOutput>> Info()
         {
-            _logger.LogInformation("test");
-            return null;
-            //var user = HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sid)?.Value;
-            //var menu = await _mneuService.GetUserMenu(1);
-            //return menu;
+
+            var user = HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sid)?.Value;
+            var menu = await _mneuService.GetUserMenu(1);
+            return menu;
         }
 
     }

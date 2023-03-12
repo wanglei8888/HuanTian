@@ -46,7 +46,7 @@ namespace HuanTian.WebCore
 
         public static TOptions GetConfig<TOptions>(string path, bool loadPostConfigure = false)
         {
-            var options = Appsettings._configuration.GetSection(path).Get<TOptions>();
+            var options = Appsettings.Configuration.GetSection(path).Get<TOptions>();
 
             // 加载默认选项配置
             if (loadPostConfigure)

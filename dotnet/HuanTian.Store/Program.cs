@@ -3,6 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using HuanTian.Common;
 using HuanTian.EntityFrameworkCore.MySql;
 using HuanTian.WebCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Huangtian.Store
@@ -21,27 +22,36 @@ namespace Huangtian.Store
            
             builder.Services.AddEndpointsApiExplorer();
 
-            //配置跨域服务
+            #region 配置跨域服务
             builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("cors", p =>
-                {
-                    p.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader();
+               {
+                   options.AddPolicy("cors", p =>
+                   {
+                       p.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
 
-                });
-            });
+                   });
+               }); 
+            #endregion
+
+            #region 全局过滤器  
+            builder.Services.Configure<MvcOptions>(options =>
+               {
+                   options.Filters.Add<DataValidationFilter>();
+                   options.Filters.Add<HandlingExceptionFilter>();
+               });
+            #endregion
 
             #region Sql注入
             // my sql
-            //var ConnectionStrings = Appsettings._configuration["ConnectionStrings:MySqlConnection"];
-            //builder.Services.AddDbContext<EfSqlContext>(options => options.UseMySql(ConnectionStrings,
-            //    ServerVersion.AutoDetect(ConnectionStrings)));
+            var ConnectionStrings = Appsettings.Configuration["ConnectionStrings:MySqlConnection"];
+            builder.Services.AddDbContext<EfSqlContext>(options => options.UseMySql(ConnectionStrings,
+                ServerVersion.AutoDetect(ConnectionStrings)));
 
             // sql server
-            var ConnectionStrings = Appsettings._configuration["ConnectionStrings:SqlServerConnection"];
-            builder.Services.AddDbContext<EfSqlContext>(options => options.UseSqlServer(ConnectionStrings));
+            //var ConnectionStrings = Appsettings._configuration["ConnectionStrings:SqlServerConnection"];
+            //builder.Services.AddDbContext<EfSqlContext>(options => options.UseSqlServer(ConnectionStrings));
             #endregion
 
             #region AutoMapper
@@ -62,6 +72,9 @@ namespace Huangtian.Store
 
             var app = builder.Build();
 
+            //自定义中间件
+            app.UseMiddleware<CustomMiddleware>();
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -76,7 +89,6 @@ namespace Huangtian.Store
             app.UseAuthentication();
             app.UseAuthorization();
 
-            //app.MapControllers();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
