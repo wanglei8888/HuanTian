@@ -3,3 +3,5 @@
 *Debug
 *obj
 *vs
+*bin
+dotnet/HuanTian.Store/Properties/PublishProfiles

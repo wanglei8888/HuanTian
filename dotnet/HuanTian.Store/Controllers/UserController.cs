@@ -26,10 +26,16 @@ namespace Huangtian.Store.Controllers
             _mneuService = mneuService;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         public async Task<IEnumerable<MenuOutput>> Info()
         {
+            
+            _logger.LogError("test11");
+            return null;
+            //var user = HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sid)?.Value;
+            //var menu = await _mneuService.GetUserMenu(1);
+            //return menu;
 
             var user = HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sid)?.Value;
             var menu = await _mneuService.GetUserMenu(1);

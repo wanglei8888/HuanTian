@@ -41,12 +41,12 @@ namespace HuanTian.WebCore
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddSwaggerService(this IServiceCollection services) 
+        public static IServiceCollection AddSwaggerService(this IServiceCollection services,string AppName) 
         {
             services.AddSwaggerGen(t =>
             {
                 t.SwaggerDoc("v1", new OpenApiInfo { Title = "皇天商店" });
-                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlFilename = $"{AppName}.xml";
                 t.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
                 t.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {

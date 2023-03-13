@@ -13,10 +13,10 @@ namespace HuanTian.WebCore
         /// <param name="mvcBuilder">Mvc构建器</param>
         /// <param name="configure"></param>
         /// <returns>IMvcBuilder</returns>
-        public static IMvcBuilder AddInject(this IMvcBuilder mvcBuilder)
+        public static IMvcBuilder AddInject(this IMvcBuilder mvcBuilder,string AppName = "")
         {
             mvcBuilder.Services.AddDynamicApiControllers(); 
-            mvcBuilder.Services.AddSwaggerService();
+            mvcBuilder.Services.AddSwaggerService(AppName);
             return mvcBuilder;
         }
     }
