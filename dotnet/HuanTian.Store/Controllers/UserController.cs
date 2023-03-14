@@ -9,7 +9,7 @@ namespace Huangtian.Store.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class UserController : BaseController
+    public class UserController : ControllerBase
     {
 
         private readonly ILogger<UserController> _logger;
@@ -30,13 +30,6 @@ namespace Huangtian.Store.Controllers
         [HttpGet]
         public async Task<IEnumerable<MenuOutput>> Info()
         {
-            
-            _logger.LogError("test11");
-            return null;
-            //var user = HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sid)?.Value;
-            //var menu = await _mneuService.GetUserMenu(1);
-            //return menu;
-
             var user = HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sid)?.Value;
             var menu = await _mneuService.GetUserMenu(1);
             return menu;

@@ -46,7 +46,7 @@ public static class LoggingServiceCollectionExtensions
     {
         builder.Services.Configure(action);
         builder.Services.AddSingleton<ILoggerProvider, LocalFileLoggerProvider>();
-        builder.Services.AddSingleton<IHostedService, LogClearTask>();
+        //builder.Services.AddSingleton<IHostedService, LogClearTask>();
     }
 }
 

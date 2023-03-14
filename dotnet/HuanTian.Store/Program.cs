@@ -4,8 +4,8 @@ using HuanTian.Common;
 using HuanTian.EntityFrameworkCore.MySql;
 using HuanTian.WebCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Reflection;
 
 namespace Huangtian.Store
@@ -19,9 +19,9 @@ namespace Huangtian.Store
             // Add services to the container.
             builder.Services.AddSingleton(new Appsettings(builder.Configuration));
             builder.Services.AddControllers().AddInject(Assembly.GetExecutingAssembly().GetName().Name);
-            
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-           
+
             builder.Services.AddEndpointsApiExplorer();
 
             #region 配置跨域服务
@@ -34,19 +34,23 @@ namespace Huangtian.Store
                        .AllowAnyHeader();
 
                    });
-               }); 
+               });
+            #endregion
+
+            #region 日志服务
+            //开发环境不需要写入日志
+            #if !DEBUG
+            builder.Logging.AddLocalFileLogger(options => options.SaveDays = 7);
+            #endif
             #endregion
 
             #region 全局过滤器  
             builder.Services.Configure<MvcOptions>(options =>
                {
-                   options.Filters.Add<DataValidationFilter>();
+                   options.Filters.Add<TemplateResultFilter>();
                    options.Filters.Add<HandlingExceptionFilter>();
+                   options.Filters.Add(new AuthorizeFilter());
                });
-            #endregion
-
-            #region 日志服务
-            builder.Logging.AddLocalFileLogger(options => options.SaveDays = 7); 
             #endregion
 
             #region Sql注入
@@ -59,7 +63,7 @@ namespace Huangtian.Store
             //var ConnectionStrings = Appsettings._configuration["ConnectionStrings:SqlServerConnection"];
             //builder.Services.AddDbContext<EfSqlContext>(options => options.UseSqlServer(ConnectionStrings));
             #endregion
- 
+
             #region AutoMapper
             builder.Services.AddAutoMapperService();
             #endregion
@@ -87,7 +91,7 @@ namespace Huangtian.Store
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-           
+
             app.UseCors("cors");
             app.UseRouting();
             app.UseHttpsRedirection();
@@ -98,7 +102,7 @@ namespace Huangtian.Store
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            }); 
+            });
             app.Run();
         }
     }

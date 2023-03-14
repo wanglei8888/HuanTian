@@ -32,6 +32,9 @@ using System.Threading.Tasks;
 
 namespace HuanTian.WebCore
 {
+    /// <summary>
+    /// 日志处理对象
+    /// </summary>
     public class LocalFileLogger : ILogger
     {
         private readonly string categoryName;
@@ -70,7 +73,7 @@ namespace HuanTian.WebCore
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
         {
             if (IsEnabled(logLevel))
-            {
+            {   
                 if (state != null && state.ToString() != null)
                 {
                     var logContent = state.ToString();
@@ -79,28 +82,15 @@ namespace HuanTian.WebCore
                     {
                         if (exception != null)
                         {
-                            var logMsg = new
-                            {
-                                message = logContent,
-                                error = new
-                                {
-                                    exception?.Source,
-                                    exception?.Message,
-                                    exception?.StackTrace
-                                }
-                            };
-
-                            //logContent = "123";//JsonHelper.ObjectToJson(logMsg);
+                            logContent = $"【报错信息 {logContent}】\r\n【报错内容 {exception?.Message}】\r\n【报错详情 {exception?.StackTrace}】";
                         }
-
                         var log = new
                         {
                             CreateTime = DateTime.UtcNow,
                             Category = categoryName,
                             Level = logLevel,
-                            Content = $"[{DateTime.Now.ToString("HH-mm-ss-fff")}] {logLevel} {logContent}"
+                            Content = $"【时间】{DateTime.Now.ToString("HH-mm-ss-fff")} 【等级】{logLevel} 【内容】{logContent}"
                         };
-
 
                         //区分报错日志
                         var logPath = basePath + "/Info/" + DateTime.UtcNow.ToString("yyyyMMdd") + ".log";
@@ -108,10 +98,7 @@ namespace HuanTian.WebCore
                         {
                             logPath = basePath + "/Error/" + DateTime.UtcNow.ToString("yyyyMMdd") + ".log";
                         }
-
-
                         File.AppendAllText(logPath, log.Content + Environment.NewLine, Encoding.UTF8);
-
                     }
                 }
             }

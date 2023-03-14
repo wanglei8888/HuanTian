@@ -1,4 +1,5 @@
-﻿using HuanTian.WebCore;
+﻿using HuanTian.Domain;
+using HuanTian.WebCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,11 +12,12 @@ namespace Huangtian.Store
         /// 测试方法
         /// </summary>
         /// <returns></returns>
-        [Authorize]
+        //[Authorize]
         [HttpGet]
-        public string Name()
+        public dynamic Name()
         {
-            return "";
+            //throw new Exception("test123");
+            return new SysMenuDO();
         }
     }
 

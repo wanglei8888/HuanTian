@@ -2,6 +2,7 @@
 using HuanTian.Common;
 using HuanTian.DtoModel;
 using HuanTian.EntityFrameworkCore.MySql;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,7 +10,7 @@ namespace Huangtian.Store.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class AuthController : BaseController
+    public class AuthController : ControllerBase
     {
         private readonly EfSqlContext _mySqlContext;
         private readonly IMapper _mapper;
@@ -26,6 +27,7 @@ namespace Huangtian.Store.Controllers
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpPost]
         public async Task<APIResult> Login(LoginInput input)
         {
@@ -42,7 +44,6 @@ namespace Huangtian.Store.Controllers
                 return APIResult.Error("登陆失败");
             }
             
-
         }
     }
 }

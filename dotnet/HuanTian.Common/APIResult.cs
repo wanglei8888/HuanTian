@@ -8,10 +8,12 @@ namespace HuanTian.Common
 {
     public class APIResult
     {
-        public string Message { get; set; }
-        public object Result { get; set; }
         public bool Status { get; set; }
+        public string Message { get; set; }
+        public long Timestamp { get; set; }
         public ResultCodeEnum Code { get; set; }
+        public object Result { get; set; }
+
 
         public APIResult SetData(object obj)
         {
