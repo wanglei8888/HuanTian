@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HuanTian.Common
+﻿namespace HuanTian.Common
 {
+    /// <summary>
+    /// 接口返回结果模板
+    /// </summary>
     public class APIResult
     {
         public bool Status { get; set; }

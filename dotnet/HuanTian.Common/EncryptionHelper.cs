@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Intrinsics.Arm;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HuanTian.Common
 {
+    /// <summary>
+    /// 加密解密
+    /// </summary>
     public class EncryptionHelper
     {
         /// <summary>
