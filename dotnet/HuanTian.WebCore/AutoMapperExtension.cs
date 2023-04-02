@@ -13,6 +13,11 @@ namespace HuanTian.WebCore
 {
     public static class AutoMapperExtension
     {
+        /// <summary>
+        /// AutoMapper拓展
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
         public static IServiceCollection AddAutoMapperService(this IServiceCollection services)
         {
             //这里会通过反射自动注入的，先临时这样

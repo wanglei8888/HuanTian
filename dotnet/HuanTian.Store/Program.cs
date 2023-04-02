@@ -5,6 +5,7 @@ using HuanTian.EntityFrameworkCore;
 using HuanTian.Interface;
 using HuanTian.SqlSugar;
 using HuanTian.WebCore;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -19,14 +20,10 @@ namespace Huangtian.Store
         {
             var builder = WebApplication.CreateBuilder(args);
 
-
-            // Add services to the container.
-            builder.Services.AddSingleton(typeof(IRepository<>), typeof(SqlSugarRepository<>));
-            builder.Services.AddSingleton(new Appsettings(builder.Configuration));
-
+            //依赖注入集合
+            builder.Services.AddInject(builder.Configuration);
+            //动态Congtrole注入
             builder.Services.AddControllers().AddInject(Assembly.GetExecutingAssembly().GetName().Name);
-
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
             builder.Services.AddEndpointsApiExplorer();
 
@@ -56,23 +53,20 @@ namespace Huangtian.Store
                    options.Filters.Add<TemplateResultFilter>();
                    options.Filters.Add<HandlingExceptionFilter>();
                    options.Filters.Add(new AuthorizeFilter());
+                   //options.Filters.Add<IStartupFilter, StartupFilter>();
                });
             #endregion
 
             #region 数据库注入
 
             var dbType = SqlSugar.DbType.MySql;
-            //EntityFrameworkCore
+            // EntityFrameworkCore
             builder.Services.AddEntityFrameworkService(dbType);
-            //SqlSugar
+            // SqlSugar
             builder.Services.AddSqlSugarService(dbType);
 
             #endregion
             
-            #region AutoMapper
-            builder.Services.AddAutoMapperService();
-            #endregion
-
             #region Autofac
             builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
             {
@@ -81,10 +75,9 @@ namespace Huangtian.Store
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
             #endregion
 
-            #region JWT
-            builder.Services.AddJwt();
-            #endregion
+            builder.Services.AddAutoMapperService();
 
+            builder.Services.AddJwt();
 
             var app = builder.Build();
 
@@ -109,6 +102,7 @@ namespace Huangtian.Store
             {
                 endpoints.MapControllers();
             });
+
             app.Run();
         }
     }

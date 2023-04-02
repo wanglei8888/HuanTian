@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Reflection;
@@ -26,6 +27,21 @@ namespace HuanTian.Common
                 return dateTime.ToLocalTime().DateTime;
             else
                 return dateTime.DateTime;
+        }
+
+        /// <summary>
+        /// 刷新IConfiguration配置对象
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
+        public static IConfiguration Reload(this IConfiguration configuration)
+        {
+            if (App.RootServices == null) return configuration;
+
+            var newConfiguration = App.GetService<IConfiguration>(App.RootServices);
+            InternalApp.Configuration = newConfiguration;
+
+            return newConfiguration;
         }
 
         /// <summary>
