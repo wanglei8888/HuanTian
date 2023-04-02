@@ -1,11 +1,14 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using HuanTian.Common;
-using HuanTian.EntityFrameworkCore.MySql;
+using HuanTian.EntityFrameworkCore;
+using HuanTian.Interface;
+using HuanTian.SqlSugar;
 using HuanTian.WebCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
+
 using System.Reflection;
 
 namespace Huangtian.Store
@@ -16,8 +19,11 @@ namespace Huangtian.Store
         {
             var builder = WebApplication.CreateBuilder(args);
 
+
             // Add services to the container.
+            builder.Services.AddSingleton(typeof(IRepository<>), typeof(SqlSugarRepository<>));
             builder.Services.AddSingleton(new Appsettings(builder.Configuration));
+
             builder.Services.AddControllers().AddInject(Assembly.GetExecutingAssembly().GetName().Name);
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -39,9 +45,9 @@ namespace Huangtian.Store
 
             #region 日志服务
             //开发环境不需要写入日志
-            #if !DEBUG
+#if !DEBUG
             builder.Logging.AddLocalFileLogger(options => options.SaveDays = 7);
-            #endif
+#endif
             #endregion
 
             #region 全局过滤器  
@@ -53,17 +59,16 @@ namespace Huangtian.Store
                });
             #endregion
 
-            #region Sql注入
-            // my sql
-            var ConnectionStrings = Appsettings.Configuration["ConnectionStrings:MySqlConnection"];
-            builder.Services.AddDbContext<EfSqlContext>(options => options.UseMySql(ConnectionStrings,
-                ServerVersion.AutoDetect(ConnectionStrings)));
+            #region 数据库注入
 
-            // sql server
-            //var ConnectionStrings = Appsettings._configuration["ConnectionStrings:SqlServerConnection"];
-            //builder.Services.AddDbContext<EfSqlContext>(options => options.UseSqlServer(ConnectionStrings));
+            var dbType = SqlSugar.DbType.MySql;
+            //EntityFrameworkCore
+            builder.Services.AddEntityFrameworkService(dbType);
+            //SqlSugar
+            builder.Services.AddSqlSugarService(dbType);
+
             #endregion
-
+            
             #region AutoMapper
             builder.Services.AddAutoMapperService();
             #endregion
@@ -79,6 +84,7 @@ namespace Huangtian.Store
             #region JWT
             builder.Services.AddJwt();
             #endregion
+
 
             var app = builder.Build();
 
