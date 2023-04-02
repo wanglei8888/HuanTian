@@ -1,3 +1,5 @@
+本项目部分代码是参考Furion开源项目   官网地址:https://furion.baiqian.ltd/docs/category/appendix
+
 一：CodeFirst操作方式
 
     1、Domain文件夹 HuanTian.Domain项目新增实体表格 例如：NewTable
