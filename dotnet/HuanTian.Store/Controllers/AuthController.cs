@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using HuanTian.Common;
 using HuanTian.DtoModel;
-using HuanTian.EntityFrameworkCore.MySql;
+using HuanTian.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +36,7 @@ namespace Huangtian.Store.Controllers
             if (userInfo != null)
             {
                 output = _mapper.Map<LoginOutput>(userInfo);
-                output.token = JWTHelper.GetToken(EncryptionHelper.Encrypt(userInfo.ID.ToString()));
+                output.token = JWTHelper.GetToken(EncryptionHelper.Encrypt(userInfo.Id.ToString()));
                 return APIResult.Success().SetData(output);
             }
             else

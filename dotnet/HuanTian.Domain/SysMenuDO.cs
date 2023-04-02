@@ -14,7 +14,6 @@ namespace HuanTian.Domain
     /// 系统菜单表
     /// </summary>
     [Description("系统菜单表")]
-    [Table("SysMenu")]
     public class SysMenuDO
     {
         /// <summary>
@@ -22,7 +21,7 @@ namespace HuanTian.Domain
         /// </summary>
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; }
+        public int Id { get; set; }
         /// <summary>
         /// 菜单父级ID
         /// </summary>

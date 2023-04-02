@@ -8,12 +8,11 @@ namespace HuanTian.Domain
     /// 系统用户权限表
     /// </summary>
     [Description("系统用户权限表")]
-    [Table("SysUserRole")]
     public class SysUserRoleDO
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; }
+        public int Id { get; set; }
         /// <summary>
         /// 用户ID
         /// </summary>

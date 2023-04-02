@@ -9,7 +9,6 @@ namespace HuanTian.Domain
     /// 系统角色信息表
     /// </summary>
     [Description("系统角色信息表")]
-    [Table("SysRoleInfo")]
     public class SysRoleInfoDO
     {
         /// <summary>
@@ -18,7 +17,7 @@ namespace HuanTian.Domain
         [Key]
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; }
+        public int Id { get; set; }
         /// <summary>
         /// 角色名字
         /// </summary>

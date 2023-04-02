@@ -1,21 +1,31 @@
 ﻿using HuanTian.Domain;
+using HuanTian.EntityFrameworkCore;
+using HuanTian.Interface;
 using HuanTian.WebCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Huangtian.Store
 {
     [ApiDescriptionSettings(Name = "Test", Order = 100)]
     public class DynamicApi : IDynamicApiController
     {
+        //依赖注入数据库仓储访问方式
+        private readonly IRepository<SysUserInfoDO> _repository;
+        public DynamicApi(IRepository<SysUserInfoDO> repository)
+        {
+            _repository = repository;
+        }
         /// <summary>
         /// 测试方法
         /// </summary>
         /// <returns></returns>
-        //[Authorize]
+        [AllowAnonymous]
         [HttpGet]
-        public dynamic Name()
+        public async Task<dynamic> NameAsync()
         {
+            var list = await _repository.GetAllAsync(t => t.Name != "");
             //throw new Exception("test123");
             return new SysMenuDO();
         }

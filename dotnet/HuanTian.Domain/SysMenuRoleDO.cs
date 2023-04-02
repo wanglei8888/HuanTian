@@ -14,12 +14,11 @@ namespace HuanTian.Domain
     /// 系统菜单权限表
     /// </summary>
     [Description("系统菜单权限表")]
-    [Table("SysMneuRole")]
-    public class SysMneuRoleDO
+    public class SysMenuRoleDO
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; }
+        public int Id { get; set; }
         /// <summary>
         /// 菜单ID
         /// </summary>

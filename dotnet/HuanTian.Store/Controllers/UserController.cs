@@ -1,7 +1,6 @@
 using HuanTian.DtoModel;
-using HuanTian.EntityFrameworkCore.MySql;
+using HuanTian.EntityFrameworkCore;
 using HuanTian.Interface;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 

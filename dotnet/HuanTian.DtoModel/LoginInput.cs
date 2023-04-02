@@ -15,14 +15,14 @@ namespace HuanTian.DtoModel
         public string? password { get; set; }
         
     }
-    public class LoginOutput: UserInfoDO
+    public class LoginOutput: SysUserInfoDO
     { 
         public string? token { get; set; }
     }
     public class LoginProfile : Profile
     {
         public LoginProfile() {
-            CreateMap<UserInfoDO, LoginOutput>();
+            CreateMap<SysUserInfoDO, LoginOutput>();
                // .ForMember(x=>x.RoleId,b=> b.MapFrom(q => q.Deleted));
         }
         
