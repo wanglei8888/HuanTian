@@ -20,7 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HuanTian.Common\HuanTian.Common.csproj" />
     <ProjectReference Include="..\HuanTian.Domain\HuanTian.Domain.csproj" />
+    <ProjectReference Include="..\HuanTian.Interface\HuanTian.Interface.csproj" />
   </ItemGroup>
 
 </Project>

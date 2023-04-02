@@ -1,18 +1,14 @@
-﻿using HuanTian.Domain;
+﻿using HuanTian.Common;
+using HuanTian.Domain;
+using HuanTian.Domain.Base;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace HuanTian.EntityFrameworkCore.MySql
+namespace HuanTian.EntityFrameworkCore
 {
     public class EfSqlContext : DbContext
     {
-        public DbSet<FestivalInfoDO> FestivalInfoDO { get; set; }
-        public DbSet<UserInfoDO> UserInfoDO { get; set; }
-        public DbSet<SysMneuRoleDO> SysMneuRoleDO { get; set; }
+        public DbSet<SysUserInfoDO> UserInfoDO { get; set; }
+        public DbSet<SysMenuRoleDO> SysMneuRoleDO { get; set; }
         public DbSet<SysRoleInfoDO> SysRoleInfoDO { get; set; }
         public DbSet<SysUserRoleDO> SysUserRoleDO { get; set; }
         public DbSet<SysMenuDO> SysMenuDO { get; set; }
@@ -29,19 +25,36 @@ namespace HuanTian.EntityFrameworkCore.MySql
 
         }
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    if (!optionsBuilder.IsConfigured)
-        //    {
-        //        string connStringMySql = @"Server=localhost;DataBase=CoreMvcTestDB;uid=root;pwd=123456;pooling=true;port=3306;Charset=utf8;sslMode=None;";
-        //        //参数除了连接字符串，还要规定版本
-        //        //optionsBuilder.UseMySql(connStringMySql, Microsoft.EntityFrameworkCore.ServerVersion.Create(new Version(8, 0, 19), ServerType.MySql));
-        //        //一般会这样写：
-        //        optionsBuilder.UseMySql(connStringMySql, ServerVersion.AutoDetect(connStringMySql));
-        //        //optionsBuilder.UseMySql("Server=yourserver;Port=yourport;Database=yourdatabasename;Uid=youruser;Pwd=yourpwd;", ServerVersion.AutoDetect("Server=yourserver;Port=yourport;Database=yourdatabasename;Uid=youruser;Pwd=yourpwd;"));
-        //    }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // 获取所有实体类型
+            var entityTypes = modelBuilder.Model.GetEntityTypes();
 
-        //}
+            foreach (var entity in modelBuilder.Model.GetEntityTypes())
+            {
+                if (Appsettings.Configuration["SqlSettings:GlobalSettingsTableName"] == "true") 
+                {
+                    // 全局设置表名生成规则
+                    if (entity.ClrType.Name.EndsWith("DO"))
+                    {
+                        // 替换DO后缀 并将属性名转换成小写，并将驼峰命名方式转换为下划线命名方式
+                        var tableName = entity.ClrType.Name.Replace("DO", "").ToLowerHump();
+                        entity.SetTableName(tableName);
+                    }
+                }
+                    
+                if (Appsettings.Configuration["SqlSettings:GlobalSettingsColumnName"] == "true") 
+                {
+                    // 全局设置列名生成规则
+                    foreach (var property in entity.GetProperties())
+                    {
+                        // 将属性名转换成小写，并将驼峰命名方式转换为下划线命名方式
+                        property.SetColumnName(property.Name.ToLowerHump());
+                    }
+                }
+                   
+            }
+        }
         #endregion
     }
 }
