@@ -509,7 +509,12 @@ namespace HuanTian.Common
                 ? type.GetCustomAttribute<TAttribute>(inherit)
                 : default;
         }
+        /// <summary>
+        /// string将属性名转换成小写，并将驼峰命名方式转换为下划线命名方式
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string ToLowerHump(this string value) => string.Concat(value.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString())).ToLower();
 
-        
     }
 }
