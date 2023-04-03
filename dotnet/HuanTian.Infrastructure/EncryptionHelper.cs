@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace HuanTian.Common
+namespace HuanTian.Infrastructure
 {
     /// <summary>
     /// 加密解密

@@ -1,4 +1,4 @@
-﻿using HuanTian.Common;
+﻿using HuanTian.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;

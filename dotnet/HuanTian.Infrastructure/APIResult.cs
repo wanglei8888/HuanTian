@@ -1,4 +1,4 @@
-﻿namespace HuanTian.Common
+﻿namespace HuanTian.Infrastructure
 {
     /// <summary>
     /// 接口返回结果模板

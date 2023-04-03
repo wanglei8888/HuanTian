@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Concurrent;
 
-namespace HuanTian.Common
+namespace HuanTian.Infrastructure
 {
     public static class App
     {

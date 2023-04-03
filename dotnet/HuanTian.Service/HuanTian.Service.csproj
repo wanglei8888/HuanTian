@@ -8,9 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HuanTian.DtoModel\HuanTian.DtoModel.csproj" />
+    <ProjectReference Include="..\HuanTian.Entities\HuanTian.Entities.csproj" />
     <ProjectReference Include="..\HuanTian.EntityFrameworkCore\HuanTian.EntityFrameworkCore.csproj" />
-    <ProjectReference Include="..\HuanTian.Interface\HuanTian.Interface.csproj" />
   </ItemGroup>
 
 </Project>

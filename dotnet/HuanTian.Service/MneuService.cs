@@ -1,6 +1,5 @@
-﻿using HuanTian.DtoModel;
+﻿using HuanTian.Entities;
 using HuanTian.EntityFrameworkCore;
-using HuanTian.Interface;
 using Microsoft.EntityFrameworkCore;
 
 namespace HuanTian.Service

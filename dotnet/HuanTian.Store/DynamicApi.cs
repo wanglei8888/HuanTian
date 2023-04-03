@@ -1,5 +1,5 @@
-﻿using HuanTian.Domain;
-using HuanTian.Interface;
+﻿using HuanTian.Entities;
+using HuanTian.Infrastructure;
 using HuanTian.WebCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

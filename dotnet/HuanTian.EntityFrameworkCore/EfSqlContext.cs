@@ -1,6 +1,5 @@
-﻿using HuanTian.Common;
-using HuanTian.Domain;
-using HuanTian.Domain.Base;
+﻿using HuanTian.Entities;
+using HuanTian.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 namespace HuanTian.EntityFrameworkCore

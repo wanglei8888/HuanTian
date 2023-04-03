@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using HuanTian.Common;
-using HuanTian.DtoModel;
+using HuanTian.Infrastructure;
+using HuanTian.Entities;
 using HuanTian.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

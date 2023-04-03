@@ -28,7 +28,7 @@ using NPOI.XSSF.UserModel;
 using System.Data;
 using System.Text;
 
-namespace HuanTian.Common
+namespace HuanTian.Infrastructure
 {
     /// <summary>
     /// 导出帮助类

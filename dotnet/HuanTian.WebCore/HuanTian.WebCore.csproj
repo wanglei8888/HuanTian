@@ -8,20 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="Autofac.Extras.DynamicProxy" Version="6.0.1" />
-    <PackageReference Include="AutoMapper" Version="12.0.0" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.11" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="7.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\HuanTian.Common\HuanTian.Common.csproj" />
-    <ProjectReference Include="..\HuanTian.DtoModel\HuanTian.DtoModel.csproj" />
     <ProjectReference Include="..\HuanTian.EntityFrameworkCore\HuanTian.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\HuanTian.Infrastructure\HuanTian.Infrastructure.csproj" />
     <ProjectReference Include="..\HuanTian.SqlSugar\HuanTian.SqlSugar.csproj" />
   </ItemGroup>
 

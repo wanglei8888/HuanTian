@@ -22,8 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HuanTian.Domain\HuanTian.Domain.csproj" />
-    <ProjectReference Include="..\HuanTian.Interface\HuanTian.Interface.csproj" />
     <ProjectReference Include="..\HuanTian.Service\HuanTian.Service.csproj" />
     <ProjectReference Include="..\HuanTian.WebCore\HuanTian.WebCore.csproj" />
   </ItemGroup>

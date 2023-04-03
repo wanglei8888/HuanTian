@@ -1,6 +1,6 @@
-using HuanTian.DtoModel;
+using HuanTian.Entities;
 using HuanTian.EntityFrameworkCore;
-using HuanTian.Interface;
+using HuanTian.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 

@@ -28,7 +28,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using HuanTian.Common;
+using HuanTian.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace HuanTian.WebCore

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Runtime;
 
-namespace HuanTian.Common
+namespace HuanTian.Infrastructure
 {
     /// <summary>
     /// Appsetting操作类

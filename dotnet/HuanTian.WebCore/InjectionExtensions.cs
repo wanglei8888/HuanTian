@@ -23,8 +23,7 @@
  * 版本：V1.0.1
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
-using HuanTian.Common;
-using HuanTian.Interface;
+using HuanTian.Infrastructure;
 using HuanTian.SqlSugar;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

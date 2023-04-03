@@ -1,16 +1,8 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using HuanTian.Common;
-using HuanTian.EntityFrameworkCore;
-using HuanTian.Interface;
-using HuanTian.SqlSugar;
 using HuanTian.WebCore;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.EntityFrameworkCore;
-
-using System.Reflection;
 
 namespace Huangtian.Store
 {

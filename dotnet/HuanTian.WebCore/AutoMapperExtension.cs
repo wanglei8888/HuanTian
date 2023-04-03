@@ -41,12 +41,12 @@ namespace HuanTian.WebCore
         {
             //这里会通过反射自动注入的，先临时这样
 
-            var profileList = GetClassByBaseClassesAndInterfaces("HuanTian.DtoModel", typeof(Profile));
+            var profileList = GetClassByBaseClassesAndInterfaces("HuanTian.Entities", typeof(Profile));
             //profileList.Add(typeof(LoginProfile));
             services.AddAutoMapper(profileList.ToArray());
 
             #region 依赖注入-第二种方式注入在Stantup
-            //services.AddAutoMapper(Assembly.Load("HuanTian.DtoModel")
+            //services.AddAutoMapper(Assembly.Load("HuanTian.Entities")
             //    .DefinedTypes.Where(t => typeof(Profile).GetTypeInfo().IsAssignableFrom(t.AsType()))
             //    .Select(t => t.AsType()).ToArray());
             #endregion 

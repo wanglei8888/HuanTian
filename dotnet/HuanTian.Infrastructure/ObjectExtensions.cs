@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace HuanTian.Common
+namespace HuanTian.Infrastructure
 {
     /// <summary>
     /// 对象拓展类

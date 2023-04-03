@@ -27,7 +27,7 @@ using System.Collections;
 using System.Data;
 using System.Reflection;
 
-namespace HuanTian.Common
+namespace HuanTian.Infrastructure
 {
     /// <summary>
     /// List集合帮助类

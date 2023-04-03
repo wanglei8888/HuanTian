@@ -23,250 +23,205 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreateTime")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("create_time");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Creater")
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("creater");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Icon")
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("icon");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<bool?>("KeepAlive")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("keep_alive");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("name");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<int>("ParentId")
-                        .HasColumnType("int")
-                        .HasColumnName("parent_id");
+                        .HasColumnType("int");
 
                     b.Property<string>("Path")
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("path");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Title")
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("title");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<DateTime>("UpdateTime")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("update_time");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Updater")
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("updater");
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("sys_menu");
+                    b.ToTable("SysMenuDO");
                 });
 
             modelBuilder.Entity("HuanTian.Domain.SysMenuRoleDO", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreateTime")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("create_time");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Creater")
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("creater");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<int>("MenuId")
-                        .HasColumnType("int")
-                        .HasColumnName("menu_id");
+                        .HasColumnType("int");
 
                     b.Property<int>("RoleId")
-                        .HasColumnType("int")
-                        .HasColumnName("role_id");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdateTime")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("update_time");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Updater")
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("updater");
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("sys_menu_role");
+                    b.ToTable("SysMneuRoleDO");
                 });
 
             modelBuilder.Entity("HuanTian.Domain.SysRoleInfoDO", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreateTime")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("create_time");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Creater")
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("creater");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("RoleName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("role_name");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<DateTime>("UpdateTime")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("update_time");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Updater")
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("updater");
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("sys_role_info");
+                    b.ToTable("SysRoleInfoDO");
                 });
 
             modelBuilder.Entity("HuanTian.Domain.SysUserInfoDO", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
                     b.Property<string>("Avatar")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("varchar(200)")
-                        .HasColumnName("avatar");
+                        .HasColumnType("varchar(200)");
 
                     b.Property<DateTime>("CreateTime")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("create_time");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("CreatorId")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("creator_id");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<int>("Deleted")
-                        .HasColumnType("int")
-                        .HasColumnName("deleted");
+                        .HasColumnType("int");
 
                     b.Property<int>("Langguage")
-                        .HasColumnType("int")
-                        .HasColumnName("langguage");
+                        .HasColumnType("int");
 
                     b.Property<string>("LastLoginIp")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("last_login_ip");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime>("LastLoginTime")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("last_login_time");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("name");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("password");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("varchar(200)")
-                        .HasColumnName("role_id");
+                        .HasColumnType("varchar(200)");
 
                     b.Property<int>("Status")
-                        .HasColumnType("int")
-                        .HasColumnName("status");
+                        .HasColumnType("int");
 
                     b.Property<string>("Telephone")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("telephone");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("user_name");
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("sys_user_info");
+                    b.ToTable("UserInfoDO");
                 });
 
             modelBuilder.Entity("HuanTian.Domain.SysUserRoleDO", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreateTime")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("create_time");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Creater")
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("creater");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<int>("RoleId")
-                        .HasColumnType("int")
-                        .HasColumnName("role_id");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdateTime")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("update_time");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Updater")
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("updater");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int")
-                        .HasColumnName("user_id");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("sys_user_role");
+                    b.ToTable("SysUserRoleDO");
                 });
 #pragma warning restore 612, 618
         }
