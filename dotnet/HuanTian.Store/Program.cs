@@ -23,7 +23,7 @@ namespace Huangtian.Store
             //依赖注入集合
             builder.Services.AddInject(builder.Configuration);
             //动态Congtrole注入
-            builder.Services.AddControllers().AddInject(Assembly.GetExecutingAssembly().GetName().Name);
+            builder.Services.AddControllers().AddInject();
 
             builder.Services.AddEndpointsApiExplorer();
 

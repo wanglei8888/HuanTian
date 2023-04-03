@@ -29,6 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -41,13 +42,27 @@ namespace HuanTian.WebCore
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddSwaggerService(this IServiceCollection services,string AppName) 
+        public static IServiceCollection AddSwaggerService(this IServiceCollection services) 
         {
             services.AddSwaggerGen(t =>
             {
-                t.SwaggerDoc("v1", new OpenApiInfo { Title = "皇天商店" });
-                var xmlFilename = $"{AppName}.xml";
-                t.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+                t.SwaggerDoc("v1", new OpenApiInfo 
+                { 
+                    Version = "1.0",
+                    Title = "huantian API 文档" ,
+                    Description = "基于.Net 6 搭建的 Web API框架",
+                    Contact =  new OpenApiContact 
+                    { 
+                        Name = "wanglei",
+                        Email = "271976304@qq.com",
+                        Url = new Uri(@"https://gitee.com/wanglei6688/wanglei")
+                    }
+                });
+                var files = Directory.GetFiles(AppContext.BaseDirectory,"*.xml");
+                foreach (var file in files) 
+                {
+                    t.IncludeXmlComments(file);
+                }
                 t.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "Value: Bearer {token}",
