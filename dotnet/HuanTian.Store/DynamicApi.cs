@@ -1,10 +1,8 @@
 ﻿using HuanTian.Domain;
-using HuanTian.EntityFrameworkCore;
 using HuanTian.Interface;
 using HuanTian.WebCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Huangtian.Store
 {
