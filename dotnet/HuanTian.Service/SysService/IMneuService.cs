@@ -1,6 +1,6 @@
 ﻿using HuanTian.Entities;
 
-namespace HuanTian.Service
+namespace HuanTian.Service.SysService
 {
     public interface IMneuService
     {

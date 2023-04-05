@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HuanTian.Service\HuanTian.Service.csproj" />
-    <ProjectReference Include="..\HuanTian.WebCore\HuanTian.WebCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

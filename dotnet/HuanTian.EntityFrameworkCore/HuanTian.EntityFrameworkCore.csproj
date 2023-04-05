@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HuanTian.Entities\HuanTian.Entities.csproj" />
+    <ProjectReference Include="..\HuanTian.Infrastructure\HuanTian.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

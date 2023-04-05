@@ -2,7 +2,7 @@
 using HuanTian.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace HuanTian.Service
+namespace HuanTian.Service.SysService
 {
     public class MneuService : IMneuService
     {

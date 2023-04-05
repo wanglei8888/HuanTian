@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-
-namespace HuanTian.Entities
+﻿namespace HuanTian.Entities
 {
     public class LoginInput
     {
@@ -18,12 +16,12 @@ namespace HuanTian.Entities
     { 
         public string? token { get; set; }
     }
-    public class LoginProfile : Profile
-    {
-        public LoginProfile() {
-            CreateMap<SysUserInfoDO, LoginOutput>();
-               // .ForMember(x=>x.RoleId,b=> b.MapFrom(q => q.Deleted));
-        }
+    //public class LoginProfile : Profile
+    //{
+    //    public LoginProfile() {
+    //        CreateMap<SysUserInfoDO, LoginOutput>();
+    //           // .ForMember(x=>x.RoleId,b=> b.MapFrom(q => q.Deleted));
+    //    }
         
-    }
+    //}
 }

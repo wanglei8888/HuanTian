@@ -8,8 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HuanTian.Entities\HuanTian.Entities.csproj" />
-    <ProjectReference Include="..\HuanTian.EntityFrameworkCore\HuanTian.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\HuanTian.WebCore\HuanTian.WebCore.csproj" />
   </ItemGroup>
 
 </Project>

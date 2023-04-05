@@ -49,7 +49,7 @@ namespace HuanTian.WebCore
         /// </summary>
         /// <param name="context">Http内容</param>
         /// <returns></returns>
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, IServiceProvider serviceProvider)
         {
             //try
             //{
