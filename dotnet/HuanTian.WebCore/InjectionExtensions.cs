@@ -31,23 +31,21 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HuanTian.WebCore
 {
-    public static class InjectionExtensions
-    {
-        /// <summary>
-        /// 依赖注入集合
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="configure"></param>
-        /// <returns>IServiceCollection</returns>
-        public static IServiceCollection AddInject(this IServiceCollection services, IConfiguration configuration)
-        {
-            InternalApp.Configuration = configuration;
-            InternalApp.InternalServices = services;
-            services.AddSingleton(typeof(IRepository<>), typeof(SqlSugarRepository<>));
-            services.AddSingleton(new Appsettings(configuration));
-            services.AddSingleton<IStartupFilter, StartupFilter>();
-            
-            return services;
-        }
-    }
+	public static class InjectionExtensions
+	{
+		/// <summary>
+		/// 依赖注入集合
+		/// </summary>
+		/// <param name="services"></param>
+		/// <param name="configure"></param>
+		/// <returns>IServiceCollection</returns>
+		public static IServiceCollection AddInject(this IServiceCollection services, IConfiguration configuration)
+		{
+			InternalApp.Configuration = configuration;
+			InternalApp.InternalServices = services;
+
+
+			return services;
+		}
+	}
 }

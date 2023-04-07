@@ -26,15 +26,15 @@ namespace HuanTian.Infrastructure
             };
             //Signature
             //取出私钥并以utf8编码字节输出
-            var secretByte = Encoding.UTF8.GetBytes(Appsettings.Configuration["JWTAuthentication:SecretKey"]);
+            var secretByte = Encoding.UTF8.GetBytes(App.Configuration["JWTAuthentication:SecretKey"]);
             //使用非对称算法对私钥进行加密
             var signingKey = new SymmetricSecurityKey(secretByte);
             //使用HmacSha256来验证加密后的私钥生成数字签名
             var signingCredentials = new SigningCredentials(signingKey, signingAlogorithm);
             //生成Token
             var Token = new JwtSecurityToken(
-                    issuer: Appsettings.Configuration["JWTAuthentication:Issuer"],        //发布者
-                    audience: Appsettings.Configuration["JWTAuthentication:Audience"],    //接收者
+                    issuer: App.Configuration["JWTAuthentication:Issuer"],        //发布者
+                    audience: App.Configuration["JWTAuthentication:Audience"],    //接收者
                     claims: claims,                                         //存放的用户信息
                     notBefore: DateTime.UtcNow,                             //发布时间
                     expires: DateTime.UtcNow.AddDays(1),                      //有效期设置为1天

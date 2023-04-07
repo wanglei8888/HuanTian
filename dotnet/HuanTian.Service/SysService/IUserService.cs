@@ -23,16 +23,13 @@
  * 版本：V1.0.1
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using HuanTian.Entities;
+using HuanTian.WebCore;
 
-namespace HuanTian.Service.SysService
+namespace HuanTian.Service
 {
-    public class IUserService
+    public interface IUserService
     {
-
+        IEnumerable<MenuOutput> Info();
     }
 }

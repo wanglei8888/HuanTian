@@ -40,7 +40,7 @@ namespace HuanTian.WebCore
         /// <returns></returns>
         public static IServiceCollection AddEntityFrameworkService(this IServiceCollection services, DbType dbType)
         {
-            var ConnectionStrings = Appsettings.Configuration["ConnectionStrings:MySqlConnection"];
+            var ConnectionStrings = App.Configuration["ConnectionStrings:MySqlConnection"];
             switch (dbType)
             {
                 case DbType.MySql:

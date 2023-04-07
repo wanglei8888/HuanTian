@@ -47,22 +47,22 @@ namespace HuanTian.WebCore
         {
             // 添加授权
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
+                .AddJwtBearer((Action<JwtBearerOptions>)(options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters()
                     {
                         // 验证发布者
                         ValidateIssuer = true,
-                        ValidIssuer = Appsettings.Configuration["JWTAuthentication:Issuer"],
+                        ValidIssuer = App.Configuration["JWTAuthentication:Issuer"],
                         // 验证接收者
                         ValidateAudience = true,
-                        ValidAudience = Appsettings.Configuration["JWTAuthentication:Audience"],
+                        ValidAudience = App.Configuration["JWTAuthentication:Audience"],
                         // 验证是否过期
                         ValidateLifetime = true,
                         // 验证私钥
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Appsettings.Configuration["JWTAuthentication:SecretKey"]))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes((string)App.Configuration["JWTAuthentication:SecretKey"]))
                     };
-                });
+                }));
 
             //启用全局授权
             if (enableGlobalAuthorize)

@@ -41,14 +41,14 @@ namespace HuanTian.WebCore
             var config = new ConnectionConfig()
             {
                 DbType = dbType, //数据库切换，需要改
-                ConnectionString = Appsettings.Configuration["ConnectionStrings:MySqlConnection"],
+                ConnectionString = App.Configuration["ConnectionStrings:MySqlConnection"],
                 IsAutoCloseConnection = true,
                 ConfigureExternalServices = new ConfigureExternalServices()
                 {
                     EntityNameService = (type, entity) =>
                     {
                         //全局设置表名
-                        if (Appsettings.Configuration["SqlSettings:GlobalSettingsTableName"] == "True")
+                        if (App.Configuration["SqlSettings:GlobalSettingsTableName"] == "True")
                         {
                             if (entity.DbTableName.EndsWith("DO"))
                             {
@@ -60,7 +60,7 @@ namespace HuanTian.WebCore
                     EntityService = (property, column) => 
                     {
                         //全局设置列名
-                        if (Appsettings.Configuration["SqlSettings:GlobalSettingsColumnName"] == "True")
+                        if (App.Configuration["SqlSettings:GlobalSettingsColumnName"] == "True")
                         {
                             // 将属性名转换成小写，并将驼峰命名方式转换为下划线命名方式
                             column.DbColumnName = column.DbColumnName.ToLowerHump();

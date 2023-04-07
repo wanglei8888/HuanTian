@@ -1,11 +1,12 @@
 ﻿using HuanTian.Entities;
 using HuanTian.EntityFrameworkCore;
+using HuanTian.WebCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace HuanTian.Service.SysService
+namespace HuanTian.Service
 {
-    public class MneuService : IMneuService
-    {
+    public class MneuService : IMneuService, IScoped
+	{
         private readonly EfSqlContext _mySqlContext;
         public MneuService(EfSqlContext mySqlContext)
         {

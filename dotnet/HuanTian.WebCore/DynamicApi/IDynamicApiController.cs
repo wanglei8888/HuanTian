@@ -25,7 +25,20 @@
 
 namespace HuanTian.WebCore
 {
-    [AttributeUsage(AttributeTargets.Class)]
-    public sealed class DynamicApiControllerAttribute : Attribute { }
-    
+    /// <summary>
+    /// 动态Api控制器依赖接口
+    /// </summary>
+    public interface IDynamicApiController { }
+    /// <summary>
+    /// 瞬时依赖注入
+    /// </summary>
+    public interface ITransient { }
+    /// <summary>
+    /// 作用域依赖注入
+    /// </summary>
+    public interface IScoped { }
+    /// <summary>
+    /// 单例依赖注入
+    /// </summary>
+    public interface ISingleton { }
 }

@@ -25,34 +25,36 @@
 #endregion << 版 本 注 释 >>
 using HuanTian.Entities;
 using HuanTian.EntityFrameworkCore;
+using HuanTian.WebCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.JsonWebTokens;
 
-namespace HuanTian.Service.SysService
+namespace HuanTian.Service
 {
-    public class UserService
-    {
+    public class UserService : IUserService, ISingleton
+	{
         private readonly ILogger<UserService> _logger;
         private readonly EfSqlContext _mySqlContext;
-        private readonly IMneuService _mneuService;
+        //private readonly IMneuService _mneuService;
 
+        private DateTime _lastLogin;
         public UserService(
             ILogger<UserService> logger,
-            EfSqlContext mySqlContext,
-            IMneuService mneuService)
+            EfSqlContext mySqlContext
+            //IMneuService mneuService
+)
         {
             _logger = logger;
             _mySqlContext = mySqlContext;
-            _mneuService = mneuService;
+           // _mneuService = mneuService;
+            _lastLogin = DateTime.Now;
         }
 
-        //[Authorize]
-        [HttpGet]
-        public async Task<IEnumerable<MenuOutput>> Info()
+        public IEnumerable<MenuOutput> Info()
         {
-
+            _logger.LogInformation(_lastLogin.ToString("HH-mm-ss-fffffff"));
             //var user = HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sid)?.Value;
             //var menu = await _mneuService.GetUserMenu(1);
             //return menu;

@@ -12,9 +12,14 @@ namespace Huangtian.Store
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            //依赖注入集合
-            builder.Services.AddInject(builder.Configuration);
-            //动态Congtrole注入
+			var containerBuilder = new ContainerBuilder();
+			containerBuilder.RegisterModule(new AutofacRegister());
+			var container = containerBuilder.Build();
+
+			var registeredServices = container.ComponentRegistry.Registrations;
+			// 静态类存储
+			builder.Services.AddInject(builder.Configuration);
+            // 动态Congtrole注入
             builder.Services.AddControllers().AddInject();
 
             builder.Services.AddEndpointsApiExplorer();
@@ -51,20 +56,20 @@ namespace Huangtian.Store
 
             #region 数据库注入
 
-            var dbType = SqlSugar.DbType.MySql;
+            var dbType = SqlSugar.DbType.SqlServer;
             // EntityFrameworkCore
             builder.Services.AddEntityFrameworkService(dbType);
             // SqlSugar
             builder.Services.AddSqlSugarService(dbType);
 
-            #endregion
-            
-            #region Autofac
-            builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
-            {
-                containerBuilder.RegisterModule<AutofacRegister>(); // Autofac
-            });
-            builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+			#endregion
+
+			#region Autofac
+			builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+			{
+				containerBuilder.RegisterModule(new AutofacRegister()); // Autofac
+			});
+			builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
             #endregion
 
             builder.Services.AddAutoMapperService();
@@ -72,8 +77,7 @@ namespace Huangtian.Store
             builder.Services.AddJwt();
 
             var app = builder.Build();
-
-            //自定义中间件
+            // 自定义中间件
             app.UseMiddleware<CustomMiddleware>();
 
             // Configure the HTTP request pipeline.
@@ -94,8 +98,8 @@ namespace Huangtian.Store
             {
                 endpoints.MapControllers();
             });
-
-            app.Run();
+			//var registeredServices = app.ComponentRegistry.Registrations;
+			app.Run();
         }
     }
 }

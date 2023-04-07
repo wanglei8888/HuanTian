@@ -106,7 +106,7 @@ namespace HuanTian.Infrastructure
         }
         public static TOptions GetConfig<TOptions>(string path, bool loadPostConfigure = false)
         {
-            var options = Appsettings.Configuration.GetSection(path).Get<TOptions>();
+            var options = App.Configuration.GetSection(path).Get<TOptions>();
 
             // 加载默认选项配置
             if (loadPostConfigure)
@@ -115,7 +115,7 @@ namespace HuanTian.Infrastructure
                 if (postConfigure != null)
                 {
                     options ??= Activator.CreateInstance<TOptions>();
-                    postConfigure.Invoke(options, new object[] { options, Appsettings.Configuration });
+                    postConfigure.Invoke(options, new object[] { options, App.Configuration });
                 }
             }
 
