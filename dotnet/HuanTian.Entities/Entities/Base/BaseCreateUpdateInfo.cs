@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using Microsoft.EntityFrameworkCore;
 
 namespace HuanTian.Entities
 {
@@ -15,23 +16,23 @@ namespace HuanTian.Entities
         /// 创建人
         /// </summary>
         [MaxLength(50)]
-        [Description("创建人")]
+        [Comment("创建人")]
         public string? Creater { get; set; }
         /// <summary>
         /// 创建时间
         /// </summary>
-        [Description("创建时间")]
+        [Comment("创建时间")]
         public DateTime CreateTime { get; set; }
         /// <summary>
         /// 修改人
         /// </summary>
         [MaxLength(50)]
-        [Description("修改人")]
+        [Comment("修改人")]
         public string? Updater { get; set; }
         /// <summary>
         /// 修改时间
         /// </summary>
-        [Description("修改时间")]
+        [Comment("修改时间")]
         public DateTime UpdateTime { get; set; }
     }
 }

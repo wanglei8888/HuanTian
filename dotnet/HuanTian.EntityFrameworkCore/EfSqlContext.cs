@@ -31,7 +31,7 @@ namespace HuanTian.EntityFrameworkCore
 
             foreach (var entity in modelBuilder.Model.GetEntityTypes())
             {
-                if (App.Configuration["SqlSettings:GlobalSettingsTableName"] == "true") 
+                if (App.Configuration["SqlSettings:GlobalSettingsTableName"] == "True") 
                 {
                     // 全局设置表名生成规则
                     if (entity.ClrType.Name.EndsWith("DO"))
@@ -42,7 +42,7 @@ namespace HuanTian.EntityFrameworkCore
                     }
                 }
                     
-                if (App.Configuration["SqlSettings:GlobalSettingsColumnName"] == "true") 
+                if (App.Configuration["SqlSettings:GlobalSettingsColumnName"] == "True") 
                 {
                     // 全局设置列名生成规则
                     foreach (var property in entity.GetProperties())
