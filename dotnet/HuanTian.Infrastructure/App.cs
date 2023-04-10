@@ -7,6 +7,11 @@ namespace HuanTian.Infrastructure
 {
     public static class App
     {
+        static App()
+        {
+            // 未托管的对象
+            UnmanagedObjects = new ConcurrentBag<IDisposable>();
+        }
         /// <summary>
         /// 全局配置选项
         /// </summary>
@@ -27,6 +32,15 @@ namespace HuanTian.Infrastructure
         /// </summary>
         public static readonly ConcurrentBag<IDisposable> UnmanagedObjects;
 
+        /// <summary>
+        /// GC 回收默认间隔
+        /// </summary>
+        private const int GC_COLLECT_INTERVAL_SECONDS = 5;
+
+        /// <summary>
+        /// 记录最近 GC 回收时间
+        /// </summary>
+        private static DateTime? LastGCCollectTime { get; set; }
 
         /// <summary>
         /// 获取请求生存周期的服务
@@ -59,6 +73,7 @@ namespace HuanTian.Infrastructure
             //// 处理控制台应用程序
             //if (HostEnvironment == default) return RootServices;
 
+            var asd1 = InternalApp.InternalServices.Where(t=>t.ServiceType.Name.Contains("Service"));
             // 第一选择，判断是否是单例注册且单例服务不为空，如果是直接返回根服务提供器
             if (RootServices != null && InternalApp.InternalServices.Where(u => u.ServiceType == (serviceType.IsGenericType ? serviceType.GetGenericTypeDefinition() : serviceType))
                                                                     .Any(u => u.Lifetime == ServiceLifetime.Singleton)) return RootServices;
@@ -70,14 +85,14 @@ namespace HuanTian.Infrastructure
             else if (RootServices != null)
             {
                 var scoped = RootServices.CreateScope();
-                // UnmanagedObjects.Add(scoped);
+                UnmanagedObjects.Add(scoped);
                 return scoped.ServiceProvider;
             }
             // 第四选择，构建新的服务对象（性能最差）
             else
             {
                 var serviceProvider = InternalApp.InternalServices.BuildServiceProvider();
-                // UnmanagedObjects.Add(serviceProvider);
+                UnmanagedObjects.Add(serviceProvider);
                 return serviceProvider;
             }
 
@@ -87,22 +102,27 @@ namespace HuanTian.Infrastructure
         /// </summary>
         public static void DisposeUnmanagedObjects()
         {
-            //foreach (var dsp in UnmanagedObjects)
-            //{
-            //    try
-            //    {
-            //        dsp?.Dispose();
-            //    }
-            //    finally { }
-            //}
+            foreach (var dsp in UnmanagedObjects)
+            {
+                try
+                {
+                    dsp?.Dispose();
+                }
+                finally { }
+            }
 
-            //// 强制手动回收 GC 内存
-            //if (UnmanagedObjects.Any())
-            //{         
-            //   GC.Collect();     
-            //}
+            // 强制手动回收 GC 内存
+            if (UnmanagedObjects.Any())
+            {
+                var nowTime = DateTime.UtcNow;
+                if ((LastGCCollectTime == null || (nowTime - LastGCCollectTime.Value).TotalSeconds > GC_COLLECT_INTERVAL_SECONDS))
+                {
+                    LastGCCollectTime = nowTime;
+                    GC.Collect();
+                }
+            }
 
-            //UnmanagedObjects.Clear();
+            UnmanagedObjects.Clear();
         }
         public static TOptions GetConfig<TOptions>(string path, bool loadPostConfigure = false)
         {
@@ -121,6 +141,7 @@ namespace HuanTian.Infrastructure
 
             return options;
         }
+
         /// <summary>
         /// 处理获取对象异常问题
         /// </summary>
