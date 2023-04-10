@@ -23,16 +23,23 @@
  * 版本：V1.0.1
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
+using HuanTian.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace HuanTian.Service
 {
-    public class IAuthService
+    public interface IAuthService
     {
-
+        /// <summary>
+        /// 登陆
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<dynamic> Login(LoginInput input);
     }
 }

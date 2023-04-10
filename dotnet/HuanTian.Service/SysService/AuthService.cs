@@ -27,22 +27,24 @@ using AutoMapper;
 using HuanTian.Entities;
 using HuanTian.EntityFrameworkCore;
 using HuanTian.Infrastructure;
+using HuanTian.WebCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace HuanTian.Service
 {
-    public class AuthService
+    public class AuthService: IAuthService
     {
-        private readonly EfSqlContext _mySqlContext;
+        private readonly IRepository<SysUserInfoDO> _sysUserInfo;
         private readonly IMapper _mapper;
         public AuthService(
-            EfSqlContext mySqlContext,
+            IRepository<SysUserInfoDO> sysUserInfo,
             IMapper mapper
             )
         {
-            _mySqlContext = mySqlContext;
+            _sysUserInfo = sysUserInfo;
             _mapper = mapper;
         }
         /// <summary>
@@ -52,9 +54,9 @@ namespace HuanTian.Service
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost]
-        public async Task<APIResult> Login(LoginInput input)
+        public async Task<dynamic> Login(LoginInput input)
         {
-            var userInfo = await _mySqlContext.UserInfoDO.FirstOrDefaultAsync(t => t.UserName == input.username && t.Password == input.password);
+            var userInfo = await _sysUserInfo.FirstOrDefaultAsync(t => t.UserName == input.username && t.Password == input.password);
             LoginOutput output = new LoginOutput();
             if (userInfo != null)
             {

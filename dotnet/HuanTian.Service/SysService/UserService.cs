@@ -24,38 +24,39 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 using HuanTian.Entities;
-using HuanTian.EntityFrameworkCore;
 using HuanTian.WebCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace HuanTian.Service
 {
-    public class UserService : IUserService, ISingleton
-	{
+    /// <summary>
+    /// 用户信息服务
+    /// </summary>
+    public class UserService : IUserService,IDynamicApiController
+    {
         private readonly ILogger<UserService> _logger;
-        private readonly EfSqlContext _mySqlContext;
-        //private readonly IMneuService _mneuService;
+        private readonly IMneuService _mneuService;
+        private readonly IHttpContextAccessor _httpContext;
 
-        private DateTime _lastLogin;
         public UserService(
             ILogger<UserService> logger,
-            EfSqlContext mySqlContext
-            //IMneuService mneuService
+            IHttpContextAccessor httpContext,
+            IMneuService mneuService
 )
         {
             _logger = logger;
-            _mySqlContext = mySqlContext;
-           // _mneuService = mneuService;
-            _lastLogin = DateTime.Now;
+            _mneuService = mneuService;
+            _httpContext = httpContext;
         }
 
+        [AllowAnonymous]
         public IEnumerable<MenuOutput> Info()
         {
-            _logger.LogInformation(_lastLogin.ToString("HH-mm-ss-fffffff"));
-            //var user = HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sid)?.Value;
+            
+            var authHeader = _httpContext.HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+            var user = _httpContext.HttpContext.User.Claims.FirstOrDefault(u => u.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sid)?.Value;
             //var menu = await _mneuService.GetUserMenu(1);
             //return menu;
             return null;
