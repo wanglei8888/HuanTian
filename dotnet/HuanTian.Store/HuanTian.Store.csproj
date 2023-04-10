@@ -9,11 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Program - 副本.cs" />
-    <Compile Remove="Startup.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -38,6 +33,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="wwwroot\index-mini-profiler.html" />
   </ItemGroup>
 
 </Project>

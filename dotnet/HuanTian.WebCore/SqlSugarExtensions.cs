@@ -41,7 +41,7 @@ namespace HuanTian.WebCore
             var config = new ConnectionConfig()
             {
                 DbType = dbType, //数据库切换，需要改
-                ConnectionString = App.Configuration["ConnectionStrings:MySqlConnection"],
+                ConnectionString = App.Configuration[$"ConnectionStrings:{dbType}Connection"],
                 IsAutoCloseConnection = true,
                 ConfigureExternalServices = new ConfigureExternalServices()
                 {

@@ -19,14 +19,14 @@ namespace HuanTian.WebCore
         /// <summary>
         /// 控制器排序集合
         /// </summary>
-        internal static ConcurrentDictionary<string, int> ControllerOrderCollection { get; set; }
+        internal static ConcurrentDictionary<string, (string, int)> ControllerOrderCollection { get; set; }
 
         /// <summary>
         /// 构造函数
         /// </summary>
         static Penetrates()
         {
-            ControllerOrderCollection = new ConcurrentDictionary<string, int>();
+            ControllerOrderCollection = new ConcurrentDictionary<string, (string, int)>();
 
             VerbToHttpMethods = new ConcurrentDictionary<string, string>
             {

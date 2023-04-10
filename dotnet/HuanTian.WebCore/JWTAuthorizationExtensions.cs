@@ -23,17 +23,17 @@
  * 版本：V1.0.1
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
+using HuanTian.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
-using System.Text;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using HuanTian.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Authorization;
+using System.Text;
 
 namespace HuanTian.WebCore
 {
-    public static class JWTAuthorizationExtensions
+    public static class JwtAuthorizationExtensions
     {
         /// <summary>
         /// 添加 JWT 授权

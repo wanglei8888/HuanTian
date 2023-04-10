@@ -24,16 +24,14 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 using Autofac;
-using HuanTian.EntityFrameworkCore;
 using HuanTian.Infrastructure;
 using HuanTian.SqlSugar;
 using Microsoft.AspNetCore.Hosting;
-using Org.BouncyCastle.Crypto;
 using System.Reflection;
 
 namespace HuanTian.WebCore
 {
-	public class AutofacRegister : Autofac.Module
+    public class AutofacRegister : Autofac.Module
 	{
 		protected override void Load(ContainerBuilder builder)
 		{

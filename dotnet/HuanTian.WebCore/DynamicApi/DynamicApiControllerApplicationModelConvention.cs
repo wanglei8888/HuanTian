@@ -96,7 +96,7 @@ namespace HuanTian.WebCore
             ConfigureControllerRouteAttribute(controller, controllerApiDescriptionSettings);
 
             // 存储排序给 Swagger 使用
-            Penetrates.ControllerOrderCollection.TryAdd(controller.ControllerName, controllerApiDescriptionSettings?.Order ?? 0);
+            Penetrates.ControllerOrderCollection.TryAdd(controller.ControllerName, (controllerApiDescriptionSettings?.Tag ?? controller.ControllerName, controllerApiDescriptionSettings?.Order ?? 0));
 
             var actions = controller.Actions;
 

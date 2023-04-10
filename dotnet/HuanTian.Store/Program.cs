@@ -1,5 +1,5 @@
-﻿using Autofac;
-using Autofac.Extensions.DependencyInjection;
+﻿using HuanTian.Infrastructure;
+using HuanTian.SqlSugar;
 using HuanTian.WebCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -12,13 +12,8 @@ namespace Huangtian.Store
         {
             var builder = WebApplication.CreateBuilder(args);
 
-			var containerBuilder = new ContainerBuilder();
-			containerBuilder.RegisterModule(new AutofacRegister());
-			var container = containerBuilder.Build();
-
-			var registeredServices = container.ComponentRegistry.Registrations;
-			// 静态类存储
-			builder.Services.AddInject(builder.Configuration);
+            // 静态类存储
+            builder.Services.AddInject(builder.Configuration);
             // 动态Congtrole注入
             builder.Services.AddControllers().AddInject();
 
@@ -56,25 +51,33 @@ namespace Huangtian.Store
 
             #region 数据库注入
 
-            var dbType = SqlSugar.DbType.SqlServer;
+            var dbType = SqlSugar.DbType.MySql;
             // EntityFrameworkCore
             builder.Services.AddEntityFrameworkService(dbType);
             // SqlSugar
             builder.Services.AddSqlSugarService(dbType);
 
-			#endregion
+            #endregion
 
-			#region Autofac
-			builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
-			{
-				containerBuilder.RegisterModule(new AutofacRegister()); // Autofac
-			});
-			builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+            #region Autofac - 自动依赖注入
+            // Autofac
+            //builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+            //{
+            //    containerBuilder.RegisterModule(new AutofacRegister()); // Autofac
+            //});
+            //builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+            // 自动依赖注入,手写的 如果不符合需求，可以注释，使用autofac
+            builder.Services.AddScoped(typeof(IRepository<>), typeof(SqlSugarRepository<>));
+            builder.Services.AddSingleton<IStartupFilter, StartupFilter>();
+            builder.Services.AddAutoInjection();
             #endregion
 
             builder.Services.AddAutoMapperService();
 
             builder.Services.AddJwt();
+            // 注册Http服务
+            builder.Services.AddHttpContextAccessor();
 
             var app = builder.Build();
             // 自定义中间件
@@ -84,7 +87,7 @@ namespace Huangtian.Store
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(t => { SwaggerExtensions.BuildSwaggerUI(t); });
             }
 
             app.UseCors("cors");
@@ -98,8 +101,8 @@ namespace Huangtian.Store
             {
                 endpoints.MapControllers();
             });
-			//var registeredServices = app.ComponentRegistry.Registrations;
-			app.Run();
+
+            app.Run();
         }
     }
 }

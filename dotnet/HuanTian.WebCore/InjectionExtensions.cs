@@ -33,19 +33,19 @@ namespace HuanTian.WebCore
 {
 	public static class InjectionExtensions
 	{
-		/// <summary>
-		/// 依赖注入集合
-		/// </summary>
-		/// <param name="services"></param>
-		/// <param name="configure"></param>
-		/// <returns>IServiceCollection</returns>
-		public static IServiceCollection AddInject(this IServiceCollection services, IConfiguration configuration)
+        /// <summary>
+        /// 静态类存储
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configure"></param>
+        /// <returns>IServiceCollection</returns>
+        public static IServiceCollection AddInject(this IServiceCollection services, IConfiguration configuration)
 		{
 			InternalApp.Configuration = configuration;
 			InternalApp.InternalServices = services;
 
-
-			return services;
+            return services;
 		}
 	}
 }
+

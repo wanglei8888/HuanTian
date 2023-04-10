@@ -25,8 +25,8 @@
 #endregion << 版 本 注 释 >>
 using AutoMapper;
 using AutoMapper.Internal;
+using HuanTian.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace HuanTian.WebCore
 {
@@ -39,24 +39,16 @@ namespace HuanTian.WebCore
         /// <returns></returns>
         public static IServiceCollection AddAutoMapperService(this IServiceCollection services)
         {
-            //这里会通过反射自动注入的，先临时这样
-
+            //这里会通过反射自动注入的
             var profileList = GetClassByBaseClassesAndInterfaces("HuanTian.Entities", typeof(Profile));
             //profileList.Add(typeof(LoginProfile));
             services.AddAutoMapper(profileList.ToArray());
-
-            #region 依赖注入-第二种方式注入在Stantup
-            //services.AddAutoMapper(Assembly.Load("HuanTian.Entities")
-            //    .DefinedTypes.Where(t => typeof(Profile).GetTypeInfo().IsAssignableFrom(t.AsType()))
-            //    .Select(t => t.AsType()).ToArray());
-            #endregion 
             return services;
         }
 
         public static List<Type> GetClassByBaseClassesAndInterfaces(string assemblyFile, Type type)
         {
-            Assembly assembly = Assembly.Load(assemblyFile);
-
+            var assembly = AssemblyHelper.GetAssembly(assemblyFile);
             List<Type> resList = new List<Type>();
 
             List<Type> typeList = assembly.GetTypes().Where(m => m.IsClass).ToList();
