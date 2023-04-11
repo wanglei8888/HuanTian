@@ -53,7 +53,6 @@ namespace Huangtian.Store
 
             #region 数据库注入
 
-            var dbType = SqlSugar.DbType.MySql;
             // EntityFrameworkCore
             builder.Services.AddEntityFrameworkService();
             // SqlSugar

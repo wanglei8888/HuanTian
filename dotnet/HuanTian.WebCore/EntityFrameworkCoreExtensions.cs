@@ -41,7 +41,7 @@ namespace HuanTian.WebCore
         public static IServiceCollection AddEntityFrameworkService(this IServiceCollection services)
         {
             DbType dbType = (DbType)Enum.Parse(typeof(DbType), App.Configuration["SqlSettings:SqlType"]);
-            var ConnectionStrings = App.Configuration["ConnectionStrings:MySqlConnection"];
+            var ConnectionStrings = App.Configuration[$"ConnectionStrings:{dbType}Connection"];
             switch (dbType)
             {
                 case DbType.MySql:
