@@ -1,4 +1,5 @@
-﻿using HuanTian.Infrastructure;
+﻿using Autofac;
+using HuanTian.Infrastructure;
 using HuanTian.SqlSugar;
 using HuanTian.WebCore;
 using Microsoft.AspNetCore.Mvc;
@@ -68,15 +69,14 @@ namespace Huangtian.Store
             //{
             //    containerBuilder.RegisterModule(new AutofacRegister()); // Autofac
             //});
-            //builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+            //builder.Host.UseServiceProviderFactory(new Autofac.Extensions.DependencyInjection.AutofacServiceProviderFactory());
 
             // 自动依赖注入,手写的 如果不符合需求，可以注释，使用autofac
+            // .NET Core 的原生 DI 容器中不允许作用域注入在单例服务中
             builder.Services.AddScoped(typeof(IRepository<>), typeof(SqlSugarRepository<>));
             builder.Services.AddSingleton<IStartupFilter, StartupFilter>();
             builder.Services.AddAutoInjection();
             #endregion
-
-            builder.Services.AddAutoMapperService();
 
             builder.Services.AddJwt();
             // 注册Http服务

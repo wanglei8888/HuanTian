@@ -14,14 +14,7 @@
     }
     public class LoginOutput: SysUserInfoDO
     { 
-        public string? token { get; set; }
+        public string? Token { get; set; }
+        public new string? Password { get; set; }
     }
-    //public class LoginProfile : Profile
-    //{
-    //    public LoginProfile() {
-    //        CreateMap<SysUserInfoDO, LoginOutput>();
-    //           // .ForMember(x=>x.RoleId,b=> b.MapFrom(q => q.Deleted));
-    //    }
-        
-    //}
 }

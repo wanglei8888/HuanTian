@@ -43,8 +43,7 @@ namespace HuanTian.Service
         public UserService(
             ILogger<UserService> logger,
             IHttpContextAccessor httpContext,
-            IMneuService mneuService
-)
+            IMneuService mneuService)
         {
             _logger = logger;
             _mneuService = mneuService;

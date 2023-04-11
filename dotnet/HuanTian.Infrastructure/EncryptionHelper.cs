@@ -1,4 +1,6 @@
-﻿using System.Security.Cryptography;
+﻿using System.Buffers.Text;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace HuanTian.Infrastructure
@@ -9,7 +11,7 @@ namespace HuanTian.Infrastructure
     public class EncryptionHelper
     {
         /// <summary>
-        /// 加密算法
+        /// 普通随机加密算法
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
@@ -20,7 +22,7 @@ namespace HuanTian.Infrastructure
         }
 
         /// <summary>
-        /// 解密算法
+        /// 普通随机解密算法
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
@@ -124,6 +126,74 @@ namespace HuanTian.Infrastructure
             {
                 throw new Exception("SHA1加密出错：" + ex.Message);
             }
+        }
+
+        /// <summary>
+        /// AES加密 
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <param name="skey">16位长度key值</param>
+        /// <returns></returns>
+        public static string Encrypt(string text, string skey)
+        {
+            try
+            {
+                byte[] bytes = Encoding.UTF8.GetBytes(skey);
+                using Aes aes = Aes.Create();
+                using ICryptoTransform transform = aes.CreateEncryptor(bytes, aes.IV);
+                using MemoryStream memoryStream = new MemoryStream();
+                using (CryptoStream stream = new CryptoStream(memoryStream, transform, CryptoStreamMode.Write, leaveOpen: true))
+                {
+                    using StreamWriter streamWriter = new StreamWriter(stream, null, -1, leaveOpen: true);
+                    streamWriter.Write(text);
+                }
+
+                byte[] iV = aes.IV;
+                int num = iV.Length + (int)memoryStream.Length;
+                byte[] buffer = memoryStream.GetBuffer();
+                int bytesWritten = Base64.GetMaxEncodedToUtf8Length(num);
+                byte[] array = new byte[bytesWritten];
+                Unsafe.CopyBlock(ref array[0], ref iV[0], (uint)iV.Length);
+                Unsafe.CopyBlock(ref array[iV.Length], ref buffer[0], (uint)memoryStream.Length);
+                Base64.EncodeToUtf8InPlace(array, num, out bytesWritten);
+                return Encoding.ASCII.GetString(array.AsSpan().Slice(0, bytesWritten));
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
+          
+        }
+
+        /// <summary>
+        /// AES解密
+        /// </summary>
+        /// <param name="hash">加密值</param>
+        /// <param name="skey">16位长度key值</param>
+        /// <returns></returns>
+        public static string Decrypt(string hash, string skey)
+        {
+            try
+            {
+                byte[] array = Convert.FromBase64String(hash);
+                byte[] array2 = new byte[16];
+                byte[] array3 = new byte[array.Length - array2.Length];
+                Unsafe.CopyBlock(ref array2[0], ref array[0], (uint)array2.Length);
+                Unsafe.CopyBlock(ref array3[0], ref array[array2.Length], (uint)(array.Length - array2.Length));
+                byte[] bytes = Encoding.UTF8.GetBytes(skey);
+                using Aes aes = Aes.Create();
+                using ICryptoTransform transform = aes.CreateDecryptor(bytes, array2);
+                using MemoryStream stream = new MemoryStream(array3);
+                using CryptoStream stream2 = new CryptoStream(stream, transform, CryptoStreamMode.Read);
+                using StreamReader streamReader = new StreamReader(stream2);
+                return streamReader.ReadToEnd();
+            }
+            catch (Exception)
+            {
+
+                return string.Empty;
+            }
+           
         }
     }
 }

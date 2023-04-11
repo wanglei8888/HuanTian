@@ -24,9 +24,9 @@ namespace HuanTian.SqlSugar
             _db.Insertable(entity).ExecuteCommand();
         }
 
-        public Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+        public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return await _db.Queryable<TEntity>().FirstAsync(predicate);
         }
 
         public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate)

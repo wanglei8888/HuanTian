@@ -23,29 +23,23 @@
  * 版本：V1.0.1
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
-using AutoMapper;
 using HuanTian.Entities;
-using HuanTian.EntityFrameworkCore;
 using HuanTian.Infrastructure;
 using HuanTian.WebCore;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 
 namespace HuanTian.Service
 {
-    public class AuthService: IAuthService
+    public class AuthService: IAuthService,IDynamicApiController
     {
         private readonly IRepository<SysUserInfoDO> _sysUserInfo;
-        private readonly IMapper _mapper;
         public AuthService(
-            IRepository<SysUserInfoDO> sysUserInfo,
-            IMapper mapper
+            IRepository<SysUserInfoDO> sysUserInfo
             )
         {
             _sysUserInfo = sysUserInfo;
-            _mapper = mapper;
         }
         /// <summary>
         /// 获取登陆信息
@@ -56,19 +50,15 @@ namespace HuanTian.Service
         [HttpPost]
         public async Task<dynamic> Login(LoginInput input)
         {
-            var userInfo = await _sysUserInfo.FirstOrDefaultAsync(t => t.UserName == input.username && t.Password == input.password);
-            LoginOutput output = new LoginOutput();
-            if (userInfo != null)
-            {
-                output = _mapper.Map<LoginOutput>(userInfo);
-                output.token = JWTHelper.GetToken(EncryptionHelper.Encrypt(userInfo.Id.ToString()));
-                return APIResult.Success().SetData(output);
-            }
-            else
-            {
-                return APIResult.Error("登陆失败");
-            }
+            var userInfo = await _sysUserInfo.FirstOrDefaultAsync(t => t.UserName == input.username && t.Password == EncryptionHelper.SHA1(input.password));
+            if (userInfo == null) throw new Exception("用户账号密码错误");
 
+            var output = userInfo.Adapt<LoginOutput>();
+            output.Token = JWTHelper.GetToken(EncryptionHelper.Encrypt(userInfo.Id.ToString()));
+            // ant 前端需要  暂时先保留字段
+            output.Password = "";
+
+            return output;
         }
     }
 }
