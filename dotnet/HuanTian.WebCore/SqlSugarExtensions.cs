@@ -36,8 +36,9 @@ namespace HuanTian.WebCore
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddSqlSugarService(this IServiceCollection services, DbType dbType)
+        public static IServiceCollection AddSqlSugarService(this IServiceCollection services)
         {
+            DbType dbType = (DbType)Enum.Parse(typeof(DbType), App.Configuration["SqlSettings:SqlType"]);
             var config = new ConnectionConfig()
             {
                 DbType = dbType, //数据库切换，需要改

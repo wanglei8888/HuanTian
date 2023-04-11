@@ -73,60 +73,6 @@ namespace HuanTian.WebCore
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddSwaggerService(this IServiceCollection services)
-        {
-            //var num = 0;
-            //services.AddSwaggerGen(t =>
-            //{
-            //    num++;
-            //    t.SwaggerDoc("test1", new OpenApiInfo
-            //    {
-            //        Version = "2.0",
-            //        Title = "huantian API 文档",
-            //        Description = "基于.Net 6 搭建的 Web API框架",
-            //        Contact = new OpenApiContact
-            //        {
-            //            Name = "wanglei",
-            //            Email = "271976304@qq.com",
-            //            Url = new Uri(@"https://gitee.com/wanglei6688/wanglei")
-            //        }
-            //    });
-
-            //    LoadXmlComments(t);
-
-            //    ConfigureActionSequence(t);
-
-            //    CreateSwaggerDocs(t, num);
-            //    t.DocumentFilter<TagsOrderDocumentFilter>();
-
-            //    t.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-            //    {
-            //        Description = "Value: Bearer {token}",
-            //        Name = "Authorization",
-            //        In = ParameterLocation.Header,
-            //        Type = SecuritySchemeType.ApiKey,
-            //        Scheme = "Bearer"
-            //    });
-            //    t.AddSecurityRequirement(new OpenApiSecurityRequirement()
-            //    {{
-            //        new OpenApiSecurityScheme
-            //        {
-            //            Reference = new OpenApiReference
-            //            {
-            //                Type = ReferenceType.SecurityScheme,
-            //                Id = "Bearer"
-            //            }, Scheme = "oauth2", Name = "Bearer", In = ParameterLocation.Header }, new List<string>()
-            //        }
-
-            //        });
-            //});
-            return services;
-        }
-        /// <summary>
-        /// 添加Swagger中间件
-        /// </summary>
-        /// <param name="services"></param>
-        /// <returns></returns>
         public static void BuildSwaggerService(SwaggerGenOptions swaggerGenOptions, Action<SwaggerGenOptions> configure = null)
         {
             // 创建分组文档
@@ -183,7 +129,7 @@ namespace HuanTian.WebCore
             swaggerUIOptions.DocumentTitle = _swaggerSettings.DocumentTitle;
 
             // 配置UI地址（处理二级虚拟目录）
-            if (string.IsNullOrEmpty(_swaggerSettings.RoutePrefix))
+            if (!string.IsNullOrEmpty(_swaggerSettings.RoutePrefix))
             {
                swaggerUIOptions.RoutePrefix = _swaggerSettings.RoutePrefix ?? routePrefix ?? "api";
             }
