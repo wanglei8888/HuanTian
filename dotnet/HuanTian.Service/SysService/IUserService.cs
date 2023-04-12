@@ -30,6 +30,6 @@ namespace HuanTian.Service
 {
     public interface IUserService
     {
-        IEnumerable<MenuOutput> Info();
+        Task<IEnumerable<MenuOutput>> Info();
     }
 }

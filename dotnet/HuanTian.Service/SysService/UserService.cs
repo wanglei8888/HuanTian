@@ -50,15 +50,12 @@ namespace HuanTian.Service
             _httpContext = httpContext;
         }
 
-        [AllowAnonymous]
-        public IEnumerable<MenuOutput> Info()
+        public async Task<IEnumerable<MenuOutput>> Info()
         {
-            
             var authHeader = _httpContext.HttpContext.Request.Headers["Authorization"].FirstOrDefault();
             var user = _httpContext.HttpContext.User.Claims.FirstOrDefault(u => u.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sid)?.Value;
-            //var menu = await _mneuService.GetUserMenu(1);
-            //return menu;
-            return null;
+            var menu = await _mneuService.GetUserMenu(1);
+            return menu;
         }
     }
 }

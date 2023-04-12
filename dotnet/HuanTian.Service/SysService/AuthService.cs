@@ -50,7 +50,7 @@ namespace HuanTian.Service
         [HttpPost]
         public async Task<dynamic> Login(LoginInput input)
         {
-            var userInfo = await _sysUserInfo.FirstOrDefaultAsync(t => t.UserName == input.username && t.Password == EncryptionHelper.SHA1(input.password));
+            var userInfo = await _sysUserInfo.FirstOrDefaultAsync(t => t.UserName == input.UserName && t.Password == EncryptionHelper.SHA1(input.Password));
             if (userInfo == null) throw new Exception("用户账号密码错误");
 
             var output = userInfo.Adapt<LoginOutput>();
