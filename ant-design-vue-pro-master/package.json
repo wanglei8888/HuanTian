@@ -11,7 +11,7 @@
     "lint:nofix": "vue-cli-service lint --no-fix",
     "lint:js": "eslint src/**/*.js --fix",
     "lint:css": "stylelint src/**/*.*ss --fix  --custom-syntax postcss-less",
-    "prepare": "husky install"
+    "prepare": "cd .. && husky install superjsonweb/.husky"
   },
   "dependencies": {
     "@ant-design-vue/pro-layout": "^1.0.12",
