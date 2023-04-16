@@ -23,10 +23,9 @@
  * 版本：V1.0.1
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
-using HuanTian.Entities;
+using HuanTian.Infrastructure;
 using HuanTian.WebCore;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace HuanTian.Service
@@ -34,26 +33,28 @@ namespace HuanTian.Service
     /// <summary>
     /// 用户信息服务
     /// </summary>
-    public class UserService : IUserService,IDynamicApiController
+    public class UserService : IUserService, IDynamicApiController
     {
         private readonly ILogger<UserService> _logger;
         private readonly IMneuService _mneuService;
-        private readonly IHttpContextAccessor _httpContext;
 
         public UserService(
             ILogger<UserService> logger,
-            IHttpContextAccessor httpContext,
             IMneuService mneuService)
         {
             _logger = logger;
             _mneuService = mneuService;
-            _httpContext = httpContext;
         }
-
-        public async Task<IEnumerable<MenuOutput>> Info()
+        /// <summary>
+        /// 获取用户信息跟菜单信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<dynamic> Info()
         {
-            var authHeader = _httpContext.HttpContext.Request.Headers["Authorization"].FirstOrDefault();
-            var user = _httpContext.HttpContext.User.Claims.FirstOrDefault(u => u.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sid)?.Value;
+            var user = App.HttpContext.User.Claims.FirstOrDefault(u => u.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sid)?.Value;
+            // 解密
+            user = EncryptionHelper.Decrypt(user, CommonConst.UserToken);
             var menu = await _mneuService.GetUserMenu(1);
             return menu;
         }

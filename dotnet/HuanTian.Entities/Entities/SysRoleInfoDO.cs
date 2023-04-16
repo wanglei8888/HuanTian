@@ -26,6 +26,19 @@ namespace HuanTian.Entities
         [Comment("角色名字")]
         public string? RoleName { get; set; }
         /// <summary>
+        /// 角色描述
+        /// </summary>
+        [Required]
+        [MaxLength(200)]
+        [Comment("角色描述")]
+        public string Describe { get; set; }
+        /// <summary>
+        /// 角色状态
+        /// </summary>
+        [Required]
+        [Comment("角色状态")]
+        public int Status { get; set; }
+        /// <summary>
         /// 创建人
         /// </summary>
         [MaxLength(50)]
@@ -47,5 +60,10 @@ namespace HuanTian.Entities
         /// </summary>
         [Comment("修改时间")]
         public DateTime UpdateTime { get; set; }
+        /// <summary>
+        /// 是否删除
+        /// </summary>
+        [Comment("是否删除")]
+        public bool Deleted { get; set; }
     }
 }

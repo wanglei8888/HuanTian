@@ -32,14 +32,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HuanTian.Service
 {
+    /// <summary>
+    /// 登陆服务
+    /// </summary>
     public class AuthService: IAuthService,IDynamicApiController
     {
         private readonly IRepository<SysUserInfoDO> _sysUserInfo;
+        private readonly IRedisCache _redisCache;
         public AuthService(
-            IRepository<SysUserInfoDO> sysUserInfo
-            )
+            IRepository<SysUserInfoDO> sysUserInfo,
+            IRedisCache redisCache)  
         {
             _sysUserInfo = sysUserInfo;
+            _redisCache = redisCache;
         }
         /// <summary>
         /// 获取登陆信息
@@ -54,11 +59,24 @@ namespace HuanTian.Service
             if (userInfo == null) throw new Exception("用户账号密码错误");
 
             var output = userInfo.Adapt<LoginOutput>();
-            output.Token = JWTHelper.GetToken(EncryptionHelper.Encrypt(userInfo.Id.ToString()));
+            output.Token = JWTHelper.GetToken(EncryptionHelper.Encrypt(userInfo.Id.ToString(),CommonConst.UserToken));
             // ant 前端需要  暂时先保留字段
             output.Password = "";
 
             return output;
+        }
+        /// <summary>
+        /// 登出
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        [HttpPost]
+        public Task Logout()
+        {
+            // 登出操作，可以利用缓存进行白名单，黑名单验证
+            // 暂时不考虑实现该功能
+            // await _redisCache.SetAsync(userInfo.Id.ToString(), userInfo.UserName, TimeSpan.FromSeconds(10));
+            return Task.CompletedTask;
         }
     }
 }
