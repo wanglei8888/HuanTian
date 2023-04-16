@@ -31,8 +31,14 @@ using System.Threading.Tasks;
 
 namespace HuanTian.Entities.DtoModel
 {
+    /// <summary>
+    /// 分页返回对象
+    /// </summary>
     public class PagingEntity
     {
+        /// <summary>
+        /// 数据值
+        /// </summary>
         public object Data { get; set; }
         /// <summary>
         /// 每页条数

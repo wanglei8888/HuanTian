@@ -23,19 +23,10 @@
  * 版本：V1.0.1
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HuanTian.Entities.DtoModel
 {
-    public class TestData
-    {
-
-    }
-    public class Item
+    public class ProjectItem_Test
     {
         /// <summary>
         /// ID
@@ -67,5 +58,84 @@ namespace HuanTian.Entities.DtoModel
         /// </summary>
         public DateTime UpdatedAt { get; set; }
     }
+    /// <summary>
+    /// 日志实体类
+    /// </summary>
+    public class ActivityData_Test
+    {
+        /// <summary>
+        /// ID
+        /// </summary>
+        public int Id { get; set; }
 
+        /// <summary>
+        /// 用户信息
+        /// </summary>
+        public User_Test User { get; set; }
+
+        /// <summary>
+        /// 项目信息
+        /// </summary>
+        public Project_Test Project { get; set; }
+
+        /// <summary>
+        /// 时间
+        /// </summary>
+        public string Time { get; set; }
+    }
+
+    /// <summary>
+    /// 用户信息实体类
+    /// </summary>
+    public class User_Test
+    {
+        /// <summary>
+        /// 昵称
+        /// </summary>
+        public string Nickname { get; set; }
+
+        /// <summary>
+        /// 头像
+        /// </summary>
+        public string Avatar { get; set; }
+    }
+    public class Team_Test
+    { 
+        public string Id { get; set; }
+        /// <summary>
+        /// 头像
+        /// </summary>
+        public string Avatar { get; set; }
+        /// <summary>
+        /// 名称
+        /// </summary>
+        public string Name { get; set; }
+    }
+    /// <summary>
+    /// 项目信息实体类
+    /// </summary>
+    public class Project_Test
+    {
+        /// <summary>
+        /// 名称
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 操作
+        /// </summary>
+        public string Action { get; set; }
+
+        /// <summary>
+        /// 事件
+        /// </summary>
+        public string Event { get; set; }
+    }
+    public class RadarDataItem_Test
+    {
+        public string Item { get; set; }
+        public int People { get; set; }
+        public int Group { get; set; }
+        public int Department { get; set; }
+    }
 }

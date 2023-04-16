@@ -137,7 +137,8 @@ import { mapState } from 'vuex'
 import { PageHeaderWrapper } from '@ant-design-vue/pro-layout'
 import { Radar } from '@/components'
 
-import { getRoleList, getServiceList } from '@/api/manage'
+// import { getRoleList, getServiceList } from '@/api/manage'
+import { getRoleList } from '@/api/manage'
 
 const DataSet = require('@antv/data-set')
 
@@ -223,9 +224,9 @@ export default {
       // console.log('workplace -> call getRoleList()', res)
     })
 
-    getServiceList().then(res => {
-      // console.log('workplace -> call getServiceList()', res)
-    })
+    // getServiceList().then(res => {
+    //   // console.log('workplace -> call getServiceList()', res)
+    // })
   },
   mounted () {
     this.getProjects()
@@ -257,11 +258,10 @@ export default {
         const dv = new DataSet.View().source(res.result)
         dv.transform({
           type: 'fold',
-          fields: ['个人', '团队', '部门'],
+          fields: ['people', 'group', 'department'],
           key: 'user',
           value: 'score'
         })
-
         this.radarData = dv.rows
         this.radarLoading = false
       })
