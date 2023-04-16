@@ -23,6 +23,7 @@
 		<PackageReference Include="NPOI" Version="2.6.0" />
 		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.2" />
 		<PackageReference Include="SqlSugarCore" Version="5.1.4.64" />
+		<PackageReference Include="StackExchange.Redis" Version="2.6.104" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
 	</ItemGroup>
 </Project>

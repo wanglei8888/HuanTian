@@ -90,8 +90,8 @@ namespace HuanTian.WebCore
             // 增加鉴权认证
             swaggerGenOptions.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                Description = "Value: Bearer {token}",
-                Name = "Authorization",
+                Description = "Value:{token}",
+                Name = App.Configuration["AppSettings:ApiHeard"],
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.ApiKey,
                 Scheme = "Bearer"

@@ -61,6 +61,19 @@ namespace HuanTian.WebCore
                         ValidateLifetime = true,
                         // 验证私钥
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes((string)App.Configuration["JWTAuthentication:SecretKey"]))
+
+                    };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            // 设置jwt认证信息不需要带 Bearer
+                            if (context.Request.Headers.TryGetValue(App.Configuration["AppSettings:ApiHeard"], out var token))
+                            {
+                                context.Token = token;
+                            }
+                            return Task.CompletedTask;
+                        }
                     };
                 }));
 

@@ -1,9 +1,8 @@
-﻿using Autofac;
-using HuanTian.Infrastructure;
+﻿using HuanTian.Infrastructure;
+using HuanTian.Service;
 using HuanTian.SqlSugar;
 using HuanTian.WebCore;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace Huangtian.Store
 {
@@ -45,8 +44,8 @@ namespace Huangtian.Store
                {
                    options.Filters.Add<TemplateResultFilter>();
                    options.Filters.Add<HandlingExceptionFilter>();
-                   options.Filters.Add(new AuthorizeFilter());
-                   //options.Filters.Add<IStartupFilter, StartupFilter>();
+                   options.Filters.Add<AuthenticationFilter>();
+                   
                });
             #endregion
 
@@ -78,7 +77,12 @@ namespace Huangtian.Store
             builder.Services.AddAutoInjection();
             #endregion
 
-            builder.Services.AddJwt();
+            // 注册Redis缓存服务
+            builder.Services.AddSingleton<IRedisCache>(provider =>
+                new RedisCache(builder.Configuration["ConnectionStrings:RedisConnection"]));
+
+            // 注册JWT服务
+            builder.Services.AddJwt(true);
             // 注册Http服务
             builder.Services.AddHttpContextAccessor();
 

@@ -32,8 +32,8 @@ namespace HuanTian.Infrastructure
     public class CommonConst
     {
         /// <summary>
-        /// 用户信息加密Key
+        /// 用户Token加密Key
         /// </summary>
-        public const string AesUserInfo = "6853E16C52D448E48A37C20A6E7D13E7";
+        public const string UserToken = "6853E16C52D448E48A37C20A6E7D13E7";
     }
 }
