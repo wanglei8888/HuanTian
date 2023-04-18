@@ -12,7 +12,7 @@
         public string? Password { get; set; }
         
     }
-    public class LoginOutput: SysUserInfoDO
+    public class LoginOutput
     { 
         public string? Token { get; set; }
     }
