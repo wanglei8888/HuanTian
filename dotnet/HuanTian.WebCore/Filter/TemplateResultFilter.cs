@@ -26,29 +26,33 @@
 using HuanTian.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Net;
 
 namespace HuanTian.WebCore
 {
     /// <summary>
-    /// 数据验证拦截器
+    /// 结果过滤器,用于规范返回数据模板
     /// </summary>
-    public class TemplateResultFilter : IAsyncActionFilter
+    public class TemplateResultFilter : IAsyncResultFilter
     {
-        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
-        {
-            ActionExecutedContext action = await next(); //如果执行 下一个ActionFilter
+        public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
+        {  
+            var result = context.Result is EmptyResult ? null : context.Result; // 如果是空结果则返回null
+            // 统一返回结果
             var newResult = new APIResult()
             {
-                Result = ((ObjectResult)action.Result)?.Value,
-                Status = true,
-                Message = "",
-                Code = ResultCodeEnum.Success,
+                Result = (result as ObjectResult)?.Value,
+                Message = "success",
+                Code = HttpStatusCode.OK,
                 Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
             };
-            action.Result = new ObjectResult(newResult);
-            action.HttpContext.Response.Headers.Add("Custom-Header", Guid.NewGuid().ToString());
-        }
 
+            context.Result = new ObjectResult(newResult);
+            context.HttpContext.Response.Headers.Add("Custom-Header", Guid.NewGuid().ToString());
+            // 调用下一个中间件或过滤器
+            var resultContext = await next();
+
+        }
     }
 
 }
