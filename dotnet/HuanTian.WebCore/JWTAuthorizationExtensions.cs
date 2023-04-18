@@ -70,6 +70,11 @@ namespace HuanTian.WebCore
                             // 设置jwt认证信息不需要带 Bearer
                             if (context.Request.Headers.TryGetValue(App.Configuration["AppSettings:ApiHeard"], out var token))
                             {
+                                // 如果头部带Bearer 则去掉
+                                if (token.ToString().StartsWith("Bearer "))
+                                {
+                                    token = token.ToString().Replace("Bearer ", "");
+                                }
                                 context.Token = token;
                             }
                             return Task.CompletedTask;
