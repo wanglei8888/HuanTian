@@ -47,7 +47,7 @@ namespace HuanTian.Service
             _redisCache = redisCache;
         }
         /// <summary>
-        /// 获取登陆信息
+        /// 用户登陆
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
@@ -55,28 +55,30 @@ namespace HuanTian.Service
         [HttpPost]
         public async Task<dynamic> Login(LoginInput input)
         {
+
             var userInfo = await _sysUserInfo.FirstOrDefaultAsync(t => t.UserName == input.UserName && t.Password == EncryptionHelper.SHA1(input.Password));
             if (userInfo == null) throw new Exception("用户账号密码错误");
 
-            var output = userInfo.Adapt<LoginOutput>();
+            var output = new LoginOutput();
             output.Token = JWTHelper.GetToken(EncryptionHelper.Encrypt(userInfo.Id.ToString(),CommonConst.UserToken));
-            // ant 前端需要  暂时先保留字段
-            output.Password = "";
 
             return output;
         }
         /// <summary>
-        /// 登出
+        /// 用户登出
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        [AllowAnonymous]
         [HttpPost]
-        public Task Logout()
+        public async Task Logout()
         {
-            // 登出操作，可以利用缓存进行白名单，黑名单验证
-            // 暂时不考虑实现该功能
-            // await _redisCache.SetAsync(userInfo.Id.ToString(), userInfo.UserName, TimeSpan.FromSeconds(10));
-            return Task.CompletedTask;
+            // 登出操作，利用Redis缓存进行白名单验证,防止失效Token依然使用
+            if (App.HttpContext.Request.Headers.TryGetValue(App.Configuration["AppSettings:ApiHeard"], out var token))
+            {
+                var userId = App.HttpContext.User.Claims.FirstOrDefault(u => u.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sid)?.Value;
+                await _redisCache.SetAsync($"LoginUserInfoWhitelist-{userId}-{token}", token, TimeSpan.FromHours(1));
+            }
+            
         }
     }
 }

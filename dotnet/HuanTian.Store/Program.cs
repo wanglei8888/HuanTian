@@ -2,6 +2,7 @@
 using HuanTian.Service;
 using HuanTian.SqlSugar;
 using HuanTian.WebCore;
+using HuanTian.WebCore.Filter;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Huangtian.Store
@@ -45,7 +46,7 @@ namespace Huangtian.Store
                    options.Filters.Add<TemplateResultFilter>();
                    options.Filters.Add<HandlingExceptionFilter>();
                    options.Filters.Add<AuthenticationFilter>();
-                   
+                   options.Filters.Add<AsyncActionFilter>();
                });
             #endregion
 

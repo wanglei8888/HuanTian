@@ -48,7 +48,7 @@ namespace HuanTian.WebCore
                 // 定义返回类型
                 var result = new APIResult
                 {
-                    Code = ResultCodeEnum.NotSuccess,
+                    Code = HttpStatusCode.OK,
                     Message = context.Exception.Message,
                     Result = null
                 };

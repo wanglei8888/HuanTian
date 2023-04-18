@@ -23,20 +23,29 @@
  * 版本：V1.0.1
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
+using HuanTian.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Net;
 
 namespace HuanTian.WebCore
 {
     /// <summary>
     /// 鉴权过滤器 监测是否符合权限的访问
     /// </summary>
-    public class AuthenticationFilter : IAsyncAuthorizationFilter 
+    public class AuthenticationFilter : IAsyncAuthorizationFilter
     {
-        public Task OnAuthorizationAsync(AuthorizationFilterContext context)
+        private readonly IRedisCache _redisCache;
+        public AuthenticationFilter(IRedisCache redisCache)
         {
-            //// 判断方法是否允许匿名访问 AllowAnonymous
-            //var allowAnonymous = context.ActionDescriptor.EndpointMetadata
-            //    .Any(metadata => metadata.GetType() == typeof(AllowAnonymousAttribute));
+            _redisCache = redisCache;
+        }
+        public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
+        {
+            // 判断方法是否允许匿名访问 AllowAnonymous
+            var allowAnonymous = context.ActionDescriptor.EndpointMetadata
+                .Any(metadata => metadata.GetType() == typeof(AllowAnonymousAttribute));
             //if (allowAnonymous)
             //{
             //    // 方法允许匿名访问，直接放行
@@ -46,15 +55,29 @@ namespace HuanTian.WebCore
             //var isAuthenticated = context.HttpContext.User.Identity.IsAuthenticated;
             //if (isAuthenticated)
             //{
-
             //}
             //else
             //{
             //    context.Result = new UnauthorizedResult();
             //}
 
-            var asd = context.HttpContext.User.Claims.FirstOrDefault(u => u.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sid)?.Value;
-            return Task.CompletedTask;
+            // 检测用户的token是否为黑名单用户,如果是则返回401
+            if (!allowAnonymous && App.HttpContext.Request.Headers.TryGetValue(App.Configuration["AppSettings:ApiHeard"], out var token))
+            {
+                var userId = App.HttpContext.User.Claims.FirstOrDefault(u => u.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sid)?.Value;
+                if ((await _redisCache.ListGetAsync<string>($"LoginUserInfoWhitelist-{userId}-{token}", token)))
+                {
+                    context.Result = new ObjectResult(new APIResult()
+                    {
+                        Result = null,
+                        Message = "用户未授权,请登录后再操作",
+                        Code = HttpStatusCode.Unauthorized,
+                        Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+                    });
+                    context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                }
+            }
+
         }
     }
 }

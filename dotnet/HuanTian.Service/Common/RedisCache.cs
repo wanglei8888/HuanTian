@@ -48,17 +48,29 @@ namespace HuanTian.Service
             }
             return default;
         }
+        
         public async Task SetAsync<T>(string key, T value, TimeSpan? expiration = null)
         {
             var options = new JsonSerializerOptions { IgnoreNullValues = true };
             var serializedValue = JsonSerializer.Serialize(value, options);
-
-            await _database.StringSetAsync(key, serializedValue, expiration);
+            // 默认指定储存10分钟
+            await _database.StringSetAsync(key, serializedValue, expiration ?? TimeSpan.FromMinutes(10));
         }
 
         public async Task<bool> DeleteAsync(string key)
         {
             return await _database.KeyDeleteAsync(key);
+        }
+
+        public async Task<bool> ListGetAsync<T>(string key, T value)
+        {
+            var serializedValue = await _database.ListGetByIndexAsync("", 0);
+            var redisValue = await _database.StringGetAsync(key);
+            if (redisValue.HasValue)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

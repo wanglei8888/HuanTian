@@ -39,6 +39,14 @@ namespace HuanTian.Infrastructure
         /// <returns></returns>
         Task<T> GetAsync<T>(string key);
         /// <summary>
+        /// 获取缓存键是否存在
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        Task<bool> ListGetAsync<T>(string key,T value);
+        /// <summary>
         /// 存储缓存
         /// </summary>
         /// <typeparam name="T"></typeparam>
