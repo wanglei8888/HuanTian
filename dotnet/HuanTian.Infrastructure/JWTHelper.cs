@@ -33,12 +33,12 @@ namespace HuanTian.Infrastructure
             var signingCredentials = new SigningCredentials(signingKey, signingAlogorithm);
             //生成Token
             var Token = new JwtSecurityToken(
-                    issuer: App.Configuration["JWTAuthentication:Issuer"],        //发布者
-                    audience: App.Configuration["JWTAuthentication:Audience"],    //接收者
-                    claims: claims,                                         //存放的用户信息
-                    notBefore: DateTime.UtcNow,                             //发布时间
-                    expires: DateTime.UtcNow.AddHours(1),                      //有效期设置为1小时
-                    signingCredentials                                      //数字签名
+                    issuer: App.Configuration["JWTAuthentication:Issuer"],                  //发布者
+                    audience: App.Configuration["JWTAuthentication:Audience"],              //接收者
+                    claims: claims,                                                             //存放的用户信息
+                    notBefore: DateTime.UtcNow,                                                 //发布时间
+                    expires: DateTime.UtcNow.AddHours(1),                                 //有效期设置为1小时
+                    signingCredentials                                                          //数字签名
                 );
             //生成字符串token
             var TokenStr = new JwtSecurityTokenHandler().WriteToken(Token);

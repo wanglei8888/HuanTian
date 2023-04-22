@@ -32,34 +32,73 @@ namespace HuanTian.Infrastructure
     public interface IRedisCache
     {
         /// <summary>
-        /// 获取缓存
+        /// String(字符串)获取缓存
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
-        Task<T> GetAsync<T>(string key);
+        Task<T> StringGetAsync<T>(string key);
         /// <summary>
-        /// 获取缓存键是否存在
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        Task<bool> ListGetAsync<T>(string key,T value);
-        /// <summary>
-        /// 存储缓存
+        /// String(字符串)获取缓存键是否存在
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        /// <param name="expiration"></param>
         /// <returns></returns>
-        Task SetAsync<T>(string key, T value, TimeSpan? expiration = null);
+        Task<bool> StringContainsAsync<T>(string key, T value);
         /// <summary>
-        /// 删除缓存
+        /// String(字符串)插入一个字符串类型的键值对
+        /// </summary>
+        /// <param name="key">键名</param>
+        /// <param name="value">键值</param>
+        /// <param name="expiration">过期时间(默认10分钟)</param>
+        /// <returns>是否插入成功</returns>
+        Task<bool> StringAddAsync<T>(string key, T value, TimeSpan? expiration = null);
+        /// <summary>
+        /// String(字符串)删除缓存
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        Task<bool> DeleteAsync(string key);
+        Task<bool> StringDeleteAsync(string key);
+        /// <summary>
+        /// Set(集合)将一个元素添加到集合中
+        /// </summary>
+        /// <param name="key">集合键名</param>
+        /// <param name="values">元素</param>
+        /// <returns>成功添加的元素数量</returns>
+        Task<bool> SetAddAsync(string key, string values, TimeSpan? expiration = null);
+        /// <summary>
+        /// Set(集合)将一个或多个元素添加到集合中
+        /// </summary>
+        /// <param name="key">集合键名</param>
+        /// <param name="values">元素</param>
+        /// <returns>成功添加的元素数量</returns>
+        Task<long> SetAddAsync(string key, string[] values, TimeSpan? expiration = null);
+        /// <summary>
+        /// Set(集合)移除集合中的一个或多个元素
+        /// </summary>
+        /// <param name="key">集合键名</param>
+        /// <param name="values">元素</param>
+        /// <returns>成功移除的元素数量</returns>
+        Task<long> SetRemoveAsync(string key, params string[] values);
+        /// <summary>
+        /// Set(集合)获取集合中的所有元素
+        /// </summary>
+        /// <param name="key">集合键名</param>
+        /// <returns>集合中的所有元素</returns>
+        Task<IEnumerable<string>> SetGetAllAsync(string key);
+        /// <summary>
+        /// Set(集合)判断集合中是否包含指定元素
+        /// </summary>
+        /// <param name="key">集合键名</param>
+        /// <param name="value">元素</param>
+        /// <returns>是否包含</returns>
+        Task<bool> SetContainsAsync(string key, string value);
+        /// <summary>
+        /// 获取集合中元素的数量
+        /// </summary>
+        /// <param name="key">集合键名</param>
+        /// <returns>元素数量</returns>
+        Task<long> SetGetCountAsync(string key);
     }
 }

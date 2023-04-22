@@ -29,6 +29,9 @@ using System.Text.Json;
 
 namespace HuanTian.Service
 {
+    /// <summary>
+    /// Redis缓存实现类
+    /// </summary>
     public class RedisCache : IRedisCache
     {
         private readonly ConnectionMultiplexer _redis;
@@ -39,7 +42,9 @@ namespace HuanTian.Service
             _redis = ConnectionMultiplexer.Connect(connectionString);
             _database = _redis.GetDatabase();
         }
-        public async Task<T> GetAsync<T>(string key)
+
+        #region String(字符串)
+        public async Task<T> StringGetAsync<T>(string key)
         {
             var value = await _database.StringGetAsync(key);
             if (value.HasValue)
@@ -48,21 +53,14 @@ namespace HuanTian.Service
             }
             return default;
         }
-        
-        public async Task SetAsync<T>(string key, T value, TimeSpan? expiration = null)
-        {
-            var options = new JsonSerializerOptions { IgnoreNullValues = true };
-            var serializedValue = JsonSerializer.Serialize(value, options);
-            // 默认指定储存10分钟
-            await _database.StringSetAsync(key, serializedValue, expiration ?? TimeSpan.FromMinutes(10));
-        }
 
-        public async Task<bool> DeleteAsync(string key)
+
+        public async Task<bool> StringDeleteAsync(string key)
         {
             return await _database.KeyDeleteAsync(key);
         }
 
-        public async Task<bool> ListGetAsync<T>(string key, T value)
+        public async Task<bool> StringContainsAsync<T>(string key, T value)
         {
             var serializedValue = await _database.ListGetByIndexAsync("", 0);
             var redisValue = await _database.StringGetAsync(key);
@@ -72,5 +70,55 @@ namespace HuanTian.Service
             }
             return false;
         }
+        public async Task<bool> StringAddAsync<T>(string key, T value, TimeSpan? expiration)
+        {
+            var options = new JsonSerializerOptions { IgnoreNullValues = true };
+            var serializedValue = JsonSerializer.Serialize(value, options);
+            // 默认指定储存10分钟
+            return await _database.StringSetAsync(key, serializedValue, expiration ?? App.Configuration["AppSettings:RedisExpirationTime"].ToTimeSpan());
+        }
+        #endregion
+
+        #region Set(集合)
+
+        public async Task<bool> SetAddAsync(string key, string values, TimeSpan? expiration = null)
+        {
+            var value = await _database.SetAddAsync(key, values);
+            _database.KeyExpire(key, expiration ?? App.Configuration["AppSettings:RedisExpirationTime"].ToTimeSpan());
+            return value;
+        }
+
+        public async Task<long> SetAddAsync(string key, string[] values, TimeSpan? expiration = null)
+        {
+            RedisValue[] redisValues = values.Select(x => (RedisValue)x).ToArray();
+            var value =  await _database.SetAddAsync(key, redisValues);
+            _database.KeyExpire(key, expiration ?? App.Configuration["AppSettings:RedisExpirationTime"].ToTimeSpan());
+            return value;
+        }
+
+        public async Task<long> SetRemoveAsync(string key, params string[] values)
+        {
+            RedisValue[] redisValues = values.Select(x => (RedisValue)x).ToArray();
+            return await _database.SetRemoveAsync(key, redisValues);
+        }
+
+        public async Task<IEnumerable<string>> SetGetAllAsync(string key)
+        {
+            var redisValues = await _database.SetMembersAsync(key);
+            return redisValues.Select(x => (string)x);
+        }
+
+        public async Task<bool> SetContainsAsync(string key, string value)
+        {
+            RedisValue redisValue = value;
+            return await _database.SetContainsAsync(key, redisValue);
+        }
+
+        public async Task<long> SetGetCountAsync(string key)
+        {
+            return await _database.SetLengthAsync(key);
+        } 
+        #endregion
+
     }
 }

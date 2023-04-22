@@ -72,11 +72,11 @@ namespace HuanTian.Service
         [HttpPost]
         public async Task Logout()
         {
-            // 登出操作，利用Redis缓存进行白名单验证,防止失效Token依然使用
+            // 登出操作，利用Redis缓存进行黑名单验证,防止失效Token依然使用
             if (App.HttpContext.Request.Headers.TryGetValue(App.Configuration["AppSettings:ApiHeard"], out var token))
             {
                 var userId = App.HttpContext.User.Claims.FirstOrDefault(u => u.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sid)?.Value;
-                await _redisCache.SetAsync($"LoginUserInfoWhitelist-{userId}-{token}", token, TimeSpan.FromHours(1));
+                await _redisCache.SetAddAsync($"LoginUserInfoWhitelist", token.ToString());
             }
             
         }

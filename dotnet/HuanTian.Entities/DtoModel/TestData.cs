@@ -24,8 +24,248 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-namespace HuanTian.Entities.DtoModel
+namespace HuanTian.Entities
 {
+    public class Meta
+    {
+        /// <summary>
+        /// 菜单标题
+        /// </summary>
+        public string Title { get; set; }
+
+        /// <summary>
+        /// 菜单图标
+        /// </summary>
+        public string Icon { get; set; }
+
+        /// <summary>
+        /// 是否显示菜单
+        /// </summary>
+        public bool Show { get; set; } = true;
+
+        /// <summary>
+        /// 菜单跳转方式
+        /// </summary>
+        public string Target { get; set; }
+    }
+
+    public class MenuItem
+    {
+        /// <summary>
+        /// 菜单ID
+        /// </summary>
+        public int Id { get; set; }
+
+        /// <summary>
+        /// 菜单名称
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 父菜单ID
+        /// </summary>
+        public int ParentId { get; set; }
+
+       
+
+        /// <summary>
+        /// 菜单元信息
+        /// </summary>
+        public Meta Meta { get; set; }
+
+        /// <summary>
+        /// 路由组件名称
+        /// </summary>
+        public string Component { get; set; }
+
+        /// <summary>
+        /// 路由重定向地址
+        /// </summary>
+        public string Redirect { get; set; }
+
+        /// <summary>
+        /// 路由路径
+        /// </summary>
+        public string Path { get; set; }
+    }
+
+    public class User_Test
+    {
+        /// <summary>
+        /// 用户ID
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
+        /// 用户姓名
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 用户名
+        /// </summary>
+        public string Username { get; set; }
+
+        /// <summary>
+        /// 密码
+        /// </summary>
+        public string Password { get; set; }
+
+        /// <summary>
+        /// 用户头像
+        /// </summary>
+        public string Avatar { get; set; }
+
+        /// <summary>
+        /// 用户状态
+        /// </summary>
+        public int Status { get; set; }
+
+        /// <summary>
+        /// 联系电话
+        /// </summary>
+        public string Telephone { get; set; }
+
+        /// <summary>
+        /// 最后登录IP
+        /// </summary>
+        public string LastLoginIp { get; set; }
+
+        /// <summary>
+        /// 最后登录时间
+        /// </summary>
+        public long LastLoginTime { get; set; }
+
+        /// <summary>
+        /// 创建者ID
+        /// </summary>
+        public string CreatorId { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public long CreateTime { get; set; }
+
+        /// <summary>
+        /// 商户代码
+        /// </summary>
+        public string MerchantCode { get; set; }
+
+        /// <summary>
+        /// 是否删除
+        /// </summary>
+        public int Deleted { get; set; }
+
+        /// <summary>
+        /// 角色ID
+        /// </summary>
+        public string RoleId { get; set; }
+
+        /// <summary>
+        /// 用户角色
+        /// </summary>
+        public Role_Test Role { get; set; }
+    }
+
+    public class Role_Test
+    {
+        /// <summary>
+        /// 角色ID
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
+        /// 角色名称
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 角色描述
+        /// </summary>
+        public string Describe { get; set; }
+
+        /// <summary>
+        /// 角色状态
+        /// </summary>
+        public int Status { get; set; }
+
+        /// <summary>
+        /// 创建者ID
+        /// </summary>
+        public string CreatorId { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public long CreateTime { get; set; }
+
+        /// <summary>
+        /// 是否删除
+        /// </summary>
+        public int Deleted { get; set; }
+
+        /// <summary>
+        /// 角色权限列表
+        /// </summary>
+        public List<Permission_Test> Permissions { get; set; }
+    }
+
+    public class Permission_Test
+    {
+        /// <summary>
+        /// 角色ID
+        /// </summary>
+        public string roleId { get; set; }
+
+        /// <summary>
+        /// 权限ID
+        /// </summary>
+        public string permissionId { get; set; }
+
+        /// <summary>
+        /// 权限名称
+        /// </summary>
+        public string permissionName { get; set; }
+
+        /// <summary>
+        /// 动作列表JSON
+        /// </summary>
+        public string actions { get; set; }
+
+        /// <summary>
+        /// 动作实体集合
+        /// </summary>
+        public List<RoleActionEntity_Test> actionEntitySet { get; set; }
+
+        /// <summary>
+        /// 动作列表
+        /// </summary>
+        public string actionList { get; set; }
+
+        /// <summary>
+        /// 数据访问
+        /// </summary>
+        public string dataAccess { get; set; }
+
+    }
+
+    public class RoleActionEntity_Test
+    {
+        /// <summary>
+        /// 动作名称
+        /// </summary>
+        public string action { get; set; }
+
+        /// <summary>
+        /// 描述
+        /// </summary>
+        public string describe { get; set; }
+
+        /// <summary>
+        /// 默认选中
+        /// </summary>
+        public bool defaultCheck { get; set; }
+    }
     public class ProjectItem_Test
     {
         /// <summary>
@@ -71,7 +311,7 @@ namespace HuanTian.Entities.DtoModel
         /// <summary>
         /// 用户信息
         /// </summary>
-        public User_Test User { get; set; }
+        public User_Test_2 User { get; set; }
 
         /// <summary>
         /// 项目信息
@@ -87,7 +327,7 @@ namespace HuanTian.Entities.DtoModel
     /// <summary>
     /// 用户信息实体类
     /// </summary>
-    public class User_Test
+    public class User_Test_2
     {
         /// <summary>
         /// 昵称

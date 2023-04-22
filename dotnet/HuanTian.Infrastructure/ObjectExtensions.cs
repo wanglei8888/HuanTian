@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Humanizer.Localisation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using NPOI.Util;
 using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Reflection;
@@ -531,6 +533,28 @@ namespace HuanTian.Infrastructure
         /// <param name="value"></param>
         /// <returns></returns>
         public static string ToLowerHump(this string value) => string.Concat(value.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString())).ToLower();
-
+        /// <summary>
+        /// 默认为分钟单位仅支持天以下单位 例: 24 * 60 等于一天,
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="type">时间单位</param>
+        /// <returns>时间单位距今多少</returns>
+        public static TimeSpan ToTimeSpan(this string value, TimeUnit type = TimeUnit.Minute)
+        {
+            var array =  value.Replace(" ", "").Split('*');
+            var sumMinuts = 0;
+            foreach (var item in array)
+            {
+                sumMinuts += Convert.ToInt32(item);
+            }
+            return type switch
+            {
+                TimeUnit.Minute => TimeSpan.FromMinutes(sumMinuts),
+                TimeUnit.Hour => TimeSpan.FromHours(sumMinuts),
+                TimeUnit.Day => TimeSpan.FromDays(sumMinuts),
+                TimeUnit.Week => TimeSpan.FromDays(sumMinuts),
+                _ => TimeSpan.FromMinutes(sumMinuts),
+            };
+        }
     }
 }

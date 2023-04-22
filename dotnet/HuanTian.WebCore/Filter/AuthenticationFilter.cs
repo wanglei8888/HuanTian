@@ -65,7 +65,7 @@ namespace HuanTian.WebCore
             if (!allowAnonymous && App.HttpContext.Request.Headers.TryGetValue(App.Configuration["AppSettings:ApiHeard"], out var token))
             {
                 var userId = App.HttpContext.User.Claims.FirstOrDefault(u => u.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sid)?.Value;
-                if ((await _redisCache.ListGetAsync<string>($"LoginUserInfoWhitelist-{userId}-{token}", token)))
+                if ((await _redisCache.SetContainsAsync($"LoginUserInfoWhitelist", token)))
                 {
                     context.Result = new ObjectResult(new APIResult()
                     {
