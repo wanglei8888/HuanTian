@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Concurrent;
@@ -27,6 +28,10 @@ namespace HuanTian.Infrastructure
         /// </summary>
         public static HttpContext HttpContext => CatchOrDefault(() => RootServices?.GetService<IHttpContextAccessor>()?.HttpContext);
 
+        /// <summary>
+        /// 获取Web主机环境
+        /// </summary>
+        public static IWebHostEnvironment WebHostEnvironment;
         /// <summary>
         /// 未托管的对象集合
         /// </summary>

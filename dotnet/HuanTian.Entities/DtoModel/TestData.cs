@@ -47,6 +47,10 @@ namespace HuanTian.Entities
         /// 菜单跳转方式
         /// </summary>
         public string Target { get; set; }
+        /// <summary>
+        /// 隐藏子类
+        /// </summary>
+        public bool HideChildren { get; set; }
     }
 
     public class MenuItem

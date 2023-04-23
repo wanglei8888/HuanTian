@@ -35,7 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="wwwroot\index-mini-profiler.html" />
+    <EmbeddedResource Include="wwwroot\swagger-index.html" />
   </ItemGroup>
 
 </Project>

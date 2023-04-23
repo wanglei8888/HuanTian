@@ -357,7 +357,7 @@ namespace HuanTian.WebCore
             // 加载目标程序集
             var thisAssembly = AssemblyHelper.GetAssembly("HuanTian.Store");
             // 判断是否启用 MiniProfile
-            var customIndex = $"HuanTian.Store.wwwroot.index-mini-profiler.html";
+            var customIndex = $"HuanTian.Store.wwwroot.swagger-index.html";
             swaggerUIOptions.IndexStream = () =>
             {
                 StringBuilder htmlBuilder;

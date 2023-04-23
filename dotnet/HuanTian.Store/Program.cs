@@ -90,6 +90,8 @@ namespace Huangtian.Store
             var app = builder.Build();
             // 自定义中间件
             app.UseMiddleware<CustomMiddleware>();
+            
+            App.WebHostEnvironment = app.Environment; // 静态类存储
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

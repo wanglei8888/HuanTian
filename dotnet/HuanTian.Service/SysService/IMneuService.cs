@@ -4,6 +4,6 @@ namespace HuanTian.Service
 {
     public interface IMneuService
     {
-        public Task<dynamic> GetUserMenu();
+        public dynamic GetUserMenu();
     }
 }

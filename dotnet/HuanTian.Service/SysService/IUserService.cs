@@ -28,6 +28,6 @@ namespace HuanTian.Service
 {
     public interface IUserService
     {
-        Task<dynamic> Info();
+        dynamic Info();
     }
 }
