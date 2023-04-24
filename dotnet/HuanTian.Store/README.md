@@ -20,3 +20,37 @@
        [202107010000_add_NewTable]
 
     6、确认有迁移记录后，在【程序包管理控制台】输入更新数据库命令 "update-database" 后等待完成即可
+
+二：修改数据库、仓储连接方式
+
+    1、修改 HuanTian.Store-appsettings.json 中 SqlSettings:SqlType 的数据库连接字符串 MySql、或者SqlServer
+    2、修改 HuanTian.Store-Program.cs 中 builder.Services.AddScoped(typeof(IRepository<>), typeof(SqlSugarRepository<>));  把 SqlSugarRepository 切换为想要的仓储就行
+
+三：本项目已经全部统一 EF Core 生的表名、列名为下划线命名法  方便命名
+    
+    1、例如  TestTable 会转换为 test_table
+    2、如果需要修改命名方式可以修改 HuanTian.Infrastructure.ToLowerHump 方法
+    3、如果不需要统一列名表名可以修改 HuanTian.Store-appsettings.json 中 SqlSettings:(GlobalSettingsTableName、GlobalSettingsColumnName) 的值为 false 
+       **注意**:如果切换为false的话,仓储就不能随意切换了,因为不用orm框架生成的表名、列名不一致,会报错。
+
+四: 动态生成 Controle 功能
+
+    1、可参考 HuanTian.Service 中的方法  只需要继承 IDynamicApiController 接口就会生成 Controle
+    2、Swagger中的大部分常用配置,本项目都已经配置
+
+五：项目关于Swagger备注的实现
+
+    1、Swagger备注默认是加载HuanTian.Entities、HuanTian.Service两个项目的xml文件，如果需要添加的话，
+        (1)需要在HuanTian.Store引用该项目 
+        (2)需要修改在项目文件添加 <GenerateDocumentationFile>true</GenerateDocumentationFile> <DocumentationFile>项目名称.xml</DocumentationFile> 这两行代码，可以参考HuanTian.Entities的实现方式
+    2、为了更方便面向接口编程,如果在接口跟接口实现类中,只有接口中有备注那么接口中的备注就会替换到实现类中,因为Swagger默认只会读取实现类生成的controle的备注，
+       **注意**：但是需要谨遵命名规范  IService 和 Service 两个类名的接口实现类才会被替换(你也可以进行修改,在HuanTian.WebCore-SwaggerExtensions.cs),如果不是这两个命名规范的话,那么就需要在接口实现类中添加备注了。
+    3、可以对 Controle 进行分组、ApiDescriptionSettingsAttribute["",order=10]特性。 对分组的Swagger配置则在 HuanTian.Store-appsettings.json 中
+
+六：项目中已经实现的功能
+
+    1、防止Token已经失效依然被请求，使用Redis加JWT，缓存已经注销的用户Token，生成黑名单在鉴权过滤器中查询存在就显示未认证
+    2、更多功能正在实现中,敬请期待 ····   
+       个人开发精力有限,还请谅解   ···· 
+       本人也是一个小菜鸡,遇到的问题解决的方式都是自己找文档、论坛一步步解决的。 ····
+       在学习中慢慢完善本项目,如果你也是志同道合之人欢迎你的加入。               ····

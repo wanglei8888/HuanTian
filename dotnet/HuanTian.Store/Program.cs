@@ -52,14 +52,10 @@ namespace Huangtian.Store
 
             #region 数据库注入
 
-            #region 数据库注入
-
             // EntityFrameworkCore
             builder.Services.AddEntityFrameworkService();
             // SqlSugar
             builder.Services.AddSqlSugarService();
-
-            #endregion
 
             #endregion
 
