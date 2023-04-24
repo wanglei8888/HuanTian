@@ -4,7 +4,13 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<DocumentationFile>HuanTian.Entities.xml</DocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="HuanTian.Entities.xml" />
+  </ItemGroup>
 	<ItemGroup>
 	<PackageReference Include="Mapster" Version="7.3.0" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.10" />

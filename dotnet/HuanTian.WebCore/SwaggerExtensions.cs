@@ -161,103 +161,94 @@ namespace HuanTian.WebCore
 
             var members = new Dictionary<string, XElement>();
 
-            // 显式继承的注释
-            var regex = new Regex(@"[A-Z]:[a-zA-Z_@\.]+");
-            // 隐式继承的注释
-            var regex2 = new Regex(@"[A-Z]:[a-zA-Z_@\.]+\.");
-
-            // 支持注释完整特性，包括 inheritdoc 注释语法
+            // 支持注释完整特性
             foreach (var xmlComment in xmlComments)
             {
-                var files = Directory.GetFiles(AppContext.BaseDirectory.Replace("HuanTian.Store", "HuanTian.Service"), "*.xml");
+                var fileCount = Directory.GetFiles(AppContext.BaseDirectory, "*.xml");
                 var assemblyXmlName = xmlComment.EndsWith(".xml") ? xmlComment : $"{xmlComment}.xml";
-                var assemblyXmlPath = files[0];//Path.Combine(AppContext.BaseDirectory, assemblyXmlName);
-
-                if (File.Exists(assemblyXmlPath))
+                foreach (string file in fileCount)
                 {
-                    var xmlDoc = XDocument.Load(assemblyXmlPath);
-
-                    // 查找所有 member[name] 节点，且不包含 <inheritdoc /> 节点的注释
-                    var memberNotInheritdocElementList = xmlDoc.XPathSelectElements("/doc/members/member[@name and not(inheritdoc)]");
-
-                    foreach (var memberElement in memberNotInheritdocElementList)
+                    if (File.Exists(file))
                     {
-                        members.Add(memberElement.Attribute("name").Value, memberElement);
-                    }
+                        var xmlDoc = XDocument.Load(file);
 
-                    // 查找所有 member[name] 含有 <inheritdoc /> 节点的注释
-                    var memberElementList = xmlDoc.XPathSelectElements("/doc/members/member[inheritdoc]");
-                    foreach (var memberElement in memberElementList)
-                    {
-                        var inheritdocElement = memberElement.Element("inheritdoc");
-                        var cref = inheritdocElement.Attribute("cref");
-                        var value = cref?.Value;
-
-                        // 处理不带 cref 的 inheritdoc 注释
-                        if (value == null)
+                        #region 为了方便面向接口开发，备注不用接口、实现类写两遍 如果只有接口有备注就把接口的备注替换到实现类里 因为Swagger只显示实现类的备注
+                        // 查找所有 member[name] 节点，且不包含 <inheritdoc /> 节点的注释
+                        var memberNotInheritdocElementList = xmlDoc.XPathSelectElements("/doc/members/member[@name and not(inheritdoc)]").ToList();
+                        for (int i = 0; i < memberNotInheritdocElementList.Count(); i++)
                         {
-                            var memberName = inheritdocElement.Parent.Attribute("name").Value;
-
-                            // 处理隐式实现接口的注释
-                            // 注释格式：M:Furion.Application.TestInheritdoc.Furion#Application#ITestInheritdoc#Abc(System.String)
-                            // 匹配格式：[A-Z]:[a-zA-Z_@\.]+\.
-                            // 处理逻辑：直接替换匹配为空，然后讲 # 替换为 . 查找即可
-                            if (memberName.Contains('#'))
+                            var name = memberNotInheritdocElementList[i].Attribute("name").Value;
+                            // 去除空格参数的数据
+                            var removeSpacesName = Regex.Replace(name, @"\([^)]*\)", "");
+                            // 获取类名
+                            var className = removeSpacesName.Split('.')[2];
+                            if (className.StartsWith("I"))
                             {
-                                value = $"{memberName[..2]}{regex2.Replace(memberName, "").Replace('#', '.')}";
-                            }
-                            // 处理带参数的注释
-                            // 注释格式：M:Furion.Application.TestInheritdoc.WithParams(System.String)
-                            // 匹配格式：[A-Z]:[a-zA-Z_@\.]+
-                            // 处理逻辑：匹配出不带参数的部分，然后获取类型命名空间，最后调用 GenerateInheritdocCref 进行生成
-                            else if (memberName.Contains('('))
-                            {
-                                var noParamsClassName = regex.Match(memberName).Value;
-                                var className = noParamsClassName[noParamsClassName.IndexOf(":")..noParamsClassName.LastIndexOf(".")];
-                                value = GenerateInheritdocCref(xmlDoc, memberName, className);
-                            }
-                            // 处理不带参数的注释
-                            // 注释格式：M:Furion.Application.TestInheritdoc.WithParams
-                            // 匹配格式：无
-                            // 处理逻辑：获取类型命名空间，最后调用 GenerateInheritdocCref 进行生成
-                            else
-                            {
-                                var className = memberName[memberName.IndexOf(":")..memberName.LastIndexOf(".")];
-                                value = GenerateInheritdocCref(xmlDoc, memberName, className);
-                            }
-                        }
+                                // 获取完整的方法名
+                                var serviceName = $"{removeSpacesName.Split('.')[0]}.{removeSpacesName.Split('.')[1]}.{className.Substring(1)}";
+                                XElement? service = null;
 
-                        if (string.IsNullOrWhiteSpace(value)) continue;
+                                // 如果是接口备注
+                                if (name.StartsWith("T"))
+                                {
+                                    // 查询是否只有接口的备注
+                                    service = memberNotInheritdocElementList.FirstOrDefault(t => t.Attribute("name").Value == serviceName);
+                                    if (service == null)
+                                    {
+                                        memberNotInheritdocElementList[i].Attribute("name").Value = serviceName;
+                                    }
+                                    continue;
+                                }
 
-                        // 处理带 cref 的 inheritdoc 注释
-                        if (members.TryGetValue(value, out var realDocMember))
-                        {
-                            memberElement.SetAttributeValue("_ref_", value);
-                            inheritdocElement.Parent.ReplaceNodes(realDocMember.Nodes());
-                        }
+                                // 获取方法名
+                                var methodName = removeSpacesName.Split('.')[3];
+                                serviceName = serviceName + $".{methodName}";
+
+                                // 获取方法参数
+                                var match = Regex.Match(name, @"\((.*?)\)"); // 匹配括号内的任何字符，非贪婪模式
+                                string parameters = "";
+                                if (match.Success)
+                                {
+                                    parameters = match.Groups[1].Value;
+                                    serviceName = serviceName + $"({parameters})";
+                                }
+
+                                // 查询是否只有接口-方法的备注
+                                service = memberNotInheritdocElementList.FirstOrDefault(t => t.Attribute("name").Value == serviceName);
+                                if (service == null)
+                                {
+                                    memberNotInheritdocElementList[i].Attribute("name").Value = serviceName;
+                                }
+                            }
+                        } 
+                        #endregion
+
+                        // 创建一个新的 XDocument，将两个 XElement 列表合并到一起
+                        XDocument newXmlDoc = new XDocument();
+
+                        // 创建根元素
+                        XElement rootElement = new XElement("doc");
+
+                        // 添加子元素
+                        var xmlName = Path.GetFileName(file);
+                        xmlName = xmlName.Substring(0, xmlName.LastIndexOf('.'));
+
+                        XElement assemblyElement = new XElement("assembly",
+                            new XElement("name", xmlName));
+                        XElement membersElement = new XElement("members", memberNotInheritdocElementList);
+
+                        // 将元素添加到根元素中
+                        rootElement.Add(assemblyElement);
+                        rootElement.Add(membersElement);
+
+                        // 将根元素添加到新的XDocument对象中
+                        newXmlDoc.Add(rootElement);
+
+                        swaggerGenOptions.IncludeXmlComments(() => new XPathDocument(newXmlDoc.CreateReader()), true);
                     }
-
-                    swaggerGenOptions.IncludeXmlComments(() => new XPathDocument(xmlDoc.CreateReader()), true);
                 }
+                
             }
-        }
-        /// <summary>
-        /// 生成 Inheritdoc cref 属性
-        /// </summary>
-        /// <param name="xmlDoc"></param>
-        /// <param name="memberName"></param>
-        /// <param name="className"></param>
-        /// <returns></returns>
-        private static string GenerateInheritdocCref(XDocument xmlDoc, string memberName, string className)
-        {
-            var classElement = xmlDoc.XPathSelectElements($"/doc/members/member[@name='{"T" + className}' and @_ref_]").FirstOrDefault();
-            if (classElement == null) return default;
-
-            var _ref_value = classElement.Attribute("_ref_")?.Value;
-            if (_ref_value == null) return default;
-
-            var classCrefValue = _ref_value[_ref_value.IndexOf(":")..];
-            return memberName.Replace(className, classCrefValue);
         }
         /// <summary>
         ///  配置 Action 排序

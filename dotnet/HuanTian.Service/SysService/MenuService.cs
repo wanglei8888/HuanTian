@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace HuanTian.Service
 {
-    public class MenuService : IMneuService, IDynamicApiController, IScoped
+    public class MenuService : IMenuService, IDynamicApiController, IScoped
     {
         private readonly EfSqlContext _mySqlContext;
         public MenuService(EfSqlContext mySqlContext)
