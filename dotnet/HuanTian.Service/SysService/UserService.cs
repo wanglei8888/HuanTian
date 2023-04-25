@@ -38,18 +38,21 @@ namespace HuanTian.Service
     public class UserService : IUserService, IDynamicApiController
     {
         private readonly ILogger<UserService> _logger;
+        private readonly IRepository<SysUserInfoDO> _userInfo;
 
         public UserService(
-            ILogger<UserService> logger)
+            ILogger<UserService> logger,
+            IRepository<SysUserInfoDO> userInfo)
         {
             _logger = logger;
+            _userInfo = userInfo;
         }
         /// <summary>
-        /// 获取用户信息跟菜单信息
+        /// 获取用户信息跟用户权限信息
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public  dynamic Info()
+        public dynamic Info()
         {
             var user = App.HttpContext.User.Claims.FirstOrDefault(u => u.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sid)?.Value;
             // 解密
@@ -59,6 +62,18 @@ namespace HuanTian.Service
             var userInfo = JsonConvert.DeserializeObject<User_Test>(jsonString);
 
             return userInfo;
+        }
+        /// <summary>
+        /// 查询用户列表信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<dynamic> Get()
+        {
+            var pageData = await _userInfo
+                .OrderBy(t => t.Id, true)
+                .GetAllToPageAsync(t => t.Id != 1, 1, 10);
+            return pageData;
         }
     }
 }
