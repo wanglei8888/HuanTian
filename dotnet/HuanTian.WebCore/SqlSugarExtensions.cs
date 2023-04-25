@@ -24,6 +24,7 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 using HuanTian.Infrastructure;
+using HuanTian.SqlSugar;
 using Microsoft.Extensions.DependencyInjection;
 using SqlSugar;
 
@@ -39,6 +40,7 @@ namespace HuanTian.WebCore
         public static IServiceCollection AddSqlSugarService(this IServiceCollection services)
         {
             DbType dbType = (DbType)Enum.Parse(typeof(DbType), App.Configuration["SqlSettings:SqlType"]);
+
             var config = new ConnectionConfig()
             {
                 DbType = dbType, //数据库切换，需要改
@@ -71,19 +73,26 @@ namespace HuanTian.WebCore
             };
             services.AddScoped<ISqlSugarClient>(s =>
             {
-                //Scoped用SqlSugarClient 
+               // Scoped用SqlSugarClient 
                SqlSugarClient sqlSugar = new SqlSugarClient(config,
                db =>
                {
-                   //单例参数配置，所有上下文生效
+                   // 打印输出Sql
                    db.Aop.OnLogExecuting = (sql, pars) =>
                    {
-                       //获取IOC对象不要求在一个上下文
-                       //vra log=s.GetService<Log>()
-
-                       //获取IOC对象要求在一个上下文
-                       //var appServive = s.GetService<IHttpContextAccessor>();
-                       //var log= appServive?.HttpContext?.RequestServices.GetService<Log>();
+                       if (sql.StartsWith("SELECT"))
+                       {
+                           Console.ForegroundColor = ConsoleColor.Green;
+                       }
+                       if (sql.StartsWith("UPDATE") || sql.StartsWith("INSERT"))
+                       {
+                           Console.ForegroundColor = ConsoleColor.White;
+                       }
+                       if (sql.StartsWith("DELETE"))
+                       {
+                           Console.ForegroundColor = ConsoleColor.Blue;
+                       }
+                       Console.WriteLine(SqlProfiler.ParameterFormat(sql, pars));
                    };
                });
                 return sqlSugar;
