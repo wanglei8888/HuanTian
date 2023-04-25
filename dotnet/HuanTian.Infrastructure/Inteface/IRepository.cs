@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using HuanTian.Entities;
+using System.Linq.Expressions;
 
 namespace HuanTian.Infrastructure
 {
@@ -7,15 +8,31 @@ namespace HuanTian.Infrastructure
         /// <summary>
         /// 只查询一条数据
         /// </summary>
-        /// <param name="predicate"></param>
+        /// <param name="predicate">筛选条件</param>
         /// <returns></returns>
         Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
         /// <summary>
         /// 获取所有数据
         /// </summary>
-        /// <param name="predicate"></param>
+        /// <param name="predicate">筛选条件</param>
         /// <returns></returns>
-        Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate);
+        Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate = default);
+        /// <summary>
+        /// 分页获取所有数据 
+        /// </summary>
+        /// <param name="predicate">筛选条件</param>
+        /// <param name="pageNo">页码</param>
+        /// <param name="pageSize">页大小</param>
+        /// <returns>返回原始数据</returns>
+        Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize);
+        /// <summary>
+        /// 分页获取所有数据 
+        /// </summary>
+        /// <param name="predicate">筛选条件</param>
+        /// <param name="pageNo">页码</param>
+        /// <param name="pageSize">页大小</param>
+        /// <returns>返回分页PageData实体</returns>
+        Task<PageData> GetAllToPageAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize);
         /// <summary>
         /// 新增一条数据
         /// </summary>
@@ -32,7 +49,13 @@ namespace HuanTian.Infrastructure
         /// </summary>
         /// <param name="entity"></param>
         void DeleteAsync(TEntity entity);
-
+        /// <summary>
+        /// 数据排序
+        /// </summary>
+        /// <param name="orderByExpression">排序字段</param>
+        /// <param name="isAsc">是否升序</param>
+        /// <returns></returns>
+        IRepository<TEntity> OrderBy(Expression<Func<TEntity, object>> orderByExpression, bool isAsc);
         //// 原生 SqlSugar 操作
         //ISqlSugarClient SqlSugarClient { get; }
     }
