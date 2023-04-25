@@ -40,7 +40,7 @@ const user = {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
           const result = response.result
-          storage.set(ACCESS_TOKEN, result.token, new Date().getTime() + 60 * 60 * 1000) // 一小时
+          storage.set(ACCESS_TOKEN, result.token)
           commit('SET_TOKEN', result.token)
           resolve()
         }).catch(error => {

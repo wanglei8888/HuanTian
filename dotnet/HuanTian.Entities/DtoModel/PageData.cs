@@ -6,7 +6,7 @@
  * 公司名称：
  * 命名空间：HuanTian.Entities.DtoModel
  * 唯一标识：d21e8bb6-df78-4131-aa2e-163acbf29aa3
- * 文件名：PagingEntity
+ * 文件名：PageData
  * 当前用户域：DESKTOP-4P8G8RH
  * 
  * 创建者：wanglei
@@ -29,12 +29,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HuanTian.Entities.DtoModel
+namespace HuanTian.Entities
 {
     /// <summary>
     /// 分页返回对象
     /// </summary>
-    public class PagingEntity
+    public class PageData
     {
         /// <summary>
         /// 数据值
@@ -59,6 +59,6 @@ namespace HuanTian.Entities.DtoModel
         /// 总条数
         /// </summary>
         public int TotalCount { get; set; }
-
     }
+
 }
