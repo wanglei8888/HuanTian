@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HuanTian.EntityFrameworkCore.Migrations
 {
-    public partial class add_SysTable : Migration
+    public partial class add_NewTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -73,12 +73,16 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     role_name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false, comment: "角色名字")
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    describe = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false, comment: "角色描述")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    status = table.Column<int>(type: "int", nullable: false, comment: "角色状态"),
                     creater = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, comment: "创建人")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     create_time = table.Column<DateTime>(type: "datetime(6)", nullable: false, comment: "创建时间"),
                     updater = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, comment: "修改人")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    update_time = table.Column<DateTime>(type: "datetime(6)", nullable: false, comment: "修改时间")
+                    update_time = table.Column<DateTime>(type: "datetime(6)", nullable: false, comment: "修改时间"),
+                    deleted = table.Column<bool>(type: "tinyint(1)", nullable: false, comment: "是否删除")
                 },
                 constraints: table =>
                 {
@@ -113,7 +117,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                     deleted = table.Column<int>(type: "int", nullable: false, comment: "是否删除"),
                     role_id = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false, comment: "权限ID")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    langguage = table.Column<int>(type: "int", nullable: false, comment: "系统语言")
+                    language = table.Column<int>(type: "int", nullable: false, comment: "系统语言")
                 },
                 constraints: table =>
                 {

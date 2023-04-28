@@ -1,6 +1,7 @@
 ﻿using HuanTian.Entities;
 using HuanTian.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace HuanTian.EntityFrameworkCore
@@ -18,6 +19,12 @@ namespace HuanTian.EntityFrameworkCore
         public EfRepository(EfSqlContext dbContext)
         {
             _dbContext = dbContext;
+        }
+        public EfRepository(EfSqlContext dbContext, Expression<Func<TEntity, object>> orderByExpression, bool isAsc)
+        {
+            _dbContext = dbContext;
+            _isAsc = isAsc;
+            _orderByExpression = orderByExpression;
         }
 
         public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate) => await _dbContext.Set<TEntity>().FirstOrDefaultAsync(predicate);
@@ -92,9 +99,7 @@ namespace HuanTian.EntityFrameworkCore
 
         public IRepository<TEntity> OrderBy(Expression<Func<TEntity, object>> orderByExpression, bool isAsc)
         {
-            _isAsc = isAsc;
-            _orderByExpression = orderByExpression;
-            return this;
+            return new EfRepository<TEntity>(_dbContext, orderByExpression, isAsc); ;
         }
     }
 

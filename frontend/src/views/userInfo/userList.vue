@@ -5,16 +5,16 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="规则编号">
-                <a-input v-model="queryParam.id" placeholder=""/>
+              <a-form-item label="用户名">
+                <a-input v-model="queryParam.name" placeholder=""/>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-form-item label="使用状态">
-                <a-select v-model="queryParam.status" placeholder="请选择" default-value="0">
-                  <a-select-option value="0">全部123123</a-select-option>
-                  <a-select-option value="1">关闭12312312</a-select-option>
-                  <a-select-option value="2">运行中3123123</a-select-option>
+              <a-form-item label="用户状态">
+                <a-select v-model="queryParam.status" placeholder="请选择" >
+                  <a-select-option value="">全部</a-select-option>
+                  <a-select-option value="0">启用</a-select-option>
+                  <a-select-option value="1">禁用</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -86,15 +86,15 @@
         :rowSelection="rowSelection"
         showPagination="auto"
       >
-        <span slot="serial" slot-scope="text, record, index">
-          {{ index + 1 }}
-        </span>
         <span slot="status" slot-scope="text">
           <a-badge :status="text | statusTypeFilter" :text="text | statusFilter" />
         </span>
-        <span slot="description" slot-scope="text">
-          <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
+        <span slot="language" slot-scope="text" style="margin-left: -13px;">
+          <a-badge :status="text | languageTypeFilter" :text="text | languageFilter" />
         </span>
+        <!-- <span slot="description" slot-scope="text">
+          <ellipsis :length="10" tooltip>{{ text }}</ellipsis>
+        </span> -->
 
         <span slot="action" slot-scope="text, record">
           <template>
@@ -127,34 +127,38 @@ import StepByStepModal from '../list/modules/StepByStepModal'
 import CreateForm from '../list/modules/CreateForm'
 
 const columns = [
+  // {
+  //   title: '#',
+  //   scopedSlots: { customRender: 'serial' }
+  // },
   {
-    title: '#',
-    scopedSlots: { customRender: 'serial' }
+    title: '用户',
+    dataIndex: 'name'
   },
   {
-    title: '规则编号',
-    dataIndex: 'no'
+    title: '头像',
+    dataIndex: 'avatar'
   },
   {
-    title: '描述',
-    dataIndex: 'description',
-    scopedSlots: { customRender: 'description' }
+    title: '语言',
+    dataIndex: 'language',
+    scopedSlots: { customRender: 'language' }
   },
   {
-    title: '服务调用次数',
-    dataIndex: 'callNo',
-    sorter: true,
-    needTotal: true,
-    customRender: (text) => text + ' 次'
+    title: '登陆名',
+    dataIndex: 'userName'
   },
   {
-    title: '状态',
+    title: '用户状态',
     dataIndex: 'status',
     scopedSlots: { customRender: 'status' }
   },
   {
-    title: '更新时间',
-    dataIndex: 'updatedAt',
+    title: '最后登陆时间',
+    dataIndex: 'lastLoginTime',
+    customRender: (text, row, index) => {
+      return moment(text).format('YYYY-MM-DD HH:mm:ss')
+    },
     sorter: true
   },
   {
@@ -167,20 +171,22 @@ const columns = [
 
 const statusMap = {
   0: {
-    status: 'default',
-    text: '关闭'
+    status: '0',
+    text: '启用'
   },
   1: {
-    status: 'processing',
-    text: '运行中'
+    status: '1',
+    text: '禁用'
+  }
+}
+const languageMap = {
+  0: {
+    status: '0',
+    text: '中文'
   },
-  2: {
-    status: 'success',
-    text: '已上线'
-  },
-  3: {
-    status: 'error',
-    text: '异常'
+  1: {
+    status: '1',
+    text: '英语'
   }
 }
 
@@ -220,6 +226,12 @@ export default {
     },
     statusTypeFilter (type) {
       return statusMap[type].status
+    },
+    languageFilter (type) {
+      return languageMap[type].text
+    },
+    languageTypeFilter (type) {
+      return languageMap[type].status
     }
   },
   created () {

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HuanTian.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(EfSqlContext))]
-    [Migration("20230408181823_add_SysTable")]
-    partial class add_SysTable
+    [Migration("20230425144840_add_NewTable")]
+    partial class add_NewTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -153,12 +153,29 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnName("creater")
                         .HasComment("创建人");
 
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("deleted")
+                        .HasComment("是否删除");
+
+                    b.Property<string>("Describe")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)")
+                        .HasColumnName("describe")
+                        .HasComment("角色描述");
+
                     b.Property<string>("RoleName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)")
                         .HasColumnName("role_name")
                         .HasComment("角色名字");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("status")
+                        .HasComment("角色状态");
 
                     b.Property<DateTime>("UpdateTime")
                         .HasColumnType("datetime(6)")
@@ -209,9 +226,9 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnName("deleted")
                         .HasComment("是否删除");
 
-                    b.Property<int>("Langguage")
+                    b.Property<int>("Language")
                         .HasColumnType("int")
-                        .HasColumnName("langguage")
+                        .HasColumnName("language")
                         .HasComment("系统语言");
 
                     b.Property<string>("LastLoginIp")

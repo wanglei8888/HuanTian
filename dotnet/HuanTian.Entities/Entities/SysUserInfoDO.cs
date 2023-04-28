@@ -99,7 +99,7 @@ public class SysUserInfoDO
     /// </summary>
     [Required]
     [Comment("系统语言")]
-    public SystemLangguage Langguage { get; set; }
+    public SystemLanguage Language { get; set; }
 }
 public enum UserStatus
 {
@@ -114,7 +114,7 @@ public enum UserStatus
     [Comment("禁用")]
     UnEnable
 }
-public enum SystemLangguage
+public enum SystemLanguage
 {
     /// <summary>
     /// 中文

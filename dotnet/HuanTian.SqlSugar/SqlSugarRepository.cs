@@ -1,5 +1,7 @@
 ﻿using HuanTian.Entities;
 using HuanTian.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SqlSugar;
 using System.Linq.Expressions;
 
@@ -15,11 +17,15 @@ namespace HuanTian.SqlSugar
         private bool _isAsc;
         private Expression<Func<TEntity, object>> _orderByExpression;
 
-        public ISqlSugarClient SqlSugarClient => _db;
-
         public SqlSugarRepository(ISqlSugarClient db)
         {
             _db = db;
+        }
+        public SqlSugarRepository(ISqlSugarClient db, Expression<Func<TEntity, object>> orderByExpression, bool isAsc)
+        {
+            _db = db;
+            _orderByExpression = orderByExpression;
+            _isAsc = isAsc;
         }
 
         public void Insert(TEntity entity)
@@ -67,7 +73,7 @@ namespace HuanTian.SqlSugar
         }
 
         public async Task<PageData> GetAllToPageAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize)
-        { 
+        {
             var value = _db.Queryable<TEntity>();
             var pageData = new PageData();
             if (predicate != null)
@@ -107,9 +113,7 @@ namespace HuanTian.SqlSugar
 
         public IRepository<TEntity> OrderBy(Expression<Func<TEntity, object>> orderByExpression, bool isAsc)
         {
-            _isAsc = isAsc;
-            _orderByExpression = orderByExpression;
-            return this;
+            return new SqlSugarRepository<TEntity>(_db, orderByExpression, isAsc); ;
         }
     }
 }
