@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HuanTian.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(EfSqlContext))]
-    [Migration("20230425144840_add_NewTable")]
+    [Migration("20230505060151_add_NewTable")]
     partial class add_NewTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

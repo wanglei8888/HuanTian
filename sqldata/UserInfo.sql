@@ -1,4 +1,4 @@
-INSERT INTO sys_user_info (name, avatar, user_name, password, status, telephone, last_login_ip, last_login_time, creator_id, create_time, deleted, role_id, langguage)
+INSERT INTO sys_user_info (name, avatar, user_name, password, status, telephone, last_login_ip, last_login_time, creator_id, create_time, deleted, role_id, language)
 VALUES 
 ('John Doe', 'avatar1.jpg', 'test', '40BD001563085FC35165329EA1FF5C5ECBDBBEEF', 1, '123456789', '192.168.0.1', '2022-03-31 10:00:00', 1, '2022-03-31 10:00:00', 0, 1, 0),
 ('Jane Smith', 'avatar2.jpg', 'admin', 'ADCD7048512E64B48DA55B027577886EE5A36350', 1, '987654321', '192.168.0.2', '2022-03-31 11:00:00', 2, '2022-03-31 11:00:00', 0, 2, 1),

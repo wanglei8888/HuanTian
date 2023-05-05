@@ -251,7 +251,14 @@ namespace HuanTian.WebCore
                         {
                             tempName = tempName[(words[0] + words[1]).Length..];
                         }
-                        else if (Penetrates.VerbToHttpMethods.ContainsKey(verbKey)) tempName = tempName[verbKey.Length..];
+                        else if (Penetrates.VerbToHttpMethods.ContainsKey(verbKey)) {
+
+                            // 只去除单独带动作谓词的方法
+                            if (verbKey.Length == tempName.Length)
+                            {
+                                tempName = tempName[verbKey.Length..];
+                            }
+                        } 
                     }
 
                     return tempName;

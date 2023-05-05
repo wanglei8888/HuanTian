@@ -1,7 +1,5 @@
 ﻿using HuanTian.Entities;
 using HuanTian.Infrastructure;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using SqlSugar;
 using System.Linq.Expressions;
 
@@ -16,16 +14,22 @@ namespace HuanTian.SqlSugar
         private readonly ISqlSugarClient _db;
         private bool _isAsc;
         private Expression<Func<TEntity, object>> _orderByExpression;
+        private Expression<Func<TEntity, bool>> _sqlWhereExpression;
 
         public SqlSugarRepository(ISqlSugarClient db)
         {
             _db = db;
         }
         public SqlSugarRepository(ISqlSugarClient db, Expression<Func<TEntity, object>> orderByExpression, bool isAsc)
+            : this(db)
         {
-            _db = db;
             _orderByExpression = orderByExpression;
             _isAsc = isAsc;
+        }
+        public SqlSugarRepository(ISqlSugarClient db, Expression<Func<TEntity, object>> orderByExpression, bool isAsc, Expression<Func<TEntity, bool>> sqlWhereExpression)
+             : this(db, orderByExpression, isAsc)
+        {
+            _sqlWhereExpression = sqlWhereExpression;
         }
 
         public void Insert(TEntity entity)
@@ -49,7 +53,7 @@ namespace HuanTian.SqlSugar
 
             if (_orderByExpression != null)
             {
-                value = _isAsc ? value.OrderBy(_orderByExpression) : value.OrderByDescending(_orderByExpression);
+                value = _isAsc ? value.OrderBy(_orderByExpression,OrderByType.Desc) : value.OrderByDescending(_orderByExpression);
             }
 
             return await value.ToListAsync();
@@ -62,6 +66,11 @@ namespace HuanTian.SqlSugar
             if (predicate != null)
             {
                 value = value.Where(predicate);
+            }
+
+            if (_sqlWhereExpression != null)
+            {
+                value.Where(_sqlWhereExpression);
             }
 
             if (_orderByExpression != null)
@@ -79,6 +88,35 @@ namespace HuanTian.SqlSugar
             if (predicate != null)
             {
                 value = value.Where(predicate);
+            }
+
+            if (_sqlWhereExpression != null)
+            {
+                value.Where(_sqlWhereExpression);
+            }
+
+            if (_orderByExpression != null)
+            {
+                value = _isAsc ? value.OrderBy(_orderByExpression) : value.OrderByDescending(_orderByExpression);
+            }
+
+            RefAsync<int> total = 0;
+            pageData.Data = await value.ToPageListAsync(pageNo, pageSize, total);
+            pageData.TotalCount = total;
+            pageData.PageNo = pageNo;
+            pageData.PageSize = pageSize;
+            pageData.TotalPage = (int)Math.Ceiling((double)total / pageSize);
+
+            return pageData;
+        }
+        public async Task<PageData> GetAllToPageAsync(int pageNo, int pageSize)
+        {
+            var value = _db.Queryable<TEntity>();
+            var pageData = new PageData();
+
+            if (_sqlWhereExpression != null)
+            {
+                value.Where(_sqlWhereExpression);
             }
 
             if (_orderByExpression != null)
@@ -114,6 +152,27 @@ namespace HuanTian.SqlSugar
         public IRepository<TEntity> OrderBy(Expression<Func<TEntity, object>> orderByExpression, bool isAsc)
         {
             return new SqlSugarRepository<TEntity>(_db, orderByExpression, isAsc); ;
+        }
+        public IRepository<TEntity> WhereIf(bool condition, Expression<Func<TEntity, bool>> sqlWhereExpression)
+        {
+            // 合并 Expression
+            Expression<Func<TEntity, bool>>? whereExpression = _sqlWhereExpression;
+
+            if (condition && sqlWhereExpression != null)
+            {
+                if (whereExpression != null)
+                {
+                    whereExpression = whereExpression.And<TEntity>(sqlWhereExpression, ExpressionType.Add);
+                }
+                else
+                {
+                    whereExpression = sqlWhereExpression;
+                }
+                return new SqlSugarRepository<TEntity>(_db, _orderByExpression, _isAsc, whereExpression);
+            }
+
+            return this;
+
         }
     }
 }

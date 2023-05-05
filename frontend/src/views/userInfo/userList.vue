@@ -212,7 +212,7 @@ export default {
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
-        return this.$http.get('/user/Get', { params: requestParameters }).then(res => {
+        return this.$http.get('/user/page', { params: requestParameters }).then(res => {
           return res.result
         })
       },

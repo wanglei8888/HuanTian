@@ -68,11 +68,12 @@ namespace HuanTian.Service
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<dynamic> Get()
+        public async Task<dynamic> Page([FromQuery] UserInput input)
         {
             var pageData = await _userInfo
-                .OrderBy(t => t.Id, true)
-                .GetAllToPageAsync(t => t.Id != 1, 1, 10);
+                .WhereIf(!string.IsNullOrEmpty(input.Name),t => t.Name == input.Name)
+                .WhereIf(!string.IsNullOrEmpty(input.Status), t => t.Status == input.Status.ToEnum<UserStatus>())
+                .GetAllToPageAsync(1, 10);
             return pageData;
         }
     }

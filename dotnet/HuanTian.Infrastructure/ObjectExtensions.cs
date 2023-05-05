@@ -1,9 +1,11 @@
 ﻿using Humanizer.Localisation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using NPOI.SS.Formula.Functions;
 using NPOI.Util;
 using System.Collections.Concurrent;
 using System.ComponentModel;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -358,34 +360,6 @@ namespace HuanTian.Infrastructure
         }
 
         /// <summary>
-        /// 格式化字符串
-        /// </summary>
-        /// <param name="str"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        public static string Format(this string str, params object[] args)
-        {
-            return args == null || args.Length == 0 ? str : string.Format(str, args);
-        }
-
-        /// <summary>
-        /// 切割骆驼命名式字符串
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static string[] SplitCamelCase(this string str)
-        {
-            if (str == null) return Array.Empty<string>();
-
-            if (string.IsNullOrWhiteSpace(str)) return new string[] { str };
-            if (str.Length == 1) return new string[] { str };
-
-            return Regex.Split(str, @"(?=\p{Lu}\p{Ll})|(?<=\p{Ll})(?=\p{Lu})")
-                .Where(u => u.Length > 0)
-                .ToArray();
-        }
-
-        /// <summary>
         /// JsonElement 转 Object
         /// </summary>
         /// <param name="jsonElement"></param>
@@ -432,70 +406,6 @@ namespace HuanTian.Infrastructure
         }
 
         /// <summary>
-        /// 清除字符串前后缀
-        /// </summary>
-        /// <param name="str">字符串</param>
-        /// <param name="pos">0：前后缀，1：后缀，-1：前缀</param>
-        /// <param name="affixes">前后缀集合</param>
-        /// <returns></returns>
-        public static string ClearStringAffixes(this string str, int pos = 0, params string[] affixes)
-        {
-            // 空字符串直接返回
-            if (string.IsNullOrWhiteSpace(str)) return str;
-
-            // 空前后缀集合直接返回
-            if (affixes == null || affixes.Length == 0) return str;
-
-            var startCleared = false;
-            var endCleared = false;
-
-            string tempStr = null;
-            foreach (var affix in affixes)
-            {
-                if (string.IsNullOrWhiteSpace(affix)) continue;
-
-                if (pos != 1 && !startCleared && str.StartsWith(affix, StringComparison.OrdinalIgnoreCase))
-                {
-                    tempStr = str[affix.Length..];
-                    startCleared = true;
-                }
-                if (pos != -1 && !endCleared && str.EndsWith(affix, StringComparison.OrdinalIgnoreCase))
-                {
-                    var _tempStr = !string.IsNullOrWhiteSpace(tempStr) ? tempStr : str;
-                    tempStr = _tempStr[..^affix.Length];
-                    endCleared = true;
-                }
-                if (startCleared && endCleared) break;
-            }
-
-            return !string.IsNullOrWhiteSpace(tempStr) ? tempStr : str;
-        }
-
-        /// <summary>
-        /// 首字母小写
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static string ToLowerCamelCase(this string str)
-        {
-            if (string.IsNullOrWhiteSpace(str)) return str;
-
-            return string.Concat(str.First().ToString().ToLower(), str.AsSpan(1));
-        }
-
-        /// <summary>
-        /// 首字母大写
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static string ToUpperCamelCase(this string str)
-        {
-            if (string.IsNullOrWhiteSpace(str)) return str;
-
-            return string.Concat(str.First().ToString().ToUpper(), str.AsSpan(1));
-        }
-
-        /// <summary>
         /// 判断集合是否为空
         /// </summary>
         /// <typeparam name="T">元素类型</typeparam>
@@ -527,34 +437,43 @@ namespace HuanTian.Infrastructure
                 ? type.GetCustomAttribute<TAttribute>(inherit)
                 : default;
         }
+
         /// <summary>
-        /// string将属性名转换成小写，并将驼峰命名方式转换为下划线命名方式
+        /// 合并两个 Expression<Func<T, bool>
         /// </summary>
-        /// <param name="value"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="leftExpression"></param>
+        /// <param name="rightExpression"></param>
+        /// <param name="expressionType"></param>
         /// <returns></returns>
-        public static string ToLowerHump(this string value) => string.Concat(value.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString())).ToLower();
-        /// <summary>
-        /// 默认为分钟单位仅支持天以下单位 例: 24 * 60 等于一天,
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="type">时间单位</param>
-        /// <returns>时间单位距今多少</returns>
-        public static TimeSpan ToTimeSpan(this string value, TimeUnit type = TimeUnit.Minute)
+        public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> leftExpression, Expression<Func<T, bool>> rightExpression, ExpressionType expressionType)
         {
-            var array =  value.Replace(" ", "").Split('*');
-            var sumMinuts = 0;
-            foreach (var item in array)
-            {
-                sumMinuts += Convert.ToInt32(item);
-            }
-            return type switch
-            {
-                TimeUnit.Minute => TimeSpan.FromMinutes(sumMinuts),
-                TimeUnit.Hour => TimeSpan.FromHours(sumMinuts),
-                TimeUnit.Day => TimeSpan.FromDays(sumMinuts),
-                TimeUnit.Week => TimeSpan.FromDays(sumMinuts),
-                _ => TimeSpan.FromMinutes(sumMinuts),
-            };
+            var parameter = Expression.Parameter(typeof(T));
+
+            var leftVisitor = new ReplaceExpressionVisitor(leftExpression.Parameters[0], parameter);
+            var left = leftVisitor.Visit(leftExpression.Body);
+
+            var rightVisitor = new ReplaceExpressionVisitor(rightExpression.Parameters[0], parameter);
+            var right = rightVisitor.Visit(rightExpression.Body);
+
+            return Expression.Lambda<Func<T, bool>>(
+                Expression.AndAlso(left, right), parameter);
+        }
+    }
+    class ReplaceExpressionVisitor : ExpressionVisitor
+    {
+        private readonly Expression _oldValue;
+        private readonly Expression _newValue;
+
+        public ReplaceExpressionVisitor(Expression oldValue, Expression newValue)
+        {
+            _oldValue = oldValue;
+            _newValue = newValue;
+        }
+
+        public override Expression Visit(Expression node)
+        {
+            return node == _oldValue ? _newValue : base.Visit(node);
         }
     }
 }

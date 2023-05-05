@@ -172,7 +172,7 @@ namespace HuanTian.Infrastructure
 //         if (steam != null) 导出代码
 //            {
 //                byte[] buffer = steam.ToByteArray();
-//                var outUrl = Path.Combine("E:\\Code", "区县导出temp.xlsx"); ;
+//                var outUrl = Path.And("E:\\Code", "区县导出temp.xlsx"); ;
 //                using (FileStream filestream = new FileStream(outUrl, FileMode.Create))
 //                {
 //                    byte[] bt = new byte[filestream.Length];
