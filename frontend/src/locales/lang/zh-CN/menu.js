@@ -23,6 +23,7 @@ export default {
     // 新加
     'menu.userInfo': '用户信息',
     'menu.userInfo.userList': '用户列表',
+    'menu.other.IconSelector': '图标列表',
     // 新加
     'menu.profile': '详情页',
     'menu.profile.basic': '基础详情页',

@@ -51,8 +51,18 @@ const constantRouterComponents = {
   CustomSettings: () => import('@/views/account/settings/Custom'),
   BindingSettings: () => import('@/views/account/settings/Binding'),
   NotificationSettings: () => import('@/views/account/settings/Notification'),
-  UserList: () => import('@/views/userInfo/userList')
 
+  // Other
+  IconSelectorView: () => import('@/views/other/IconSelectorView'),
+  TableInnerEditList: () => import('@/views/other/TableInnerEditList'),
+
+  // system
+  TreeList: () => import('@/views/System/TreeList'),
+  UserList2: () => import('@/views/System/UserList'),
+  RoleList: () => import('@/views/System/RoleList'),
+  PermissionList: () => import('@/views/System/PermissionList')
+  // // userinfo
+  // UserList: () => import('@/views/userInfo/userList')
   // 'TestWork': () => import(/* webpackChunkName: "TestWork" */ '@/views/dashboard/TestWork')
 }
 
