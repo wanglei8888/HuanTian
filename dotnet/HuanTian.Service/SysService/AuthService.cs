@@ -26,22 +26,22 @@
 using HuanTian.Entities;
 using HuanTian.Infrastructure;
 using HuanTian.WebCore;
-using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace HuanTian.Service
 {
     /// <summary>
     /// 登陆服务
     /// </summary>
-    public class AuthService: IAuthService,IDynamicApiController
+    public class AuthService : IAuthService, IDynamicApiController
     {
         private readonly IRepository<SysUserInfoDO> _sysUserInfo;
         private readonly IRedisCache _redisCache;
         public AuthService(
             IRepository<SysUserInfoDO> sysUserInfo,
-            IRedisCache redisCache)  
+            IRedisCache redisCache)
         {
             _sysUserInfo = sysUserInfo;
             _redisCache = redisCache;
@@ -55,13 +55,19 @@ namespace HuanTian.Service
         [HttpPost]
         public async Task<dynamic> Login(LoginInput input)
         {
-
             var userInfo = await _sysUserInfo.FirstOrDefaultAsync(t => t.UserName == input.UserName && t.Password == EncryptionHelper.SHA1(input.Password));
             if (userInfo == null) throw new Exception("用户账号密码错误");
 
-            var output = new LoginOutput();
-            output.Token = JWTHelper.GetToken(EncryptionHelper.Encrypt(userInfo.Id.ToString(),CommonConst.UserToken));
+            // 储存Jwt数据
+            var claims = new[]
+            {
+                new Claim(JwtClaimConst.UserIdClaim,userInfo.Id.ToString()),
+                new Claim(JwtClaimConst.TenantIdClaim,userInfo.TenantId.ToString()),
+            };
 
+            var output = new LoginOutput() {
+                Token = JWTHelper.GetToken(claims)
+            };
             return output;
         }
         /// <summary>
@@ -78,7 +84,7 @@ namespace HuanTian.Service
                 var userId = App.HttpContext.User.Claims.FirstOrDefault(u => u.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sid)?.Value;
                 await _redisCache.SetAddAsync($"LoginUserInfoWhitelist", token.ToString());
             }
-            
+
         }
     }
 }

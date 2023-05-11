@@ -1,8 +1,11 @@
-﻿using HuanTian.Entities;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
-namespace HuanTian.Infrastructure
+namespace HuanTian.Entities
 {
+    /// <summary>
+    /// 仓储接口
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
     public interface IRepository<TEntity> where TEntity : class, new()
     {
         /// <summary>
@@ -41,11 +44,11 @@ namespace HuanTian.Infrastructure
         /// <returns>返回分页PageData实体</returns>
         Task<PageData> ToPageListAsync(int pageNo, int pageSize);
         /// <summary>
-        /// 新增一条数据
+        /// 新增一条数据  (如果传入了InitTable将以InitTable为主)
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        Task AddAsync(TEntity entity);
+        Task<int> AddAsync(TEntity? entity = default);
         /// <summary>
         /// 修改一条数据
         /// </summary>
@@ -70,7 +73,19 @@ namespace HuanTian.Infrastructure
         /// <param name="sqlWhereExpression">筛选条件</param>
         /// <returns></returns>
         IRepository<TEntity> WhereIf(bool condition, Expression<Func<TEntity, bool>> sqlWhereExpression);
-        //// 原生 SqlSugar 操作
-        //ISqlSugarClient SqlSugarClient { get; }
+        /// <summary>
+        /// 调用实体方法
+        /// </summary>
+        /// <param name="method"></param>
+        /// <returns></returns>
+        IRepository<TEntity> CallEntityMethod(Expression<Action<TEntity>> method);
+        /// <summary>
+        /// 加载表格实体
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns></returns>
+        IRepository<TEntity> InitTable(TEntity table);
+
+
     }
 }

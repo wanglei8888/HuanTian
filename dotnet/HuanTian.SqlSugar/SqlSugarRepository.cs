@@ -15,7 +15,7 @@ namespace HuanTian.SqlSugar
         private bool _isAsc;
         private Expression<Func<TEntity, object>> _orderByExpression;
         private Expression<Func<TEntity, bool>> _sqlWhereExpression;
-
+        private TEntity _table;
         public SqlSugarRepository(ISqlSugarClient db)
         {
             _db = db;
@@ -31,10 +31,10 @@ namespace HuanTian.SqlSugar
         {
             _sqlWhereExpression = sqlWhereExpression;
         }
-
-        public void Insert(TEntity entity)
+        public SqlSugarRepository(ISqlSugarClient db, Expression<Func<TEntity, object>> orderByExpression, bool isAsc, Expression<Func<TEntity, bool>> sqlWhereExpression, TEntity table)
+             : this(db, orderByExpression, isAsc, sqlWhereExpression)
         {
-            _db.Insertable(entity).ExecuteCommand();
+            _table = table;
         }
 
         public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
@@ -109,6 +109,7 @@ namespace HuanTian.SqlSugar
 
             return pageData;
         }
+
         public async Task<PageData> ToPageListAsync(int pageNo, int pageSize)
         {
             var value = _db.Queryable<TEntity>();
@@ -133,10 +134,18 @@ namespace HuanTian.SqlSugar
 
             return pageData;
         }
-        public async Task AddAsync(TEntity entity)
+
+        public async Task<int> AddAsync(TEntity? entity = default)
         {
-            _db.Insertable(entity).ExecuteCommand();
-            await Task.CompletedTask;
+            if (entity == null)
+            {
+                entity = _table;
+            }
+            if (entity == null)
+            {
+                throw new ArgumentException("AddAsync(TEntity)、InitTable(TEntity)必须使用一个", nameof(entity));
+            }
+            return  await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         public void UpdateAsync(TEntity entity)
@@ -153,6 +162,7 @@ namespace HuanTian.SqlSugar
         {
             return new SqlSugarRepository<TEntity>(_db, orderByExpression, isAsc); ;
         }
+
         public IRepository<TEntity> WhereIf(bool condition, Expression<Func<TEntity, bool>> sqlWhereExpression)
         {
             // 合并 Expression
@@ -174,5 +184,27 @@ namespace HuanTian.SqlSugar
             return this;
 
         }
+
+        public IRepository<TEntity> CallEntityMethod(Expression<Action<TEntity>> method)
+        {
+            if (!(method.Body is MethodCallExpression callExpresion))
+            {
+                throw new ArgumentException("Expression must be a method call.", nameof(method));
+            }
+            if (_table == null)
+            {
+                throw new ArgumentException("使用CallEntityMethod必须先调用InitTable", nameof(method));
+            }
+
+            callExpresion.Method.Invoke(_table, null);
+            return this;
+        }
+
+        public IRepository<TEntity> InitTable(TEntity table)
+        {
+            _table = table;
+            return new SqlSugarRepository<TEntity>(_db, _orderByExpression, _isAsc, _sqlWhereExpression,table);
+        }
+
     }
 }

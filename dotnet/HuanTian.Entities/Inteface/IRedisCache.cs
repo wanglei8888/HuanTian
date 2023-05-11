@@ -24,7 +24,7 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-namespace HuanTian.Infrastructure
+namespace HuanTian.Entities
 {
     /// <summary>
     /// Redis缓存接口

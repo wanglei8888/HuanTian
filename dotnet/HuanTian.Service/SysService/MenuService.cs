@@ -23,11 +23,7 @@ namespace HuanTian.Service
             var jsonString = File.ReadAllText(Path.Combine(App.WebHostEnvironment.WebRootPath, "MenuInfo.json"));
                 
             var menuInfo = JsonConvert.DeserializeObject<List<MenuItem>>(jsonString);
-
             return menuInfo;
-
-
-
         }
     }
 }

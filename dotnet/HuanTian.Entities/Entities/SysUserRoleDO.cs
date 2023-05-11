@@ -9,42 +9,17 @@ namespace HuanTian.Entities
     /// 系统用户权限表
     /// </summary>
     [Comment("系统用户权限表")]
-    public class SysUserRoleDO
+    public class SysUserRoleDO: BaseEntityCreate
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
         /// <summary>
         /// 用户ID
         /// </summary>
         [Required]
-        public int UserId { get; set; }
+        public long UserId { get; set; }
         /// <summary>
         /// 权限ID
         /// </summary>
         [Required]
-        public int RoleId { get; set; }
-        /// <summary>
-        /// 创建人
-        /// </summary>
-        [MaxLength(50)]
-        [Comment("创建人")]
-        public string? Creater { get; set; }
-        /// <summary>
-        /// 创建时间
-        /// </summary>
-        [Comment("创建时间")]
-        public DateTime CreateTime { get; set; }
-        /// <summary>
-        /// 修改人
-        /// </summary>
-        [MaxLength(50)]
-        [Comment("修改人")]
-        public string? Updater { get; set; }
-        /// <summary>
-        /// 修改时间
-        /// </summary>
-        [Comment("修改时间")]
-        public DateTime UpdateTime { get; set; }
+        public long RoleId { get; set; }
     }
 }

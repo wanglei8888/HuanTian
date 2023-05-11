@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HuanTian.Entities
 {
@@ -9,15 +8,8 @@ namespace HuanTian.Entities
     /// 系统角色信息表
     /// </summary>
     [Comment("系统角色信息表")]
-    public class SysRoleInfoDO
+    public class SysRoleInfoDO : BaseEntityCreate
     {
-        /// <summary>
-        /// 角色ID
-        /// </summary>
-        [Key]
-        [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
         /// <summary>
         /// 角色名字
         /// </summary>
@@ -28,7 +20,6 @@ namespace HuanTian.Entities
         /// <summary>
         /// 角色描述
         /// </summary>
-        [Required]
         [MaxLength(200)]
         [Comment("角色描述")]
         public string Describe { get; set; }
@@ -38,32 +29,5 @@ namespace HuanTian.Entities
         [Required]
         [Comment("角色状态")]
         public int Status { get; set; }
-        /// <summary>
-        /// 创建人
-        /// </summary>
-        [MaxLength(50)]
-        [Comment("创建人")]
-        public string? Creater { get; set; }
-        /// <summary>
-        /// 创建时间
-        /// </summary>
-        [Comment("创建时间")]
-        public DateTime CreateTime { get; set; }
-        /// <summary>
-        /// 修改人
-        /// </summary>
-        [MaxLength(50)]
-        [Comment("修改人")]
-        public string? Updater { get; set; }
-        /// <summary>
-        /// 修改时间
-        /// </summary>
-        [Comment("修改时间")]
-        public DateTime UpdateTime { get; set; }
-        /// <summary>
-        /// 是否删除
-        /// </summary>
-        [Comment("是否删除")]
-        public bool Deleted { get; set; }
     }
 }

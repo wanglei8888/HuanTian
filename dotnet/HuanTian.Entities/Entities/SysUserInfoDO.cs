@@ -1,19 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HuanTian.Entities;
 /// <summary>
 /// 用户信息表
 /// </summary>
 [Comment("用户信息表")]
-public class SysUserInfoDO
+public class SysUserInfoDO:BaseEntityBusiness
 {
-    [Key]
-    [Required]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
     /// <summary>
     /// 名字
     /// </summary>
@@ -24,7 +18,6 @@ public class SysUserInfoDO
     /// <summary>
     /// 名字
     /// </summary>
-    [Required]
     [MaxLength(200)]
     [Comment("图片路径")]
     public string? Avatar { get; set; }
@@ -51,53 +44,29 @@ public class SysUserInfoDO
     /// <summary>
     /// 电话
     /// </summary>
-    [Required]
     [MaxLength(50)]
     [Comment("电话")]
     public string? Telephone { get; set; }
     /// <summary>
     /// 最后登陆IP
     /// </summary>
-    [Required]
     [MaxLength(100)]
     [Comment("最后登陆IP")]
     public string? LastLoginIp { get; set; }
     /// <summary>
     /// 最后登陆时间
     /// </summary>
-    [Required]
     [Comment("最后登陆时间")]
     public DateTime LastLoginTime { get; set; }
     /// <summary>
-    /// 创建人
-    /// </summary>
-    [Required]
-    [MaxLength(100)]
-    [Comment("创建人")]
-    public string? CreatorId { get; set; }
-    /// <summary>
-    /// 创建时间
-    /// </summary>
-    [Required]
-    [Comment("创建时间")]
-    public DateTime CreateTime { get; set; }
-    /// <summary>
-    /// 是否删除
-    /// </summary>
-    [Required]
-    [Comment("是否删除")]
-    public int Deleted { get; set; }
-    /// <summary>
     /// 权限ID
     /// </summary>
-    [Required]
     [MaxLength(200)]
     [Comment("权限ID")]
     public string? RoleId { get; set; }
     /// <summary>
     /// 系统语言
     /// </summary>
-    [Required]
     [Comment("系统语言")]
     public SystemLanguage Language { get; set; }
 }

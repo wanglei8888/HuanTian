@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HuanTian.Infrastructure\HuanTian.Infrastructure.csproj" />
+    <ProjectReference Include="..\HuanTian.Entities\HuanTian.Entities.csproj" />
   </ItemGroup>
 
 </Project>

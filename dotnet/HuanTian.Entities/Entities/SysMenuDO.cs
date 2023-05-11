@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HuanTian.Entities
 {
@@ -9,14 +7,8 @@ namespace HuanTian.Entities
     /// 系统菜单表
     /// </summary>
     [Comment("系统菜单表")]
-    public class SysMenuDO
+    public class SysMenuDO : BaseEntityCreate
     {
-        /// <summary>
-        /// 菜单ID
-        /// </summary>
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
         /// <summary>
         /// 菜单父级ID
         /// </summary>
@@ -28,7 +20,6 @@ namespace HuanTian.Entities
         [MaxLength(50)]
         [Comment("菜单名字")]
         public string? Name { get; set; }
-
         /// <summary>
         /// 菜单地址
         /// </summary>
@@ -41,7 +32,6 @@ namespace HuanTian.Entities
         [MaxLength(50)]
         [Comment("菜单标题")]
         public string? Title { get; set; }
-
         /// <summary>
         /// 是否缓存
         /// </summary>
@@ -54,26 +44,19 @@ namespace HuanTian.Entities
         [Comment("图标")]
         public string? Icon { get; set; }
         /// <summary>
-        /// 创建人
+        /// 是否显示菜单
         /// </summary>
-        [MaxLength(50)]
-        [Comment("创建人")]
-        public string? Creater { get; set; }
+        [Comment("是否显示菜单")]
+        public bool Show { get; set; } = true;
         /// <summary>
-        /// 创建时间
+        /// 菜单跳转方式
         /// </summary>
-        [Comment("创建时间")]
-        public DateTime CreateTime { get; set; } = DateTime.Now;
+        [Comment("菜单跳转方式")]
+        public string Target { get; set; }
         /// <summary>
-        /// 修改人
+        /// 隐藏子类
         /// </summary>
-        [MaxLength(50)]
-        [Comment("修改人")]
-        public string? Updater { get; set; }
-        /// <summary>
-        /// 修改时间
-        /// </summary>
-        [Comment("修改时间")]
-        public DateTime UpdateTime { get; set; } = DateTime.Now;
+        [Comment("隐藏子类")]
+        public bool HideChildren { get; set; }
     }
 }

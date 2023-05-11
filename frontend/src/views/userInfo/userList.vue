@@ -92,6 +92,9 @@
         <span slot="language" slot-scope="text" style="margin-left: -13px;">
           <a-badge :status="text | languageTypeFilter" :text="text | languageFilter" />
         </span>
+        <span slot="avatar" slot-scope="text" style="margin-left: -13px;">
+          <img style="width:75px;heigth:75px" slot="avatar" :src=text />
+        </span>
         <!-- <span slot="description" slot-scope="text">
           <ellipsis :length="10" tooltip>{{ text }}</ellipsis>
         </span> -->
@@ -137,7 +140,8 @@ const columns = [
   },
   {
     title: '头像',
-    dataIndex: 'avatar'
+    dataIndex: 'avatar',
+    scopedSlots: { customRender: 'avatar' }
   },
   {
     title: '语言',

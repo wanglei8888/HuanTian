@@ -415,6 +415,7 @@
     "redirect": "/userInfo/userList",
     "component": "RouteView"
   },
+
   {
     "name": "tree-list",
     "parentId": 10060,
@@ -423,6 +424,16 @@
       "title": "树目录表格"
     },
     "component": "TreeList"
+  },
+  {
+    "name": "userList",
+    "parentId": 10060,
+    "id": 92,
+    "meta": {
+      "title": "menu.userInfo.userList",
+      "show": true
+    },
+    "component": "UserList"
   },
   {
     "name": "user-list",

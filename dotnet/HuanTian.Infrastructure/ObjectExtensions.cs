@@ -1,15 +1,12 @@
-﻿using Humanizer.Localisation;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using NPOI.SS.Formula.Functions;
-using NPOI.Util;
+using Newtonsoft.Json;
 using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 
 namespace HuanTian.Infrastructure
 {
@@ -458,6 +455,15 @@ namespace HuanTian.Infrastructure
 
             return Expression.Lambda<Func<T, bool>>(
                 Expression.AndAlso(left, right), parameter);
+        }
+        /// <summary>
+        /// 转为json string
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string ToJsonString(this object value)
+        {
+            return JsonConvert.SerializeObject(value);
         }
     }
     class ReplaceExpressionVisitor : ExpressionVisitor

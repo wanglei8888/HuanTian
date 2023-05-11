@@ -27,6 +27,10 @@ namespace HuanTian.Infrastructure
         /// 获取请求上下文
         /// </summary>
         public static HttpContext HttpContext => CatchOrDefault(() => RootServices?.GetService<IHttpContextAccessor>()?.HttpContext);
+        /// <summary>
+        /// 获取当前登陆账户的用户ID
+        /// </summary>
+        public static long GetUserId => long.Parse(HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtClaimConst.UserIdClaim)?.Value);
 
         /// <summary>
         /// 获取Web主机环境
