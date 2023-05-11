@@ -129,10 +129,10 @@ namespace HuanTian.WebCore
             swaggerUIOptions.DocumentTitle = _swaggerSettings.DocumentTitle;
 
             // 配置UI地址（处理二级虚拟目录）
-            if (!string.IsNullOrEmpty(_swaggerSettings.RoutePrefix))
-            {
+            //if (!string.IsNullOrEmpty(_swaggerSettings.RoutePrefix))
+            //{
                swaggerUIOptions.RoutePrefix = _swaggerSettings.RoutePrefix ?? routePrefix ?? "api";
-            }
+            //}
             
             // 文档展开设置
             swaggerUIOptions.DocExpansion(_swaggerSettings.DocExpansionState ?? DocExpansion.None);

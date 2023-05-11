@@ -35,7 +35,7 @@ namespace HuanTian.EntityFrameworkCore
 
         public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate) => await _dbContext.Set<TEntity>().FirstOrDefaultAsync(predicate);
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate = default)
+        public async Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> predicate = default)
         {
             IQueryable<TEntity> value = _dbContext.Set<TEntity>();
 
@@ -47,7 +47,7 @@ namespace HuanTian.EntityFrameworkCore
             return await value.ToListAsync();
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize)
+        public async Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize)
         {
             IQueryable<TEntity> value = _dbContext.Set<TEntity>();
 
@@ -64,7 +64,7 @@ namespace HuanTian.EntityFrameworkCore
             return await value.Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
         }
 
-        public async Task<PageData> GetAllToPageAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize)
+        public async Task<PageData> ToPageListAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize)
         {
             IQueryable<TEntity> value = _dbContext.Set<TEntity>();
             var pageData = new PageData();
@@ -108,7 +108,7 @@ namespace HuanTian.EntityFrameworkCore
             return new EfRepository<TEntity>(_dbContext, orderByExpression, isAsc); ;
         }
 
-        public async Task<PageData> GetAllToPageAsync(int pageNo, int pageSize)
+        public async Task<PageData> ToPageListAsync(int pageNo, int pageSize)
         {
             IQueryable<TEntity> value = _dbContext.Set<TEntity>();
             var pageData = new PageData();

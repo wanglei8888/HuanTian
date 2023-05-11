@@ -24,6 +24,7 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 using HuanTian.Entities;
+using HuanTian.Infrastructure;
 using HuanTian.WebCore;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -33,7 +34,7 @@ namespace HuanTian.Service
     /// <summary>
     /// 用户权限
     /// </summary>
-    public class RoleService: IRoleService,IDynamicApiController
+    public class RoleService : IRoleService, IDynamicApiController
     {
         /// <summary>
         /// 获取用户权限
@@ -42,8 +43,13 @@ namespace HuanTian.Service
         [HttpGet]
         public dynamic UserRole()
         {
-            var jsonString = "{\"id\":\"1\",\"name\":\"管理员\",\"describe\":\"拥有所有权限\",\"status\":1,\"creatorId\":\"system\",\"createTime\":\"2022-03-01\",\"deleted\":0,\"permissions\":[{\"roleId\":\"admin\",\"permissionId\":\"comment\",\"permissionName\":\"评论管理\",\"actions\":\"[{\\\"action\\\":\\\"add\\\",\\\"defaultCheck\\\":false,\\\"describe\\\":\\\"新增\\\"},{\\\"action\\\":\\\"query\\\",\\\"defaultCheck\\\":false,\\\"describe\\\":\\\"查询\\\"},{\\\"action\\\":\\\"get\\\",\\\"defaultCheck\\\":false,\\\"describe\\\":\\\"详情\\\"},{\\\"action\\\":\\\"edit\\\",\\\"defaultCheck\\\":false,\\\"describe\\\":\\\"修改\\\"},{\\\"action\\\":\\\"delete\\\",\\\"defaultCheck\\\":false,\\\"describe\\\":\\\"删除\\\"}]\",\"actionList\":[\"delete\",\"edit\"]}]}";
-            var role = JsonConvert.DeserializeObject<RolePermissionDto>(jsonString);
+            var jsonString = File.ReadAllText(Path.Combine(App.WebHostEnvironment.WebRootPath, "UserRole.json"));
+            var role = JsonConvert.DeserializeObject<List<UserPermission>>(jsonString);
+            var pageData = new PageData();
+            pageData.Data = role;
+            pageData.PageNo = 1;
+            pageData.PageSize = 10;
+            pageData.TotalCount = 5;
             return role;
         }
     }

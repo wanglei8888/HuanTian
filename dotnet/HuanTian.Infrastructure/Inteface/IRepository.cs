@@ -16,7 +16,7 @@ namespace HuanTian.Infrastructure
         /// </summary>
         /// <param name="predicate">筛选条件</param>
         /// <returns></returns>
-        Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate = default);
+        Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> predicate = default);
         /// <summary>
         /// 分页获取所有数据 返回原始数据
         /// </summary>
@@ -24,7 +24,7 @@ namespace HuanTian.Infrastructure
         /// <param name="pageNo">页码</param>
         /// <param name="pageSize">页大小</param>
         /// <returns>返回原始数据</returns>
-        Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize);
+        Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize);
         /// <summary>
         /// 分页获取所有数据 有筛选条件
         /// </summary>
@@ -32,14 +32,14 @@ namespace HuanTian.Infrastructure
         /// <param name="pageNo">页码</param>
         /// <param name="pageSize">页大小</param>
         /// <returns>返回分页PageData实体</returns>
-        Task<PageData> GetAllToPageAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize);
+        Task<PageData> ToPageListAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize);
         /// <summary>
         /// 分页获取所有数据 无筛选条件通过WhereIf
         /// </summary>
         /// <param name="pageNo">页码</param>
         /// <param name="pageSize">页大小</param>
         /// <returns>返回分页PageData实体</returns>
-        Task<PageData> GetAllToPageAsync(int pageNo, int pageSize);
+        Task<PageData> ToPageListAsync(int pageNo, int pageSize);
         /// <summary>
         /// 新增一条数据
         /// </summary>

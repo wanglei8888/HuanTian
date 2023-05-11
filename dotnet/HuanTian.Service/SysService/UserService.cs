@@ -29,6 +29,7 @@ using HuanTian.WebCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using NPOI.HSSF.Record.Aggregates;
 
 namespace HuanTian.Service
 {
@@ -60,7 +61,7 @@ namespace HuanTian.Service
 
             var jsonString = File.ReadAllText(Path.Combine(App.WebHostEnvironment.WebRootPath, "UserInfo.json"));
             var userInfo = JsonConvert.DeserializeObject<User_Test>(jsonString);
-
+            
             return userInfo;
         }
         /// <summary>
@@ -73,7 +74,7 @@ namespace HuanTian.Service
             var pageData = await _userInfo
                 .WhereIf(!string.IsNullOrEmpty(input.Name),t => t.Name == input.Name)
                 .WhereIf(!string.IsNullOrEmpty(input.Status), t => t.Status == input.Status.ToEnum<UserStatus>())
-                .GetAllToPageAsync(1, 10);
+                .ToPageListAsync(input.PageNo,input.PageSize);
             return pageData;
         }
     }

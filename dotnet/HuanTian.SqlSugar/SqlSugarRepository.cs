@@ -42,7 +42,7 @@ namespace HuanTian.SqlSugar
             return await _db.Queryable<TEntity>().FirstAsync(predicate);
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
+        public async Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> predicate)
         {
             var value = _db.Queryable<TEntity>();
 
@@ -59,7 +59,7 @@ namespace HuanTian.SqlSugar
             return await value.ToListAsync();
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize)
+        public async Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize)
         {
             var value = _db.Queryable<TEntity>();
 
@@ -81,7 +81,7 @@ namespace HuanTian.SqlSugar
             return await value.ToPageListAsync(pageNo, pageSize);
         }
 
-        public async Task<PageData> GetAllToPageAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize)
+        public async Task<PageData> ToPageListAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize)
         {
             var value = _db.Queryable<TEntity>();
             var pageData = new PageData();
@@ -109,7 +109,7 @@ namespace HuanTian.SqlSugar
 
             return pageData;
         }
-        public async Task<PageData> GetAllToPageAsync(int pageNo, int pageSize)
+        public async Task<PageData> ToPageListAsync(int pageNo, int pageSize)
         {
             var value = _db.Queryable<TEntity>();
             var pageData = new PageData();

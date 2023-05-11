@@ -108,6 +108,7 @@ namespace Huangtian.Store
                 endpoints.MapControllers();
             });
 
+            app.UseStaticFiles();
             app.Run();
         }
     }
