@@ -8,6 +8,7 @@ namespace HuanTian.Entities
     /// <typeparam name="TEntity"></typeparam>
     public interface IRepository<TEntity> where TEntity : class, new()
     {
+        #region 增删改查
         /// <summary>
         /// 只查询一条数据
         /// </summary>
@@ -20,14 +21,6 @@ namespace HuanTian.Entities
         /// <param name="predicate">筛选条件</param>
         /// <returns></returns>
         Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> predicate = default);
-        /// <summary>
-        /// 分页获取所有数据 返回原始数据
-        /// </summary>
-        /// <param name="predicate">筛选条件</param>
-        /// <param name="pageNo">页码</param>
-        /// <param name="pageSize">页大小</param>
-        /// <returns>返回原始数据</returns>
-        Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize);
         /// <summary>
         /// 分页获取所有数据 有筛选条件
         /// </summary>
@@ -44,21 +37,36 @@ namespace HuanTian.Entities
         /// <returns>返回分页PageData实体</returns>
         Task<PageData> ToPageListAsync(int pageNo, int pageSize);
         /// <summary>
-        /// 新增一条数据  (如果传入了InitTable将以InitTable为主)
+        /// 新增一条数据
         /// </summary>
-        /// <param name="entity"></param>
         /// <returns></returns>
-        Task<int> AddAsync(TEntity? entity = default);
+        Task<int> AddAsync(TEntity entity);
         /// <summary>
-        /// 修改一条数据
+        /// 新增多条数据
+        /// </summary>
+        /// <returns></returns>
+        Task<int> AddAsync(List<TEntity> entityList);
+        /// <summary>
+        /// 修改一条数据 (如果传入了InitTable将以InitTable为主)
         /// </summary>
         /// <param name="entity"></param>
-        void UpdateAsync(TEntity entity);
+        Task<int> UpdateAsync(TEntity entity);
         /// <summary>
-        /// 删除一条数据
+        /// 修改多条数据 (如果传入了InitTable将以InitTable为主)
         /// </summary>
         /// <param name="entity"></param>
-        void DeleteAsync(TEntity entity);
+        Task<int> UpdateAsync(List<TEntity> entity);
+        /// <summary>
+        /// 删除一条数据 (如果传入了InitTable将以InitTable为主)
+        /// </summary>
+        /// <param name="entity"></param>
+        Task<int> DeleteAsync(TEntity entity);
+        /// <summary>
+        /// 删除多条数据 (如果传入了InitTable将以InitTable为主)
+        /// </summary>
+        /// <param name="entity"></param>
+        Task<int> DeleteAsync(List<TEntity> entity); 
+        #endregion
         /// <summary>
         /// 数据排序
         /// </summary>
@@ -74,17 +82,17 @@ namespace HuanTian.Entities
         /// <returns></returns>
         IRepository<TEntity> WhereIf(bool condition, Expression<Func<TEntity, bool>> sqlWhereExpression);
         /// <summary>
-        /// 调用实体方法
-        /// </summary>
-        /// <param name="method"></param>
-        /// <returns></returns>
-        IRepository<TEntity> CallEntityMethod(Expression<Action<TEntity>> method);
-        /// <summary>
         /// 加载表格实体
         /// </summary>
-        /// <param name="table"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        IRepository<TEntity> InitTable(TEntity table);
+        IReposityoryInit<TEntity> InitTable(TEntity entity);
+        /// <summary>
+        /// 加载表格实体(集合)
+        /// </summary>
+        /// <param name="entityList"></param>
+        /// <returns></returns>
+        IReposityoryInit<TEntity> InitTable(List<TEntity> entityList);
 
 
     }

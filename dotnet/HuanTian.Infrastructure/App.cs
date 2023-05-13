@@ -30,7 +30,11 @@ namespace HuanTian.Infrastructure
         /// <summary>
         /// 获取当前登陆账户的用户ID
         /// </summary>
-        public static long GetUserId => long.Parse(HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtClaimConst.UserIdClaim)?.Value);
+        public static long GetUserId => long.Parse(HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtClaimConst.UserId)?.Value);
+        /// <summary>
+        /// 获取当前登录账户的租户ID
+        /// </summary>
+        public static long GetTenantId => long.Parse(HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtClaimConst.TenantId)?.Value);
 
         /// <summary>
         /// 获取Web主机环境

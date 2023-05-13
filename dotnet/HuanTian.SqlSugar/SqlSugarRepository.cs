@@ -13,9 +13,10 @@ namespace HuanTian.SqlSugar
     {
         private readonly ISqlSugarClient _db;
         private bool _isAsc;
-        private Expression<Func<TEntity, object>> _orderByExpression;
-        private Expression<Func<TEntity, bool>> _sqlWhereExpression;
-        private TEntity _table;
+        private Expression<Func<TEntity, object>>? _orderByExpression;
+        private Expression<Func<TEntity, bool>>? _sqlWhereExpression;
+
+        #region 构造函数
         public SqlSugarRepository(ISqlSugarClient db)
         {
             _db = db;
@@ -31,12 +32,9 @@ namespace HuanTian.SqlSugar
         {
             _sqlWhereExpression = sqlWhereExpression;
         }
-        public SqlSugarRepository(ISqlSugarClient db, Expression<Func<TEntity, object>> orderByExpression, bool isAsc, Expression<Func<TEntity, bool>> sqlWhereExpression, TEntity table)
-             : this(db, orderByExpression, isAsc, sqlWhereExpression)
-        {
-            _table = table;
-        }
+        #endregion
 
+        #region 增删改查
         public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await _db.Queryable<TEntity>().FirstAsync(predicate);
@@ -53,7 +51,7 @@ namespace HuanTian.SqlSugar
 
             if (_orderByExpression != null)
             {
-                value = _isAsc ? value.OrderBy(_orderByExpression,OrderByType.Desc) : value.OrderByDescending(_orderByExpression);
+                value = _isAsc ? value.OrderBy(_orderByExpression, OrderByType.Desc) : value.OrderByDescending(_orderByExpression);
             }
 
             return await value.ToListAsync();
@@ -135,29 +133,35 @@ namespace HuanTian.SqlSugar
             return pageData;
         }
 
-        public async Task<int> AddAsync(TEntity? entity = default)
+        public async Task<int> DeleteAsync(TEntity entity)
         {
-            if (entity == null)
-            {
-                entity = _table;
-            }
-            if (entity == null)
-            {
-                throw new ArgumentException("AddAsync(TEntity)、InitTable(TEntity)必须使用一个", nameof(entity));
-            }
-            return  await _db.Insertable(entity).ExecuteCommandAsync();
+            return await _db.Deleteable<TEntity>(entity).ExecuteCommandAsync();
+        }
+        public async Task<int> DeleteAsync(List<TEntity> entityList)
+        {
+            return await _db.Deleteable<TEntity>(entityList).ExecuteCommandAsync();
         }
 
-        public void UpdateAsync(TEntity entity)
+        public async Task<int> AddAsync(TEntity entity)
         {
-            _db.Updateable(entity).ExecuteCommand();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
+        }
+        public async Task<int> AddAsync(List<TEntity> entityList)
+        {
+            return await _db.Insertable(entityList).ExecuteCommandAsync();
         }
 
-        public void DeleteAsync(TEntity entity)
+        public async Task<int> UpdateAsync(TEntity entity)
         {
-            _db.Deleteable<TEntity>().ExecuteCommand();
+            return await _db.Updateable(entity).ExecuteCommandAsync();
         }
+        public async Task<int> UpdateAsync(List<TEntity> entityList)
+        {
+            return await _db.Updateable(entityList).ExecuteCommandAsync();
+        }
+        #endregion
 
+        #region 帮助方法
         public IRepository<TEntity> OrderBy(Expression<Func<TEntity, object>> orderByExpression, bool isAsc)
         {
             return new SqlSugarRepository<TEntity>(_db, orderByExpression, isAsc); ;
@@ -185,26 +189,16 @@ namespace HuanTian.SqlSugar
 
         }
 
-        public IRepository<TEntity> CallEntityMethod(Expression<Action<TEntity>> method)
+        public IReposityoryInit<TEntity> InitTable(TEntity entity)
         {
-            if (!(method.Body is MethodCallExpression callExpresion))
-            {
-                throw new ArgumentException("Expression must be a method call.", nameof(method));
-            }
-            if (_table == null)
-            {
-                throw new ArgumentException("使用CallEntityMethod必须先调用InitTable", nameof(method));
-            }
-
-            callExpresion.Method.Invoke(_table, null);
-            return this;
+            return new SqlSugarReposityoryInit<TEntity>(_db, new List<TEntity>() { entity });
         }
 
-        public IRepository<TEntity> InitTable(TEntity table)
+        public IReposityoryInit<TEntity> InitTable(List<TEntity> entityList)
         {
-            _table = table;
-            return new SqlSugarRepository<TEntity>(_db, _orderByExpression, _isAsc, _sqlWhereExpression,table);
+            return new SqlSugarReposityoryInit<TEntity>(_db, entityList);
         }
+        #endregion
 
     }
 }

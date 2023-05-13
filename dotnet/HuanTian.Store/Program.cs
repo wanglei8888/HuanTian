@@ -1,4 +1,5 @@
 ﻿using HuanTian.Entities;
+using HuanTian.EntityFrameworkCore;
 using HuanTian.Infrastructure;
 using HuanTian.Service;
 using HuanTian.SqlSugar;

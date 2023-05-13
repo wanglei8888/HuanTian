@@ -23,7 +23,7 @@ namespace HuanTian.Entities
             Id = YitIdHelper.NextId();
             CreateOn = DateTime.Now;
             CreateBy = App.GetUserId;
-            TenantId = 0;
+            TenantId = App.GetTenantId;
         }
     }
 }

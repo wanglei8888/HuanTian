@@ -61,8 +61,8 @@ namespace HuanTian.Service
             // 储存Jwt数据
             var claims = new[]
             {
-                new Claim(JwtClaimConst.UserIdClaim,userInfo.Id.ToString()),
-                new Claim(JwtClaimConst.TenantIdClaim,userInfo.TenantId.ToString()),
+                new Claim(JwtClaimConst.UserId,userInfo.Id.ToString()),
+                new Claim(JwtClaimConst.TenantId,userInfo.TenantId.ToString()),
             };
 
             var output = new LoginOutput() {

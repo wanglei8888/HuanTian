@@ -29,6 +29,7 @@ using HuanTian.WebCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Yitter.IdGenerator;
 
 namespace HuanTian.Service
 {

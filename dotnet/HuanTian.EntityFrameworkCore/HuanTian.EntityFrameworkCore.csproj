@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="EfRepository - 副本.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\HuanTian.Entities\HuanTian.Entities.csproj" />
   </ItemGroup>
 

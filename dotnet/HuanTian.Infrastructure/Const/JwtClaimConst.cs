@@ -41,10 +41,10 @@ namespace HuanTian.Infrastructure
         /// <summary>
         /// 用户Id
         /// </summary>
-        public const string UserIdClaim = "UserId";
+        public const string UserId = "UserId";
         /// <summary>
         /// 租户Id
         /// </summary>
-        public const string TenantIdClaim = "UserId";
+        public const string TenantId = "UserId";
     }
 }

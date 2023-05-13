@@ -1,154 +1,172 @@
-﻿////using HuanTian.Entities;
-////using HuanTian.Infrastructure;
-////using Microsoft.EntityFrameworkCore;
-////using System.Linq;
-////using System.Linq.Expressions;
+﻿using HuanTian.Entities;
+using HuanTian.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Linq.Expressions;
 
-////namespace HuanTian.EntityFrameworkCore
-////{
-////    /// <summary>
-////    /// EF仓储类
-////    /// </summary>
-////    /// <typeparam name="TEntity"></typeparam>
-////    public class EfRepository<TEntity> : IRepository<TEntity> where TEntity : BaseEntityBusiness, new()
-////    {
-////        private readonly EfSqlContext _dbContext;
-////        private bool _isAsc;
-////        private Expression<Func<TEntity, object>> _orderByExpression;
-////        private Expression<Func<TEntity, bool>> _sqlWhereExpression;
+namespace HuanTian.EntityFrameworkCore
+{
+    /// <summary>
+    /// EF仓储类
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    public class EfRepository<TEntity> : IRepository<TEntity> where TEntity : class, new()
+    {
+        private readonly EfSqlContext _db;
+        private bool _isAsc;
+        private Expression<Func<TEntity, object>>? _orderByExpression;
+        private Expression<Func<TEntity, bool>>? _sqlWhereExpression;
 
-////        public EfRepository(EfSqlContext dbContext)
-////        {
-////            _dbContext = dbContext;
-////        }
-////        public EfRepository(EfSqlContext dbContext, Expression<Func<TEntity, object>> orderByExpression, bool isAsc)
-////             : this(dbContext)
-////        {
-////            _isAsc = isAsc;
-////            _orderByExpression = orderByExpression;
-////        }
-////        public EfRepository(EfSqlContext dbContext, Expression<Func<TEntity, object>> orderByExpression, bool isAsc, Expression<Func<TEntity, bool>> sqlWhereExpression)
-////             : this(dbContext, orderByExpression, isAsc)
-////        {
-////            _orderByExpression = orderByExpression;
-////        }
+        #region 构造参数
+        public EfRepository(EfSqlContext dbContext)
+        {
+            _db = dbContext;
+        }
+        public EfRepository(EfSqlContext dbContext, Expression<Func<TEntity, object>> orderByExpression, bool isAsc)
+             : this(dbContext)
+        {
+            _isAsc = isAsc;
+            _orderByExpression = orderByExpression;
+        }
+        public EfRepository(EfSqlContext dbContext, Expression<Func<TEntity, object>> orderByExpression, bool isAsc, Expression<Func<TEntity, bool>> sqlWhereExpression)
+             : this(dbContext, orderByExpression, isAsc)
+        {
+            _sqlWhereExpression = sqlWhereExpression;
+        }
+        #endregion
 
-////        public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate) => await _dbContext.Set<TEntity>().FirstOrDefaultAsync(predicate);
+        #region 增删改查
+        public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate) => await _db.Set<TEntity>().FirstOrDefaultAsync(predicate);
 
-//public async Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> predicate = default)
-//{
-//    IQueryable<TEntity> value = _dbContext.Set<TEntity>();
+        public async Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> predicate = default)
+        {
+            IQueryable<TEntity> value = _db.Set<TEntity>();
 
-//    //            if (predicate != null)
-//    //            {
-//    //                value = value.Where(predicate);
-//    //            }
+            if (predicate != null)
+            {
+                value = value.Where(predicate);
+            }
 
-//    //            return await value.ToListAsync();
-//    //        }
+            return await value.ToListAsync();
+        }
+        public async Task<PageData> ToPageListAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize)
+        {
+            IQueryable<TEntity> value = _db.Set<TEntity>();
+            var pageData = new PageData();
 
-//    public async Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize)
-//    {
-//        IQueryable<TEntity> value = _dbContext.Set<TEntity>();
+            if (predicate != null)
+            {
+                value = value.Where(predicate);
+            }
 
-//        //            if (predicate != null)
-//        //            {
-//        //                value = value.Where(predicate);
-//        //            }
+            pageData.TotalCount = await value.CountAsync();
 
-//        //            if (_orderByExpression != null)
-//        //            {
-//        //                value = _isAsc ? value.OrderBy(_orderByExpression) : value.OrderByDescending(_orderByExpression);
-//        //            }
+            if (_orderByExpression != null)
+            {
+                value = _isAsc ? value.OrderBy(_orderByExpression) : value.OrderByDescending(_orderByExpression);
+            }
 
-//        //            return await value.Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
-//        //        }
+            pageData.Data = await value.Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+            pageData.PageNo = pageNo;
+            pageData.PageSize = pageSize;
+            pageData.TotalPage = (int)Math.Ceiling((double)pageData.TotalCount / pageSize);
 
-//        public async Task<PageData> ToPageListAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize)
-//        {
-//            IQueryable<TEntity> value = _dbContext.Set<TEntity>();
-//            var pageData = new PageData();
+            return pageData;
+        }
 
-//            //            if (predicate != null)
-//            //            {
-//            //                value = value.Where(predicate);
-//            //            }
+        public async Task<int> DeleteAsync(TEntity entity)
+        {
+            _db.Set<TEntity>().Remove(entity);
+            return await _db.SaveChangesAsync();
+        }
+        public async Task<int> DeleteAsync(List<TEntity> entityList)
+        {
+            _db.Set<TEntity>().RemoveRange(entityList);
+            return await _db.SaveChangesAsync();
+        }
 
-//            //            pageData.TotalCount = await value.CountAsync();
+        public async Task<int> AddAsync(TEntity entity)
+        {
+            await _db.Set<TEntity>().AddAsync(entity);
+            return await _db.SaveChangesAsync();
+        }
+        public async Task<int> AddAsync(List<TEntity> entityList)
+        {
+            await _db.Set<TEntity>().AddRangeAsync(entityList);
+            return await _db.SaveChangesAsync();
+        }
 
-//            //            if (_orderByExpression != null)
-//            //            {
-//            //                value = _isAsc ? value.OrderBy(_orderByExpression) : value.OrderByDescending(_orderByExpression);
-//            //            }
+        public async Task<int> UpdateAsync(TEntity entity)
+        {
+            _db.Set<TEntity>().Update(entity);
+            return await _db.SaveChangesAsync();
+        }
+        public async Task<int> UpdateAsync(List<TEntity> entityList)
+        {
+            _db.Set<TEntity>().UpdateRange(entityList);
+            return await _db.SaveChangesAsync();
+        }
+        #endregion
 
-//            //            pageData.Data = await value.Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
-//            //            pageData.PageNo = pageNo;
-//            //            pageData.PageSize = pageSize;
-//            //            pageData.TotalPage = (int)Math.Ceiling((double)pageData.TotalCount / pageSize);
+        #region 帮助方法
 
-//            //            return pageData;
-//            //        }
-//            //        public void DeleteAsync(TEntity entity)
-//            //        {
-//            //            _dbContext.Set<TEntity>().Remove(entity);
-//            //        }
+        public IRepository<TEntity> OrderBy(Expression<Func<TEntity, object>> orderByExpression, bool isAsc)
+        {
+            return new EfRepository<TEntity>(_db, orderByExpression, isAsc); ;
+        }
 
-//            //        public async Task AddAsync(TEntity entity)
-//            //        {
-//            //            await _dbContext.Set<TEntity>().AddAsync(entity);
-//            //        }
+        public async Task<PageData> ToPageListAsync(int pageNo, int pageSize)
+        {
+            IQueryable<TEntity> value = _db.Set<TEntity>();
+            var pageData = new PageData();
 
-//            //        public void UpdateAsync(TEntity entity)
-//            //        {
-//            //            _dbContext.Set<TEntity>().Update(entity);
-//            //        }
+            pageData.TotalCount = await value.CountAsync();
 
-//            //        public IRepository<TEntity> OrderBy(Expression<Func<TEntity, object>> orderByExpression, bool isAsc)
-//            //        {
-//            //            return new EfRepository<TEntity>(_dbContext, orderByExpression, isAsc); ;
-//            //        }
+            if (_orderByExpression != null)
+            {
+                value = _isAsc ? value.OrderBy(_orderByExpression) : value.OrderByDescending(_orderByExpression);
+            }
 
-//            public async Task<PageData> ToPageListAsync(int pageNo, int pageSize)
-//            {
-//                IQueryable<TEntity> value = _dbContext.Set<TEntity>();
-//                var pageData = new PageData();
+            pageData.Data = await value.Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+            pageData.PageNo = pageNo;
+            pageData.PageSize = pageSize;
+            pageData.TotalPage = (int)Math.Ceiling((double)pageData.TotalCount / pageSize);
 
-////            pageData.TotalCount = await value.CountAsync();
+            return pageData;
+        }
 
-////            if (_orderByExpression != null)
-////            {
-////                value = _isAsc ? value.OrderBy(_orderByExpression) : value.OrderByDescending(_orderByExpression);
-////            }
+        public IRepository<TEntity> WhereIf(bool condition, Expression<Func<TEntity, bool>> sqlWhereExpression)
+        {
+            // 合并 Expression
+            Expression<Func<TEntity, bool>>? whereExpression = _sqlWhereExpression;
 
-////            pageData.Data = await value.Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
-////            pageData.PageNo = pageNo;
-////            pageData.PageSize = pageSize;
-////            pageData.TotalPage = (int)Math.Ceiling((double)pageData.TotalCount / pageSize);
+            if (condition && sqlWhereExpression != null)
+            {
+                if (whereExpression != null)
+                {
+                    whereExpression = whereExpression.And<TEntity>(sqlWhereExpression, ExpressionType.Add);
+                }
+                else
+                {
+                    whereExpression = sqlWhereExpression;
+                }
+                return new EfRepository<TEntity>(_db, _orderByExpression, _isAsc, whereExpression);
+            }
 
-////            return pageData;
-////        }
+            return this;
 
-////        public IRepository<TEntity> WhereIf(bool condition, Expression<Func<TEntity, bool>> sqlWhereExpression)
-////        {
-////            // 合并 Expression
-////            Expression<Func<TEntity, bool>>? whereExpression = _sqlWhereExpression;
+        }
 
-////            if (condition && sqlWhereExpression != null)
-////            {
-////                if (whereExpression != null)
-////                {
-////                    whereExpression = whereExpression.And<TEntity>(sqlWhereExpression, ExpressionType.Add);
-////                }
-////                else
-////                {
-////                    whereExpression = sqlWhereExpression;
-////                }
-////                return new EfRepository<TEntity>(_dbContext, _orderByExpression, _isAsc, whereExpression);
-////            }
+        public IReposityoryInit<TEntity> InitTable(TEntity entity)
+        {
+            return new EfReposityoryInit<TEntity>(_db, new List<TEntity> { entity });
+        }
 
-////            return this;
+        public IReposityoryInit<TEntity> InitTable(List<TEntity> entityList)
+        {
+            return new EfReposityoryInit<TEntity>(_db, entityList);
+        }
+        #endregion
+    }
 
-////        }
-////    }
-
-////}
+}

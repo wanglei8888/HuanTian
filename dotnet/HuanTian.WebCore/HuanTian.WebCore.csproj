@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HuanTian.EntityFrameworkCore\HuanTian.EntityFrameworkCore.csproj" />
-    <ProjectReference Include="..\HuanTian.Infrastructure\HuanTian.Infrastructure.csproj" />
     <ProjectReference Include="..\HuanTian.SqlSugar\HuanTian.SqlSugar.csproj" />
   </ItemGroup>
 
