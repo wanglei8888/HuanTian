@@ -24,14 +24,14 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 using HuanTian.Infrastructure;
-using HuanTian.SqlSugar;
-using Microsoft.AspNetCore.Hosting;
+using Mapster;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Yitter.IdGenerator;
 
 namespace HuanTian.WebCore
 {
-	public static class InjectionExtensions
+    public static class InjectionExtensions
 	{
         /// <summary>
         /// 静态类存储
@@ -43,9 +43,17 @@ namespace HuanTian.WebCore
 		{
 			InternalApp.Configuration = configuration;
 			InternalApp.InternalServices = services;
-
+            // 雪花ID
+            YitIdHelper.SetIdGenerator(new IdGeneratorOptions(1));
+            // Mapster加载全局设计
+            var assemblies = AssemblyHelper.GetAssemblyList();
+            foreach (var assembly in assemblies)
+            {
+                TypeAdapterConfig.GlobalSettings.Scan(assembly);
+            }
+            
             return services;
-		}
-	}
+        }
+    }
 }
 

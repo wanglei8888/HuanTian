@@ -6,7 +6,7 @@
  * 公司名称：
  * 命名空间：HuanTian.Service
  * 唯一标识：1c802320-32e2-493b-81f8-b5a82b66b275
- * 文件名：UserService
+ * 文件名：SysUserService
  * 当前用户域：DESKTOP-4P8G8RH
  * 
  * 创建者：wanglei
@@ -36,13 +36,13 @@ namespace HuanTian.Service
     /// <summary>
     /// 用户信息服务
     /// </summary>
-    public class UserService : IUserService, IDynamicApiController
+    public class SysUserService : ISysUserService, IDynamicApiController
     {
-        private readonly ILogger<UserService> _logger;
+        private readonly ILogger<SysUserService> _logger;
         private readonly IRepository<SysUserInfoDO> _userInfo;
 
-        public UserService(
-            ILogger<UserService> logger,
+        public SysUserService(
+            ILogger<SysUserService> logger,
             IRepository<SysUserInfoDO> userInfo)
         {
             _logger = logger;

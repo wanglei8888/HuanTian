@@ -26,72 +26,7 @@
 
 namespace HuanTian.Entities
 {
-    public class Meta
-    {
-        /// <summary>
-        /// 菜单标题
-        /// </summary>
-        public string Title { get; set; }
-
-        /// <summary>
-        /// 菜单图标
-        /// </summary>
-        public string Icon { get; set; }
-
-        /// <summary>
-        /// 是否显示菜单
-        /// </summary>
-        public bool Show { get; set; } = true;
-
-        /// <summary>
-        /// 菜单跳转方式
-        /// </summary>
-        public string Target { get; set; }
-        /// <summary>
-        /// 隐藏子类
-        /// </summary>
-        public bool HideChildren { get; set; }
-    }
-
-    public class MenuItem
-    {
-        /// <summary>
-        /// 菜单ID
-        /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// 菜单名称
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// 父菜单ID
-        /// </summary>
-        public int ParentId { get; set; }
-
-       
-
-        /// <summary>
-        /// 菜单元信息
-        /// </summary>
-        public Meta Meta { get; set; }
-
-        /// <summary>
-        /// 路由组件名称
-        /// </summary>
-        public string Component { get; set; }
-
-        /// <summary>
-        /// 路由重定向地址
-        /// </summary>
-        public string Redirect { get; set; }
-
-        /// <summary>
-        /// 路由路径
-        /// </summary>
-        public string Path { get; set; }
-    }
+    
 
     public class User_Test
     {

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HuanTian.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(EfSqlContext))]
-    [Migration("20230511144757_update_systable")]
-    partial class update_systable
+    [Migration("20230514030027_first_init")]
+    partial class first_init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,17 +28,27 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
-                    b.Property<long>("CreateBy")
+                    b.Property<string>("Component")
+                        .HasColumnType("longtext")
+                        .HasColumnName("component")
+                        .HasComment("菜单类型");
+
+                    b.Property<long?>("CreateBy")
                         .HasColumnType("bigint")
                         .HasColumnName("create_by")
                         .HasComment("创建人");
 
-                    b.Property<DateTime>("CreateOn")
+                    b.Property<DateTime?>("CreateOn")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("create_on")
                         .HasComment("创建时间");
 
-                    b.Property<bool>("HideChildren")
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("deleted")
+                        .HasComment("软删除");
+
+                    b.Property<bool?>("HideChildren")
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("hide_children")
                         .HasComment("隐藏子类");
@@ -48,11 +58,6 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnType("varchar(50)")
                         .HasColumnName("icon")
                         .HasComment("图标");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("is_deleted")
-                        .HasComment("软删除");
 
                     b.Property<bool?>("KeepAlive")
                         .HasColumnType("tinyint(1)")
@@ -65,8 +70,8 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnName("name")
                         .HasComment("菜单名字");
 
-                    b.Property<int>("ParentId")
-                        .HasColumnType("int")
+                    b.Property<long>("ParentId")
+                        .HasColumnType("bigint")
                         .HasColumnName("parent_id")
                         .HasComment("菜单父级ID");
 
@@ -76,16 +81,15 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnName("path")
                         .HasComment("菜单地址");
 
+                    b.Property<string>("Redirect")
+                        .HasColumnType("longtext")
+                        .HasColumnName("redirect")
+                        .HasComment("菜单跳转地址");
+
                     b.Property<bool>("Show")
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("show")
                         .HasComment("是否显示菜单");
-
-                    b.Property<string>("Target")
-                        .IsRequired()
-                        .HasColumnType("longtext")
-                        .HasColumnName("target")
-                        .HasComment("菜单跳转方式");
 
                     b.Property<string>("Title")
                         .HasMaxLength(50)
@@ -107,19 +111,19 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
-                    b.Property<long>("CreateBy")
+                    b.Property<long?>("CreateBy")
                         .HasColumnType("bigint")
                         .HasColumnName("create_by")
                         .HasComment("创建人");
 
-                    b.Property<DateTime>("CreateOn")
+                    b.Property<DateTime?>("CreateOn")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("create_on")
                         .HasComment("创建时间");
 
-                    b.Property<bool>("IsDeleted")
+                    b.Property<bool>("Deleted")
                         .HasColumnType("tinyint(1)")
-                        .HasColumnName("is_deleted")
+                        .HasColumnName("deleted")
                         .HasComment("软删除");
 
                     b.Property<long>("MenuId")
@@ -144,15 +148,20 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
-                    b.Property<long>("CreateBy")
+                    b.Property<long?>("CreateBy")
                         .HasColumnType("bigint")
                         .HasColumnName("create_by")
                         .HasComment("创建人");
 
-                    b.Property<DateTime>("CreateOn")
+                    b.Property<DateTime?>("CreateOn")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("create_on")
                         .HasComment("创建时间");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("deleted")
+                        .HasComment("软删除");
 
                     b.Property<string>("Describe")
                         .IsRequired()
@@ -160,11 +169,6 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnType("varchar(200)")
                         .HasColumnName("describe")
                         .HasComment("角色描述");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("is_deleted")
-                        .HasComment("软删除");
 
                     b.Property<string>("RoleName")
                         .IsRequired()
@@ -198,19 +202,19 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnName("avatar")
                         .HasComment("图片路径");
 
-                    b.Property<long>("CreateBy")
+                    b.Property<long?>("CreateBy")
                         .HasColumnType("bigint")
                         .HasColumnName("create_by")
                         .HasComment("创建人");
 
-                    b.Property<DateTime>("CreateOn")
+                    b.Property<DateTime?>("CreateOn")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("create_on")
                         .HasComment("创建时间");
 
-                    b.Property<bool>("IsDeleted")
+                    b.Property<bool>("Deleted")
                         .HasColumnType("tinyint(1)")
-                        .HasColumnName("is_deleted")
+                        .HasColumnName("deleted")
                         .HasComment("软删除");
 
                     b.Property<int>("Language")
@@ -224,7 +228,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnName("last_login_ip")
                         .HasComment("最后登陆IP");
 
-                    b.Property<DateTime>("LastLoginTime")
+                    b.Property<DateTime?>("LastLoginTime")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("last_login_time")
                         .HasComment("最后登陆时间");
@@ -243,12 +247,6 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnName("password")
                         .HasComment("用户密码");
 
-                    b.Property<string>("RoleId")
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)")
-                        .HasColumnName("role_id")
-                        .HasComment("权限ID");
-
                     b.Property<int>("Status")
                         .HasColumnType("int")
                         .HasColumnName("status")
@@ -265,12 +263,12 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnName("tenant_id")
                         .HasComment("租户ID");
 
-                    b.Property<long>("UpdateBy")
+                    b.Property<long?>("UpdateBy")
                         .HasColumnType("bigint")
                         .HasColumnName("update_by")
                         .HasComment("修改人");
 
-                    b.Property<DateTime>("UpdateOn")
+                    b.Property<DateTime?>("UpdateOn")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("update_on")
                         .HasComment("修改时间");
@@ -296,19 +294,19 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
-                    b.Property<long>("CreateBy")
+                    b.Property<long?>("CreateBy")
                         .HasColumnType("bigint")
                         .HasColumnName("create_by")
                         .HasComment("创建人");
 
-                    b.Property<DateTime>("CreateOn")
+                    b.Property<DateTime?>("CreateOn")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("create_on")
                         .HasComment("创建时间");
 
-                    b.Property<bool>("IsDeleted")
+                    b.Property<bool>("Deleted")
                         .HasColumnType("tinyint(1)")
-                        .HasColumnName("is_deleted")
+                        .HasColumnName("deleted")
                         .HasComment("软删除");
 
                     b.Property<long>("RoleId")

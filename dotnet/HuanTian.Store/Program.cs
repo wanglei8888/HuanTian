@@ -1,12 +1,10 @@
 ﻿using HuanTian.Entities;
-using HuanTian.EntityFrameworkCore;
 using HuanTian.Infrastructure;
 using HuanTian.Service;
 using HuanTian.SqlSugar;
 using HuanTian.WebCore;
 using HuanTian.WebCore.Filter;
 using Microsoft.AspNetCore.Mvc;
-using Yitter.IdGenerator;
 
 namespace Huangtian.Store
 {
@@ -16,8 +14,6 @@ namespace Huangtian.Store
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // 雪花ID
-            YitIdHelper.SetIdGenerator(new IdGeneratorOptions(1));
             // 静态类存储
             builder.Services.AddInject(builder.Configuration);
             // 动态Congtrole注入

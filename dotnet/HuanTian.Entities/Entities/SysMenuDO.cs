@@ -13,7 +13,7 @@ namespace HuanTian.Entities
         /// 菜单父级ID
         /// </summary>
         [Comment("菜单父级ID")]
-        public int ParentId { get; set; }
+        public long ParentId { get; set; }
         /// <summary>
         /// 菜单名字
         /// </summary>
@@ -49,14 +49,19 @@ namespace HuanTian.Entities
         [Comment("是否显示菜单")]
         public bool Show { get; set; } = true;
         /// <summary>
-        /// 菜单跳转方式
+        /// 菜单跳转地址
         /// </summary>
-        [Comment("菜单跳转方式")]
-        public string Target { get; set; }
+        [Comment("菜单跳转地址")]
+        public string? Redirect { get; set; }
         /// <summary>
         /// 隐藏子类
         /// </summary>
         [Comment("隐藏子类")]
-        public bool HideChildren { get; set; }
+        public bool? HideChildren { get; set; }
+        /// <summary>
+        /// 菜单类型
+        /// </summary>
+        [Comment("菜单类型")]
+        public string? Component { get; set; }
     }
 }

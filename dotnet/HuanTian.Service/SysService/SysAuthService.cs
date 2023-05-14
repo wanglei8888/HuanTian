@@ -6,7 +6,7 @@
  * 公司名称：
  * 命名空间：HuanTian.Service
  * 唯一标识：d1e9cb75-3ee7-40a9-ad70-1850a42c3d35
- * 文件名：AuthService
+ * 文件名：SysAuthService
  * 当前用户域：DESKTOP-4P8G8RH
  * 
  * 创建者：wanglei
@@ -35,11 +35,11 @@ namespace HuanTian.Service
     /// <summary>
     /// 登陆服务
     /// </summary>
-    public class AuthService : IAuthService, IDynamicApiController
+    public class SysAuthService : ISysAuthService, IDynamicApiController
     {
         private readonly IRepository<SysUserInfoDO> _sysUserInfo;
         private readonly IRedisCache _redisCache;
-        public AuthService(
+        public SysAuthService(
             IRepository<SysUserInfoDO> sysUserInfo,
             IRedisCache redisCache)
         {

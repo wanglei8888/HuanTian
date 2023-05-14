@@ -4,14 +4,14 @@
  * CLR版本：4.0.30319.42000
  * 机器名称：DESKTOP-4P8G8RH
  * 公司名称：
- * 命名空间：HuanTian.Service.SysService
- * 唯一标识：e5a64c98-8b59-4389-b2bd-fbe258ce1cbf
- * 文件名：IRoleService
+ * 命名空间：HuanTian.Service
+ * 唯一标识：e02184b8-f57f-4b4f-a44e-e8d37fca16fb
+ * 文件名：ISysUserService
  * 当前用户域：DESKTOP-4P8G8RH
  * 
  * 创建者：wanglei
  * 电子邮箱：271976304@qq.com
- * 创建时间：2023/4/16 15:42:12
+ * 创建时间：2023/4/5 21:03:18
  * 版本：V1.0.0
  * 描述：
  *
@@ -26,8 +26,8 @@
 
 namespace HuanTian.Service
 {
-    public interface IRoleService
+    public interface ISysUserService
     {
-        dynamic UserRole();
+        dynamic Info();
     }
 }

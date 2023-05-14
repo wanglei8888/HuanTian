@@ -39,12 +39,12 @@ namespace HuanTian.Entities
         /// 修改人
         /// </summary>
         [Comment("修改人")]
-        public virtual long UpdateBy { get; set; }
+        public virtual long? UpdateBy { get; set; }
         /// <summary>
         /// 修改时间
         /// </summary>
         [Comment("修改时间")]
-        public virtual DateTime UpdateOn { get; set; }
+        public virtual DateTime? UpdateOn { get; set; }
         /// <summary>
         /// 实体新增自动赋值
         /// </summary>

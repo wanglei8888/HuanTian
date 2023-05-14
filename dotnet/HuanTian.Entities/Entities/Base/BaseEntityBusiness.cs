@@ -21,6 +21,7 @@ namespace HuanTian.Entities
         public override void CreateFunc()
         {
             Id = YitIdHelper.NextId();
+            Deleted = false;
             CreateOn = DateTime.Now;
             CreateBy = App.GetUserId;
             TenantId = App.GetTenantId;

@@ -15,4 +15,8 @@
   <ItemGroup>
     <ProjectReference Include="..\HuanTian.Infrastructure\HuanTian.Infrastructure.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Register\" />
+  </ItemGroup>
 </Project>

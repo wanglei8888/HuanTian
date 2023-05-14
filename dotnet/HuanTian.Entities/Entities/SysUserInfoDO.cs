@@ -57,13 +57,7 @@ public class SysUserInfoDO : BaseEntityBusiness
     /// 最后登陆时间
     /// </summary>
     [Comment("最后登陆时间")]
-    public DateTime LastLoginTime { get; set; }
-    /// <summary>
-    /// 权限ID
-    /// </summary>
-    [MaxLength(200)]
-    [Comment("权限ID")]
-    public string? RoleId { get; set; }
+    public DateTime? LastLoginTime { get; set; }
     /// <summary>
     /// 系统语言
     /// </summary>

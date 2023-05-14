@@ -6,7 +6,7 @@
  * 公司名称：
  * 命名空间：HuanTian.Service.SysService
  * 唯一标识：ac64e7a2-f8dc-4e62-9f81-d43263981270
- * 文件名：RoleService
+ * 文件名：SysRoleService
  * 当前用户域：DESKTOP-4P8G8RH
  * 
  * 创建者：wanglei
@@ -34,7 +34,7 @@ namespace HuanTian.Service
     /// <summary>
     /// 用户权限
     /// </summary>
-    public class RoleService : IRoleService, IDynamicApiController
+    public class SysRoleService : ISysRoleService, IDynamicApiController
     {
         /// <summary>
         /// 获取用户权限
