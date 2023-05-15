@@ -23,7 +23,6 @@
  * 版本：V1.0.1
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
-using HuanTian.Infrastructure;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;

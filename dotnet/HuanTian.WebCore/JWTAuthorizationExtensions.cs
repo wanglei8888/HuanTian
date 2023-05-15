@@ -23,7 +23,6 @@
  * 版本：V1.0.1
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
-using HuanTian.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;

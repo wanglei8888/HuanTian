@@ -23,10 +23,7 @@
  * 版本：V1.0.1
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
-using HuanTian.Entities;
-using HuanTian.Infrastructure;
-using HuanTian.WebCore;
-using Microsoft.AspNetCore.Mvc;
+
 using Newtonsoft.Json;
 
 namespace HuanTian.Service

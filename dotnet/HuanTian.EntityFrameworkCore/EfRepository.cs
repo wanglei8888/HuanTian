@@ -1,6 +1,7 @@
 ﻿using HuanTian.Entities;
 using HuanTian.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -47,16 +48,21 @@ namespace HuanTian.EntityFrameworkCore
                 value = value.Where(predicate);
             }
 
+            if (_sqlWhereExpression != null)
+            {
+                value = value.Where(_sqlWhereExpression);
+            }
+
             return await value.ToListAsync();
         }
-        public async Task<PageData> ToPageListAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize)
+        public async Task<PageData> ToPageListAsync(int pageNo, int pageSize)
         {
             IQueryable<TEntity> value = _db.Set<TEntity>();
             var pageData = new PageData();
 
-            if (predicate != null)
+            if (_sqlWhereExpression != null)
             {
-                value = value.Where(predicate);
+                value = value.Where(_sqlWhereExpression);
             }
 
             pageData.TotalCount = await value.CountAsync();
@@ -113,26 +119,6 @@ namespace HuanTian.EntityFrameworkCore
         public IRepository<TEntity> OrderBy(Expression<Func<TEntity, object>> orderByExpression, bool isAsc)
         {
             return new EfRepository<TEntity>(_db, orderByExpression, isAsc); ;
-        }
-
-        public async Task<PageData> ToPageListAsync(int pageNo, int pageSize)
-        {
-            IQueryable<TEntity> value = _db.Set<TEntity>();
-            var pageData = new PageData();
-
-            pageData.TotalCount = await value.CountAsync();
-
-            if (_orderByExpression != null)
-            {
-                value = _isAsc ? value.OrderBy(_orderByExpression) : value.OrderByDescending(_orderByExpression);
-            }
-
-            pageData.Data = await value.Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
-            pageData.PageNo = pageNo;
-            pageData.PageSize = pageSize;
-            pageData.TotalPage = (int)Math.Ceiling((double)pageData.TotalCount / pageSize);
-
-            return pageData;
         }
 
         public IRepository<TEntity> WhereIf(bool condition, Expression<Func<TEntity, bool>> sqlWhereExpression)

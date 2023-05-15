@@ -94,7 +94,7 @@ namespace Huangtian.Store
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI(t => { SwaggerExtensions.BuildSwaggerUI(t); });
+                app.UseSwaggerUI(t => { SwaggerExtensions.BuildSwaggerUI(t,""); });
             }
 
             app.UseCors("cors");

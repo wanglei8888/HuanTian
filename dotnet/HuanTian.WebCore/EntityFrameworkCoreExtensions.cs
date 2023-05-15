@@ -24,7 +24,6 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 using HuanTian.EntityFrameworkCore;
-using HuanTian.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SqlSugar;

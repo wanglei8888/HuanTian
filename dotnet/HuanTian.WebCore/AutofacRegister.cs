@@ -24,10 +24,7 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 using Autofac;
-using HuanTian.Entities;
-using HuanTian.Infrastructure;
 using HuanTian.SqlSugar;
-using Microsoft.AspNetCore.Hosting;
 using System.Reflection;
 
 namespace HuanTian.WebCore

@@ -18,19 +18,11 @@ namespace HuanTian.Entities
         /// <summary>
         /// 获取所有数据
         /// </summary>
-        /// <param name="predicate">筛选条件</param>
+        /// <param name="predicate">筛选条件+whereif</param>
         /// <returns></returns>
         Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> predicate = default);
         /// <summary>
-        /// 分页获取所有数据 有筛选条件
-        /// </summary>
-        /// <param name="predicate">筛选条件</param>
-        /// <param name="pageNo">页码</param>
-        /// <param name="pageSize">页大小</param>
-        /// <returns>返回分页PageData实体</returns>
-        Task<PageData> ToPageListAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize);
-        /// <summary>
-        /// 分页获取所有数据 无筛选条件通过WhereIf
+        /// 分页获取所有数据 通过WhereIf筛选条件
         /// </summary>
         /// <param name="pageNo">页码</param>
         /// <param name="pageSize">页大小</param>

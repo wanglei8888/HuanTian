@@ -93,4 +93,9 @@ namespace HuanTian.Service
         /// </summary>
         public bool HideChildren { get; set; }
     }
+
+    public class SysMenuTreeOutput: SysMenuDO
+    {
+       public List<SysMenuTreeOutput> Children { get; set; }
+    }
 }

@@ -50,7 +50,7 @@
             </template>
             <a-col :md="!advanced && 8 || 24" :sm="24">
               <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
-                <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+                <a-button type="primary" @click="handSerach()">查询</a-button>
                 <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
                 <a @click="toggleAdvanced" style="margin-left: 8px">
                   {{ advanced ? '收起' : '展开' }}
@@ -76,38 +76,35 @@
         </a-dropdown>
       </div>
 
-      <s-table
-        ref="table"
-        size="default"
-        rowKey="key"
-        :columns="columns"
-        :data="loadData"
-        :alert="true"
-        :rowSelection="rowSelection"
-        showPagination="auto"
-      >
-        <span slot="status" slot-scope="text">
-          <a-badge :status="text | statusTypeFilter" :text="text | statusFilter" />
-        </span>
-        <span slot="language" slot-scope="text" style="margin-left: -13px;">
-          <a-badge :status="text | languageTypeFilter" :text="text | languageFilter" />
-        </span>
-        <span slot="avatar" slot-scope="text" style="margin-left: -13px;">
-          <img style="width:75px;heigth:75px" slot="avatar" :src=text />
-        </span>
-        <!-- <span slot="description" slot-scope="text">
-          <ellipsis :length="10" tooltip>{{ text }}</ellipsis>
-        </span> -->
-
-        <span slot="action" slot-scope="text, record">
-          <template>
-            <a @click="handleEdit(record)">配置</a>
+      <a-table
+      :columns="columns"
+      :dataSource="loadData"
+      :pagination="false"
+      :loading="tableLoading">
+      <template slot="operation" slot-scope="text, record">
+        <template >
+          <span>
+            <a @click="saveRow(record)">添加</a>
             <a-divider type="vertical" />
-            <a @click="handleSub(record)">订阅报警</a>
-          </template>
+            <a-popconfirm title="是否要删除此行？" @confirm="remove(record.key)">
+              <a>删除</a>
+            </a-popconfirm>
+          </span>
+          <span>
+            <a @click="saveRow(record)">保存</a>
+            <a-divider type="vertical" />
+            <a @click="cancel(record.key)">取消</a>
+          </span>
+        </template>
+        <span>
+          <a @click="toggle(record.key)">编辑</a>
+          <a-divider type="vertical" />
+          <a-popconfirm title="是否要删除此行？" @confirm="remove(record.key)">
+            <a>删除</a>
+          </a-popconfirm>
         </span>
-      </s-table>
-
+      </template>
+    </a-table>
       <create-form
         ref="createModal"
         :visible="visible"
@@ -134,42 +131,43 @@ const columns = [
   //   title: '#',
   //   scopedSlots: { customRender: 'serial' }
   // },
+  // {
+  //   title: '',
+  //   dataIndex: ''
+  // },
   {
-    title: '用户',
+    title: '名称',
     dataIndex: 'name'
   },
   {
-    title: '头像',
-    dataIndex: 'avatar',
-    scopedSlots: { customRender: 'avatar' }
+    title: '多语言值',
+    dataIndex: 'title'
   },
   {
-    title: '语言',
-    dataIndex: 'language',
-    scopedSlots: { customRender: 'language' }
+    title: '图标',
+    dataIndex: 'icon'
   },
   {
-    title: '登陆名',
-    dataIndex: 'userName'
+    title: '跳转地址',
+    dataIndex: 'redirect'
   },
   {
-    title: '用户状态',
-    dataIndex: 'status',
-    scopedSlots: { customRender: 'status' }
+    title: '菜单类型',
+    dataIndex: 'component'
   },
-  {
-    title: '最后登陆时间',
-    dataIndex: 'lastLoginTime',
-    customRender: (text, row, index) => {
-      return moment(text).format('YYYY-MM-DD HH:mm:ss')
-    },
-    sorter: true
-  },
+  // {
+  //   title: '',
+  //   dataIndex: 'lastLoginTime',
+  //   customRender: (text, row, index) => {
+  //     return moment(text).format('YYYY-MM-DD HH:mm:ss')
+  //   },
+  //   sorter: true
+  // },
   {
     title: '操作',
-    dataIndex: 'action',
     width: '150px',
-    scopedSlots: { customRender: 'action' }
+    key: 'action',
+    scopedSlots: { customRender: 'operation' }
   }
 ]
 
@@ -209,17 +207,13 @@ export default {
       visible: false,
       confirmLoading: false,
       mdl: null,
+      tableLoading: false,
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
       queryParam: {},
       // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {
-        const requestParameters = Object.assign({}, parameter, this.queryParam)
-        return this.$http.get('/sysUser/page', { params: requestParameters }).then(res => {
-          return res.result
-        })
-      },
+      loadData: [],
       selectedRowKeys: [],
       selectedRows: []
     }
@@ -253,6 +247,13 @@ export default {
     handleAdd () {
       this.mdl = null
       this.visible = true
+    },
+    handSerach () {
+      // const requestParameters = Object.assign({}, parameter, this.queryParam)
+      this.$http.get('/sysMenu/page', { params: this.queryParam }).then(res => {
+         this.loadData = res.result
+      })
+      // this.$refs.table.refresh()
     },
     handleEdit (record) {
       this.visible = true

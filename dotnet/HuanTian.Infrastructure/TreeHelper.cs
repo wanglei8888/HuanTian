@@ -4,14 +4,14 @@
  * CLR版本：4.0.30319.42000
  * 机器名称：DESKTOP-6BOHDBE
  * 公司名称：
- * 命名空间：HuanTian.Infrastructure.Const
- * 唯一标识：1eb45746-a100-4cc8-bd88-ed90d9e384dc
- * 文件名：ClaimConst
+ * 命名空间：HuanTian.Infrastructure
+ * 唯一标识：6baea456-26b7-46f9-8fba-774214bfc7c7
+ * 文件名：TreeHelper
  * 当前用户域：DESKTOP-6BOHDBE
  * 
  * 创建者：wanglei
  * 电子邮箱：271976304@qq.com
- * 创建时间：2023/5/11 22:04:41
+ * 创建时间：2023/5/15 19:56:39
  * 版本：V1.0.0
  * 描述：
  *
@@ -34,17 +34,24 @@ using System.Threading.Tasks;
 namespace HuanTian.Infrastructure
 {
     /// <summary>
-    /// jwt 常量
+    /// TreeHelper 的摘要说明
     /// </summary>
-    public class JwtClaimConst
+    public class TreeHelper<TEntity> where TEntity : ITreeBuild
     {
-        /// <summary>
-        /// 用户Id
-        /// </summary>
-        public const string UserId = "UserId";
-        /// <summary>
-        /// 租户Id
-        /// </summary>
-        public const string TenantId = "UserId";
+        //public void BuildTree(List<TEntity> tree)
+        //{
+        //    foreach (var item in tree)
+        //    {
+        //        item.get
+        //    }
+        //}
+    }
+    public interface ITreeBuild
+    {
+        public long GetId();
+
+        public long GetParentId();
+
+
     }
 }

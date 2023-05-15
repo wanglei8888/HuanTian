@@ -1,5 +1,4 @@
-﻿using HuanTian.Infrastructure;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Yitter.IdGenerator;
 
 namespace HuanTian.Entities
@@ -9,7 +8,6 @@ namespace HuanTian.Entities
     /// </summary>
     public class BaseEntityBusiness : BaseEntityUpdate
     {
-       
         /// <summary>
         /// 租户ID
         /// </summary>

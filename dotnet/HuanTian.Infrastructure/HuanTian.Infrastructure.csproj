@@ -1,27 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	<ItemGroup>
+	  <Compile Remove="App.cs" />
+	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Autofac" Version="7.0.0" />
-		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.11" />
-		<PackageReference Include="Microsoft.Extensions.DependencyModel" Version="7.0.0" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="NPOI" Version="2.6.0" />
-		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.2" />
-		<PackageReference Include="StackExchange.Redis" Version="2.6.104" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-		<PackageReference Include="Mapster" Version="7.3.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.10" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.10" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.10" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.10" />
-		<PackageReference Include="SqlSugarCore" Version="5.1.4.64" />
-		<PackageReference Include="Yitter.IdGenerator" Version="1.0.14" />
+		<ProjectReference Include="..\HuanTian.Entities\HuanTian.Entities.csproj" />
 	</ItemGroup>
 </Project>

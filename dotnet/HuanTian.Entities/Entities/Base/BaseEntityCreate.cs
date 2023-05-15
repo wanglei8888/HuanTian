@@ -1,5 +1,4 @@
-﻿using HuanTian.Infrastructure;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
 using Yitter.IdGenerator;
 

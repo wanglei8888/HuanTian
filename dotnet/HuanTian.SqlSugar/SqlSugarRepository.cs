@@ -40,13 +40,18 @@ namespace HuanTian.SqlSugar
             return await _db.Queryable<TEntity>().FirstAsync(predicate);
         }
 
-        public async Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> predicate)
+        public async Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> predicate = default)
         {
             var value = _db.Queryable<TEntity>();
 
             if (predicate != null)
             {
                 value = value.Where(predicate);
+            }
+
+            if (_sqlWhereExpression != null)
+            {
+                value = value.Where(_sqlWhereExpression);
             }
 
             if (_orderByExpression != null)
@@ -55,57 +60,6 @@ namespace HuanTian.SqlSugar
             }
 
             return await value.ToListAsync();
-        }
-
-        public async Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize)
-        {
-            var value = _db.Queryable<TEntity>();
-
-            if (predicate != null)
-            {
-                value = value.Where(predicate);
-            }
-
-            if (_sqlWhereExpression != null)
-            {
-                value.Where(_sqlWhereExpression);
-            }
-
-            if (_orderByExpression != null)
-            {
-                value = _isAsc ? value.OrderBy(_orderByExpression) : value.OrderByDescending(_orderByExpression);
-            }
-
-            return await value.ToPageListAsync(pageNo, pageSize);
-        }
-
-        public async Task<PageData> ToPageListAsync(Expression<Func<TEntity, bool>> predicate, int pageNo, int pageSize)
-        {
-            var value = _db.Queryable<TEntity>();
-            var pageData = new PageData();
-            if (predicate != null)
-            {
-                value = value.Where(predicate);
-            }
-
-            if (_sqlWhereExpression != null)
-            {
-                value.Where(_sqlWhereExpression);
-            }
-
-            if (_orderByExpression != null)
-            {
-                value = _isAsc ? value.OrderBy(_orderByExpression) : value.OrderByDescending(_orderByExpression);
-            }
-
-            RefAsync<int> total = 0;
-            pageData.Data = await value.ToPageListAsync(pageNo, pageSize, total);
-            pageData.TotalCount = total;
-            pageData.PageNo = pageNo;
-            pageData.PageSize = pageSize;
-            pageData.TotalPage = (int)Math.Ceiling((double)total / pageSize);
-
-            return pageData;
         }
 
         public async Task<PageData> ToPageListAsync(int pageNo, int pageSize)

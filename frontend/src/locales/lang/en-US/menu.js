@@ -24,6 +24,8 @@ export default {
     'menu.userInfo': 'userInfo',
     'menu.userInfo.userList': 'userList',
     'menu.other.IconSelector': 'IconSelector',
+    'menu.sysManage': 'sysManage',
+    'menu.sysManage.menuList': 'menuList',
     // 新加
     'menu.profile': 'Profile',
     'menu.profile.basic': 'Basic Profile',

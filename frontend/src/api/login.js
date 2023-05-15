@@ -1,16 +1,16 @@
 import request from '@/utils/request'
 
 const userApi = {
-  Login: '/auth/login',
-  Logout: '/auth/logout',
-  ForgePassword: '/auth/forge-password',
-  Register: '/auth/register',
-  twoStepCode: '/auth/2step-code',
+  Login: '/sysAuth/login',
+  Logout: '/sysAuth/logout',
+  ForgePassword: '/sysAuth/forge-password',
+  Register: '/sysAuth/register',
+  twoStepCode: '/sysAuth/2step-code',
   SendSms: '/account/sms',
   SendSmsErr: '/account/sms_err',
   // get my info
-  UserInfo: '/user/info',
-  UserMenu: '/menu/GetUserMenu'
+  UserInfo: '/sysUser/info',
+  UserMenu: '/sysMenu/GetUserMenu'
 }
 
 /**

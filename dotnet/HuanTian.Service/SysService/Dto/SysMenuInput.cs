@@ -4,14 +4,14 @@
  * CLR版本：4.0.30319.42000
  * 机器名称：DESKTOP-6BOHDBE
  * 公司名称：
- * 命名空间：HuanTian.Entities.IRegister
- * 唯一标识：b3257fff-9527-40b6-b72c-c4d1f28b6aff
- * 文件名：SysMenuRegister
+ * 命名空间：HuanTian.Service.SysService.Dto
+ * 唯一标识：77009abb-af58-44e6-8b8d-65ba58a24eae
+ * 文件名：SysMenuInput
  * 当前用户域：DESKTOP-6BOHDBE
  * 
  * 创建者：wanglei
  * 电子邮箱：271976304@qq.com
- * 创建时间：2023/5/14 11:37:11
+ * 创建时间：2023/5/14 20:15:18
  * 版本：V1.0.0
  * 描述：
  *
@@ -28,17 +28,10 @@
 namespace HuanTian.Service
 {
     /// <summary>
-    /// SysMenuRegister 的摘要说明
+    /// SysMenuInput 入参
     /// </summary>
-    public class SysMenuRegister : IRegister
+    public class SysMenuInput : PageInput
     {
-        public void Register(TypeAdapterConfig config)
-        {
-            config.ForType<SysMenuDO, SysMenuOutput>()
-                .Map(dest => dest.Meta.Icon, src => src.Icon)
-                .Map(dest => dest.Meta.Title, src => src.Title)
-                .Map(dest => dest.Meta.Show, src => src.Show)
-                .Map(dest => dest.Meta.HideChildren, src => src.HideChildren);
-        }
+
     }
 }

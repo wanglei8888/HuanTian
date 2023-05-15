@@ -61,6 +61,7 @@ const constantRouterComponents = {
   UserList2: () => import('@/views/System/UserList'),
   RoleList: () => import('@/views/System/RoleList'),
   PermissionList: () => import('@/views/System/PermissionList'),
+  MenuList: () => import('@/views/System/MenuList'),
   // userinfo
   UserList: () => import('@/views/userInfo/userList')
   // 'TestWork': () => import(/* webpackChunkName: "TestWork" */ '@/views/dashboard/TestWork')

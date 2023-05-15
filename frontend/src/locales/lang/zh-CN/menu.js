@@ -21,8 +21,10 @@ export default {
     'menu.list.search-list.projects': '搜索列表（项目）',
     'menu.list.search-list.applications': '搜索列表（应用）',
     // 新加
-    'menu.userInfo': '系统管理',
-    'menu.userInfo.userList': '用户管理',
+    'menu.sysManage': '系统管理',
+    'menu.sysManage.menuList': '菜单列表',
+    'menu.userMange': '用户管理',
+    'menu.userInfo.userList': '用户列表',
     'menu.other.IconSelector': '图标列表',
     // 新加
     'menu.profile': '详情页',

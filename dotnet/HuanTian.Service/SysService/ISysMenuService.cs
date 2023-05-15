@@ -1,6 +1,4 @@
-﻿using HuanTian.Entities;
-
-namespace HuanTian.Service
+﻿namespace HuanTian.Service
 {
     /// <summary>
     /// 用户菜单服务

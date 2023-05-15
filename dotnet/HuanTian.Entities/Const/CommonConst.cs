@@ -4,14 +4,14 @@
  * CLR版本：4.0.30319.42000
  * 机器名称：DESKTOP-4P8G8RH
  * 公司名称：
- * 命名空间：HuanTian.WebCore.Filter
- * 唯一标识：7f0fbe36-3390-4781-907f-989f63ef0514
- * 文件名：testclass
+ * 命名空间：HuanTian.Infrastructure
+ * 唯一标识：3f6161f8-efc1-453e-857c-2a83b8b49cbd
+ * 文件名：ConstValue
  * 当前用户域：DESKTOP-4P8G8RH
  * 
  * 创建者：wanglei
  * 电子邮箱：271976304@qq.com
- * 创建时间：2023/4/18 20:42:38
+ * 创建时间：2023/4/11 22:23:54
  * 版本：V1.0.0
  * 描述：
  *
@@ -23,21 +23,18 @@
  * 版本：V1.0.1
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
-using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace HuanTian.WebCore.Filter
+namespace HuanTian.Entities
 {
     /// <summary>
-    /// 操作过滤器
+    ///  常量值
     /// </summary>
-    public class AsyncActionFilter : IAsyncActionFilter
+    public class CommonConst
     {
-        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
-        {
+        /// <summary>
+        /// 用户Token加密Key
+        /// </summary>
+        public const string UserToken = "6853E16C52D448E48A37C20A6E7D13E7";
 
-            // 调用下一个中间件或过滤器
-            var result = await next();
-
-        }
     }
 }

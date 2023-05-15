@@ -31,21 +31,6 @@ namespace HuanTian.Infrastructure
         }
 
         /// <summary>
-        /// 刷新IConfiguration配置对象
-        /// </summary>
-        /// <param name="configuration"></param>
-        /// <returns></returns>
-        public static IConfiguration Reload(this IConfiguration configuration)
-        {
-            if (App.RootServices == null) return configuration;
-
-            var newConfiguration = App.GetService<IConfiguration>(App.RootServices);
-            InternalApp.Configuration = newConfiguration;
-
-            return newConfiguration;
-        }
-
-        /// <summary>
         /// 将 DateTimeOffset? 转换成本地 DateTime?
         /// </summary>
         /// <param name="dateTime"></param>
@@ -436,7 +421,7 @@ namespace HuanTian.Infrastructure
         }
 
         /// <summary>
-        /// 合并两个 Expression<Func<T, bool>
+        /// 合并两个Expression Func bool
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="leftExpression"></param>
