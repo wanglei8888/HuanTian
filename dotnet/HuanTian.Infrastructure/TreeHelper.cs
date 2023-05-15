@@ -24,34 +24,50 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
+using HuanTian.Entities;
 
 namespace HuanTian.Infrastructure
 {
     /// <summary>
-    /// TreeHelper 的摘要说明
+    /// 构建树
     /// </summary>
-    public class TreeHelper<TEntity> where TEntity : ITreeBuild
+    public static class TreeHelper<TEntity> where TEntity : ITreeBuild
     {
-        //public void BuildTree(List<TEntity> tree)
-        //{
-        //    foreach (var item in tree)
-        //    {
-        //        item.get
-        //    }
-        //}
-    }
-    public interface ITreeBuild
-    {
-        public long GetId();
+        /// <summary>
+        /// 构造树节点
+        /// </summary>
+        /// <param name="nodes"></param>
+        /// <returns></returns>
+        public static List<TEntity> DoTreeBuild(List<TEntity> nodes)
+        {
+            nodes.ForEach(u => BuildChildNodes(nodes, u, new List<TEntity>()));
 
-        public long GetParentId();
-
-
+            var results = new List<TEntity>();
+            nodes.ForEach(u =>
+            {
+                if (0 == u.GetParentId())
+                    results.Add(u);
+            });
+            return results;
+        }
+        /// <summary>
+        /// 构造子节点集合
+        /// </summary>
+        /// <param name="totalNodes"></param>
+        /// <param name="node"></param>
+        /// <param name="childNodeLists"></param>
+        private static void BuildChildNodes(List<TEntity> totalNodes, TEntity node, List<TEntity> childNodeLists)
+        {
+            var nodeSubLists = new List<TEntity>();
+            totalNodes.ForEach(u =>
+            {
+                if (u.GetParentId().Equals(node.GetId()))
+                    nodeSubLists.Add(u);
+            });
+            nodeSubLists.ForEach(u => BuildChildNodes(totalNodes, u, new List<TEntity>()));
+            childNodeLists.AddRange(nodeSubLists);
+            node.SetChildren(childNodeLists);
+        }
     }
 }

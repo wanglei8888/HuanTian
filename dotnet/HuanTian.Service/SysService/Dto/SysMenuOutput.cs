@@ -25,6 +25,9 @@
 #endregion << 版 本 注 释 >>
 
 
+using HuanTian.Infrastructure;
+using System.Collections;
+
 namespace HuanTian.Service
 {
     /// <summary>
@@ -94,8 +97,24 @@ namespace HuanTian.Service
         public bool HideChildren { get; set; }
     }
 
-    public class SysMenuTreeOutput: SysMenuDO
+    public class SysMenuTreeOutput : SysMenuDO, ITreeBuild
     {
-       public List<SysMenuTreeOutput> Children { get; set; }
+        public List<SysMenuTreeOutput> Children { get; set; }
+
+        public long GetId()
+        {
+            return Id;
+        }
+
+        public long GetParentId()
+        {
+            return ParentId;
+        }
+
+        public void SetChildren(IList children)
+        {
+            Children = (List<SysMenuTreeOutput>)children;
+        }
     }
+    
 }
