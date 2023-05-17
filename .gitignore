@@ -6,3 +6,4 @@
 *bin
 dotnet/HuanTian.Store/Properties/PublishProfiles
 *.xml
+superjsonweb

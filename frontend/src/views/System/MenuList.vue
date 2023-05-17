@@ -5,57 +5,20 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="用户名">
+              <a-form-item label="菜单名">
                 <a-input v-model="queryParam.name" placeholder=""/>
               </a-form-item>
             </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="用户状态">
-                <a-select v-model="queryParam.status" placeholder="请选择" >
-                  <a-select-option value="">全部</a-select-option>
-                  <a-select-option value="0">启用</a-select-option>
-                  <a-select-option value="1">禁用</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
             <template v-if="advanced">
-              <a-col :md="8" :sm="24">
-                <a-form-item label="调用次数">
-                  <a-input-number v-model="queryParam.callNo" style="width: 100%"/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="更新日期">
-                  <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请输入更新日期"/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="使用状态">
-                  <a-select v-model="queryParam.useStatus" placeholder="请选择" default-value="0">
-                    <a-select-option value="0">全部</a-select-option>
-                    <a-select-option value="1">关闭</a-select-option>
-                    <a-select-option value="2">运行中</a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="使用状态">
-                  <a-select placeholder="请选择" default-value="0">
-                    <a-select-option value="0">全部</a-select-option>
-                    <a-select-option value="1">关闭</a-select-option>
-                    <a-select-option value="2">运行中</a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
             </template>
             <a-col :md="!advanced && 8 || 24" :sm="24">
               <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
                 <a-button type="primary" @click="handSerach()">查询</a-button>
                 <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
-                <a @click="toggleAdvanced" style="margin-left: 8px">
+                <!-- <a @click="toggleAdvanced" style="margin-left: 8px">
                   {{ advanced ? '收起' : '展开' }}
                   <a-icon :type="advanced ? 'up' : 'down'"/>
-                </a>
+                </a> -->
               </span>
             </a-col>
           </a-row>
@@ -79,33 +42,26 @@
       <a-table
       :columns="columns"
       :dataSource="loadData"
+      :row-selection="rowSelection"
       :pagination="false"
+      :expandIconAsCell='false'
       :loading="tableLoading">
       <template slot="operation" slot-scope="text, record">
-        <template >
           <span>
-            <a @click="saveRow(record)">添加</a>
-            <a-divider type="vertical" />
             <a-popconfirm title="是否要删除此行？" @confirm="remove(record.key)">
               <a>删除</a>
             </a-popconfirm>
           </span>
-          <span>
-            <a @click="saveRow(record)">保存</a>
-            <a-divider type="vertical" />
-            <a @click="cancel(record.key)">取消</a>
-          </span>
-        </template>
         <span>
-          <a @click="toggle(record.key)">编辑</a>
           <a-divider type="vertical" />
-          <a-popconfirm title="是否要删除此行？" @confirm="remove(record.key)">
-            <a>删除</a>
-          </a-popconfirm>
+          <a @click="toggle(record.key)">编辑</a>
         </span>
       </template>
+      <span slot="serial" slot-scope="text">
+        <a-icon slot="serial" :type="text" />
+      </span>
     </a-table>
-      <create-form
+    <create-form
         ref="createModal"
         :visible="visible"
         :loading="confirmLoading"
@@ -113,7 +69,6 @@
         @cancel="handleCancel"
         @ok="handleOk"
       />
-      <step-by-step-modal ref="modal" @ok="handleOk"/>
     </a-card>
   </page-header-wrapper>
 </template>
@@ -124,36 +79,33 @@ import { STable, Ellipsis } from '@/components'
 import { getRoleList } from '@/api/manage'
 
 import StepByStepModal from '../list/modules/StepByStepModal'
-import CreateForm from '../list/modules/CreateForm'
+import CreateForm from '../System/modules/CreateForm'
 
 const columns = [
-  // {
-  //   title: '#',
-  //   scopedSlots: { customRender: 'serial' }
-  // },
-  // {
-  //   title: '',
-  //   dataIndex: ''
-  // },
   {
-    title: '名称',
-    dataIndex: 'name'
+    title: '菜单名称',
+    dataIndex: 'name',
+    width: '15%'
+  },
+  {
+    title: '图标',
+    dataIndex: 'icon',
+    width: '15%',
+    scopedSlots: { customRender: 'serial' }
   },
   {
     title: '多语言值',
     dataIndex: 'title'
   },
   {
-    title: '图标',
-    dataIndex: 'icon'
-  },
-  {
     title: '跳转地址',
-    dataIndex: 'redirect'
+    dataIndex: 'redirect',
+    width: '12%'
   },
   {
     title: '菜单类型',
-    dataIndex: 'component'
+    dataIndex: 'component',
+    width: '12%'
   },
   // {
   //   title: '',

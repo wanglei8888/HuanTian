@@ -37,16 +37,23 @@ namespace HuanTian.WebCore
         public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
         {  
             var result = context.Result is EmptyResult ? null : context.Result; // 如果是空结果则返回null
-            // 统一返回结果
-            var newResult = new APIResult()
+            switch (result)
             {
-                Result = (result as ObjectResult)?.Value,
-                Message = "success",
-                Code = HttpStatusCode.OK,
-                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-            };
-
-            context.Result = new ObjectResult(newResult);
+                case FileResult:
+                break;
+                default:
+                    // 统一返回结果
+                    var newResult = new APIResult()
+                    {
+                        Result = (result as ObjectResult)?.Value,
+                        Message = "success",
+                        Code = HttpStatusCode.OK,
+                        Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+                    };
+                    context.Result = new ObjectResult(newResult);
+                    break;
+            }
+            
             context.HttpContext.Response.Headers.Add("Custom-Header", Guid.NewGuid().ToString());
             // 调用下一个中间件或过滤器
             var resultContext = await next();

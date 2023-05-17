@@ -24,6 +24,10 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using OfficeOpenXml;
+using Org.BouncyCastle.Utilities;
+using System.Reflection;
 using System.Security.Claims;
 
 namespace HuanTian.Service
@@ -35,12 +39,18 @@ namespace HuanTian.Service
     {
         private readonly IRepository<SysUserInfoDO> _sysUserInfo;
         private readonly IRedisCache _redisCache;
+        private readonly IGenerateFilesService _generateFiles;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         public SysAuthService(
             IRepository<SysUserInfoDO> sysUserInfo,
-            IRedisCache redisCache)
+            IRedisCache redisCache,
+            IGenerateFilesService generateFiles,
+            IHttpContextAccessor httpContextAccessor)
         {
             _sysUserInfo = sysUserInfo;
             _redisCache = redisCache;
+            _generateFiles = generateFiles;
+            _httpContextAccessor = httpContextAccessor;
         }
         /// <summary>
         /// 用户登陆
@@ -80,6 +90,15 @@ namespace HuanTian.Service
                 var userId = App.HttpContext.User.Claims.FirstOrDefault(u => u.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sid)?.Value;
                 await _redisCache.SetAddAsync($"LoginUserInfoWhitelist", token.ToString());
             }
+
+        }
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> RenderFile() 
+        {
+            var list = await _sysUserInfo.ToListAsync();
+            var bytes = _generateFiles.RenderTemplateExcel("ExcelTemplate.xlsx", list);
+            return new FileContentResult(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") { FileDownloadName =  $"Box-{DateTime.Now:HHmmss}.xlsx" };
 
         }
     }

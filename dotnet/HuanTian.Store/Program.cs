@@ -1,4 +1,5 @@
-﻿using HuanTian.Entities;
+﻿using Autofac;
+using HuanTian.Entities;
 using HuanTian.Infrastructure;
 using HuanTian.Service;
 using HuanTian.SqlSugar;
@@ -80,7 +81,7 @@ namespace Huangtian.Store
                 new RedisCache(builder.Configuration["ConnectionStrings:RedisConnection"]));
 
             // 注册JWT服务
-            builder.Services.AddJwt(true);
+            builder.Services.AddJwt(false);
             // 注册Http服务
             builder.Services.AddHttpContextAccessor();
 
