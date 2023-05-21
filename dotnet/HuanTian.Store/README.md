@@ -46,12 +46,17 @@
     2、为了更方便面向接口编程,如果在接口跟接口实现类中,只有接口中有备注那么接口中的备注就会替换到实现类中,因为Swagger默认只会读取实现类生成的controle的备注，
        **注意**：但是需要谨遵命名规范  IService 和 Service 两个类名的接口实现类才会被替换(你也可以进行修改,在HuanTian.WebCore-SwaggerExtensions.cs),如果不是这两个命名规范的话,那么就需要在接口实现类中添加备注了。
     3、可以对 Controle 进行分组、ApiDescriptionSettingsAttribute["",order=10]特性。 对分组的Swagger配置则在 HuanTian.Store-appsettings.json 中
+
 六: 关于Excel、PDF文件按模板导出
-    1、Excel、PDF文件按模板导出的功能已经实现,可以参考 HuanTian.Service 中的方法 TestData
+    1、Excel、PDF文件按模板导出的功能已经实现,可以参考 HuanTian.Service 中的方法 TestData 类中 DownmldExcel
 	2、Excel、PDF文件按模板导出的功能是使用 EPPlus、iTextSharp 实现的
+
 六：项目中已经实现的功能
 
     1、防止Token已经失效依然被请求，使用Redis加JWT，缓存已经注销的用户Token，生成黑名单在鉴权过滤器中查询存在就显示未认证
+    2、增加了友好的异常处理，使用友好异常处理，返回200状态码。
+       示例:throw new FriendlyException("测试异常");  
+       建议只在需要的情况下使用，不然出问题排查不到问题错在哪里
     2、更多功能正在实现中,敬请期待 ····   
        个人开发精力有限,还请谅解   ···· 
        本人也是一个小菜鸡,遇到的问题解决的方式都是自己找文档、论坛一步步解决的。 ····
