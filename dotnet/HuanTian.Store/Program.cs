@@ -63,17 +63,17 @@ namespace Huangtian.Store
 
             #region Autofac - 自动依赖注入
             // Autofac
-            //builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
-            //{
-            //    containerBuilder.RegisterModule(new AutofacRegister()); // Autofac
-            //});
-            //builder.Host.UseServiceProviderFactory(new Autofac.Extensions.DependencyInjection.AutofacServiceProviderFactory());
+            builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+            {
+                containerBuilder.RegisterModule(new AutofacRegister()); // Autofac
+            });
+            builder.Host.UseServiceProviderFactory(new Autofac.Extensions.DependencyInjection.AutofacServiceProviderFactory());
 
             // 自动依赖注入,手写的 如果不符合需求，可以注释，使用autofac
             // .NET Core 的原生 DI 容器中不允许作用域注入在单例服务中
-            builder.Services.AddScoped(typeof(IRepository<>), typeof(SqlSugarRepository<>));
-            builder.Services.AddSingleton<IStartupFilter, StartupFilter>();
-            builder.Services.AddAutoInjection();
+            //builder.Services.AddScoped(typeof(IRepository<>), typeof(SqlSugarRepository<>));
+            //builder.Services.AddSingleton<IStartupFilter, StartupFilter>();
+            //builder.Services.AddAutoInjection();
             #endregion
 
             // 注册Redis缓存服务

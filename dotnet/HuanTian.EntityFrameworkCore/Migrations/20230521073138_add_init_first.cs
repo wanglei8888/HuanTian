@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HuanTian.EntityFrameworkCore.Migrations
 {
-    public partial class first_init : Migration
+    public partial class add_init_first : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

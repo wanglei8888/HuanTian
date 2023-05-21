@@ -44,23 +44,31 @@ namespace HuanTian.Entities
         /// <param name="value">数据集model</param>
 		/// <param name="setInfo">PDF 设置信息</param>
         /// <returns></returns>
-        byte[] RenderPdf<TClass>(string templateAddress, TClass value, PdfSetting setInfo = default);
+        byte[] RenderTemplatePdf<TClass>(string templateAddress, TClass value, PdfSetting setInfo = default);
 
         /// <summary>
-        /// 基于模板生成PDF文件,支持多个数据集
+        /// 基于模板生成PDF文件,集合生成多个pdf(非表格)
         /// </summary>
         /// <param name="templateAddress">模板地址</param>
         /// <param name="value">数据集model</param>
 		/// <param name="setInfo">PDF 设置信息</param>
         /// <returns></returns>
-        byte[] RenderPdf<TClass>(string templateAddress, IEnumerable<TClass> value, PdfSetting setInfo = default);
+        byte[] RenderTemplatePdf<TClass>(string templateAddress, IEnumerable<TClass> value, PdfSetting setInfo = default);
         /// <summary>
-        /// 基于模板生成Excel文件
+        /// 基于模板生成Excel文件 集合生成列表
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="templateAddress"></param>
         /// <param name="entityList"></param>
         /// <returns></returns>
         byte[] RenderTemplateExcel<TEntity>(string templateAddress, IEnumerable<TEntity> entityList);
+        /// <summary>
+        /// 基于模板生成Excel文件
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="templateAddress"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        byte[] RenderTemplateExcel<TEntity>(string templateAddress, TEntity entity);
     }
 }

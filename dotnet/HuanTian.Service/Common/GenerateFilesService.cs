@@ -35,21 +35,26 @@ using QRCoder;
 using RazorEngine;
 using RazorEngine.Templating;
 using SixLabors.ImageSharp.Formats.Jpeg;
-using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace HuanTian.Service
 {
     public class GenerateFilesService : IGenerateFilesService, IScoped
     {
-        public byte[] RenderPdf<TEntity>(string templateAddress, TEntity entity, PdfSetting setInfo = default)
+        /// <summary>
+		///     匹配表达式
+		/// </summary>
+		private const string VariableRegexString = "(\\{\\{)+([\\w_.>|\\?:&=]*)+(\\}\\})";
+        /// <summary>
+        ///     变量正则
+        /// </summary>
+        private readonly Regex _variableRegex = new Regex(VariableRegexString, RegexOptions.IgnoreCase);
+        public byte[] RenderTemplatePdf<TEntity>(string templateAddress, TEntity entity, PdfSetting setInfo = default)
         {
             try
             {
                 // 读取 Razor 模板文件
                 var templateString = File.ReadAllText(templateAddress);
-                // 使用 Razor 转换引擎生成 HTML 字符串
-                var htmlString = Engine.Razor.RunCompile(templateString, Guid.NewGuid().ToString(), typeof(TEntity), entity);
-
                 using (var stream = new MemoryStream())
                 {
                     using var pdfWriter = new PdfWriter(stream);
@@ -62,41 +67,51 @@ namespace HuanTian.Service
                         fontProvider.AddFont(fontProgram);
 
                         // 设置 PDF 页面大小
-                        var pageSize = new PageSize(setInfo.Width, setInfo.Height);
                         pdfDocument.SetDefaultPageSize(PageSize.A4.Rotate());
-                        if (setInfo.Width != 0 || setInfo.Height != 0)
+                        if (setInfo != null && (setInfo.Width != 0 || setInfo.Height != 0))
                         {
+                            var pageSize = new PageSize(setInfo.Width, setInfo.Height);
                             pdfDocument.SetDefaultPageSize(pageSize);
                         }
 
                         // 转换为文件流
-                        var elements = HtmlConverter.ConvertToElements(htmlString, new ConverterProperties().SetFontProvider(fontProvider));
+                        var elements = new List<IElement>();
+                        
+                        // 使用 Razor 转换引擎生成 HTML 字符串
+                        var htmlString = Engine.Razor.RunCompile(templateString, Guid.NewGuid().ToString(), typeof(TEntity), entity);
+                        elements.AddRange(HtmlConverter.ConvertToElements(htmlString, new ConverterProperties().SetFontProvider(fontProvider)));
+                        
                         using var document = new iText.Layout.Document(pdfDocument);
-                        foreach (var element in elements)
-                        {
-                            document.Add((IBlockElement)element);
-                        }
-
                         // 设置 PDF 外边距
-                        if (setInfo.Margin != null)
+                        if (setInfo?.Margin != null)
                         {
                             document.SetMargins(setInfo.Margin.Top, setInfo.Margin.Right, setInfo.Margin.Bottom, setInfo.Margin.Left);
+                        }
+                        // 添加进document 容器
+                        foreach (var element in elements)
+                        {
+                            var index = elements.IndexOf(element) + 1;
+                            document.Add((IBlockElement)element);
+                            if (index != elements.Count())
+                            {
+                                document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE)); // 在元素列表末尾添加分页符
+                            }
                         }
 
                     }
                     // 将 PDF 数据写入字节数组并返回
                     return stream.ToArray();
-                }
+                
+            }
                 //File.WriteAllBytes("output.pdf", stream.ToArray());
             }
             catch (Exception ex)
             {
-                throw new Exception("PdfGenerationService_RenderPdf_Error:" + ex.Message);
+                throw new FriendlyException($"{nameof(RenderTemplatePdf)}生成失败。" + ex.Message);
             }
 
         }
-
-        public byte[] RenderPdf<TEntity>(string templateAddress, IEnumerable<TEntity> entityList, PdfSetting setInfo = null)
+        public byte[] RenderTemplatePdf<TEntity>(string templateAddress, IEnumerable<TEntity> entityList, PdfSetting setInfo = null)
         {
             try
             {
@@ -148,17 +163,15 @@ namespace HuanTian.Service
                         }
 
                     }
-
                     // 将 PDF 数据写入字节数组并返回
                     return stream.ToArray();
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("PdfGenerationService_RenderPdf_Error:" + ex.Message);
+                throw new FriendlyException($"{nameof(RenderTemplatePdf)}生成失败。" + ex.Message);
             }
         }
-
         public byte[] RenderQrCode(string value)
         {
             var qrGenerator = new QRCodeGenerator();
@@ -174,29 +187,82 @@ namespace HuanTian.Service
                 return ms.ToArray();
             }
         }
-
         public byte[] RenderTemplateExcel<TEntity>(string templateAddress, IEnumerable<TEntity> entityList)
         {
-            var templatePath = System.IO.Path.Combine(App.WebHostEnvironment.WebRootPath, "Template", templateAddress);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            using (var templatePackage = new ExcelPackage(new FileInfo(templatePath)))
+            using (var templatePackage = new ExcelPackage(new FileInfo(templateAddress)))
             {
-                var asd = templatePackage.Workbook;
                 // 获取模板中的工作表
-                var templateWorksheet = templatePackage.Workbook.Worksheets[0];
-
-                // 填入数据
-                int row = 2;// 从第二行开始填充数据
-                foreach (var data in entityList)
+                foreach (var sheet in templatePackage.Workbook.Worksheets)
                 {
-                    var propertys = data?.GetType().GetProperties() ?? new PropertyInfo[] { };
-                    foreach (var property in propertys)
+                    if (sheet.Dimension == null)
+                        continue;
+                    var endColumnIndex = sheet.Dimension.End.Column;
+                    var endRowIndex = sheet.Dimension.End.Row;
+                    var excelColumns = (from cell in sheet.Cells[sheet.Dimension.Start.Row, sheet.Dimension.Start.Column,
+                       endRowIndex, endColumnIndex]
+                                        where _variableRegex.IsMatch((cell.Value ?? string.Empty).ToString())
+                                        select cell).ToList();
+                    // 遍历工作簿中的可替换变量值
+                    foreach (var excelItem in excelColumns)
                     {
-                        var value = property.GetValue(data);
-                        var index = Array.IndexOf(propertys, property) + 1;
-                        templateWorksheet.Cells[row, index].Value = value;
+                        var nameMatch = Regex.Match(excelItem.Text, @"\{\{(.*?)\}\}");
+                        if (nameMatch.Success)
+                        {
+                            var entityName = nameMatch.Groups[1].Value;
+                            var excelVar = Regex.Match(excelItem.Text, VariableRegexString).Value;
+                            // 遍历集合
+                            var i = 0;
+                            foreach (var item in entityList)
+                            {
+                                // 集合就一直往下显示数据
+                                var value = TEntityHelper<TEntity>.GetEnutityColumn(item, entityName);
+                                var addressIndex = Regex.Match(excelItem.Address, @"\d+").Value;
+                                var address = excelItem.Address.Replace(addressIndex, (Convert.ToInt32(addressIndex) + i).ToString());
+                                sheet.Cells[address].Value = excelItem.Text.Replace(excelVar, value);
+                                i++;
+                            }
+                        }
                     }
-                    row++;
+                }
+                // 将ExcelPackage转换为字节数组
+                byte[] bytes;
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    templatePackage.SaveAs(ms);
+                    bytes = ms.ToArray();
+                }
+                return bytes;
+            }
+        }
+        public byte[] RenderTemplateExcel<TEntity>(string templateAddress, TEntity entity)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using (var templatePackage = new ExcelPackage(new FileInfo(templateAddress)))
+            {
+                // 获取模板中的工作表
+                foreach (var sheet in templatePackage.Workbook.Worksheets)
+                {
+                    if (sheet.Dimension == null)
+                        continue;
+                    var endColumnIndex = sheet.Dimension.End.Column;
+                    var endRowIndex = sheet.Dimension.End.Row;
+                    var excelColumns = (from cell in sheet.Cells[sheet.Dimension.Start.Row, sheet.Dimension.Start.Column,
+                       endRowIndex, endColumnIndex]
+                                        where _variableRegex.IsMatch((cell.Value ?? string.Empty).ToString())
+                                        select cell).ToList();
+                    // 遍历工作簿中的可替换变量值
+                    foreach (var excelItem in excelColumns)
+                    {
+                        var nameMatch = Regex.Match(excelItem.Text, @"\{\{(.*?)\}\}");
+                        if (nameMatch.Success)
+                        {
+                            var entityName = nameMatch.Groups[1].Value;
+                            var value = TEntityHelper<TEntity>.GetEnutityColumn(entity, entityName);
+                            var excelVar = Regex.Match(excelItem.Text, VariableRegexString).Value;
+                            sheet.Cells[excelItem.Address].Value = excelItem.Text.Replace(excelVar, value);
+                        }
+                    }
                 }
                 // 将ExcelPackage转换为字节数组
                 byte[] bytes;
@@ -209,14 +275,5 @@ namespace HuanTian.Service
             }
         }
 
-        // /*文件返回需要添加表头*/
-        //// 添加表头 返回名字 不然前端文件名字会加格式
-        //var cd = new System.Net.Mime.ContentDisposition
-        //{
-        //    FileName = $"{listOutput[0].PartNumber}-Bag-{DateTime.Now:HHmmss}.pdf",
-        //    Inline = false
-        //};
-        //App.HttpContext.Response.Headers.Add("Content-Disposition", cd.ToString());
-        //    return new FileContentResult(bytes, "application/pdf");
     }
 }

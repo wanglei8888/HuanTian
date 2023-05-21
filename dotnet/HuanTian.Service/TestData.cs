@@ -36,6 +36,13 @@ namespace HuanTian.Service
     [Route("api/")]
     public class TestData : IDynamicApiController
     {
+        private readonly IRepository<SysMenuDO> _sysMenu;
+        private readonly IGenerateFilesService _generateFilesService;
+        public TestData(IRepository<SysMenuDO> sysMenu, IGenerateFilesService generateFilesService)
+        {
+            _sysMenu = sysMenu;
+            _generateFilesService = generateFilesService;
+        }
         [HttpGet("list/search/projects")]
         public dynamic GetProjects()
         {
@@ -67,9 +74,9 @@ namespace HuanTian.Service
             data.Add(new RadarDataItem_Test
             {
                 Item = "引用",
-                People=  70 ,
-                Group =   30 ,
-                Department =   40 
+                People = 70,
+                Group = 30,
+                Department = 40
             });
             data.Add(new RadarDataItem_Test
             {
@@ -107,6 +114,18 @@ namespace HuanTian.Service
                 Department = 40
             });
             return data;
+        }
+        /// <summary>
+        /// 导出excel 模板
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> DownmldExcel()
+        {
+            var menuList = await _sysMenu.ToListAsync();
+            var templatePath = Path.Combine(App.WebHostEnvironment.WebRootPath, "template", "ExcelTemplate.xlsx");
+            var bytes = _generateFilesService.RenderTemplateExcel(templatePath, menuList);
+            return new FileContentResult(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") { FileDownloadName = "test.xlsx" };
         }
     }
 }

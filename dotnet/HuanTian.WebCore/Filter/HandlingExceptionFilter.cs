@@ -44,25 +44,45 @@ namespace HuanTian.WebCore
             // 如果异常没有被处理则进行处理
             if (context.ExceptionHandled == false)
             {
-                // 定义返回类型
-                var result = new APIResult
+                switch (context.Exception)
                 {
-                    Code = HttpStatusCode.OK,
-                    Message = context.Exception.Message,
-                    Result = null
-                };
-                context.Result = new ContentResult
-                {
-                    // 返回状态码设置为200，表示成功
-                    StatusCode = (int)HttpStatusCode.OK,
-                    // 设置返回格式
-                    ContentType = "application/json;charset=utf-8",
-                    Content = JsonConvert.SerializeObject(result)
-                };
+                    // 友好报错机制 状态码为200
+                    case FriendlyException:
+                        //context.HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                        context.Result = new ContentResult
+                        {
+                            // 返回状态码设置为200，表示成功
+                            StatusCode = (int)HttpStatusCode.OK,
+                            // 设置返回格式
+                            ContentType = "application/json;charset=utf-8",
+                            Content = JsonConvert.SerializeObject(new APIResult
+                            {
+                                Code = HttpStatusCode.OK,
+                                Message = context.Exception.Message,
+                                Result = null
+                            })
+                        };
+                        break;
+                    default:
+                        // 默认状态码返回500
+                        context.Result = new ContentResult
+                        {
+                            // 返回状态码设置为200，表示成功
+                            StatusCode = (int)HttpStatusCode.InternalServerError,
+                            // 设置返回格式
+                            ContentType = "application/json;charset=utf-8",
+                            Content = JsonConvert.SerializeObject(new APIResult
+                            {
+                                Code = HttpStatusCode.OK,
+                                Message = context.Exception.Message,
+                                Result = null
+                            })
+                        };
+                        break;
+                }
             }
             // 设置为true，表示异常已经被处理了
             context.ExceptionHandled = true;
-
             await Task.CompletedTask;
 
         }

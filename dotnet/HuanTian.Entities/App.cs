@@ -86,7 +86,6 @@ namespace HuanTian.Entities
             //// 处理控制台应用程序
             //if (HostEnvironment == default) return RootServices;
 
-            var asd1 = InternalApp.InternalServices.Where(t=>t.ServiceType.Name.Contains("Service"));
             // 第一选择，判断是否是单例注册且单例服务不为空，如果是直接返回根服务提供器
             if (RootServices != null && InternalApp.InternalServices.Where(u => u.ServiceType == (serviceType.IsGenericType ? serviceType.GetGenericTypeDefinition() : serviceType))
                                                                     .Any(u => u.Lifetime == ServiceLifetime.Singleton)) return RootServices;
