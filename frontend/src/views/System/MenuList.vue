@@ -40,6 +40,7 @@
       </div>
 
       <a-table
+      rowKey="id"
       :columns="columns"
       :dataSource="loadData"
       :row-selection="rowSelection"

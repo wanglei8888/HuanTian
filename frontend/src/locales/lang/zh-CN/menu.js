@@ -23,7 +23,7 @@ export default {
     // 新加
     'menu.sysManage': '系统管理',
     'menu.sysManage.menuList': '菜单列表',
-    'menu.userMange': '用户管理',
+    'menu.userManage': '用户管理',
     'menu.userInfo.userList': '用户列表',
     'menu.other.IconSelector': '图标列表',
     // 新加

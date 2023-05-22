@@ -3,6 +3,7 @@ using System;
 using HuanTian.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HuanTian.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(EfSqlContext))]
-    partial class EfSqlContextModelSnapshot : ModelSnapshot
+    [Migration("20230522152500_updateMenuTable")]
+    partial class updateMenuTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,10 +64,10 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnName("keep_alive")
                         .HasComment("是否缓存");
 
-                    b.Property<int?>("MenuType")
-                        .HasColumnType("int")
+                    b.Property<string>("MenuType")
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnName("menu_type")
-                        .HasComment("菜单类型,0系统菜单、1业务菜单");
+                        .HasComment("排序,越大越靠前");
 
                     b.Property<string>("Name")
                         .HasMaxLength(50)

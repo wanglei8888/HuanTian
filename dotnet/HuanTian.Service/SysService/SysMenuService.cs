@@ -12,7 +12,8 @@
         }
         public async Task<List<SysMenuOutput>> GetUserMenu()
         {
-            var allMenu = await _menu.ToListAsync();
+            var allMenu = await _menu.OrderBy(t => t.Order)
+                .ToListAsync();
             var menuInfo = allMenu.Adapt<List<SysMenuOutput>>();
             return menuInfo;
         }
@@ -20,7 +21,7 @@
         public async Task<List<SysMenuTreeOutput>> Page([FromQuery] SysMenuInput input)
         {
             var allMenu = await _menu.ToListAsync();
-            var tree =  TreeHelper<SysMenuTreeOutput>.DoTreeBuild(allMenu.Adapt<List<SysMenuTreeOutput>>());
+            var tree = TreeHelper<SysMenuTreeOutput>.DoTreeBuild(allMenu.Adapt<List<SysMenuTreeOutput>>());
             return tree;
         }
 

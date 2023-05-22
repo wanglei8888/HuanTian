@@ -32,7 +32,4 @@
 		<PackageReference Include="RazorEngine.NetCore" Version="3.1.0" />
 		<PackageReference Include="itext7.pdfhtml" Version="4.0.5" />
 	</ItemGroup>
-	<ItemGroup>
-		<Folder Include="Register\" />
-	</ItemGroup>
 </Project>

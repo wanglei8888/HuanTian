@@ -65,7 +65,7 @@ namespace HuanTian.Entities
         /// <param name="orderByExpression">排序字段</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns></returns>
-        IRepository<TEntity> OrderBy(Expression<Func<TEntity, object>> orderByExpression, bool isAsc);
+        IRepository<TEntity> OrderBy(Expression<Func<TEntity, object>> orderByExpression, bool isAsc = true);
         /// <summary>
         /// 是否,筛选条件 true执行 false不执行
         /// </summary>
