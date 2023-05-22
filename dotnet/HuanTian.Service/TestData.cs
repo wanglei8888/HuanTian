@@ -27,6 +27,7 @@ using HuanTian.Entities;
 using HuanTian.WebCore;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using static StackExchange.Redis.Role;
 
 namespace HuanTian.Service
 {
@@ -127,5 +128,28 @@ namespace HuanTian.Service
             var bytes = _generateFilesService.RenderTemplateExcel(templatePath, menuList);
             return new FileContentResult(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") { FileDownloadName = "test.xlsx" };
         }
+        /// <summary>
+        /// 导出PDF 模板
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult DownmldPdf()
+        {
+            var output = new BoxInfoOutput()
+            {
+                PartNumber = "DFS.2461513",
+                Version = "abPeole",
+                ProductName = "软件设计",
+                Quantity = "56 PCS",
+                ProductionDate = DateTime.Now.ToString("yyyy-MM-dd"),
+                Supplier = "阿里巴巴事业部",
+                QRCode = Convert.ToBase64String(_generateFilesService.RenderQrCode("这里是二维码内容"))
+            };
+            var setting = new PdfSetting(0,0,new PdfMargin(0,0,0,0));
+            var templatePath = Path.Combine(App.WebHostEnvironment.WebRootPath, "template", "PdfTemplate.html");
+            var bytes = _generateFilesService.RenderTemplatePdf(templatePath, output, setting);
+            return new FileContentResult(bytes, "application/pdf") { FileDownloadName = "test.pdf" };
+        }
     }
+    
 }

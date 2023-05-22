@@ -48,7 +48,8 @@
     3、可以对 Controle 进行分组、ApiDescriptionSettingsAttribute["",order=10]特性。 对分组的Swagger配置则在 HuanTian.Store-appsettings.json 中
 
 六: 关于Excel、PDF文件按模板导出
-    1、Excel、PDF文件按模板导出的功能已经实现,可以参考 HuanTian.Service 中的方法 TestData 类中 DownmldExcel
+
+    1、Excel、PDF文件按模板导出的功能已经实现,可以参考 HuanTian.Service 中的方法 TestData 类中 DownmldExcel、DownmldPdf
 	2、Excel、PDF文件按模板导出的功能是使用 EPPlus、iTextSharp 实现的
 
 六：项目中已经实现的功能
