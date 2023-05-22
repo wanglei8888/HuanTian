@@ -317,4 +317,20 @@ namespace HuanTian.Entities
         public int Group { get; set; }
         public int Department { get; set; }
     }
+    public class BoxInfoOutput
+    {
+        /// <summary>
+        /// 料号
+        /// </summary>
+        public string PartNumber { get; set; }
+        public string Version { get; set; }
+        public string ProductName { get; set; }
+        public string Quantity { get; set; }
+        public string ProductionDate { get; set; }
+        public string Supplier { get; set; }
+        /// <summary>
+        /// 二维码
+        /// </summary>
+        public string QRCode { get; set; }
+    }
 }
