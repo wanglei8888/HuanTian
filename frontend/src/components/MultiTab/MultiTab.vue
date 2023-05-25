@@ -51,6 +51,7 @@ export default {
       }
     },
     selectedLastPath () {
+      console.log('selectedLastPath')
       this.activeKey = this.fullPathList[this.fullPathList.length - 1]
     },
 

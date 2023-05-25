@@ -39,22 +39,27 @@ namespace HuanTian.Entities
         /// <returns></returns>
         Task<int> AddAsync(List<TEntity> entityList);
         /// <summary>
-        /// 修改一条数据 (如果传入了InitTable将以InitTable为主)
+        /// 修改一条数据 
         /// </summary>
         /// <param name="entity"></param>
         Task<int> UpdateAsync(TEntity entity);
         /// <summary>
-        /// 修改多条数据 (如果传入了InitTable将以InitTable为主)
+        /// 修改多条数据 
         /// </summary>
         /// <param name="entity"></param>
         Task<int> UpdateAsync(List<TEntity> entity);
         /// <summary>
-        /// 删除一条数据 (如果传入了InitTable将以InitTable为主)
+        /// 删除一条数据 
         /// </summary>
         /// <param name="entity"></param>
         Task<int> DeleteAsync(TEntity entity);
         /// <summary>
-        /// 删除多条数据 (如果传入了InitTable将以InitTable为主)
+        /// 删除一条数据根据ID 
+        /// </summary>
+        /// <param name="id"></param>
+        Task<int> DeleteAsync(params long[] id);
+        /// <summary>
+        /// 删除多条数据 
         /// </summary>
         /// <param name="entity"></param>
         Task<int> DeleteAsync(List<TEntity> entity); 

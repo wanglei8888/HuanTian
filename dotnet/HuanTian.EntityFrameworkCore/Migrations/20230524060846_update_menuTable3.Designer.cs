@@ -3,6 +3,7 @@ using System;
 using HuanTian.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,64 +11,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HuanTian.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(EfSqlContext))]
-    partial class EfSqlContextModelSnapshot : ModelSnapshot
+    [Migration("20230524060846_update_menuTable3")]
+    partial class update_menuTable3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "6.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
-
-            modelBuilder.Entity("HuanTian.Entities.SysDictionaryDO", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("code")
-                        .HasComment("系统字典表");
-
-                    b.Property<long?>("CreateBy")
-                        .HasColumnType("bigint")
-                        .HasColumnName("create_by")
-                        .HasComment("创建人");
-
-                    b.Property<DateTime?>("CreateOn")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("create_on")
-                        .HasComment("创建时间");
-
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("deleted")
-                        .HasComment("软删除");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(60)
-                        .HasColumnType("varchar(60)")
-                        .HasColumnName("name")
-                        .HasComment("字典名字");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("value")
-                        .HasComment("字典值");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("sys_dictionary");
-
-                    b.HasComment("系统字典表");
-                });
 
             modelBuilder.Entity("HuanTian.Entities.SysMenuDO", b =>
                 {

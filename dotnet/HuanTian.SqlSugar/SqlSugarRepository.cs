@@ -1,5 +1,6 @@
 ﻿using HuanTian.Entities;
 using HuanTian.Infrastructure;
+using MathNet.Numerics.Distributions;
 using SqlSugar;
 using System.Linq.Expressions;
 
@@ -95,7 +96,10 @@ namespace HuanTian.SqlSugar
         {
             return await _db.Deleteable<TEntity>(entityList).ExecuteCommandAsync();
         }
-
+        public async Task<int> DeleteAsync(params long[] id)
+        {
+            return await _db.Deleteable<TEntity>().In(id).ExecuteCommandAsync();
+        }
         public async Task<int> AddAsync(TEntity entity)
         {
             return await _db.Insertable(entity).ExecuteCommandAsync();
@@ -152,6 +156,7 @@ namespace HuanTian.SqlSugar
         {
             return new SqlSugarReposityoryInit<TEntity>(_db, entityList);
         }
+
         #endregion
 
     }

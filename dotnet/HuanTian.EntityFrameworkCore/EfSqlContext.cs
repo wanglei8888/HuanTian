@@ -11,8 +11,8 @@ namespace HuanTian.EntityFrameworkCore
         public DbSet<SysRoleInfoDO> SysRoleInfoDO { get; set; }
         public DbSet<SysUserRoleDO> SysUserRoleDO { get; set; }
         public DbSet<SysMenuDO> SysMenuDO { get; set; }
+        public DbSet<SysDictionaryDO> SysDictionaryDO { get; set; }
 
-        
         #region 
         public EfSqlContext()
         {

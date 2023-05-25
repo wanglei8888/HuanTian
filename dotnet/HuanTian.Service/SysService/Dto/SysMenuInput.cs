@@ -34,4 +34,8 @@ namespace HuanTian.Service
     {
 
     }
+    public class SysMenuTypeInput
+    {
+        public string MenuType { get; set; }
+    }
 }

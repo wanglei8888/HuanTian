@@ -12,11 +12,5 @@
 		<None Remove="HuanTian.Service.xml" />
 		<ProjectReference Include="..\HuanTian.WebCore\HuanTian.WebCore.csproj" />
 	</ItemGroup>
-	<ItemGroup>
-	  <EditorConfigFiles Remove="..\.editorconfig" />
-	</ItemGroup>
-	<ItemGroup>
-	  <None Include="..\.editorconfig" />
-	</ItemGroup>
 
 </Project>

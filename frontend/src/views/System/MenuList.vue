@@ -6,13 +6,14 @@
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
               <a-form-item label="菜单名">
-                <a-input v-model="queryParam.name" placeholder=""/>
+                <a-input v-model="queryParam.name" placeholder="" />
               </a-form-item>
             </a-col>
             <template v-if="advanced">
             </template>
             <a-col :md="!advanced && 8 || 24" :sm="24">
-              <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
+              <span class="table-page-search-submitButtons"
+                :style="advanced && { float: 'right', overflow: 'hidden' } || {}">
                 <a-button type="primary" @click="handSerach()">查询</a-button>
                 <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
                 <!-- <a @click="toggleAdvanced" style="margin-left: 8px">
@@ -26,7 +27,7 @@
       </div>
 
       <div class="table-operator">
-        <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
+        <a-button type="primary" icon="plus" @click="$refs.detailForm.detail()">新建</a-button>
         <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
           <a-menu slot="overlay">
             <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
@@ -39,37 +40,25 @@
         </a-dropdown>
       </div>
 
-      <a-table
-      rowKey="id"
-      :columns="columns"
-      :dataSource="loadData"
-      :row-selection="rowSelection"
-      :pagination="false"
-      :expandIconAsCell='false'
-      :loading="tableLoading">
-      <template slot="operation" slot-scope="text, record">
+      <a-table rowKey="id" :columns="columns" :dataSource="loadData" :row-selection="rowSelection" :pagination="false"
+        :expandIconAsCell='false' :loading="tableLoading">
+        <template slot="operation" slot-scope="text, record">
           <span>
-            <a-popconfirm title="是否要删除此行？" @confirm="remove(record.key)">
+            <a-popconfirm title="是否要删除此行？" @confirm="remove(record.id)">
               <a>删除</a>
             </a-popconfirm>
           </span>
-        <span>
-          <a-divider type="vertical" />
-          <a @click="toggle(record.key)">编辑</a>
+          <span>
+            <a-divider type="vertical" />
+            <a @click="$refs.detailForm.detail(record)">编辑</a>
+          </span>
+        </template>
+        <span slot="serial" slot-scope="text">
+          <a-icon slot="serial" :type="text" />
         </span>
-      </template>
-      <span slot="serial" slot-scope="text">
-        <a-icon slot="serial" :type="text" />
-      </span>
-    </a-table>
-    <create-form
-        ref="createModal"
-        :visible="visible"
-        :loading="confirmLoading"
-        :model="mdl"
-        @cancel="handleCancel"
-        @ok="handleOk"
-      />
+      </a-table>
+      <menu-Form ref="detailForm" @ok="modelOk" />
+      <!-- <add-form ref="detailForm" @ok="handleOk"/> -->
     </a-card>
   </page-header-wrapper>
 </template>
@@ -77,10 +66,9 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { getRoleList } from '@/api/manage'
 
 import StepByStepModal from '../list/modules/StepByStepModal'
-import CreateForm from '../System/modules/CreateForm'
+import menuForm from '../System/modules/MenuForm'
 
 const columns = [
   {
@@ -150,14 +138,13 @@ export default {
   components: {
     STable,
     Ellipsis,
-    CreateForm,
+    menuForm,
     StepByStepModal
   },
-  data () {
+  data() {
     this.columns = columns
     return {
       // create model
-      visible: false,
       confirmLoading: false,
       mdl: null,
       tableLoading: false,
@@ -171,25 +158,11 @@ export default {
       selectedRows: []
     }
   },
-  filters: {
-    statusFilter (type) {
-      return statusMap[type].text
-    },
-    statusTypeFilter (type) {
-      return statusMap[type].status
-    },
-    languageFilter (type) {
-      return languageMap[type].text
-    },
-    languageTypeFilter (type) {
-      return languageMap[type].status
-    }
-  },
-  created () {
-    getRoleList({ t: new Date() })
+  created() {
+    this.handSerach()
   },
   computed: {
-    rowSelection () {
+    rowSelection() {
       return {
         selectedRowKeys: this.selectedRowKeys,
         onChange: this.onSelectChange
@@ -197,86 +170,50 @@ export default {
     }
   },
   methods: {
-    handleAdd () {
+    handleAdd() {
       this.mdl = null
-      this.visible = true
     },
-    handSerach () {
-      // const requestParameters = Object.assign({}, parameter, this.queryParam)
-      this.$http.get('/sysMenu/page', { params: this.queryParam }).then(res => {
-         this.loadData = res.result
-      })
-      // this.$refs.table.refresh()
-    },
-    handleEdit (record) {
-      this.visible = true
-      this.mdl = { ...record }
-    },
-    handleOk () {
-      const form = this.$refs.createModal.form
-      this.confirmLoading = true
-      form.validateFields((errors, values) => {
-        if (!errors) {
-          console.log('values', values)
-          if (values.id > 0) {
-            // 修改 e.g.
-            new Promise((resolve, reject) => {
-              setTimeout(() => {
-                resolve()
-              }, 1000)
-            }).then(res => {
-              this.visible = false
-              this.confirmLoading = false
-              // 重置表单数据
-              form.resetFields()
-              // 刷新表格
-              this.$refs.table.refresh()
-
-              this.$message.info('修改成功')
-            })
-          } else {
-            // 新增
-            new Promise((resolve, reject) => {
-              setTimeout(() => {
-                resolve()
-              }, 1000)
-            }).then(res => {
-              this.visible = false
-              this.confirmLoading = false
-              // 重置表单数据
-              form.resetFields()
-              // 刷新表格
-              this.$refs.table.refresh()
-
-              this.$message.info('新增成功')
-            })
-          }
-        } else {
-          this.confirmLoading = false
+    remove(key) {
+      this.$http.delete('/sysMenu', { data: { Id: key } }).then(res => {
+        if (res.code === 200) {
+          this.$message.success('删除成功')
+          this.handSerach()
         }
       })
     },
-    handleCancel () {
-      this.visible = false
-
+    handSerach() {
+      // const requestParameters = Object.assign({}, parameter, this.queryParam)
+      this.$http.get('/sysMenu', { params: this.queryParam }).then(res => {
+        this.loadData = res.result
+      })
+      // this.$refs.table.refresh()
+    },
+    handleEdit(record) {
+      this.mdl = { ...record }
+    },
+    modelOk() {
+      console.log(1)
+      this.handSerach()
+    },
+    handleCancel() {
       const form = this.$refs.createModal.form
       form.resetFields() // 清理表单数据（可不做）
     },
-    handleSub (record) {
+    handleSub(record) {
       if (record.status !== 0) {
         this.$message.info(`${record.no} 订阅成功`)
       } else {
         this.$message.error(`${record.no} 订阅失败，规则已关闭`)
       }
     },
-    onSelectChange (selectedRowKeys, selectedRows) {
+    onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
-    toggleAdvanced () {
+    toggleAdvanced() {
       this.advanced = !this.advanced
     },
-    resetSearchForm () {
+    resetSearchForm() {
       this.queryParam = {
         date: moment(new Date())
       }

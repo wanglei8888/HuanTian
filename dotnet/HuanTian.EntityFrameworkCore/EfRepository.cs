@@ -1,7 +1,11 @@
 ﻿using HuanTian.Entities;
 using HuanTian.Infrastructure;
+using iText.Commons.Actions.Contexts;
 using Microsoft.EntityFrameworkCore;
+using NPOI.SS.Formula.Functions;
+using NPOI.XSSF.Streaming.Values;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -89,6 +93,18 @@ namespace HuanTian.EntityFrameworkCore
         {
             _db.Set<TEntity>().RemoveRange(entityList);
             return await _db.SaveChangesAsync();
+        }
+        public async Task<int> DeleteAsync(params long[] id)
+        {
+            // 单个执行
+            if (id.Length == 1)
+            {
+                var entity = await _db.Set<TEntity>().FindAsync(id);
+                _db.Set<TEntity>().Remove(entity);
+                return await _db.SaveChangesAsync();
+            }
+            // efcore 暂未找到实现ID批量删除方法
+            return 0;
         }
 
         public async Task<int> AddAsync(TEntity entity)

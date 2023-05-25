@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SqlSugar;
 using System.ComponentModel.DataAnnotations;
 using Yitter.IdGenerator;
 
@@ -10,6 +11,7 @@ namespace HuanTian.Entities
     public class BaseEntity
     {
         [Key]
+        [SugarColumn(IsPrimaryKey = true)]
         public long Id { get; set; }
 
         /// <summary>

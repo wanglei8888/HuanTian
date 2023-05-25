@@ -54,6 +54,7 @@ namespace HuanTian.Entities
         /// 菜单跳转地址
         /// </summary>
         [Comment("菜单跳转地址")]
+        [MaxLength(50)]
         public string? Redirect { get; set; }
         /// <summary>
         /// 隐藏子类
@@ -64,31 +65,24 @@ namespace HuanTian.Entities
         /// 菜单前端绑定值
         /// </summary>
         [Comment("菜单前端绑定值")]
+        [MaxLength(50)]
         public string? Component { get; set; }
         /// <summary>
         /// 菜单类型
         /// </summary>
-        [Comment("菜单类型,0系统菜单、1业务菜单")]
-        [EnumDataType(typeof(MenuTypeEnum))]
-        public MenuTypeEnum? MenuType { get; set; }
+        [Comment("菜单类型")]
+        [MaxLength(50)]
+        public string? MenuType { get; set; }
         /// <summary>
         /// 排序,越大越靠前
         /// </summary>
         [Comment("排序,越大越靠前")]
         public int? Order { get; set; }
-    }
-    /// <summary>
-    /// 菜单类型枚举
-    /// </summary>
-    public enum MenuTypeEnum
-    { 
-        /// <summary>
-        /// 系统菜单
-        /// </summary>
-        System,
-        /// <summary>
-        /// 业务菜单
-        /// </summary>
-        Business
+        ///// <summary>
+        ///// 菜单类型
+        ///// </summary>
+        //[Comment("菜单类型,0系统菜单、1业务菜单")]
+        //[EnumDataType(typeof(MenuTypeEnum))]
+        //public MenuTypeEnum? MenuType { get; set; }
     }
 }
