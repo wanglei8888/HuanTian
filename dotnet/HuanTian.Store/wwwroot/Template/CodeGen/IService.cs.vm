@@ -1,0 +1,17 @@
+﻿using Magic.Core;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using Magic.Application.Entity;
+namespace @Model.NameSpace
+{
+    public interface I@(@Model.ClassName)Service
+    {
+        Task<dynamic> Page([FromQuery] @(@Model.ClassName)Input input);
+        Task Add(@(@Model.ClassName)FormInput input);
+        Task Update(@(@Model.ClassName)FormInput input);
+        Task Delete(IdInput input);
+        Task<@(@Model.ClassName)> Get([FromQuery] IdInput input);
+        Task<dynamic> List([FromQuery] @(@Model.ClassName)Input input);
+        Task<dynamic> FkList([FromQuery] Fk@(@Model.ClassName)Input input);
+    }
+}

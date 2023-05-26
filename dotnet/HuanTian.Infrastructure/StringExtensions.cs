@@ -23,7 +23,7 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-using Humanizer.Localisation;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace HuanTian.Infrastructure
@@ -145,22 +145,45 @@ namespace HuanTian.Infrastructure
         /// <param name="value"></param>
         /// <param name="type">时间单位</param>
         /// <returns>时间单位距今多少</returns>
-        public static TimeSpan ToTimeSpan(this string value, TimeUnit type = TimeUnit.Minute)
+        //public static TimeSpan ToTimeSpan(this string value, TimeUnit type = TimeUnit.Minute)
+        //{
+        //    var array = value.Replace(" ", "").Split('*');
+        //    var sumMinuts = 0;
+        //    foreach (var item in array)
+        //    {
+        //        sumMinuts += Convert.ToInt32(item);
+        //    }
+        //    return type switch
+        //    {
+        //        TimeUnit.Minute => TimeSpan.FromMinutes(sumMinuts),
+        //        TimeUnit.Hour => TimeSpan.FromHours(sumMinuts),
+        //        TimeUnit.Day => TimeSpan.FromDays(sumMinuts),
+        //        TimeUnit.Week => TimeSpan.FromDays(sumMinuts),
+        //        _ => TimeSpan.FromMinutes(sumMinuts),
+        //    };
+        //}
+        /// <summary>
+        /// 字符串转换为帕斯卡命名方式
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string ToPascalCase(this string input)
         {
-            var array = value.Replace(" ", "").Split('*');
-            var sumMinuts = 0;
-            foreach (var item in array)
+            if (string.IsNullOrEmpty(input))
             {
-                sumMinuts += Convert.ToInt32(item);
+                return input;
             }
-            return type switch
+
+            var words = input.Split(new[] { ' ', '-', '_' }, StringSplitOptions.RemoveEmptyEntries);
+            var result = new StringBuilder();
+
+            foreach (var word in words)
             {
-                TimeUnit.Minute => TimeSpan.FromMinutes(sumMinuts),
-                TimeUnit.Hour => TimeSpan.FromHours(sumMinuts),
-                TimeUnit.Day => TimeSpan.FromDays(sumMinuts),
-                TimeUnit.Week => TimeSpan.FromDays(sumMinuts),
-                _ => TimeSpan.FromMinutes(sumMinuts),
-            };
+                result.Append(char.ToUpper(word[0]));
+                result.Append(word.Substring(1).ToLower());
+            }
+
+            return result.ToString();
         }
     }
 }

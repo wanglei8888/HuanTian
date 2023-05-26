@@ -1,0 +1,38 @@
+﻿using Magic.Core;
+using System;
+using System.ComponentModel.DataAnnotations;
+using Magic.Application.Entity;
+
+namespace @Model.NameSpace
+{
+    /// <summary>
+    /// @(@Model.BusName)输入参数
+    /// </summary>
+    public class @(@Model.ClassName)Input : PageInput
+    {
+        @foreach (var column in Model.TableField){
+
+
+        @:/// <summary>
+        @:/// @column.ColumnDescription
+        @:/// </summary>
+
+                if(@column.DataType == "long" || @column.DataType == "int" || @column.DataType == "decimal"){
+        @:public @column.DataType? @column.DbColumnName { get; set; }
+                }else{
+        @:public @column.DataType @column.DbColumnName { get; set; }
+                }
+                @:
+            
+        }
+    }
+
+    /// <summary>
+    /// @(@Model.BusName)表单参数
+    /// </summary>
+    public class @(@Model.ClassName)FormInput : @Model.ClassName
+    {
+       
+    }
+ 
+}
