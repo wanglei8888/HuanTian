@@ -3,7 +3,7 @@
 #### 🎁项目介绍
 * 前端基于ant design vue 的模板而搭建的服务器 （前端模板微小改动主要涉及后端）
 
-* 后端涉及技术 .Net6框架、Mapster对象映射、Autofac自动依赖注入、Jwt权限认证、Logging缓存写入文件夹、继承接口动态生成API Controle、Swagger动态配置、Excel PDF 按模板导出、等等技术
+* 后端涉及技术 .Net6框架、Mapster对象映射、Autofac自动依赖注入、Jwt权限认证、Logging缓存写入文件夹、继承接口动态生成API Controle、Swagger动态配置、Excel PDF 按模板导出、自动生成代码、等等技术
   </br>仓储层支持 EF Core 、SqlSugar,数据库（暂时）支持 SqlServer、MySql
 
 #### 👀前端页面展示
