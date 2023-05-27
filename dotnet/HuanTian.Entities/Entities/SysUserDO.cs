@@ -6,7 +6,7 @@ namespace HuanTian.Entities;
 /// 用户信息表
 /// </summary>
 [Comment("用户信息表")]
-public class SysUserInfoDO : BaseEntityBusiness
+public class SysUserDO : BaseEntityBusiness
 {
     /// <summary>
     /// 名字

@@ -1,38 +1,46 @@
-﻿using Magic.Core;
-using System;
-using System.ComponentModel.DataAnnotations;
-using Magic.Application.Entity;
+﻿#region << 版 本 注 释 >>
+/*----------------------------------------------------------------
+ * 文件名：@(@Model.ClassName)Input
+ * 代码生成文件
+ * 创建时间：@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+ * 版本：V1.0.0
+ * 描述：
+ *
+ * ----------------------------------------------------------------
+ * 修改人：
+ * 时间：
+ * 修改说明：
+ *
+ * 版本：V1.0.1
+ *----------------------------------------------------------------*/
+#endregion << 版 本 注 释 >>
 
-namespace @Model.NameSpace
+namespace @Model.NameSpace;
+
+/// <summary>
+/// @(@Model.ClassName)输入参数
+/// </summary>
+public class @(@Model.ClassName)Input : PageInput
 {
-    /// <summary>
-    /// @(@Model.BusName)输入参数
-    /// </summary>
-    public class @(@Model.ClassName)Input : PageInput
-    {
-        @foreach (var column in Model.TableField){
-
-
-        @:/// <summary>
-        @:/// @column.ColumnDescription
-        @:/// </summary>
-
-                if(@column.DataType == "long" || @column.DataType == "int" || @column.DataType == "decimal"){
-        @:public @column.DataType? @column.DbColumnName { get; set; }
-                }else{
-        @:public @column.DataType @column.DbColumnName { get; set; }
-                }
-                @:
+    @foreach (var column in Model.TableField){
+        @if (@column.QueryParameters == true)
+        {
+    @:/// <summary>
+    @:/// @column.ColumnDescription
+    @:/// </summary>
+    @:public string @column.DbColumnName { get; set; } 
+             
             
-        }
+        }   
     }
-
-    /// <summary>
-    /// @(@Model.BusName)表单参数
-    /// </summary>
-    public class @(@Model.ClassName)FormInput : @Model.ClassName
-    {
-       
-    }
- 
 }
+
+/// <summary>
+/// @(@Model.ClassName)表单参数
+/// </summary>
+public class @(@Model.ClassName)FormInput : @Model.EntityName
+{
+       
+}
+ 
+

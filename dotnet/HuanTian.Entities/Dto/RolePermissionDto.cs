@@ -29,7 +29,7 @@ namespace HuanTian.Entities
     /// <summary>
     /// 角色权限
     /// </summary>
-    public class RolePermissionDto: SysRoleInfoDO
+    public class RolePermissionDto: SysRoleDO
     {
         
         /// <summary>

@@ -22,16 +22,11 @@
  * 版本：V1.0.1
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace HuanTian.Service.SysService.Dto
+namespace HuanTian.Service
 {
     public class SysDictionaryInput
     {
-        public string Code { get; set; }
+        public string Code { get; set; }    
     }
 }

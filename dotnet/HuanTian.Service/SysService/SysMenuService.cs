@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace HuanTian.Service
+﻿namespace HuanTian.Service
 {
     /// <summary>
     /// 菜单服务

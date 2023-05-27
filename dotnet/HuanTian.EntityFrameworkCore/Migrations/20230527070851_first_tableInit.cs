@@ -6,11 +6,63 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HuanTian.EntityFrameworkCore.Migrations
 {
-    public partial class add_init_first : Migration
+    /// <inheritdoc />
+    public partial class first_tableInit : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "sys_code_gen",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    table_name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false, comment: "表格名字")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    data_type = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false, comment: "列类型")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    db_column_name = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false, comment: "列名字")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    column_description = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false, comment: "列备注")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    drop_down_list = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: true, comment: "下拉框绑定字典值 如果没有就是不是下拉框")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    query_parameters = table.Column<bool>(type: "tinyint(1)", nullable: false, comment: "是否是查询参数"),
+                    deleted = table.Column<bool>(type: "tinyint(1)", nullable: false, comment: "软删除"),
+                    create_by = table.Column<long>(type: "bigint", nullable: true, comment: "创建人"),
+                    create_on = table.Column<DateTime>(type: "datetime(6)", nullable: true, comment: "创建时间")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_sys_code_gen", x => x.id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "sys_dictionary",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    code = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false, comment: "系统字典表")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    value = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false, comment: "字典值")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    name = table.Column<string>(type: "varchar(60)", maxLength: 60, nullable: false, comment: "字典名字")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    deleted = table.Column<bool>(type: "tinyint(1)", nullable: false, comment: "软删除"),
+                    create_by = table.Column<long>(type: "bigint", nullable: true, comment: "创建人"),
+                    create_on = table.Column<DateTime>(type: "datetime(6)", nullable: true, comment: "创建时间")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_sys_dictionary", x => x.id);
+                },
+                comment: "系统字典表")
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
@@ -30,11 +82,14 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                     icon = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, comment: "图标")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     show = table.Column<bool>(type: "tinyint(1)", nullable: false, comment: "是否显示菜单"),
-                    redirect = table.Column<string>(type: "longtext", nullable: true, comment: "菜单跳转地址")
+                    redirect = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, comment: "菜单跳转地址")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     hide_children = table.Column<bool>(type: "tinyint(1)", nullable: true, comment: "隐藏子类"),
-                    component = table.Column<string>(type: "longtext", nullable: true, comment: "菜单类型")
+                    component = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, comment: "菜单前端绑定值")
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    menu_type = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, comment: "菜单类型")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    order = table.Column<int>(type: "int", nullable: true, comment: "排序,越大越靠前"),
                     deleted = table.Column<bool>(type: "tinyint(1)", nullable: false, comment: "软删除"),
                     create_by = table.Column<long>(type: "bigint", nullable: true, comment: "创建人"),
                     create_on = table.Column<DateTime>(type: "datetime(6)", nullable: true, comment: "创建时间")
@@ -66,7 +121,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "sys_role_info",
+                name: "sys_role",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
@@ -82,13 +137,13 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_sys_role_info", x => x.id);
+                    table.PrimaryKey("PK_sys_role", x => x.id);
                 },
                 comment: "系统角色信息表")
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "sys_user_info",
+                name: "sys_user",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
@@ -117,7 +172,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_sys_user_info", x => x.id);
+                    table.PrimaryKey("PK_sys_user", x => x.id);
                 },
                 comment: "用户信息表")
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -142,8 +197,15 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "sys_code_gen");
+
+            migrationBuilder.DropTable(
+                name: "sys_dictionary");
+
             migrationBuilder.DropTable(
                 name: "sys_menu");
 
@@ -151,10 +213,10 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                 name: "sys_menu_role");
 
             migrationBuilder.DropTable(
-                name: "sys_role_info");
+                name: "sys_role");
 
             migrationBuilder.DropTable(
-                name: "sys_user_info");
+                name: "sys_user");
 
             migrationBuilder.DropTable(
                 name: "sys_user_role");

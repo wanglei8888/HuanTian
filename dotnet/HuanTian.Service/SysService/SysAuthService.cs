@@ -37,20 +37,17 @@ namespace HuanTian.Service
     /// </summary>
     public class SysAuthService : ISysAuthService, IDynamicApiController
     {
-        private readonly IRepository<SysUserInfoDO> _sysUserInfo;
+        private readonly IRepository<SysUserDO> _sysUserInfo;
         private readonly IRedisCache _redisCache;
         private readonly IGenerateFilesService _generateFiles;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         public SysAuthService(
-            IRepository<SysUserInfoDO> sysUserInfo,
+            IRepository<SysUserDO> sysUserInfo,
             IRedisCache redisCache,
-            IGenerateFilesService generateFiles,
-            IHttpContextAccessor httpContextAccessor)
+            IGenerateFilesService generateFiles)
         {
             _sysUserInfo = sysUserInfo;
             _redisCache = redisCache;
             _generateFiles = generateFiles;
-            _httpContextAccessor = httpContextAccessor;
         }
         /// <summary>
         /// 用户登陆
@@ -90,15 +87,6 @@ namespace HuanTian.Service
                 var userId = App.HttpContext.User.Claims.FirstOrDefault(u => u.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sid)?.Value;
                 await _redisCache.SetAddAsync($"LoginUserInfoWhitelist", token.ToString());
             }
-
-        }
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<IActionResult> RenderFile() 
-        {
-            var list = await _sysUserInfo.ToListAsync();
-            var bytes = _generateFiles.RenderTemplateExcel("ExcelTemplate.xlsx", list);
-            return new FileContentResult(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") { FileDownloadName =  $"Box-{DateTime.Now:HHmmss}.xlsx" };
 
         }
     }

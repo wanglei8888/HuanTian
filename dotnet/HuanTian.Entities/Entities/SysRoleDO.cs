@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace HuanTian.Entities
@@ -8,7 +7,7 @@ namespace HuanTian.Entities
     /// 系统角色信息表
     /// </summary>
     [Comment("系统角色信息表")]
-    public class SysRoleInfoDO : BaseEntityCreate
+    public class SysRoleDO : BaseEntityCreate
     {
         /// <summary>
         /// 角色名字

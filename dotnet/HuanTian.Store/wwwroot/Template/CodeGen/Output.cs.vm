@@ -1,13 +1,27 @@
-﻿using System;
-using Magic.Application.Entity;
+﻿#region << 版 本 注 释 >>
+/*----------------------------------------------------------------
+ * 文件名：@(@Model.ClassName)Input
+ * 代码生成文件
+ * 创建时间：@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+ * 版本：V1.0.0
+ * 描述：
+ *
+ * ----------------------------------------------------------------
+ * 修改人：
+ * 时间：
+ * 修改说明：
+ *
+ * 版本：V1.0.1
+ *----------------------------------------------------------------*/
+#endregion << 版 本 注 释 >>
 
-namespace @Model.NameSpace
+namespace @Model.NameSpace;
+
+/// <summary>
+/// @(@Model.ClassName)输出参数
+/// </summary>
+public class @(@Model.ClassName)Output : @Model.EntityName
 {
-    /// <summary>
-    /// @(@Model.BusName)输出参数
-    /// </summary>
-    public class @(@Model.ClassName)Output : @Model.ClassName
-    {
-
-    }
+        
 }
+

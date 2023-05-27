@@ -16,8 +16,74 @@ namespace HuanTian.EntityFrameworkCore.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.10")
+                .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            modelBuilder.Entity("HuanTian.Entities.SysCodeGenDO", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<string>("ColumnDescription")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)")
+                        .HasColumnName("column_description")
+                        .HasComment("列备注");
+
+                    b.Property<long?>("CreateBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("create_by")
+                        .HasComment("创建人");
+
+                    b.Property<DateTime?>("CreateOn")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("create_on")
+                        .HasComment("创建时间");
+
+                    b.Property<string>("DataType")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)")
+                        .HasColumnName("data_type")
+                        .HasComment("列类型");
+
+                    b.Property<string>("DbColumnName")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)")
+                        .HasColumnName("db_column_name")
+                        .HasComment("列名字");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("deleted")
+                        .HasComment("软删除");
+
+                    b.Property<string>("DropDownList")
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)")
+                        .HasColumnName("drop_down_list")
+                        .HasComment("下拉框绑定字典值 如果没有就是不是下拉框");
+
+                    b.Property<bool>("QueryParameters")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("query_parameters")
+                        .HasComment("是否是查询参数");
+
+                    b.Property<string>("TableName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("table_name")
+                        .HasComment("表格名字");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("sys_code_gen");
+                });
 
             modelBuilder.Entity("HuanTian.Entities.SysDictionaryDO", b =>
                 {
@@ -64,9 +130,10 @@ namespace HuanTian.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("sys_dictionary");
-
-                    b.HasComment("系统字典表");
+                    b.ToTable("sys_dictionary", t =>
+                        {
+                            t.HasComment("系统字典表");
+                        });
                 });
 
             modelBuilder.Entity("HuanTian.Entities.SysMenuDO", b =>
@@ -160,9 +227,10 @@ namespace HuanTian.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("sys_menu");
-
-                    b.HasComment("系统菜单表");
+                    b.ToTable("sys_menu", t =>
+                        {
+                            t.HasComment("系统菜单表");
+                        });
                 });
 
             modelBuilder.Entity("HuanTian.Entities.SysMenuRoleDO", b =>
@@ -197,12 +265,13 @@ namespace HuanTian.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("sys_menu_role");
-
-                    b.HasComment("系统菜单权限表");
+                    b.ToTable("sys_menu_role", t =>
+                        {
+                            t.HasComment("系统菜单权限表");
+                        });
                 });
 
-            modelBuilder.Entity("HuanTian.Entities.SysRoleInfoDO", b =>
+            modelBuilder.Entity("HuanTian.Entities.SysRoleDO", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -245,12 +314,13 @@ namespace HuanTian.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("sys_role_info");
-
-                    b.HasComment("系统角色信息表");
+                    b.ToTable("sys_role", t =>
+                        {
+                            t.HasComment("系统角色信息表");
+                        });
                 });
 
-            modelBuilder.Entity("HuanTian.Entities.SysUserInfoDO", b =>
+            modelBuilder.Entity("HuanTian.Entities.SysUserDO", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -343,9 +413,10 @@ namespace HuanTian.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("sys_user_info");
-
-                    b.HasComment("用户信息表");
+                    b.ToTable("sys_user", t =>
+                        {
+                            t.HasComment("用户信息表");
+                        });
                 });
 
             modelBuilder.Entity("HuanTian.Entities.SysUserRoleDO", b =>
@@ -380,9 +451,10 @@ namespace HuanTian.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("sys_user_role");
-
-                    b.HasComment("系统用户权限表");
+                    b.ToTable("sys_user_role", t =>
+                        {
+                            t.HasComment("系统用户权限表");
+                        });
                 });
 #pragma warning restore 612, 618
         }

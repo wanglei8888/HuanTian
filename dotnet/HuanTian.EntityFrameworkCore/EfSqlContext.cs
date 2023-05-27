@@ -6,12 +6,13 @@ namespace HuanTian.EntityFrameworkCore
 {
     public class EfSqlContext : DbContext
     {
-        public DbSet<SysUserInfoDO> UserInfoDO { get; set; }
+        public DbSet<SysUserDO> UserInfoDO { get; set; }
         public DbSet<SysMenuRoleDO> SysMneuRoleDO { get; set; }
-        public DbSet<SysRoleInfoDO> SysRoleInfoDO { get; set; }
+        public DbSet<SysRoleDO> SysRoleInfoDO { get; set; }
         public DbSet<SysUserRoleDO> SysUserRoleDO { get; set; }
         public DbSet<SysMenuDO> SysMenuDO { get; set; }
         public DbSet<SysDictionaryDO> SysDictionaryDO { get; set; }
+        public DbSet<SysCodeGenDO> SysCodeGenDO { get; set; }
 
         #region 
         public EfSqlContext()

@@ -1,17 +1,55 @@
-﻿using Magic.Core;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using Magic.Application.Entity;
-namespace @Model.NameSpace
+﻿#region << 版 本 注 释 >>
+/*----------------------------------------------------------------
+ * 文件名：@(@Model.ClassName)Input
+ * 代码生成文件
+ * 创建时间：@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+ * 版本：V1.0.0
+ * 描述：
+ *
+ * ----------------------------------------------------------------
+ * 修改人：
+ * 时间：
+ * 修改说明：
+ *
+ * 版本：V1.0.1
+ *----------------------------------------------------------------*/
+#endregion << 版 本 注 释 >>
+
+namespace @Model.NameSpace;
+
+/// <summary>
+/// @(@Model.EntityDescribe)服务
+/// </summary>
+public interface I@(@Model.ClassName)Service
 {
-    public interface I@(@Model.ClassName)Service
-    {
-        Task<dynamic> Page([FromQuery] @(@Model.ClassName)Input input);
-        Task Add(@(@Model.ClassName)FormInput input);
-        Task Update(@(@Model.ClassName)FormInput input);
-        Task Delete(IdInput input);
-        Task<@(@Model.ClassName)> Get([FromQuery] IdInput input);
-        Task<dynamic> List([FromQuery] @(@Model.ClassName)Input input);
-        Task<dynamic> FkList([FromQuery] Fk@(@Model.ClassName)Input input);
-    }
+    /// <summary>
+    /// 分页查询
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<PageData> Page(@(@Model.ClassName)Input input);
+    /// <summary>
+    /// 新增数据
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<int> Add(@(@Model.ClassName)FormInput input);
+    /// <summary>
+    /// 修改数据
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<int> Update(@(@Model.ClassName)FormInput input);
+    /// <summary>
+    /// 删除数据
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<int> Delete(IdInput input);
+    /// <summary>
+    /// 查询数据
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<IEnumerable<@(@Model.EntityName)>> Get(@(@Model.ClassName)Input input);
 }

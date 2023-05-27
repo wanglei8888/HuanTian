@@ -34,11 +34,11 @@ namespace HuanTian.Service
     public class SysUserService : ISysUserService, IDynamicApiController
     {
         private readonly ILogger<SysUserService> _logger;
-        private readonly IRepository<SysUserInfoDO> _userInfo;
+        private readonly IRepository<SysUserDO> _userInfo;
 
         public SysUserService(
             ILogger<SysUserService> logger,
-            IRepository<SysUserInfoDO> userInfo)
+            IRepository<SysUserDO> userInfo)
         {
             _logger = logger;
             _userInfo = userInfo;
