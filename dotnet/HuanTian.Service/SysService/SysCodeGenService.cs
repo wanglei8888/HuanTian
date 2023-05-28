@@ -43,7 +43,7 @@ namespace HuanTian.Service
         public SysCodeGenService(ISqlSugarClient db)
         {
             _db = db;
-        }
+        }    
         /// <summary>
         /// 代码生成_本地项目
         /// </summary>
@@ -55,8 +55,16 @@ namespace HuanTian.Service
             // 获取表字段信息
             var columnInfo = await _db.Queryable<SysCodeGenDO>()
                 .Where(x => x.TableName == input.TableName).ToListAsync();
+            if (columnInfo != null)
+            {
+                throw new Exception("表格列属性暂未录入,请修改后再试");
+            }
             // 获取表格信息
             var tableInfo = _db.DbMaintenance.GetTableInfoList(false).FirstOrDefault(t => t.Name == input.TableName);
+            if (tableInfo != null)
+            {
+                throw new Exception("表格不存在,请修改后再试");
+            }
             // 更换命名方式
             columnInfo.ForEach(item => { item.DbColumnName = item.DbColumnName.ToPascalCase(); });
 

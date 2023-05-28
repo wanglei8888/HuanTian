@@ -48,35 +48,25 @@ namespace HuanTian.WebCore
                 {
                     // 友好报错机制 状态码为200
                     case FriendlyException:
-                        //context.HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                        context.HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
                         context.Result = new ContentResult
                         {
                             // 返回状态码设置为200，表示成功
                             StatusCode = (int)HttpStatusCode.OK,
                             // 设置返回格式
                             ContentType = "application/json;charset=utf-8",
-                            Content = JsonConvert.SerializeObject(new APIResult
-                            {
-                                Code = HttpStatusCode.OK,
-                                Message = context.Exception.Message,
-                                Result = null
-                            })
+                            Content = RequestHelper.ErroRequest(context.Exception.Message, HttpStatusCode.InternalServerError)
                         };
                         break;
                     default:
                         // 默认状态码返回500
                         context.Result = new ContentResult
                         {
-                            // 返回状态码设置为200，表示成功
+                            // 返回状态码设置为500
                             StatusCode = (int)HttpStatusCode.InternalServerError,
                             // 设置返回格式
                             ContentType = "application/json;charset=utf-8",
-                            Content = JsonConvert.SerializeObject(new APIResult
-                            {
-                                Code = HttpStatusCode.OK,
-                                Message = context.Exception.Message,
-                                Result = null
-                            })
+                            Content = RequestHelper.ErroRequest(context.Exception.Message,HttpStatusCode.InternalServerError)
                         };
                         break;
                 }

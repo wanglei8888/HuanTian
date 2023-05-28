@@ -66,13 +66,7 @@ namespace HuanTian.WebCore
                 var userId = App.HttpContext.User.Claims.FirstOrDefault(u => u.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sid)?.Value;
                 if ((await _redisCache.SetContainsAsync($"LoginUserInfoWhitelist", token)))
                 {
-                    context.Result = new ObjectResult(new APIResult()
-                    {
-                        Result = null,
-                        Message = "用户未授权,请登录后再操作",
-                        Code = HttpStatusCode.Unauthorized,
-                        Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-                    });
+                    context.Result = RequestHelper.ErroRequestEntity("用户未授权,请登录后再操作", HttpStatusCode.InternalServerError);
                     context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                 }
             }

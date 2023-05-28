@@ -23,7 +23,9 @@
  * 版本：V1.0.1
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.ComponentModel.DataAnnotations;
 
 namespace HuanTian.WebCore.Filter
 {
@@ -34,7 +36,18 @@ namespace HuanTian.WebCore.Filter
     {
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-
+            // web api 请求参数验证
+            // 获取所有带有RequiredAttribute的属性
+            var properties = context.ActionDescriptor.Parameters
+            .SelectMany(p => p.ParameterType.GetProperties())
+            .Where(p => p.CustomAttributes.Any(a => a.AttributeType == typeof(RequiredAttribute)));
+            foreach (var property in properties)
+            {
+                var errors = context.ModelState[property.Name]?.Errors
+                    .Select(e => e.ErrorMessage)
+                    .ToArray() ?? new string[] { "错误信息异常" }; // 防止空引用异常
+                if (errors.Any()){ throw new ArgumentException(errors[0]); }
+            }
             // 调用下一个中间件或过滤器
             var result = await next();
 

@@ -35,25 +35,18 @@ namespace HuanTian.WebCore
     public class TemplateResultFilter : IAsyncResultFilter
     {
         public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
-        {  
+        {
             var result = context.Result is EmptyResult ? null : context.Result; // 如果是空结果则返回null
             switch (result)
             {
                 case FileResult:
-                break;
+                    break;
                 default:
                     // 统一返回结果
-                    var newResult = new APIResult()
-                    {
-                        Result = (result as ObjectResult)?.Value,
-                        Message = "success",
-                        Code = HttpStatusCode.OK,
-                        Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-                    };
-                    context.Result = new ObjectResult(newResult);
+                    context.Result = RequestHelper.ErroRequestEntity("success", HttpStatusCode.InternalServerError, result);
                     break;
             }
-            
+
             context.HttpContext.Response.Headers.Add("Custom-Header", Guid.NewGuid().ToString());
             // 调用下一个中间件或过滤器
             var resultContext = await next();
