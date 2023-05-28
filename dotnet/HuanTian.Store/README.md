@@ -5,26 +5,29 @@
     1、Domain文件夹 HuanTian.Domain项目新增实体表格 例如：NewTable
 	   表文件夹内新建表的DO     例如：NewTableDO
 
-    2、在 HuanTian.EntityFrameworkCore.MySql 项目里MySqlContext文件中写入对应 DO 的 DbSet
+    2、在 HuanTian.EntityFrameworkCore 项目里EfSqlContext文件中写入对应 DO 的 DbSet
        例如：
        public DbSet<NewTableDO> NewTable { get; set; }
 
-    3、打开【程序包管理控制台】，默认项目选为 Suncere.AirAnalysis.EntityFrameworkCore.Mysql / SqlServer
+    3、打开【程序包管理控制台】，默认项目选为 HuanTian.Store
 
-    4、在【程序包管理控制台】中输入添加数据库迁移命令 "Add-Migration"
+    4、选择解决方案重新生成,如果没问题就可以执行迁移命令
+
+    5、在【程序包管理控制台】中输入添加数据库迁移命令 "Add-Migration"
        可以简单写英文描述进行记录   例如：
        "Add-Migration add_NewTable"
 
-    5、HuanTian.EntityFrameworkCore.MySql 的 Migrations 文件夹中
+    6、HuanTian.EntityFrameworkCore.MySql 的 Migrations 文件夹中
        确认是否能看到具体日期对应的数据库迁移记录文件      例如：
        [202107010000_add_NewTable]
 
-    6、确认有迁移记录后，在【程序包管理控制台】输入更新数据库命令 "update-database" 后等待完成即可
+    7、确认有迁移记录后，在【程序包管理控制台】输入更新数据库命令 "update-database" 后等待完成即可
 
 二：修改数据库、仓储连接方式
 
     1、修改 HuanTian.Store-appsettings.json 中 SqlSettings:SqlType 的数据库连接字符串 MySql、或者SqlServer
-    2、修改 HuanTian.Store-Program.cs 中 builder.Services.AddScoped(typeof(IRepository<>), typeof(SqlSugarRepository<>));  把 SqlSugarRepository 切换为想要的仓储就行
+    2、修改 HuanTian.Store-Program.cs 中 builder.Services.AddScoped(typeof(IRepository<>), typeof(SqlSugarRepository<>)); 
+       如果使用的是 Autofac 容器 需要修改 HuanTian.WebCore、AutofacRegisterAutofac 中的依赖注入  把 SqlSugarRepository 切换为想要的仓储就行
 
 三：本项目已经全部统一 EF Core 生的表名、列名为下划线命名法  方便命名
     
@@ -52,13 +55,18 @@
     1、Excel、PDF文件按模板导出的功能已经实现,可以参考 HuanTian.Service 中的方法 TestData 类中 DownmldExcel、DownmldPdf
 	2、Excel、PDF文件按模板导出的功能是使用 EPPlus、iTextSharp 实现的
 
-六：项目中已经实现的功能
+七: 代码生成功能
+    
+    1、案例参考 HuanTian.Service、SysCodeGenService、RunLocal  实现流程为在 Razor 模板中写好代码的模板,再通过实体类数据进行替换,最后生成代码文件 
+    2、模板地址是 HuanTian.Store、wwwroot、Template 中的文件
+
+八：项目中已经实现的功能
 
     1、防止Token已经失效依然被请求，使用Redis加JWT，缓存已经注销的用户Token，生成黑名单在鉴权过滤器中查询存在就显示未认证
     2、增加了友好的异常处理，使用友好异常处理，返回200状态码。
        示例:throw new FriendlyException("测试异常");  
        建议只在需要的情况下使用，不然出问题排查不到问题错在哪里
-    2、更多功能正在实现中,敬请期待 ····   
+    3、更多功能正在实现中,敬请期待 ····   
        个人开发精力有限,还请谅解   ···· 
        本人也是一个小菜鸡,遇到的问题解决的方式都是自己找文档、论坛一步步解决的。 ····
        在学习中慢慢完善本项目,如果你也是志同道合之人欢迎你的加入。               ····
