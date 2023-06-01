@@ -13,7 +13,11 @@ namespace HuanTian.EntityFrameworkCore
         public DbSet<SysMenuDO> SysMenuDO { get; set; }
         public DbSet<SysDictionaryDO> SysDictionaryDO { get; set; }
         public DbSet<SysCodeGenDO> SysCodeGenDO { get; set; }
-
+        public DbSet<SysMenuRoleDO> SysMenuRoleDO { get; set; }
+        public DbSet<SysDeptDO> SysDeptDO { get; set; }
+        public DbSet<SysPermissionsDO> SysPermissionsDO { get; set; }
+        public DbSet<SysRolePermissionsDO> SysRolePermissionsDO { get; set; }
+        
         #region 
         public EfSqlContext()
         {

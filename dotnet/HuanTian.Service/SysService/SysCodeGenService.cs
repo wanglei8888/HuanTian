@@ -51,19 +51,24 @@ namespace HuanTian.Service
         [HttpPost]
         public async Task RunLocal(SysCodeGenInput input)
         {
+            // 获取模板信息
             var templatePathList = GetTemplatePathList(input);
+            if (Directory.Exists(templatePathList[0].FilePath.GetParentPath()) && input.Enforcement == false)
+            {
+                throw new Exception("执行失败,该代码已经存在了,如需强制执行请将Enforcement设为true!");
+            }
             // 获取表字段信息
             var columnInfo = await _db.Queryable<SysCodeGenDO>()
                 .Where(x => x.TableName == input.TableName).ToListAsync();
-            if (columnInfo != null)
+            if (columnInfo == null)
             {
                 throw new Exception("表格列属性暂未录入,请修改后再试");
             }
             // 获取表格信息
             var tableInfo = _db.DbMaintenance.GetTableInfoList(false).FirstOrDefault(t => t.Name == input.TableName);
-            if (tableInfo != null)
+            if (tableInfo == null)
             {
-                throw new Exception("表格不存在,请修改后再试");
+                throw new Exception("表格数据库中不存在,请修改后再试");
             }
             // 更换命名方式
             columnInfo.ForEach(item => { item.DbColumnName = item.DbColumnName.ToPascalCase(); });
@@ -77,15 +82,12 @@ namespace HuanTian.Service
                 NameSpace = input.ApplicationName,
                 TableField = columnInfo
             };
+            
             foreach (var item in templatePathList)
             {
                 var templateString = File.ReadAllText(item.TemplatePath);
                 var templateResult = Engine.Razor.RunCompile(templateString, Guid.NewGuid().ToString(), typeof(SysCodeGenTemplateInput), info);
-                if (Directory.Exists(item.FilePath.GetParentPath()) && input.Enforcement == false)
-                {           
-                    throw new Exception("执行失败,该代码已经存在了,如需强制执行请将Enforcement设为true!");
-                }
-
+                
                 if (!Directory.Exists(item.FilePath.GetParentPath()))
                 {
                     Directory.CreateDirectory(item.FilePath.GetParentPath());

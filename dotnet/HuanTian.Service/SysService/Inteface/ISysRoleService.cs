@@ -1,17 +1,8 @@
 ﻿#region << 版 本 注 释 >>
 /*----------------------------------------------------------------
- * 版权所有 (c) 2023  NJRN 保留所有权利。
- * CLR版本：4.0.30319.42000
- * 机器名称：DESKTOP-4P8G8RH
- * 公司名称：
- * 命名空间：HuanTian.Service.SysService
- * 唯一标识：e5a64c98-8b59-4389-b2bd-fbe258ce1cbf
- * 文件名：ISysRoleService
- * 当前用户域：DESKTOP-4P8G8RH
- * 
- * 创建者：wanglei
- * 电子邮箱：271976304@qq.com
- * 创建时间：2023/4/16 15:42:12
+ * 文件名：SysRoleInput
+ * 代码生成文件
+ * 创建时间：2023-05-30 21:56:41
  * 版本：V1.0.0
  * 描述：
  *
@@ -24,10 +15,41 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-namespace HuanTian.Service
+namespace HuanTian.Service;
+
+/// <summary>
+/// 系统角色信息表服务
+/// </summary>
+public interface ISysRoleService
 {
-    public interface ISysRoleService
-    {
-        dynamic UserRole();
-    }
+    /// <summary>
+    /// 分页查询
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<PageData> Page(SysRoleInput input);
+    /// <summary>
+    /// 新增数据
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<int> Add(SysRoleFormInput input);
+    /// <summary>
+    /// 修改数据
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<int> Update(SysRoleFormInput input);
+    /// <summary>
+    /// 删除数据
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<int> Delete(IdInput input);
+    /// <summary>
+    /// 查询数据
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<IEnumerable<SysRoleDO>> Get(SysRoleInput input);
 }

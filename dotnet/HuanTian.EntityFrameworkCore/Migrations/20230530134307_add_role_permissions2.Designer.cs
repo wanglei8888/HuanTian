@@ -3,6 +3,7 @@ using System;
 using HuanTian.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HuanTian.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(EfSqlContext))]
-    partial class EfSqlContextModelSnapshot : ModelSnapshot
+    [Migration("20230530134307_add_role_permissions2")]
+    partial class add_role_permissions2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -357,21 +360,11 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnName("deleted")
                         .HasComment("软删除");
 
-                    b.Property<long?>("MenuId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("menu_id")
-                        .HasComment("绑定系统菜单Id");
-
                     b.Property<string>("Name")
                         .HasMaxLength(30)
                         .HasColumnType("varchar(30)")
                         .HasColumnName("name")
                         .HasComment("权限名字");
-
-                    b.Property<int?>("Type")
-                        .HasColumnType("int")
-                        .HasColumnName("type")
-                        .HasComment("权限类型");
 
                     b.HasKey("Id");
 

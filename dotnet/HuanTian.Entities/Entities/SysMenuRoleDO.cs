@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 namespace HuanTian.Entities
 {
     /// <summary>
-    /// 系统菜单权限表
+    /// 系统菜单角色表
     /// </summary>
-    [Comment("系统菜单权限表")]
+    [Comment("系统菜单角色表")]
     public class SysMenuRoleDO : BaseEntityCreate
     {
         /// <summary>
@@ -15,7 +15,7 @@ namespace HuanTian.Entities
         [Required]
         public long MenuId { get; set; }
         /// <summary>
-        /// 权限ID
+        /// 角色ID
         /// </summary>
         [Required]
         public long RoleId { get; set; }

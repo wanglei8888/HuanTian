@@ -23,10 +23,10 @@ namespace HuanTian.Entities
         [Comment("角色描述")]
         public string Describe { get; set; }
         /// <summary>
-        /// 角色状态
+        /// 角色启用
         /// </summary>
         [Required]
-        [Comment("角色状态")]
-        public int Status { get; set; }
+        [Comment("角色启用")]
+        public bool Enable { get; set; }
     }
 }

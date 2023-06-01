@@ -4,14 +4,14 @@
  * CLR版本：4.0.30319.42000
  * 机器名称：DESKTOP-6BOHDBE
  * 公司名称：
- * 命名空间：HuanTian.Entities.Entities.Base
- * 唯一标识：564d99d1-7495-42f0-a87d-4a9f969d436b
- * 文件名：BaseEntityUpdate
+ * 命名空间：HuanTian.Entities.Entities
+ * 唯一标识：21da3f30-eb54-4977-9d65-10f727f13fc4
+ * 文件名：SysDeptDO
  * 当前用户域：DESKTOP-6BOHDBE
  * 
  * 创建者：wanglei
  * 电子邮箱：271976304@qq.com
- * 创建时间：2023/5/11 21:29:26
+ * 创建时间：2023/5/29 21:44:30
  * 版本：V1.0.0
  * 描述：
  *
@@ -25,40 +25,37 @@
 #endregion << 版 本 注 释 >>
 
 using Microsoft.EntityFrameworkCore;
-
+using System.ComponentModel.DataAnnotations;
 
 namespace HuanTian.Entities
 {
     /// <summary>
-    /// 修改基类
+    /// 系统部门表
     /// </summary>
-    public class BaseEntityUpdate : BaseEntityCreate
+    [Comment("系统部门表")]
+    public class SysDeptDO : BaseEntityCreate
     {
         /// <summary>
-        /// 修改人
+        /// 父级部门id
         /// </summary>
-        [Comment("修改人")]
-        public virtual long? UpdateBy { get; set; }
+        [Comment("父级部门id")]
+        public long ParentId { get; set; }
         /// <summary>
-        /// 修改时间
+        /// 部门名字
         /// </summary>
-        [Comment("修改时间")]
-        public virtual DateTime? UpdateOn { get; set; }
+        [MaxLength(30)]
+        [Comment("部门名字")]
+        public string Name { get; set; }
         /// <summary>
-        /// 实体新增自动赋值
+        /// 部门描述
         /// </summary>
-        public override void CreateFunc()
-        {
-            UpdateBy = App.GetUserId;
-            UpdateOn = DateTime.Now;
-        }
+        [MaxLength(200)]
+        [Comment("部门描述")]
+        public string Describe { get; set; }
         /// <summary>
-        /// 实体修改自动赋值
+        /// 部门启用
         /// </summary>
-        public virtual void UpdateFunc()
-        {
-            UpdateOn = DateTime.Now;
-            UpdateBy = App.GetUserId;
-        }
+        [Comment("部门启用")]
+        public bool Enable { get; set; }
     }
 }

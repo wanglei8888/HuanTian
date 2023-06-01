@@ -3,6 +3,7 @@ using System;
 using HuanTian.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HuanTian.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(EfSqlContext))]
-    partial class EfSqlContextModelSnapshot : ModelSnapshot
+    [Migration("20230530133751_add_permissions")]
+    partial class add_permissions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -82,64 +85,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("sys_code_gen", t =>
-                        {
-                            t.HasComment("代码生成数据表格");
-                        });
-                });
-
-            modelBuilder.Entity("HuanTian.Entities.SysDeptDO", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasColumnName("id");
-
-                    b.Property<long?>("CreateBy")
-                        .HasColumnType("bigint")
-                        .HasColumnName("create_by")
-                        .HasComment("创建人");
-
-                    b.Property<DateTime?>("CreateOn")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("create_on")
-                        .HasComment("创建时间");
-
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("deleted")
-                        .HasComment("软删除");
-
-                    b.Property<string>("Describe")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)")
-                        .HasColumnName("describe")
-                        .HasComment("部门描述");
-
-                    b.Property<bool>("Enable")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("enable")
-                        .HasComment("部门启用");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("varchar(30)")
-                        .HasColumnName("name")
-                        .HasComment("部门名字");
-
-                    b.Property<long>("ParentId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("parent_id")
-                        .HasComment("父级部门id");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("sys_dept", t =>
-                        {
-                            t.HasComment("系统部门表");
-                        });
+                    b.ToTable("sys_code_gen");
                 });
 
             modelBuilder.Entity("HuanTian.Entities.SysDictionaryDO", b =>
@@ -328,56 +274,6 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         });
                 });
 
-            modelBuilder.Entity("HuanTian.Entities.SysPermissionsDO", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("varchar(30)")
-                        .HasColumnName("code")
-                        .HasComment("权限Code");
-
-                    b.Property<long?>("CreateBy")
-                        .HasColumnType("bigint")
-                        .HasColumnName("create_by")
-                        .HasComment("创建人");
-
-                    b.Property<DateTime?>("CreateOn")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("create_on")
-                        .HasComment("创建时间");
-
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("deleted")
-                        .HasComment("软删除");
-
-                    b.Property<long?>("MenuId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("menu_id")
-                        .HasComment("绑定系统菜单Id");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(30)
-                        .HasColumnType("varchar(30)")
-                        .HasColumnName("name")
-                        .HasComment("权限名字");
-
-                    b.Property<int?>("Type")
-                        .HasColumnType("int")
-                        .HasColumnName("type")
-                        .HasComment("权限类型");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("sys_permissions");
-                });
-
             modelBuilder.Entity("HuanTian.Entities.SysRoleDO", b =>
                 {
                     b.Property<long>("Id")
@@ -425,41 +321,6 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         {
                             t.HasComment("系统角色信息表");
                         });
-                });
-
-            modelBuilder.Entity("HuanTian.Entities.SysRolePermissionsDO", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasColumnName("id");
-
-                    b.Property<long?>("CreateBy")
-                        .HasColumnType("bigint")
-                        .HasColumnName("create_by")
-                        .HasComment("创建人");
-
-                    b.Property<DateTime?>("CreateOn")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("create_on")
-                        .HasComment("创建时间");
-
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("deleted")
-                        .HasComment("软删除");
-
-                    b.Property<long>("PermissionsId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("permissions_id");
-
-                    b.Property<long>("RoleId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("role_id");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("sys_role_permissions");
                 });
 
             modelBuilder.Entity("HuanTian.Entities.SysUserDO", b =>

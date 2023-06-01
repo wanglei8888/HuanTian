@@ -43,7 +43,7 @@ namespace HuanTian.WebCore
                     break;
                 default:
                     // 统一返回结果
-                    context.Result = RequestHelper.ErroRequestEntity("success", HttpStatusCode.InternalServerError, result);
+                    context.Result = RequestHelper.ErroRequestEntity("success", HttpStatusCode.OK, result);
                     break;
             }
 

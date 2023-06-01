@@ -9,6 +9,12 @@ namespace HuanTian.Entities;
 public class SysUserDO : BaseEntityBusiness
 {
     /// <summary>
+    /// 所属部门Id
+    /// </summary>
+    [Required]
+    [Comment("所属部门Id")]
+    public long DeptId { get; set; }
+    /// <summary>
     /// 名字
     /// </summary>
     [Required]
@@ -36,11 +42,11 @@ public class SysUserDO : BaseEntityBusiness
     [Comment("用户密码")]
     public string? Password { get; set; }
     /// <summary>
-    /// 状态
+    /// 启用
     /// </summary>
     [Required]
-    [Comment("状态")]
-    public UserStatus Status { get; set; }
+    [Comment("启用")]
+    public bool Enable { get; set; }
     /// <summary>
     /// 电话
     /// </summary>
@@ -62,31 +68,6 @@ public class SysUserDO : BaseEntityBusiness
     /// 系统语言
     /// </summary>
     [Comment("系统语言")]
-    public SystemLanguage Language { get; set; }
-}
-public enum UserStatus
-{
-    /// <summary>
-    /// 启用
-    /// </summary>
-    [Comment("启用")]
-    Enable,
-    /// <summary>
-    /// 禁用
-    /// </summary>
-    [Comment("禁用")]
-    UnEnable
-}
-public enum SystemLanguage
-{
-    /// <summary>
-    /// 中文
-    /// </summary>
-    [Comment("中文")]
-    Chinese,
-    /// <summary>
-    /// 英文
-    /// </summary>
-    [Comment("英文")]
-    English
+    [EnumDataType(typeof(SystemLanguageEnum))]
+    public SystemLanguageEnum Language { get; set; }
 }

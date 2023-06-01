@@ -5,13 +5,13 @@
  * 机器名称：DESKTOP-6BOHDBE
  * 公司名称：
  * 命名空间：HuanTian.Entities.Entities
- * 唯一标识：ff7f56fd-f84d-4aa0-9d6e-5ecc5cf67e77
- * 文件名：SysCodeGenDO
+ * 唯一标识：39d1db96-f5ff-4ccd-83d1-7b8ce92d4ac1
+ * 文件名：SysPermissionsDO
  * 当前用户域：DESKTOP-6BOHDBE
  * 
  * 创建者：wanglei
  * 电子邮箱：271976304@qq.com
- * 创建时间：2023/5/26 23:02:04
+ * 创建时间：2023/5/29 22:19:39
  * 版本：V1.0.0
  * 描述：
  *
@@ -24,52 +24,54 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-
 
 namespace HuanTian.Entities
 {
     /// <summary>
-    /// 代码生成数据表格
+    /// 系统权限表
     /// </summary>
-    [Comment("代码生成数据表格")]
-    public class SysCodeGenDO : BaseEntityCreate
+    public class SysPermissionsDO : BaseEntityCreate
     {
         /// <summary>
-        /// 表格名字
+        /// 绑定系统菜单Id
         /// </summary>
-        [MaxLength(50)]
-        [Comment("表格名字")]
-        public string TableName { get; set; }
+        [Comment("绑定系统菜单Id")]
+        public long? MenuId { get; set; }
         /// <summary>
-        /// 列类型
+        /// 权限Code
+        /// </summary>
+        [Required]
+        [MaxLength(30)]
+        [Comment("权限Code")]
+        public string Code { get; set; }
+        /// <summary>
+        /// 权限名字
         /// </summary>
         [MaxLength(30)]
-        [Comment("列类型")]
-        public string DataType { get; set; }
+        [Comment("权限名字")]
+        public string? Name { get; set; }
         /// <summary>
-        /// 列名字
+        /// 权限类型
         /// </summary>
-        [MaxLength(30)]
-        [Comment("列名字")]
-        public string DbColumnName { get; set; }
+        [Comment("权限类型")]
+        [EnumDataType(typeof(PermissionTypeEnum))]
+        public PermissionTypeEnum? Type { get; set; }
+    }
+    /// <summary>
+    /// 权限类型枚举
+    /// </summary>
+    public enum PermissionTypeEnum
+    {
         /// <summary>
-        /// 列备注
+        /// 按钮权限
         /// </summary>
-        [MaxLength(30)]
-        [Comment("列备注")]
-        public string ColumnDescription { get; set; }
+        Button,
         /// <summary>
-        /// 下拉框绑定字典值 如果没有就是不是下拉框
+        /// 路由权限
         /// </summary>
-        [MaxLength(30)]
-        [Comment("下拉框绑定字典值 如果没有就是不是下拉框")]
-        public string? DropDownList { get; set; }
-        /// <summary>
-        /// 是否是查询参数
-        /// </summary>
-        [Comment("是否是查询参数")]
-        public bool QueryParameters { get; set; }
+        Router
     }
 }

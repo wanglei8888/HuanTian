@@ -24,16 +24,6 @@ namespace HuanTian.Entities
             CreateBy = App.GetUserId;
             TenantId = App.GetTenantId;
         }
-        /// <summary>
-        /// 实体修改自动赋值
-        /// </summary>
-        public virtual void UpdateFunc()
-        {
-            Id = YitIdHelper.NextId();
-            Deleted = false;
-            CreateOn = DateTime.Now;
-            CreateBy = App.GetUserId;
-            TenantId = App.GetTenantId;
-        }
+        
     }
 }

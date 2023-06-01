@@ -24,10 +24,6 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using OfficeOpenXml;
-using Org.BouncyCastle.Utilities;
-using System.Reflection;
 using System.Security.Claims;
 
 namespace HuanTian.Service
@@ -39,15 +35,12 @@ namespace HuanTian.Service
     {
         private readonly IRepository<SysUserDO> _sysUserInfo;
         private readonly IRedisCache _redisCache;
-        private readonly IGenerateFilesService _generateFiles;
         public SysAuthService(
             IRepository<SysUserDO> sysUserInfo,
-            IRedisCache redisCache,
-            IGenerateFilesService generateFiles)
+            IRedisCache redisCache)
         {
             _sysUserInfo = sysUserInfo;
             _redisCache = redisCache;
-            _generateFiles = generateFiles;
         }
         /// <summary>
         /// 用户登陆

@@ -25,6 +25,7 @@
 #endregion << 版 本 注 释 >>
 
 using Newtonsoft.Json;
+using SqlSugar.Extensions;
 
 namespace HuanTian.Service
 {
@@ -68,7 +69,7 @@ namespace HuanTian.Service
         {
             var pageData = await _userInfo
                 .WhereIf(!string.IsNullOrEmpty(input.Name),t => t.Name == input.Name)
-                .WhereIf(!string.IsNullOrEmpty(input.Status), t => t.Status == input.Status.ToEnum<UserStatus>())
+                .WhereIf(!string.IsNullOrEmpty(input.Enable), t => t.Enable == input.Enable.ObjToBool())
                 .ToPageListAsync(input.PageNo,input.PageSize);
             return pageData;
         }

@@ -310,7 +310,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnName("role_name")
                         .HasComment("角色名字");
 
-                    b.Property<int>("Status")
+                    b.Property<int>("Enable")
                         .HasColumnType("int")
                         .HasColumnName("status")
                         .HasComment("角色状态");
@@ -381,7 +381,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnName("password")
                         .HasComment("用户密码");
 
-                    b.Property<int>("Status")
+                    b.Property<int>("Enable")
                         .HasColumnType("int")
                         .HasColumnName("status")
                         .HasComment("状态");

@@ -26,7 +26,63 @@
 
 namespace HuanTian.Entities
 {
-    
+    public class Permission
+    {
+        /// <summary>
+        /// 权限名称
+        /// </summary>
+        public string PermissionName { get; set; }
+        public string Actions { get; set; }
+        /// <summary>
+        /// 动作列表
+        /// </summary>
+        public List<ActionEntity> actionEntitySet { get; set; }
+    }
+
+    public class ActionEntity
+    {
+        /// <summary>
+        /// 动作
+        /// </summary>
+        public string Action { get; set; }
+
+        /// <summary>
+        /// 描述
+        /// </summary>
+        public string Describe { get; set; }
+
+        /// <summary>
+        /// 默认选中
+        /// </summary>
+        public bool DefaultCheck { get; set; }
+    }
+
+    public class Role
+    {
+        /// <summary>
+        /// ID
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
+        /// 名称
+        /// </summary>
+        public string RoleName { get; set; }
+
+        /// <summary>
+        /// 描述
+        /// </summary>
+        public string Describe { get; set; }
+        /// <summary>
+        /// 启用
+        /// </summary>
+        public bool Enable { get; set; }
+
+        /// <summary>
+        /// 权限列表
+        /// </summary>
+        public List<Permission> Permissions { get; set; }
+    }
 
     public class User_Test
     {
