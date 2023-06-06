@@ -4,6 +4,7 @@ using iText.Commons.Actions.Contexts;
 using Microsoft.EntityFrameworkCore;
 using NPOI.SS.Formula.Functions;
 using NPOI.XSSF.Streaming.Values;
+using SqlSugar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,6 +58,11 @@ namespace HuanTian.EntityFrameworkCore
                 value = value.Where(_sqlWhereExpression);
             }
 
+            if (_orderByExpression != null)
+            {
+                value = _isAsc ? value.OrderBy(_orderByExpression) : value.OrderByDescending(_orderByExpression);
+            }
+
             return await value.ToListAsync();
         }
         public async Task<PageData> ToPageListAsync(int pageNo, int pageSize)
@@ -106,7 +112,12 @@ namespace HuanTian.EntityFrameworkCore
             // efcore 暂未找到实现ID批量删除方法
             return 0;
         }
-
+        public async Task<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            var entities = _db.Set<TEntity>().Where(predicate.Compile());
+            _db.Set<TEntity>().RemoveRange(entities);
+            return await _db.SaveChangesAsync();
+        }
         public async Task<int> AddAsync(TEntity entity)
         {
             await _db.Set<TEntity>().AddAsync(entity);
@@ -136,7 +147,20 @@ namespace HuanTian.EntityFrameworkCore
         {
             return new EfRepository<TEntity>(_db, orderByExpression, isAsc); ;
         }
-
+        public IRepository<TEntity> Where(Expression<Func<TEntity, bool>> sqlWhereExpression)
+        {
+            // 合并 Expression
+            var whereExpression = _sqlWhereExpression;
+            if (whereExpression != null)
+            {
+                whereExpression = whereExpression.And<TEntity>(sqlWhereExpression, ExpressionType.Add);
+            }
+            else
+            {
+                whereExpression = sqlWhereExpression;
+            }
+            return new EfRepository<TEntity>(_db, _orderByExpression, _isAsc, whereExpression);
+        }
         public IRepository<TEntity> WhereIf(bool condition, Expression<Func<TEntity, bool>> sqlWhereExpression)
         {
             // 合并 Expression
@@ -164,7 +188,7 @@ namespace HuanTian.EntityFrameworkCore
             return new EfReposityoryInit<TEntity>(_db, new List<TEntity> { entity });
         }
 
-        public IReposityoryInit<TEntity> InitTable(List<TEntity> entityList)
+        public IReposityoryInit<TEntity> InitTable(IEnumerable<TEntity> entityList)
         {
             return new EfReposityoryInit<TEntity>(_db, entityList);
         }

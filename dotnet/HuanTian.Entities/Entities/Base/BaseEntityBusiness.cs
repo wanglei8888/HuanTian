@@ -21,8 +21,8 @@ namespace HuanTian.Entities
             Id = YitIdHelper.NextId();
             Deleted = false;
             CreateOn = DateTime.Now;
-            CreateBy = App.GetUserId;
-            TenantId = App.GetTenantId;
+            CreateBy = App.GetUserId();
+            TenantId = App.GetTenantId();
         }
         
     }

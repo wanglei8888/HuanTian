@@ -86,11 +86,12 @@
         :rowSelection="rowSelection"
         showPagination="auto"
       >
-        <span slot="status" slot-scope="text">
-          <a-badge :status="text | statusTypeFilter" :text="text | statusFilter" />
+      <!-- :showPagination="false" -->
+        <span slot="enable" slot-scope="text">
+          <a-badge :status="text | enableFilter" :text="text | enableFilter" />
         </span>
         <span slot="language" slot-scope="text" style="margin-left: -13px;">
-          <a-badge :status="text | languageTypeFilter" :text="text | languageFilter" />
+          <a-badge :status="text | languageFilter" :text="text | languageFilter" />
         </span>
         <span slot="avatar" slot-scope="text" style="margin-left: -13px;">
           <img style="width:75px;heigth:75px" slot="avatar" :src=text />
@@ -154,8 +155,8 @@ const columns = [
   },
   {
     title: '用户状态',
-    dataIndex: 'status',
-    scopedSlots: { customRender: 'status' }
+    dataIndex: 'enable',
+    scopedSlots: { customRender: 'enable' }
   },
   {
     title: '最后登陆时间',
@@ -173,16 +174,6 @@ const columns = [
   }
 ]
 
-const statusMap = {
-  0: {
-    status: '0',
-    text: '启用'
-  },
-  1: {
-    status: '1',
-    text: '禁用'
-  }
-}
 const languageMap = {
   0: {
     status: '0',
@@ -225,17 +216,16 @@ export default {
     }
   },
   filters: {
-    statusFilter (type) {
-      return statusMap[type].text
-    },
-    statusTypeFilter (type) {
-      return statusMap[type].status
+    enableFilter (type) {
+      if(type === true){
+        return '启用'
+      }
+      else{
+        return '禁用'
+      }
     },
     languageFilter (type) {
       return languageMap[type].text
-    },
-    languageTypeFilter (type) {
-      return languageMap[type].status
     }
   },
   created () {
@@ -276,7 +266,7 @@ export default {
               // 重置表单数据
               form.resetFields()
               // 刷新表格
-              this.$refs.table.refresh()
+              // this.$refs.table.refresh()
 
               this.$message.info('修改成功')
             })
@@ -292,7 +282,7 @@ export default {
               // 重置表单数据
               form.resetFields()
               // 刷新表格
-              this.$refs.table.refresh()
+              // this.$refs.table.refresh()
 
               this.$message.info('新增成功')
             })

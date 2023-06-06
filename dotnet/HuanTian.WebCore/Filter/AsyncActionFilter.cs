@@ -26,6 +26,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 
 namespace HuanTian.WebCore.Filter
 {
@@ -36,6 +37,9 @@ namespace HuanTian.WebCore.Filter
     {
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
+            // 获取请求所带的参数
+            var parameters = context.ActionArguments;
+
             // web api 请求参数验证
             // 获取所有带有RequiredAttribute的属性
             var properties = context.ActionDescriptor.Parameters
@@ -43,10 +47,19 @@ namespace HuanTian.WebCore.Filter
             .Where(p => p.CustomAttributes.Any(a => a.AttributeType == typeof(RequiredAttribute)));
             foreach (var property in properties)
             {
+                // 如果参数中贴有RequiredAttribute且未提供参数
+                if (parameters.Count == 0)
+                {
+                    var requiredAttribute = property.GetCustomAttribute<RequiredAttribute>();
+                    if (requiredAttribute != null)
+                    {
+                        throw new ArgumentException(requiredAttribute.ErrorMessage);
+                    }
+                }
                 var errors = context.ModelState[property.Name]?.Errors
-                    .Select(e => e.ErrorMessage)
-                    .ToArray() ?? new string[] { "错误信息异常" }; // 防止空引用异常
-                if (errors.Any()){ throw new ArgumentException(errors[0]); }
+                .Select(e => e.ErrorMessage)
+                .ToArray();
+                if (errors != null && errors.Any()) { throw new ArgumentException(errors[0]); }
             }
             // 调用下一个中间件或过滤器
             var result = await next();

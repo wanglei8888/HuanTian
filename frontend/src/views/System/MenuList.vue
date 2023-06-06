@@ -52,13 +52,24 @@
             <a-divider type="vertical" />
             <a @click="$refs.detailForm.detail(record)">编辑</a>
           </span>
+          <a-divider type="vertical" />
+          <a-dropdown>
+            <a class="ant-dropdown-link">
+              更多 <a-icon type="down" />
+            </a>
+            <a-menu slot="overlay">
+              <a-menu-item>
+                <a href="javascript:;" @click="$refs.menuPermsModal.create(record)">菜单按钮</a>
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
         </template>
         <span slot="serial" slot-scope="text">
           <a-icon slot="serial" :type="text" />
         </span>
       </a-table>
-      <menu-Form ref="detailForm" @ok="modelOk" />
-      <!-- <add-form ref="detailForm" @ok="handleOk"/> -->
+      <menu-perms-modal ref="menuPermsModal" @ok="modelOk" />
+      <menu-modal ref="detailForm" @ok="modelOk" />
     </a-card>
   </page-header-wrapper>
 </template>
@@ -68,83 +79,21 @@ import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
 
 import StepByStepModal from '../list/modules/StepByStepModal'
-import menuForm from '../System/modules/MenuForm'
-
-const columns = [
-  {
-    title: '菜单名称',
-    dataIndex: 'name',
-    width: '15%'
-  },
-  {
-    title: '图标',
-    dataIndex: 'icon',
-    width: '15%',
-    scopedSlots: { customRender: 'serial' }
-  },
-  {
-    title: '多语言值',
-    dataIndex: 'title'
-  },
-  {
-    title: '跳转地址',
-    dataIndex: 'redirect',
-    width: '12%'
-  },
-  {
-    title: '菜单类型',
-    dataIndex: 'component',
-    width: '12%'
-  },
-  // {
-  //   title: '',
-  //   dataIndex: 'lastLoginTime',
-  //   customRender: (text, row, index) => {
-  //     return moment(text).format('YYYY-MM-DD HH:mm:ss')
-  //   },
-  //   sorter: true
-  // },
-  {
-    title: '操作',
-    width: '150px',
-    key: 'action',
-    scopedSlots: { customRender: 'operation' }
-  }
-]
-
-const statusMap = {
-  0: {
-    status: '0',
-    text: '启用'
-  },
-  1: {
-    status: '1',
-    text: '禁用'
-  }
-}
-const languageMap = {
-  0: {
-    status: '0',
-    text: '中文'
-  },
-  1: {
-    status: '1',
-    text: '英语'
-  }
-}
+import MenuModal from './modules/MenuModal'
+import menuPermsModal from './modules/MenuPermsModal'
 
 export default {
   name: 'TableList',
   components: {
     STable,
     Ellipsis,
-    menuForm,
-    StepByStepModal
+    MenuModal,
+    StepByStepModal,
+    menuPermsModal
   },
   data() {
     this.columns = columns
     return {
-      // create model
       confirmLoading: false,
       mdl: null,
       tableLoading: false,
@@ -174,7 +123,7 @@ export default {
       this.mdl = null
     },
     remove(key) {
-      this.$http.delete('/sysMenu', { data: { Id: key } }).then(res => {
+      this.$http.delete('/sysMenu', { data: { id: `${key}` } }).then(res => {
         if (res.code === 200) {
           this.$message.success('删除成功')
           this.handSerach()
@@ -183,8 +132,12 @@ export default {
     },
     handSerach() {
       // const requestParameters = Object.assign({}, parameter, this.queryParam)
+      this.tableLoading = true
       this.$http.get('/sysMenu', { params: this.queryParam }).then(res => {
+        this.tableLoading = false
         this.loadData = res.result
+      }).catch(() => {
+        this.tableLoading = false
       })
       // this.$refs.table.refresh()
     },
@@ -218,6 +171,50 @@ export default {
         date: moment(new Date())
       }
     }
+  }
+}
+const columns = [
+  {
+    title: '菜单名称',
+    dataIndex: 'name',
+    width: '15%'
+  },
+  {
+    title: '图标',
+    dataIndex: 'icon',
+    width: '15%',
+    scopedSlots: { customRender: 'serial' }
+  },
+  {
+    title: '多语言值',
+    dataIndex: 'title',
+    width: '15%'
+  },
+  {
+    title: '跳转地址',
+    dataIndex: 'redirect',
+    width: '15%'
+  },
+  {
+    title: '菜单类型',
+    dataIndex: 'component',
+    width: '15%'
+  },
+  {
+    title: '操作',
+    key: 'action',
+    scopedSlots: { customRender: 'operation' }
+  }
+]
+
+const statusMap = {
+  0: {
+    status: '0',
+    text: '启用'
+  },
+  1: {
+    status: '1',
+    text: '禁用'
   }
 }
 </script>

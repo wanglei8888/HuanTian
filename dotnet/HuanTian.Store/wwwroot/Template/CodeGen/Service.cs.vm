@@ -1,4 +1,4 @@
-﻿#region << 版 本 注 释 >>
+#region << 版 本 注 释 >>
 /*----------------------------------------------------------------
  * 文件名：@(@Model.ClassName)Input
  * 代码生成文件
@@ -55,7 +55,7 @@ public class @(@Model.ClassName)Service : I@(@Model.ClassName)Service, IDynamicA
         var entity = input.Adapt<@(@Model.EntityName)>();
         var count = await _@(Model.ClassNameLow).InitTable(entity)
             .CallEntityMethod(t => t.CreateFunc())
-            .AddAsync();;
+            .AddAsync();
         return count;
     }
     public async Task<int> Update(@(@Model.ClassName)FormInput input)

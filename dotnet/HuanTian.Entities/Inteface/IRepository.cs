@@ -59,6 +59,12 @@ namespace HuanTian.Entities
         /// <param name="id"></param>
         Task<int> DeleteAsync(params long[] id);
         /// <summary>
+        /// 删除一条数据根据lanmboda表达式
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        Task<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate);
+        /// <summary>
         /// 删除多条数据 
         /// </summary>
         /// <param name="entity"></param>
@@ -71,6 +77,12 @@ namespace HuanTian.Entities
         /// <param name="isAsc">是否升序</param>
         /// <returns></returns>
         IRepository<TEntity> OrderBy(Expression<Func<TEntity, object>> orderByExpression, bool isAsc = true);
+        /// <summary>
+        /// 筛选条件
+        /// </summary>
+        /// <param name="sqlWhereExpression"></param>
+        /// <returns></returns>
+        IRepository<TEntity> Where(Expression<Func<TEntity, bool>> sqlWhereExpression);
         /// <summary>
         /// 是否,筛选条件 true执行 false不执行
         /// </summary>
@@ -89,7 +101,7 @@ namespace HuanTian.Entities
         /// </summary>
         /// <param name="entityList"></param>
         /// <returns></returns>
-        IReposityoryInit<TEntity> InitTable(List<TEntity> entityList);
+        IReposityoryInit<TEntity> InitTable(IEnumerable<TEntity> entityList);
 
 
     }

@@ -4,7 +4,7 @@ import storage from 'store'
 import notification from 'ant-design-vue/es/notification'
 import { VueAxios } from './axios'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
-
+import { i18nRender } from '@/locales'
 // 创建 axios 实例
 const request = axios.create({
   // API 请求的默认前缀
@@ -26,8 +26,8 @@ const errorHandler = (error) => {
     }
     if (error.response.status === 401 && !(data.result && data.result.isLogin)) {
       notification.error({
-        message: 'Unauthorized',
-        description: 'Authorization verification failed'
+        message:  i18nRender('Unauthorized'),
+        description: i18nRender('Authorization verification failed')
       })
       if (token) {
         store.dispatch('Logout').then(() => {
@@ -36,6 +36,12 @@ const errorHandler = (error) => {
           }, 1500)
         })
       }
+    }
+    if (error.response.status === 500) {
+      notification.error({
+        message:  'Error message',
+        description: error.response.data.message
+      })
     }
   }
   return Promise.reject(error)

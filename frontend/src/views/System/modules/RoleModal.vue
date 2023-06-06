@@ -1,58 +1,93 @@
 <template>
-  <a-modal
-    title="操作"
-    :width="800"
-    :visible="visible"
-    :confirmLoading="confirmLoading"
-    @ok="handleOk"
-    @cancel="handleCancel"
-  >
-    <a-steps :current="1">
-      <a-step>
-        <!-- <span slot="title">Finished</span> -->
-        <template slot="title">
-          Finished
-        </template>
-        <span slot="description">This is a description.</span>
-      </a-step>
-      <a-step title="In Progress" description="This is a description." />
-      <a-step title="Waiting" description="This is a description." />
-    </a-steps>
+  <a-modal :title="title" :width="800" :visible="visible" :confirmLoading="confirmLoading" @ok="handleOk"
+    @cancel="handleCancel">
+    <a-spin :spinning="spinningLoading">
+      <a-form-model ref="form" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :rules="rules">
+        <a-row :gutter="gutter">
+          <a-col :md="mdSize" :sm="smSize">
+            <a-form-model-item label="角色名称" prop="roleName" hasFeedback>
+              <a-input placeholder="请输入角色名称" v-model="form.roleName" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :md="mdSize" :sm="smSize">
+            <a-form-model-item label="角色描述" prop="describe" hasFeedback>
+              <a-input placeholder="请输入角色名称" v-model="form.describe" />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+        <a-row :gutter="24">
+          <a-col :md="mdSize" :sm="smSize">
+            <a-form-model-item label="是否启用">
+              <a-switch id="visible" checkedChildren="是" v-model="form.enable" unCheckedChildren="否" />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+      </a-form-model>
+    </a-spin>
   </a-modal>
 </template>
 
 <script>
-import { getPermissions } from '@/api/manage'
+// import { getPermissions } from '@/api/manage'
 import pick from 'lodash.pick'
-
+function createForm() {
+  return {
+    roleName: '',
+    describe: '',
+    enable: true,
+  }
+}
 export default {
   name: 'RoleModal',
-  data () {
+  data() {
     return {
       labelCol: {
-        xs: { span: 24 },
-        sm: { span: 5 }
+        md: { span: 6 },
+        sm: { span: 4 }
       },
       wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 }
+        md: { span: 14 },
+        sm: { span: 20 }
       },
+      gutter: 24,
+      mdSize: 24,
+      smSize: 24,
+      formType: 'add',
+      title: '添加角色',
+      spinningLoading: false,
       visible: false,
       confirmLoading: false,
-      mdl: {},
-
-      form: this.$form.createForm(this),
-      permissions: []
+      rules: {
+        roleName: [{ required: true, min: 1, message: '请输入角色名称！' }],
+        describe: [{ required: true, min: 1, message: '请输入角色描述！' }]
+      },
+      form: {}
     }
   },
-  created () {
+  created() {
     this.loadPermissions()
   },
   methods: {
-    add () {
+    // 打开页面初始化
+    detail(value) {
+      this.visible = true
+      if (value) {
+        this.form = JSON.parse(JSON.stringify(value))
+        // 删除多余属性
+        delete this.form.permissions;
+        this.formType = 'edit'
+        this.title = '编辑角色'
+      }
+      else {
+        this.title = '新建角色'
+        this.formType = 'add'
+        this.form = createForm()
+      }
+    },
+    add() {
       this.edit({ id: 0 })
     },
-    edit (record) {
+    edit(record) {
       this.mdl = Object.assign({}, record)
       this.visible = true
 
@@ -74,73 +109,75 @@ export default {
       })
       console.log('this.mdl', this.mdl)
     },
-    close () {
+    close() {
       this.$emit('close')
       this.visible = false
     },
-    handleOk () {
-      const _this = this
-      // 触发表单验证
-      this.form.validateFields((err, values) => {
-        // 验证表单没错误
-        if (!err) {
-          console.log('form values', values)
-
-          _this.confirmLoading = true
-          // 模拟后端请求 2000 毫秒延迟
-          new Promise((resolve) => {
-            setTimeout(() => resolve(), 2000)
-          }).then(() => {
-            // Do something
-            _this.$message.success('保存成功')
-            _this.$emit('ok')
-          }).catch(() => {
-            // Do something
-          }).finally(() => {
-            _this.confirmLoading = false
-            _this.close()
-          })
+    handleOk() {
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.confirmLoading = true
+          if (this.formType === 'edit') {
+            this.$http.put('/sysRole', this.form).then(res => {
+              if (res.code === 200) {
+                this.$emit('ok')
+                this.confirmLoading = false
+                this.visible = false
+              } else {
+                this.$message.warning(res.message)
+              }
+            })
+          }
+          else {
+            this.$http.post('/sysRole', this.form).then(res => {
+              if (res.code === 200) {
+                this.$emit('ok')
+                this.confirmLoading = false
+                this.visible = false
+              } else {
+                this.$message.warning(res.message)
+              }
+            })
+          }
         }
       })
     },
-    handleCancel () {
+    handleCancel() {
       this.close()
     },
-    onChangeCheck (permission) {
+    onChangeCheck(permission) {
       permission.indeterminate = !!permission.selected.length && (permission.selected.length < permission.actionsOptions.length)
       permission.checkedAll = permission.selected.length === permission.actionsOptions.length
     },
-    onChangeCheckAll (e, permission) {
+    onChangeCheckAll(e, permission) {
       Object.assign(permission, {
         selected: e.target.checked ? permission.actionsOptions.map(obj => obj.value) : [],
         indeterminate: false,
         checkedAll: e.target.checked
       })
     },
-    loadPermissions () {
-      const that = this
-      getPermissions().then(res => {
-        const result = res.result
-        that.permissions = result.map(permission => {
-          const options = JSON.parse(permission.actionData) || []
-          permission.checkedAll = false
-          permission.selected = []
-          permission.indeterminate = false
-          permission.actionsOptions = options.map(option => {
-            return {
-              label: option.describe,
-              value: option.action
-            }
-          })
-          return permission
-        })
-      })
+    loadPermissions() {
+      // const that = this
+      // getPermissions().then(res => {
+      //   const result = res.result
+      //   that.permissions = result.map(permission => {
+      //     const options = JSON.parse(permission.actionData) || []
+      //     permission.checkedAll = false
+      //     permission.selected = []
+      //     permission.indeterminate = false
+      //     permission.actionsOptions = options.map(option => {
+      //       return {
+      //         label: option.describe,
+      //         value: option.action
+      //       }
+      //     })
+      //     return permission
+      //   })
+      // })
     }
 
   }
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

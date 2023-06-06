@@ -49,27 +49,13 @@ namespace HuanTian.WebCore
                     // 友好报错机制 状态码为200
                     case FriendlyException:
                         context.HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
-                        context.Result = new ContentResult
-                        {
-                            // 返回状态码设置为200，表示成功
-                            StatusCode = (int)HttpStatusCode.OK,
-                            // 设置返回格式
-                            ContentType = "application/json;charset=utf-8",
-                            Content = RequestHelper.ErroRequest(context.Exception.Message, HttpStatusCode.InternalServerError)
-                        };
                         break;
                     default:
                         // 默认状态码返回500
-                        context.Result = new ContentResult
-                        {
-                            // 返回状态码设置为500
-                            StatusCode = (int)HttpStatusCode.InternalServerError,
-                            // 设置返回格式
-                            ContentType = "application/json;charset=utf-8",
-                            Content = RequestHelper.ErroRequest(context.Exception.Message,HttpStatusCode.InternalServerError)
-                        };
+                        context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                         break;
                 }
+                context.Result = RequestHelper.ErroRequestEntity(context.Exception.Message, HttpStatusCode.InternalServerError);
             }
             // 设置为true，表示异常已经被处理了
             context.ExceptionHandled = true;

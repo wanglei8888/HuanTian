@@ -26,7 +26,9 @@
         </a-row>
       </a-form>
     </div>
-
+    <div class="table-operator">
+      <a-button type="primary" icon="plus" @click="$refs.detailModal.detail()">新建角色</a-button>
+    </div>
     <s-table ref="table" size="default" :columns="columns" :data="loadData">
       <div slot="expandedRowRender" slot-scope="record" style="margin: 0">
         <a-row :gutter="24" :style="{ marginBottom: '12px' }">
@@ -42,7 +44,11 @@
         </a-row>
       </div>
       <span slot="action" slot-scope="text, record">
-        <a @click="$refs.modal.edit(record)">编辑</a>
+        <a @click="$refs.detailModal.detail(record)">编辑</a>
+        <a-divider type="vertical" />
+        <a-popconfirm title="是否要删除此行？" @confirm="remove(record.id)">
+          <a>删除</a>
+        </a-popconfirm>
         <a-divider type="vertical" />
         <a-dropdown>
           <a class="ant-dropdown-link">
@@ -50,24 +56,23 @@
           </a>
           <a-menu slot="overlay">
             <a-menu-item>
-              <a href="javascript:;">详情</a>
+              <a href="javascript:;" @click="$refs.roleMenuModal.create(record.id)">授权菜单</a>
             </a-menu-item>
             <a-menu-item>
-              <a href="javascript:;">禁用</a>
-            </a-menu-item>
-            <a-menu-item>
-              <a href="javascript:;">删除</a>
+              <a href="javascript:;" @click="$refs.roleMenuPermsModal.create(record.id)">授权菜单按钮</a>
             </a-menu-item>
           </a-menu>
         </a-dropdown>
       </span>
       <span slot="enable" slot-scope="text" style="margin-left: -13px;">
-          <a-badge :status="text | enableFilter" :text="text | enableFilter" />
-        </span>
+        <a-tag :color="text ? 'green' : 'red'">{{ text | enableFilter }}</a-tag>
+      </span>
     </s-table>
 
-    <role-modal ref="modal" @ok="handleOk"></role-modal>
-    <a-button v-action:add123 >添加用户</a-button>
+    <role-modal ref="detailModal" @ok="handleOk" />
+    <role-menu-modal ref="roleMenuModal" @ok="handleOk" />
+    <role-menu-perms-modal ref="roleMenuPermsModal" @ok="handleOk" />
+    <!-- <a-button v-action:add123>添加用户</a-button> -->
 
   </a-card>
 </template>
@@ -75,7 +80,8 @@
 <script>
 import { STable } from '@/components'
 import RoleModal from './modules/RoleModal'
-
+import RoleMenuModal from './modules/RoleMenuModal'
+import RoleMenuPermsModal from './modules/RoleMenuPermsModal'
 const enableMap = {
   true: {
     text: '启用'
@@ -88,7 +94,9 @@ export default {
   name: 'TableList',
   components: {
     STable,
-    RoleModal
+    RoleModal,
+    RoleMenuModal,
+    RoleMenuPermsModal
   },
   data() {
     return {
@@ -102,7 +110,7 @@ export default {
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
-      queryParam: {enable:''},
+      queryParam: { enable: '' },
       // 表头
       columns: [
         {
@@ -120,7 +128,7 @@ export default {
         },
         {
           title: '操作',
-          width: '150px',
+          width: '200px',
           dataIndex: 'action',
           scopedSlots: { customRender: 'action' }
         }
@@ -155,6 +163,14 @@ export default {
       // 新增/修改 成功时，重载列表
       this.$refs.table.refresh()
     },
+    remove(key) {
+      this.$http.delete('/sysMenu', { data: { Id: key } }).then(res => {
+        if (res.code === 200) {
+          this.$message.success('删除成功')
+          this.handSerach()
+        }
+      })
+    },
     onChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
@@ -178,7 +194,7 @@ export default {
       */
   },
   filters: {
-    enableFilter (type) {
+    enableFilter(type) {
       return enableMap[type].text
     },
 

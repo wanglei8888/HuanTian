@@ -18,7 +18,8 @@ namespace Huangtian.Store
             // 静态类存储
             builder.Services.AddInject(builder.Configuration);
             // 动态Congtrole注入
-            builder.Services.AddControllers().AddInject();
+            builder.Services.AddControllers(options => {
+            }).AddInject();
 
             builder.Services.AddEndpointsApiExplorer();
 
@@ -81,7 +82,7 @@ namespace Huangtian.Store
                 new RedisCache(builder.Configuration["ConnectionStrings:RedisConnection"]));
 
             // 注册JWT服务
-            builder.Services.AddJwt(false);
+            builder.Services.AddJwt(true);
             // 注册Http服务
             builder.Services.AddHttpContextAccessor();
 

@@ -49,7 +49,7 @@ namespace HuanTian.Entities
         /// </summary>
         public override void CreateFunc()
         {
-            UpdateBy = App.GetUserId;
+            UpdateBy = App.GetUserId();
             UpdateOn = DateTime.Now;
         }
         /// <summary>
@@ -58,7 +58,7 @@ namespace HuanTian.Entities
         public virtual void UpdateFunc()
         {
             UpdateOn = DateTime.Now;
-            UpdateBy = App.GetUserId;
+            UpdateBy = App.GetUserId();
         }
     }
 }

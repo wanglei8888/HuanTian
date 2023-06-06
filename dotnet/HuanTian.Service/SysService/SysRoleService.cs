@@ -16,7 +16,6 @@
 #endregion << 版 本 注 释 >>
 
 using Newtonsoft.Json;
-using NPOI.SS.Formula.Functions;
 using SqlSugar.Extensions;
 
 namespace HuanTian.Service;
@@ -30,16 +29,19 @@ public class SysRoleService : ISysRoleService, IDynamicApiController, IScoped
     private readonly IRepository<SysRolePermissionsDO> _sysRolePerm;
     private readonly IRepository<SysPermissionsDO> _sysPerm;
     private readonly IRepository<SysMenuDO> _sysMenu;
+    private readonly IRepository<SysMenuRoleDO> _sysMenuRole;
     public SysRoleService(
         IRepository<SysRoleDO> sysRole,
         IRepository<SysRolePermissionsDO> sysRolePerm,
         IRepository<SysPermissionsDO> sysPerm,
-        IRepository<SysMenuDO> sysMenu)
+        IRepository<SysMenuDO> sysMenu,
+        IRepository<SysMenuRoleDO> sysMenuRole)
     {
         _sysRole = sysRole;
         _sysRolePerm = sysRolePerm;
         _sysPerm = sysPerm;
         _sysMenu = sysMenu;
+        _sysMenuRole = sysMenuRole;
     }
 
     [HttpGet]
@@ -48,9 +50,9 @@ public class SysRoleService : ISysRoleService, IDynamicApiController, IScoped
         var pageData = await _sysRole
             .WhereIf(!string.IsNullOrEmpty(input.Id), t => t.Id == long.Parse(input.Id))
             .WhereIf(!string.IsNullOrEmpty(input.RoleName), t => t.RoleName.Contains(input.RoleName))
-            .WhereIf(!string.IsNullOrEmpty(input.Enable), t => t.Enable ==input.Enable.ObjToBool())
+            .WhereIf(!string.IsNullOrEmpty(input.Enable), t => t.Enable == input.Enable.ObjToBool())
             .ToPageListAsync(input.PageNo, input.PageSize);
-        
+
         // 角色表
         var roleData = pageData.Data.Adapt<List<SysRoleDO>>();
         // 角色权限表
@@ -60,37 +62,43 @@ public class SysRoleService : ISysRoleService, IDynamicApiController, IScoped
         var permList = await _sysPerm
             .ToListAsync(t => rolePermList.Select(x => x.PermissionsId).Contains(t.Id)
                 && t.Type == PermissionTypeEnum.Button);
+        // 角色菜单表
+        var roleMenuList = await _sysMenuRole
+            .ToListAsync(t => roleData.Select(x => x.Id).Contains(t.RoleId));
         // 菜单表
         var menuList = await _sysMenu
-            .ToListAsync(t => permList.Select(x => x.MenuId).Contains(t.Id));
+            .ToListAsync(t => roleMenuList.Select(x => x.MenuId).Contains(t.Id));
 
         var roleList = new List<Role>();
         // 循环所有角色
-        foreach (var item in roleData)
+        foreach (var roleItem in roleData)
         {
-            var data = item.Adapt<Role>();
+            var data = roleItem.Adapt<Role>();
             var permListData = new List<Permission>();
-            var rolePermListItem = rolePermList.FirstOrDefault(t => t.RoleId == item.Id);
-            // 按权限菜单分组 循环分组信息
-            foreach (var permMenu in permList.GroupBy(t => t.MenuId))
+            // 查询角色所属的菜单
+            var roleMenuListItem = roleMenuList.Where(t => t.RoleId == roleItem.Id);
+            // 查询角色所属的菜单按钮
+            var rolePermListItem = rolePermList.Where(t => t.RoleId == roleItem.Id);
+            var permListMenuItem = permList
+                .Where(t => rolePermListItem.Select(q => q.PermissionsId).Contains(t.Id)).ToList();
+            // 循环角色的菜单
+            foreach (var menu in menuList.Where(t => roleMenuListItem.Select(q => q.MenuId).Contains(t.Id)))
             {
-                // 构建返回数据
-                var permissionModel = new Permission();
-                var permListItem = permList
-                    .Where(t => t.MenuId == permMenu.Key).ToList();
+                var perm = new Permission();
+
                 var actionList = new List<ActionEntity>();
-                foreach (var permItem in permListItem)
+                foreach (var permItem in permListMenuItem.Where(t => t.MenuId == menu.Id))
                 {
                     var model = new ActionEntity();
                     model.Action = permItem.Code;
                     model.Describe = permItem.Name ?? "";
-                    model.DefaultCheck = false;
+                    model.DefaultCheck = true;
                     actionList.Add(model);
                 }
-                permissionModel.PermissionName = menuList.FirstOrDefault(t => t.Id == permListItem[0]?.MenuId)?.Name ?? "";
-                permissionModel.Actions = permList.Select(t => t.Code).ToJsonString();
-                permissionModel.actionEntitySet = actionList;
-                permListData.Add(permissionModel);
+                perm.PermissionName = menu?.Name ?? "";
+                perm.actionEntitySet = actionList;
+                perm.Actions = permList.Where(t => t.MenuId == menu.Id).Select(t => t.Code).ToJsonString();
+                permListData.Add(perm);
             }
             data.Permissions = permListData;
             roleList.Add(data);
@@ -126,6 +134,45 @@ public class SysRoleService : ISysRoleService, IDynamicApiController, IScoped
             .WhereIf(!string.IsNullOrEmpty(input.RoleName), t => t.RoleName == input.RoleName)
             .ToListAsync();
         return list;
+    }
+    public async Task<int> AddRoleMenu(RoleMenuInput input)
+    {
+        var permsList = new List<SysMenuRoleDO>();
+        foreach (var item in input.MenuId)
+        {
+            var perms = new SysMenuRoleDO();
+            perms.MenuId = item;
+            perms.RoleId = long.Parse(input.RoleId);
+            permsList.Add(perms);
+        }
+        // 删除已经存在的数据
+        var num = await _sysMenuRole.DeleteAsync(t => t.RoleId == long.Parse(input.RoleId));
+        var count = await _sysMenuRole.InitTable(permsList)
+            .CallEntityMethod(t => t.CreateFunc())
+            .AddAsync();
+        return count;
+    }
+    public async Task<int> AddRolePerms(RolePermsInput input)
+    {
+        var permsList = new List<SysRolePermissionsDO>();
+        foreach (var item in input.PermissionsId)
+        {
+            var perms = new SysRolePermissionsDO();
+            perms.PermissionsId = item;
+            perms.RoleId = long.Parse(input.RoleId);
+            permsList.Add(perms);
+        }
+        // 查询按钮的菜单Id
+        var perm = await _sysPerm.FirstOrDefaultAsync(t=>t.Id == input.PermissionsId[0]);
+        var permList = await _sysPerm
+            .Where(t => t.MenuId == perm.MenuId && t.Type == PermissionTypeEnum.Button).ToListAsync();
+        // 删除已经存在的数据
+        var num = await _sysRolePerm.DeleteAsync(t => t.RoleId == long.Parse(input.RoleId) 
+                && permList.Select(q=>q.Id).Contains(t.PermissionsId));
+        var count = await _sysRolePerm.InitTable(permsList)
+            .CallEntityMethod(t => t.CreateFunc())
+            .AddAsync();
+        return count;
     }
     /// <summary>
     /// 获取用户权限

@@ -41,13 +41,13 @@ namespace HuanTian.EntityFrameworkCore
     /// </summary>
     public class EfReposityoryInit<TEntity> : IReposityoryInit<TEntity> where TEntity : class, new()
     {
-        private List<TEntity>? _entityList;
+        private IEnumerable<TEntity>? _entityList;
         private readonly EfSqlContext _db;
         public EfReposityoryInit(EfSqlContext db)
         {
             _db = db;
         }
-        public EfReposityoryInit(EfSqlContext db, List<TEntity> entityList)
+        public EfReposityoryInit(EfSqlContext db, IEnumerable<TEntity> entityList)
             : this(db)
         {
             _entityList = entityList;

@@ -34,7 +34,7 @@ namespace HuanTian.Test
             IGenerateFilesService _generateFilesService = new GenerateFilesService();
             var list = new List<SysMenuDO>();
             var model = new SysMenuDO { Id = 1, Path = "test", Component = "caigou", Icon = "yasuo" ,Title = "中国人第一"};
-            //var model2 = new SysMenuDO { Id = 2, Path = "test2", Component = "caigou2", Icon = "yasuo2" };
+            //var model2 = new SysMenuDO { RoleId = 2, Path = "test2", Component = "caigou2", Icon = "yasuo2" };
             list.Add(model);
             var templateName = Path.Combine(_templatePath, "Template", "ExcelTemplate.xlsx");
             var byet = _generateFilesService.RenderTemplateExcel(templateName, list);

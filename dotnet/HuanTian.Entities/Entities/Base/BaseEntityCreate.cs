@@ -28,7 +28,7 @@ namespace HuanTian.Entities
             Id = YitIdHelper.NextId();
             Deleted = false;
             CreateOn = DateTime.Now;
-            CreateBy = App.GetUserId;
+            CreateBy = App.GetUserId();
         }
     }
 }

@@ -1,8 +1,8 @@
 #region << 版 本 注 释 >>
 /*----------------------------------------------------------------
- * 文件名：@(@Model.ClassName)Output
+ * 文件名：SysPermissionsOutput
  * 代码生成文件
- * 创建时间：@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+ * 创建时间：2023-06-05 10:29:25
  * 版本：V1.0.0
  * 描述：
  *
@@ -15,12 +15,12 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-namespace @Model.NameSpace;
+namespace HuanTian.Service;
 
 /// <summary>
-/// @(@Model.EntityDescribe)输出参数
+/// SysPermissions输出参数
 /// </summary>
-public class @(@Model.ClassName)Output : @Model.EntityName
+public class SysPermissionsOutput : SysPermissionsDO
 {
         
 }

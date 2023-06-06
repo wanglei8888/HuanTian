@@ -28,15 +28,6 @@ namespace HuanTian.Entities
         /// </summary>
         public static HttpContext HttpContext => CatchOrDefault(() => RootServices?.GetService<IHttpContextAccessor>()?.HttpContext);
         /// <summary>
-        /// 获取当前登陆账户的用户ID
-        /// </summary>
-        public static long GetUserId => long.Parse(HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtClaimConst.UserId)?.Value);
-        /// <summary>
-        /// 获取当前登录账户的租户ID
-        /// </summary>
-        public static long GetTenantId => long.Parse(HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtClaimConst.TenantId)?.Value);
-
-        /// <summary>
         /// 获取Web主机环境
         /// </summary>
         public static IWebHostEnvironment WebHostEnvironment;
@@ -186,6 +177,36 @@ namespace HuanTian.Entities
             InternalApp.Configuration = newConfiguration;
 
             return newConfiguration;
+        }
+        /// <summary>
+        /// 获取当前登陆账户的用户ID
+        /// </summary>
+        /// <returns></returns>
+        public static long GetUserId()
+        {
+            try
+            {
+                return long.Parse(HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtClaimConst.UserId)?.Value);
+            }
+            catch (Exception)
+            {
+                throw new Exception("无法获取当前用户信息,请登录后再试！");
+            }
+        }
+        /// <summary>
+        /// 获取当前登陆账户的租户ID
+        /// </summary>
+        /// <returns></returns>
+        public static long GetTenantId()
+        {
+            try
+            {
+                return long.Parse(HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtClaimConst.TenantId)?.Value);
+            }
+            catch (Exception)
+            {
+                throw new Exception("无法获取当前用户信息,请登录后再试！");
+            }
         }
     }
 

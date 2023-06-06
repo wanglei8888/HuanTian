@@ -33,7 +33,7 @@ namespace HuanTian.Infrastructure
                     audience: App.Configuration["JWTAuthentication:Audience"],              //接收者
                     claims: calimValue,                                                             //存放的用户信息
                     notBefore: DateTime.UtcNow,                                                 //发布时间
-                    expires: DateTime.UtcNow.AddHours(1),                                 //有效期设置为1小时
+                    expires: DateTime.UtcNow.AddHours(2),                                 //有效期设置为1小时
                     signingCredentials                                                          //数字签名
                 );
             //生成字符串token

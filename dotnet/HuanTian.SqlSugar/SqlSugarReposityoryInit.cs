@@ -41,14 +41,14 @@ namespace HuanTian.SqlSugar
     /// </summary>
     public class SqlSugarReposityoryInit<TEntity> : IReposityoryInit<TEntity> where TEntity : class, new()
     {
-        private List<TEntity>? _entityList;
+        private IEnumerable<TEntity>? _entityList;
 
         private readonly ISqlSugarClient _db;
         public SqlSugarReposityoryInit(ISqlSugarClient db)
         {
             _db = db;
         }
-        public SqlSugarReposityoryInit(ISqlSugarClient db, List<TEntity> entityList)
+        public SqlSugarReposityoryInit(ISqlSugarClient db, IEnumerable<TEntity> entityList)
             :this(db)
         {
             _entityList = entityList;
@@ -56,17 +56,17 @@ namespace HuanTian.SqlSugar
 
         public async Task<int> AddAsync()
         {
-            return await _db.Insertable(_entityList).ExecuteCommandAsync();
+            return await _db.Insertable(_entityList.ToList()).ExecuteCommandAsync();
         }
 
         public async Task<int> DeleteAsync()
         {
-            return await _db.Deleteable(_entityList).ExecuteCommandAsync();
+            return await _db.Deleteable(_entityList.ToList()).ExecuteCommandAsync();
         }
 
         public async Task<int> UpdateAsync()
         {
-            return await _db.Updateable(_entityList).ExecuteCommandAsync();
+            return await _db.Updateable(_entityList.ToList()).ExecuteCommandAsync();
         }
 
         public IReposityoryInit<TEntity> CallEntityMethod(Expression<Action<TEntity>> method)

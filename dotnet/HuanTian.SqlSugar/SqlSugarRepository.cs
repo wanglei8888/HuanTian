@@ -3,6 +3,7 @@ using HuanTian.Infrastructure;
 using MathNet.Numerics.Distributions;
 using SqlSugar;
 using System.Linq.Expressions;
+using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace HuanTian.SqlSugar
 {
@@ -57,7 +58,7 @@ namespace HuanTian.SqlSugar
 
             if (_orderByExpression != null)
             {
-                value = _isAsc ? value.OrderBy(_orderByExpression, OrderByType.Desc) : value.OrderByDescending(_orderByExpression);
+                value = _isAsc ? value.OrderBy(_orderByExpression) : value.OrderByDescending(_orderByExpression);
             }
 
             return await value.ToListAsync();
@@ -100,6 +101,10 @@ namespace HuanTian.SqlSugar
         {
             return await _db.Deleteable<TEntity>().In(id).ExecuteCommandAsync();
         }
+        public async Task<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await _db.Deleteable<TEntity>().Where(predicate).ExecuteCommandAsync();
+        }
         public async Task<int> AddAsync(TEntity entity)
         {
             return await _db.Insertable(entity).ExecuteCommandAsync();
@@ -124,7 +129,20 @@ namespace HuanTian.SqlSugar
         {
             return new SqlSugarRepository<TEntity>(_db, orderByExpression, isAsc); ;
         }
-
+        public IRepository<TEntity> Where(Expression<Func<TEntity, bool>> sqlWhereExpression)
+        {
+            // 合并 Expression
+            var whereExpression = _sqlWhereExpression;
+            if (whereExpression != null)
+            {
+                whereExpression = whereExpression.And<TEntity>(sqlWhereExpression, ExpressionType.Add);
+            }
+            else
+            {
+                whereExpression = sqlWhereExpression;
+            }
+            return new SqlSugarRepository<TEntity>(_db, _orderByExpression, _isAsc, whereExpression);
+        }
         public IRepository<TEntity> WhereIf(bool condition, Expression<Func<TEntity, bool>> sqlWhereExpression)
         {
             // 合并 Expression
@@ -146,13 +164,11 @@ namespace HuanTian.SqlSugar
             return this;
 
         }
-
         public IReposityoryInit<TEntity> InitTable(TEntity entity)
         {
             return new SqlSugarReposityoryInit<TEntity>(_db, new List<TEntity>() { entity });
         }
-
-        public IReposityoryInit<TEntity> InitTable(List<TEntity> entityList)
+        public IReposityoryInit<TEntity> InitTable(IEnumerable<TEntity> entityList)
         {
             return new SqlSugarReposityoryInit<TEntity>(_db, entityList);
         }

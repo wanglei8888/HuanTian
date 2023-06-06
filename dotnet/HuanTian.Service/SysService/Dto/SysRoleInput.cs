@@ -15,6 +15,8 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+using System.ComponentModel.DataAnnotations;
+
 namespace HuanTian.Service;
 
 /// <summary>
@@ -23,7 +25,7 @@ namespace HuanTian.Service;
 public class SysRoleInput : PageInput
 {
     /// <summary>
-    /// Id
+    /// RoleId
     /// </summary>
     public string Id { get; set; } 
     /// <summary>
@@ -40,5 +42,25 @@ public class SysRoleFormInput : SysRoleDO
 {
        
 }
- 
+/// <summary>
+/// 角色菜单入参
+/// </summary>
+public class RoleMenuInput
+{
+    [Required(ErrorMessage = "RoleId不能为空")]
+    public string RoleId { get; set; }
+    [Required(ErrorMessage = "MenuId不能为空")]
+    public long[] MenuId { get; set; }
+}
+/// <summary>
+/// 角色菜单入参
+/// </summary>
+public class RolePermsInput
+{
+    [Required(ErrorMessage = "Id不能为空")]
+    public string RoleId { get; set; }
+    [Required(ErrorMessage = "PermissionsId不能为空")]
+    public long[] PermissionsId { get; set; }
+}
+
 

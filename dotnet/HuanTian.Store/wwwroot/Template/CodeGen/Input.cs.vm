@@ -1,4 +1,4 @@
-﻿#region << 版 本 注 释 >>
+#region << 版 本 注 释 >>
 /*----------------------------------------------------------------
  * 文件名：@(@Model.ClassName)Input
  * 代码生成文件
@@ -18,7 +18,7 @@
 namespace @Model.NameSpace;
 
 /// <summary>
-/// @(@Model.ClassName)输入参数
+/// @(@Model.EntityDescribe)输入参数
 /// </summary>
 public class @(@Model.ClassName)Input : PageInput
 {
@@ -36,7 +36,7 @@ public class @(@Model.ClassName)Input : PageInput
 }
 
 /// <summary>
-/// @(@Model.ClassName)表单参数
+/// @(@Model.EntityDescribe)表单参数
 /// </summary>
 public class @(@Model.ClassName)FormInput : @Model.EntityName
 {

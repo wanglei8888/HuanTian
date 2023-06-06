@@ -1,8 +1,8 @@
 #region << 版 本 注 释 >>
 /*----------------------------------------------------------------
- * 文件名：@(@Model.ClassName)Service
+ * 文件名：ISysPermissionsService
  * 代码生成文件
- * 创建时间：@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+ * 创建时间：2023-06-05 10:29:25
  * 版本：V1.0.0
  * 描述：
  *
@@ -15,31 +15,31 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-namespace @Model.NameSpace;
+namespace HuanTian.Service;
 
 /// <summary>
-/// @(@Model.EntityDescribe)服务
+/// 服务
 /// </summary>
-public interface I@(@Model.ClassName)Service
+public interface ISysPermissionsService
 {
     /// <summary>
     /// 分页查询
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    Task<PageData> Page(@(@Model.ClassName)Input input);
+    Task<PageData> Page(SysPermissionsInput input);
     /// <summary>
     /// 新增数据
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    Task<int> Add(@(@Model.ClassName)FormInput input);
+    Task<int> Add(List<SysPermissionsFormInput> input);
     /// <summary>
     /// 修改数据
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    Task<int> Update(@(@Model.ClassName)FormInput input);
+    Task<int> Update(SysPermissionsFormInput input);
     /// <summary>
     /// 删除数据
     /// </summary>
@@ -51,5 +51,11 @@ public interface I@(@Model.ClassName)Service
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    Task<IEnumerable<@(@Model.EntityName)>> Get(@(@Model.ClassName)Input input);
+    Task<IEnumerable<SysPermissionsDO>> Get(SysPermissionsInput input);
+    /// <summary>
+    /// 获取角色权限
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<IEnumerable<SysPermissionsDO>> RolePermission([FromQuery] SysRolePermissionsInput input);
 }

@@ -1,15 +1,15 @@
 <template>
-  <a-modal title="新增菜单" :width="1000" :visible="visible" :confirmLoading="confirmLoading" @ok="handleSubmit"
+  <a-modal :title="title" :width="1000" :visible="visible" :confirmLoading="confirmLoading" @ok="handleOk"
     @cancel="handleCancel">
     <a-spin :spinning="formLoading">
       <a-form-model ref="form" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :rules="rules">
         <a-row :gutter="24">
-          <a-col :md="12" :sm="24">
+          <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item label="菜单名称" prop="name" hasFeedback>
               <a-input placeholder="请输入菜单名称" v-model="form.name" />
             </a-form-model-item>
           </a-col>
-          <a-col :md="12" :sm="24">
+          <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item name="routs" label="菜单层级">
               <a-radio-group v-model="menuType">
                 <a-radio v-for="(item, index) in typeData" :key="index" :value="item.value"
@@ -172,6 +172,7 @@ export default {
       formLoading: false,
       iconShow: true,
       pidShow: true,
+      title: '添加菜单',
       visible: false,
       formType: 'add',
       visibleIcon: false,
@@ -209,9 +210,11 @@ export default {
           this.menuType = 'Child'
           this.pidShow = true
         }
+        this.title = '编辑菜单'
       }
       else {
         this.form = createForm()
+        this.title = '新增菜单'
       }
       this.visible = true
       this.changeApplication(this.form.menuType)
@@ -266,7 +269,11 @@ export default {
     handleCancelIcon() {
       this.visibleIcon = false
     },
-    handleSubmit() {
+    close() {
+      this.$emit('close')
+      this.visible = false
+    },
+    handleOk() {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.confirmLoading = true
@@ -296,8 +303,7 @@ export default {
       })
     },
     handleCancel() {
-      this.confirmLoading = false
-      this.visible = false
+      this.close()
     }
   }
 

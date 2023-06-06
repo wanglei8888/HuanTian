@@ -24,6 +24,7 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 using Autofac;
+using HuanTian.EntityFrameworkCore;
 using HuanTian.SqlSugar;
 using System.Reflection;
 

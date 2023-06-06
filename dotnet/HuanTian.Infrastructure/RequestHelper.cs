@@ -24,6 +24,7 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net;
@@ -36,22 +37,6 @@ namespace HuanTian.Infrastructure
     /// </summary>
     public class RequestHelper
     {
-        /// <summary>
-        /// 失败请求返回信息 返回string
-        /// </summary>
-        /// <param name="erroMessage">错误信息</param>
-        /// <param name="code">状态码</param>
-        /// <returns>string value</returns>
-        public static string ErroRequest(string erroMessage, HttpStatusCode code)
-        {
-            return JsonConvert.SerializeObject(new APIResult
-            {
-                Code = code,
-                Message = erroMessage,
-                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                Result = null
-            });
-        }
         /// <summary>
         /// 失败请求返回信息 返回实体
         /// </summary>
