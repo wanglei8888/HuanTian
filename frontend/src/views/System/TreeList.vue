@@ -121,6 +121,7 @@ export default {
   },
   methods: {
     handleClick (e) {
+      debugger
       console.log('handleClick', e)
       this.queryParam = {
         key: e.key

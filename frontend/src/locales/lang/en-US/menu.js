@@ -21,11 +21,12 @@ export default {
     'menu.list.search-list.projects': 'Search List(projects)',
     'menu.list.search-list.applications': 'Search List(applications)',
     // 新加
-    'menu.userInfo': 'userInfo',
-    'menu.userInfo.userList': 'userList',
-    'menu.other.IconSelector': 'IconSelector',
     'menu.sysManage': 'sysManage',
     'menu.sysManage.menuList': 'menuList',
+    'menu.sysManage.permissionList': 'permissionList',
+    'menu.sysManage.roleList': 'roleList',
+    'menu.sysManage.userList': 'userList',
+    'menu.other.IconSelector': 'IconSelector',
     // 新加
     'menu.profile': 'Profile',
     'menu.profile.basic': 'Basic Profile',

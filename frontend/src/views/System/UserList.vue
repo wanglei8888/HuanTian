@@ -1,340 +1,322 @@
 <template>
-  <a-card :bordered="false">
-    <div class="table-page-search-wrapper">
-      <a-form layout="inline">
-        <a-row :gutter="48">
-          <a-col :md="8" :sm="24">
-            <a-form-item label="角色ID">
-              <a-input placeholder="请输入"/>
-            </a-form-item>
-          </a-col>
-          <a-col :md="8" :sm="24">
-            <a-form-item label="状态">
-              <a-select placeholder="请选择" default-value="0">
-                <a-select-option value="0">全部</a-select-option>
-                <a-select-option value="1">关闭</a-select-option>
-                <a-select-option value="2">运行中</a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :md="8" :sm="24">
-            <span class="table-page-search-submitButtons">
-              <a-button type="primary">查询</a-button>
-              <a-button style="margin-left: 8px">重置</a-button>
-            </span>
-          </a-col>
-        </a-row>
-      </a-form>
-    </div>
-
-    <s-table
-      row-key="id"
-      size="default"
-      :columns="columns"
-      :data="loadData"
-      :expandedRowKeys="expandedRowKeys"
-      @expand="handleExpand"
-    >
-      <div
-        slot="expandedRowRender"
-        slot-scope="record"
-        style="margin: 0">
-        <a-row
-          :gutter="24"
-          :style="{ marginBottom: '12px' }">
-          <a-col :span="12" v-for="(role, index) in record.permissions" :key="index" :style="{ marginBottom: '12px', height: '23px' }">
-            <a-col :lg="4" :md="24">
-              <span>{{ role.permissionName }}：</span>
+  <page-header-wrapper>
+    <a-card :bordered="false">
+      <div class="table-page-search-wrapper">
+        <a-form layout="inline">
+          <a-row :gutter="48">
+            <a-col :md="8" :sm="24">
+              <a-form-item label="用户名">
+                <a-input v-model="queryParam.name" placeholder=""/>
+              </a-form-item>
             </a-col>
-            <a-col :lg="20" :md="24" v-if="role.actionList && role.actionList.length > 0">
-              <a-tag color="cyan" v-for="action in role.actionList" :key="action">{{ action | permissionFilter }}</a-tag>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="用户状态">
+                <a-select v-model="queryParam.status" placeholder="请选择" >
+                  <a-select-option value="">全部</a-select-option>
+                  <a-select-option value="0">启用</a-select-option>
+                  <a-select-option value="1">禁用</a-select-option>
+                </a-select>
+              </a-form-item>
             </a-col>
-            <a-col :span="20" v-else>-</a-col>
-          </a-col>
-        </a-row>
+            <template v-if="advanced">
+              <a-col :md="8" :sm="24">
+                <a-form-item label="调用次数">
+                  <a-input-number v-model="queryParam.callNo" style="width: 100%"/>
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item label="更新日期">
+                  <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请输入更新日期"/>
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item label="使用状态">
+                  <a-select v-model="queryParam.useStatus" placeholder="请选择" default-value="0">
+                    <a-select-option value="0">全部</a-select-option>
+                    <a-select-option value="1">关闭</a-select-option>
+                    <a-select-option value="2">运行中</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item label="使用状态">
+                  <a-select placeholder="请选择" default-value="0">
+                    <a-select-option value="0">全部</a-select-option>
+                    <a-select-option value="1">关闭</a-select-option>
+                    <a-select-option value="2">运行中</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+            </template>
+            <a-col :md="!advanced && 8 || 24" :sm="24">
+              <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
+                <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+                <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
+                <a @click="toggleAdvanced" style="margin-left: 8px">
+                  {{ advanced ? '收起' : '展开' }}
+                  <a-icon :type="advanced ? 'up' : 'down'"/>
+                </a>
+              </span>
+            </a-col>
+          </a-row>
+        </a-form>
       </div>
-      <a-tag color="blue" slot="status" slot-scope="text">{{ text | statusFilter }}</a-tag>
-      <span slot="createTime" slot-scope="text">{{ text | moment }}</span>
-      <span slot="action" slot-scope="text, record">
-        <a @click="handleEdit(record)">编辑</a>
-        <a-divider type="vertical" />
-        <a-dropdown>
-          <a class="ant-dropdown-link">
-            更多 <a-icon type="down" />
-          </a>
+
+      <div class="table-operator">
+        <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
+        <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
           <a-menu slot="overlay">
-            <a-menu-item>
-              <a href="javascript:;">详情</a>
-            </a-menu-item>
-            <a-menu-item>
-              <a href="javascript:;">禁用</a>
-            </a-menu-item>
-            <a-menu-item>
-              <a href="javascript:;">删除</a>
-            </a-menu-item>
+            <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
+            <!-- lock | unlock -->
+            <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item>
           </a-menu>
+          <a-button style="margin-left: 8px">
+            批量操作 <a-icon type="down" />
+          </a-button>
         </a-dropdown>
-      </span>
-    </s-table>
+      </div>
 
-    <a-modal
-      title="操作"
-      style="top: 20px;"
-      :width="800"
-      v-model="visible"
-      @ok="handleOk"
-    >
-      <a-form class="permission-form" :form="form">
+      <s-table
+        ref="table"
+        size="default"
+        rowKey="key"
+        :columns="columns"
+        :data="loadData"
+        :alert="true"
+        :rowSelection="rowSelection"
+        showPagination="auto"
+      >
+      <!-- :showPagination="false" -->
+        <span slot="enable" slot-scope="text">
+          <a-badge :status="text | enableFilter" :text="text | enableFilter" />
+        </span>
+        <span slot="language" slot-scope="text" style="margin-left: -13px;">
+          <a-badge :status="text | languageFilter" :text="text | languageFilter" />
+        </span>
+        <span slot="avatar" slot-scope="text" style="margin-left: -13px;">
+          <img style="width:75px;heigth:75px" slot="avatar" :src=text />
+        </span>
+        <!-- <span slot="description" slot-scope="text">
+          <ellipsis :length="10" tooltip>{{ text }}</ellipsis>
+        </span> -->
 
-        <a-form-item
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label="唯一识别码"
-          hasFeedback
-          validateStatus="success"
-        >
-          <a-input
-            placeholder="唯一识别码"
-            disabled="disabled"
-            v-decorator="['id']"
-          />
-        </a-form-item>
+        <span slot="action" slot-scope="text, record">
+          <template>
+            <a @click="handleEdit(record)">配置</a>
+            <a-divider type="vertical" />
+            <a @click="handleSub(record)">订阅报警</a>
+          </template>
+        </span>
+      </s-table>
 
-        <a-form-item
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label="角色名称"
-          hasFeedback
-          validateStatus="success"
-        >
-          <a-input
-            placeholder="起一个名字"
-            v-decorator="['name']"
-          />
-        </a-form-item>
-
-        <a-form-item
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label="状态"
-          hasFeedback
-          validateStatus="warning"
-        >
-          <a-select v-decorator="['status', { initialValue: 1 }]">
-            <a-select-option :value="1">正常</a-select-option>
-            <a-select-option :value="2">禁用</a-select-option>
-          </a-select>
-        </a-form-item>
-
-        <a-form-item
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label="描述"
-          hasFeedback
-        >
-          <a-textarea
-            :rows="5"
-            placeholder="..."
-            id="describe"
-            v-decorator="['describe']"
-          />
-        </a-form-item>
-
-        <a-divider>拥有权限</a-divider>
-        <template v-for="permission in permissions">
-          <a-form-item
-            class="permission-group"
-            v-if="permission.actionsOptions && permission.actionsOptions.length > 0"
-            :labelCol="labelCol"
-            :wrapperCol="wrapperCol"
-            :key="permission.permissionId"
-            :label="permission.permissionName"
-          >
-            <a-checkbox>全选</a-checkbox>
-            <a-checkbox-group v-decorator="[`permissions.${permission.permissionId}`]" :options="permission.actionsOptions"/>
-          </a-form-item>
-        </template>
-
-      </a-form>
-    </a-modal>
-
-  </a-card>
+      <create-form
+        ref="createModal"
+        :visible="visible"
+        :loading="confirmLoading"
+        :model="mdl"
+        @cancel="handleCancel"
+        @ok="handleOk"
+      />
+      <step-by-step-modal ref="modal" @ok="handleOk"/>
+    </a-card>
+  </page-header-wrapper>
 </template>
 
 <script>
-import pick from 'lodash.pick'
-import { STable } from '@/components'
-import { getRoleList, getServiceList } from '@/api/manage'
-import { PERMISSION_ENUM } from '@/core/permission/permission'
+import moment from 'moment'
+import { STable, Ellipsis } from '@/components'
+import { getRoleList } from '@/api/manage'
 
-const STATUS = {
-  1: '启用',
-  2: '禁用'
-}
+import StepByStepModal from '../list/modules/StepByStepModal'
+import CreateForm from '../list/modules/CreateForm'
 
 const columns = [
+  // {
+  //   title: '#',
+  //   scopedSlots: { customRender: 'serial' }
+  // },
   {
-    title: '唯一识别码',
-    dataIndex: 'id'
-  },
-  {
-    title: '角色名称',
+    title: '用户',
     dataIndex: 'name'
   },
   {
-    title: '状态',
-    dataIndex: 'status',
-    scopedSlots: { customRender: 'status' }
+    title: '头像',
+    dataIndex: 'avatar',
+    scopedSlots: { customRender: 'avatar' }
   },
   {
-    title: '创建时间',
-    dataIndex: 'createTime',
-    scopedSlots: { customRender: 'createTime' },
+    title: '语言',
+    dataIndex: 'language',
+    scopedSlots: { customRender: 'language' }
+  },
+  {
+    title: '登陆名',
+    dataIndex: 'userName'
+  },
+  {
+    title: '用户状态',
+    dataIndex: 'enable',
+    scopedSlots: { customRender: 'enable' }
+  },
+  {
+    title: '最后登陆时间',
+    dataIndex: 'lastLoginTime',
+    customRender: (text, row, index) => {
+      return moment(text).format('YYYY-MM-DD HH:mm:ss')
+    },
     sorter: true
-  }, {
+  },
+  {
     title: '操作',
-    width: '150px',
     dataIndex: 'action',
+    width: '150px',
     scopedSlots: { customRender: 'action' }
   }
 ]
 
+const languageMap = {
+  0: {
+    status: '0',
+    text: '中文'
+  },
+  1: {
+    status: '1',
+    text: '英语'
+  }
+}
+
 export default {
   name: 'TableList',
   components: {
-    STable
+    STable,
+    Ellipsis,
+    CreateForm,
+    StepByStepModal
   },
   data () {
+    this.columns = columns
     return {
-      description: '列表使用场景：后台管理中的权限管理以及角色管理，可用于基于 RBAC 设计的角色权限控制，颗粒度细到每一个操作类型。',
-
+      // create model
       visible: false,
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 5 }
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 }
-      },
-      form: this.$form.createForm(this),
-      permissions: [],
-
+      confirmLoading: false,
+      mdl: null,
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
       queryParam: {},
-      // 表头
-      columns,
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        return getRoleList(parameter)
-          .then(res => {
-            console.log('getRoleList', res)
-            // 展开全部行
-            this.expandedRowKeys = res.result.data.map(item => item.id)
-            return res.result
-          })
+        const requestParameters = Object.assign({}, parameter, this.queryParam)
+        return this.$http.get('/sysUser/page', { params: requestParameters }).then(res => {
+          return res.result
+        })
       },
-
-      expandedRowKeys: [],
       selectedRowKeys: [],
       selectedRows: []
     }
   },
   filters: {
-    statusFilter (key) {
-      return STATUS[key]
+    enableFilter (type) {
+      if(type === true){
+        return '启用'
+      }
+      else{
+        return '禁用'
+      }
     },
-    permissionFilter (key) {
-      const permission = PERMISSION_ENUM[key]
-      return permission && permission.label
+    languageFilter (type) {
+      return languageMap[type].text
     }
   },
   created () {
-    getServiceList().then(res => {
-      console.log('getServiceList.call()', res)
-    })
-
-    getRoleList().then(res => {
-      console.log('getRoleList.call()', res)
-    })
+    getRoleList({ t: new Date() })
+  },
+  computed: {
+    rowSelection () {
+      return {
+        selectedRowKeys: this.selectedRowKeys,
+        onChange: this.onSelectChange
+      }
+    }
   },
   methods: {
+    handleAdd () {
+      this.mdl = null
+      this.visible = true
+    },
     handleEdit (record) {
       this.visible = true
-      console.log('record', record)
+      this.mdl = { ...record }
+    },
+    handleOk () {
+      const form = this.$refs.createModal.form
+      this.confirmLoading = true
+      form.validateFields((errors, values) => {
+        if (!errors) {
+          console.log('values', values)
+          if (values.id > 0) {
+            // 修改 e.g.
+            new Promise((resolve, reject) => {
+              setTimeout(() => {
+                resolve()
+              }, 1000)
+            }).then(res => {
+              this.visible = false
+              this.confirmLoading = false
+              // 重置表单数据
+              form.resetFields()
+              // 刷新表格
+              // this.$refs.table.refresh()
 
-      const checkboxGroup = {}
-      this.permissions = record.permissions.map(permission => {
-        const groupKey = `permissions.${permission.permissionId}`
-        checkboxGroup[groupKey] = permission.actionList
-        const actionsOptions = permission.actionEntitySet.map(action => {
-          return {
-            label: action.describe,
-            value: action.action,
-            defaultCheck: action.defaultCheck
+              this.$message.info('修改成功')
+            })
+          } else {
+            // 新增
+            new Promise((resolve, reject) => {
+              setTimeout(() => {
+                resolve()
+              }, 1000)
+            }).then(res => {
+              this.visible = false
+              this.confirmLoading = false
+              // 重置表单数据
+              form.resetFields()
+              // 刷新表格
+              // this.$refs.table.refresh()
+
+              this.$message.info('新增成功')
+            })
           }
-        })
-        return {
-          ...permission,
-          actionsOptions
+        } else {
+          this.confirmLoading = false
         }
       })
-
-      this.$nextTick(() => {
-        console.log('permissions', this.permissions)
-        console.log('checkboxGroup', checkboxGroup)
-
-        this.form.setFieldsValue(pick(record, ['id', 'status', 'describe', 'name']))
-        this.form.setFieldsValue(checkboxGroup)
-      })
     },
-    handleOk (e) {
-      e.preventDefault()
-      this.form.validateFields((err, values) => {
-        console.log(err, values)
-      })
+    handleCancel () {
+      this.visible = false
+
+      const form = this.$refs.createModal.form
+      form.resetFields() // 清理表单数据（可不做）
     },
-    onChange (selectedRowKeys, selectedRows) {
+    handleSub (record) {
+      if (record.status !== 0) {
+        this.$message.info(`${record.no} 订阅成功`)
+      } else {
+        this.$message.error(`${record.no} 订阅失败，规则已关闭`)
+      }
+    },
+    onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
-    handleExpand (expanded, record) {
-      console.log('expanded', expanded, record)
-      if (expanded) {
-        this.expandedRowKeys.push(record.id)
-      } else {
-        this.expandedRowKeys = this.expandedRowKeys.filter(item => record.id !== item)
-      }
-    },
     toggleAdvanced () {
       this.advanced = !this.advanced
-    }
-  },
-  watch: {
-    /*
-      'selectedRows': function (selectedRows) {
-        this.needTotalList = this.needTotalList.map(item => {
-          return {
-            ...item,
-            total: selectedRows.reduce( (sum, val) => {
-              return sum + val[item.dataIndex]
-            }, 0)
-          }
-        })
+    },
+    resetSearchForm () {
+      this.queryParam = {
+        date: moment(new Date())
       }
-      */
+    }
   }
 }
 </script>
-
-<style lang="less" scoped>
-.permission-form {
-  :deep(.permission-group) {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-}
-
-</style>

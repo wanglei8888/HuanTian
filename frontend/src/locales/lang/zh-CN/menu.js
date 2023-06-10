@@ -23,8 +23,9 @@ export default {
     // 新加
     'menu.sysManage': '系统管理',
     'menu.sysManage.menuList': '菜单列表',
-    'menu.userManage': '用户管理',
-    'menu.userInfo.userList': '用户列表',
+    'menu.sysManage.permissionList': '权限列表',
+    'menu.sysManage.roleList': '角色列表',
+    'menu.sysManage.userList': '用户列表',
     'menu.other.IconSelector': '图标列表',
     // 新加
     'menu.profile': '详情页',

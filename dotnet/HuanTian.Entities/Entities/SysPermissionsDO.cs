@@ -66,6 +66,10 @@ namespace HuanTian.Entities
     public enum PermissionTypeEnum
     {
         /// <summary>
+        /// 空值
+        /// </summary>
+        None = 0,
+        /// <summary>
         /// 按钮权限
         /// </summary>
         Button,

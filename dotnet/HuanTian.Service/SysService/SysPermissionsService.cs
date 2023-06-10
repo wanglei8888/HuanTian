@@ -37,6 +37,7 @@ public class SysPermissionsService : ISysPermissionsService, IDynamicApiControll
         var list = await _sysPermissions
             .WhereIf(!string.IsNullOrEmpty(input.Id), t => t.Id == long.Parse(input.Id))
             .WhereIf(!string.IsNullOrEmpty(input.MenuId), t => t.MenuId == long.Parse(input.MenuId))
+            .WhereIf(input.Type != 0, t => t.Type == input.Type)
             .WhereIf(!string.IsNullOrEmpty(input.Code), t => t.Code == input.Code)
             .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name == input.Name)
             .ToPageListAsync(input.PageNo, input.PageSize);
