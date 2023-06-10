@@ -28,15 +28,11 @@ namespace HuanTian.EntityFrameworkCore
         {
             _db = dbContext;
         }
-        public EfRepository(EfSqlContext dbContext, Expression<Func<TEntity, object>> orderByExpression, bool isAsc)
+        public EfRepository(EfSqlContext dbContext, Expression<Func<TEntity, object>> orderByExpression, bool isAsc, Expression<Func<TEntity, bool>> sqlWhereExpression)
              : this(dbContext)
         {
             _isAsc = isAsc;
             _orderByExpression = orderByExpression;
-        }
-        public EfRepository(EfSqlContext dbContext, Expression<Func<TEntity, object>> orderByExpression, bool isAsc, Expression<Func<TEntity, bool>> sqlWhereExpression)
-             : this(dbContext, orderByExpression, isAsc)
-        {
             _sqlWhereExpression = sqlWhereExpression;
         }
         #endregion
@@ -145,7 +141,7 @@ namespace HuanTian.EntityFrameworkCore
 
         public IRepository<TEntity> OrderBy(Expression<Func<TEntity, object>> orderByExpression, bool isAsc)
         {
-            return new EfRepository<TEntity>(_db, orderByExpression, isAsc); ;
+            return new EfRepository<TEntity>(_db, orderByExpression, isAsc, _sqlWhereExpression); ;
         }
         public IRepository<TEntity> Where(Expression<Func<TEntity, bool>> sqlWhereExpression)
         {

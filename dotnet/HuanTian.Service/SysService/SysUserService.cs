@@ -51,7 +51,7 @@ namespace HuanTian.Service
         [HttpGet]
         public dynamic Info()
         {
-            var user = App.HttpContext.User.Claims.FirstOrDefault(u => u.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sid)?.Value;
+            var user = App.GetUserId().ToString();
             // 解密
             user = EncryptionHelper.Decrypt(user, CommonConst.UserToken);
 

@@ -42,6 +42,12 @@ public class SysUserDO : BaseEntityBusiness
     [Comment("用户密码")]
     public string? Password { get; set; }
     /// <summary>
+    /// 账号类型
+    /// </summary>
+    [Required]
+    [Comment("账号类型")]
+    public SysUserTypeEnum Type { get; set; }
+    /// <summary>
     /// 启用
     /// </summary>
     [Required]
@@ -70,4 +76,19 @@ public class SysUserDO : BaseEntityBusiness
     [Comment("系统语言")]
     [EnumDataType(typeof(SystemLanguageEnum))]
     public SystemLanguageEnum Language { get; set; }
+}
+public enum SysUserTypeEnum
+{
+    /// <summary>
+    /// 普通用户
+    /// </summary>
+    Ordinary = 0,
+    /// <summary>
+    /// 系统管理员
+    /// </summary>
+    Admin = 1,
+    /// <summary>
+    /// 超级管理员
+    /// </summary>
+    SuperAdmin = 2
 }

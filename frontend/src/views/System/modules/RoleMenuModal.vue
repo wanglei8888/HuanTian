@@ -119,7 +119,7 @@ export default {
         return
       }
       this.confirmLoading = true
-      this.$http.post('/sysRole/addRoleMenu', { id: this.id, menuId: this.selectedRowKeys }).then(res => {
+      this.$http.post('/sysRole/addRoleMenu', { roleId: this.id, menuId: this.selectedRowKeys }).then(res => {
         if (res.code === 200) {
           this.$emit('ok')
           this.visible = false

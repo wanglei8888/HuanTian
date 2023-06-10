@@ -43,4 +43,8 @@ namespace HuanTian.Service
         public string MenuType { get; set; }
         public long RoleId { get; set; }
     }
+    public class SysUserMenyInput
+    { 
+        public long UserId { get; set; }
+    }
 }

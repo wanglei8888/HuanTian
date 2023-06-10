@@ -21,6 +21,6 @@
         /// 获取用户菜单
         /// </summary>
         /// <returns></returns>
-        public Task<List<SysMenuOutput>> GetUserMenu();
+        public Task<List<SysMenuOutput>> GetUserMenu(SysUserMenyInput input);
     }
 }

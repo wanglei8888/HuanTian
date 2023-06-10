@@ -23,15 +23,11 @@ namespace HuanTian.SqlSugar
         {
             _db = db;
         }
-        public SqlSugarRepository(ISqlSugarClient db, Expression<Func<TEntity, object>> orderByExpression, bool isAsc)
-            : this(db)
+        public SqlSugarRepository(ISqlSugarClient db, Expression<Func<TEntity, object>> orderByExpression, bool isAsc, Expression<Func<TEntity, bool>> sqlWhereExpression)
+             : this(db)
         {
             _orderByExpression = orderByExpression;
             _isAsc = isAsc;
-        }
-        public SqlSugarRepository(ISqlSugarClient db, Expression<Func<TEntity, object>> orderByExpression, bool isAsc, Expression<Func<TEntity, bool>> sqlWhereExpression)
-             : this(db, orderByExpression, isAsc)
-        {
             _sqlWhereExpression = sqlWhereExpression;
         }
         #endregion
@@ -127,7 +123,7 @@ namespace HuanTian.SqlSugar
         #region 帮助方法
         public IRepository<TEntity> OrderBy(Expression<Func<TEntity, object>> orderByExpression, bool isAsc)
         {
-            return new SqlSugarRepository<TEntity>(_db, orderByExpression, isAsc); ;
+            return new SqlSugarRepository<TEntity>(_db, orderByExpression, isAsc,_sqlWhereExpression); ;
         }
         public IRepository<TEntity> Where(Expression<Func<TEntity, bool>> sqlWhereExpression)
         {
