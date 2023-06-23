@@ -60,6 +60,35 @@ namespace HuanTian.Service
             
             return userInfo;
         }
+        public async Task<int> Add(SysUserDO input)
+        {
+            // 判断是否存在名字
+            if ((await _userInfo.FirstOrDefaultAsync(t => t.UserName == input.UserName)) != null)
+            {
+                throw new Exception("登陆名已存在");
+            }
+            var count = await _userInfo.InitTable(input)
+                .CallEntityMethod(t=>t.CreateFunc())
+                .AddAsync();
+            return count;
+        }
+        public async Task<int> Update(SysUserDO input)
+        {
+            // 判断是否存在名字
+            if ((await _userInfo.FirstOrDefaultAsync(t => t.UserName == input.UserName)) != null)
+            {
+                throw new Exception("登陆名已存在");
+            }
+            var count = await _userInfo.InitTable(input)
+                .CallEntityMethod(t => t.UpdateFunc())
+                .UpdateAsync();
+            return count;
+        }
+        public async Task<int> Delete(IdInput input)
+        {
+            var count = await _userInfo.DeleteAsync(input.Id.Split(',').Adapt<long[]>());
+            return count;
+        }
         /// <summary>
         /// 查询用户列表信息
         /// </summary>
@@ -68,7 +97,8 @@ namespace HuanTian.Service
         public async Task<dynamic> Page([FromQuery] UserInput input)
         {
             var pageData = await _userInfo
-                .WhereIf(!string.IsNullOrEmpty(input.Name),t => t.Name == input.Name)
+                .WhereIf(!string.IsNullOrEmpty(input.Name),t => t.Name.Contains(input.Name))
+                .WhereIf(!string.IsNullOrEmpty(input.UserName), t => t.UserName.Contains(input.UserName))
                 .WhereIf(!string.IsNullOrEmpty(input.Enable), t => t.Enable == input.Enable.ObjToBool())
                 .ToPageListAsync(input.PageNo,input.PageSize);
             return pageData;

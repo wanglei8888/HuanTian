@@ -60,8 +60,11 @@ namespace HuanTian.WebCore
             //    context.Result = new UnauthorizedResult();
             //}
 
+            //context.Result = RequestHelper.ErroRequestEntity("用户未授权,请登录后再操作", HttpStatusCode.Unauthorized);
+            //context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+
             // 检测用户的token是否为黑名单用户,如果是则返回401
-            if (!allowAnonymous && App.HttpContext.Request.Headers.TryGetValue(App.Configuration["AppSettings:ApiHeard"], out var token))
+            if (!allowAnonymous && App.HttpContext.Request.Headers.TryGetValue(App.Configuration["AppSettings:ApiHeard"] ?? "", out var token))
             {
                 var userId = App.HttpContext.User.Claims.FirstOrDefault(u => u.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sid)?.Value;
                 if ((await _redisCache.SetContainsAsync($"LoginUserInfoWhitelist", token)))

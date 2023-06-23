@@ -101,12 +101,9 @@ export default {
   data() {
     return {
       description: '列表使用场景：后台管理中的权限管理以及角色管理，可用于基于 RBAC 设计的角色权限控制，颗粒度细到每一个操作类型。',
-
       visible: false,
-
       form: null,
       mdl: {},
-
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
@@ -164,10 +161,10 @@ export default {
       this.$refs.table.refresh()
     },
     remove(key) {
-      this.$http.delete('/sysMenu', { data: { Id: key } }).then(res => {
+      this.$http.delete('/sysRole', { data: { Id: key } }).then(res => {
         if (res.code === 200) {
           this.$message.success('删除成功')
-          this.handSerach()
+          this.handleOk()
         }
       })
     },

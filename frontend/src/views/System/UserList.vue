@@ -4,29 +4,34 @@
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
           <a-row :gutter="48">
-            <a-col :md="8" :sm="24">
+            <a-col :md="6" :sm="24">
               <a-form-item label="用户名">
-                <a-input v-model="queryParam.name" placeholder=""/>
+                <a-input v-model="queryParam.name" placeholder="" />
               </a-form-item>
             </a-col>
-            <a-col :md="8" :sm="24">
+            <a-col :md="6" :sm="24">
+              <a-form-item label="登陆名">
+                <a-input v-model="queryParam.userName" placeholder="" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
               <a-form-item label="用户状态">
-                <a-select v-model="queryParam.status" placeholder="请选择" >
+                <a-select v-model="queryParam.status" placeholder="请选择">
                   <a-select-option value="">全部</a-select-option>
                   <a-select-option value="0">启用</a-select-option>
                   <a-select-option value="1">禁用</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
-            <template v-if="advanced">
+            <!-- <template v-if="advanced">
               <a-col :md="8" :sm="24">
                 <a-form-item label="调用次数">
-                  <a-input-number v-model="queryParam.callNo" style="width: 100%"/>
+                  <a-input-number v-model="queryParam.callNo" style="width: 100%" />
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
                 <a-form-item label="更新日期">
-                  <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请输入更新日期"/>
+                  <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请输入更新日期" />
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
@@ -47,14 +52,15 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-            </template>
-            <a-col :md="!advanced && 8 || 24" :sm="24">
-              <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
+            </template> -->
+            <a-col :md="!advanced && 6 || 24" :sm="24">
+              <span class="table-page-search-submitButtons"
+                :style="advanced && { float: 'right', overflow: 'hidden' } || {}">
                 <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
                 <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
                 <a @click="toggleAdvanced" style="margin-left: 8px">
                   {{ advanced ? '收起' : '展开' }}
-                  <a-icon :type="advanced ? 'up' : 'down'"/>
+                  <a-icon :type="advanced ? 'up' : 'down'" />
                 </a>
               </span>
             </a-col>
@@ -63,12 +69,13 @@
       </div>
 
       <div class="table-operator">
-        <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
+        <a-button type="primary" icon="plus" @click="$refs.userModal.detail()">新建</a-button>
         <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
           <a-menu slot="overlay">
-            <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
-            <!-- lock | unlock -->
-            <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item>
+            <a-menu-item key="1">
+              <a-popconfirm title="是否要批量删除？" @confirm="remove(selectedRowKeys.join(','), true)">
+                <a-icon type="delete" />删除
+              </a-popconfirm></a-menu-item>
           </a-menu>
           <a-button style="margin-left: 8px">
             批量操作 <a-icon type="down" />
@@ -76,48 +83,44 @@
         </a-dropdown>
       </div>
 
-      <s-table
-        ref="table"
-        size="default"
-        rowKey="key"
-        :columns="columns"
-        :data="loadData"
-        :alert="true"
-        :rowSelection="rowSelection"
-        showPagination="auto"
-      >
-      <!-- :showPagination="false" -->
+      <s-table ref="table" size="default" rowKey="id" :columns="columns" :data="loadData" :alert="true"
+        :rowSelection="rowSelection" showPagination="auto">
+        <!-- :showPagination="false" -->
         <span slot="enable" slot-scope="text">
-          <a-badge :status="text | enableFilter" :text="text | enableFilter" />
+          <a-tag :color="text ? 'green' : 'red'">{{ text | enableFilter }}</a-tag>
         </span>
-        <span slot="language" slot-scope="text" style="margin-left: -13px;">
-          <a-badge :status="text | languageFilter" :text="text | languageFilter" />
+        <span slot="language" slot-scope="text">
+          {{ text | languageFilter }}
         </span>
         <span slot="avatar" slot-scope="text" style="margin-left: -13px;">
           <img style="width:75px;heigth:75px" slot="avatar" :src=text />
         </span>
-        <!-- <span slot="description" slot-scope="text">
-          <ellipsis :length="10" tooltip>{{ text }}</ellipsis>
-        </span> -->
 
         <span slot="action" slot-scope="text, record">
           <template>
-            <a @click="handleEdit(record)">配置</a>
+            <a @click="$refs.userModal.detail(record)">编辑</a>
             <a-divider type="vertical" />
-            <a @click="handleSub(record)">订阅报警</a>
+            <a-popconfirm title="是否要删除此行？" @confirm="remove(record.id)">
+              <a>删除</a>
+            </a-popconfirm>
+            <a-divider type="vertical" />
+            <a-dropdown>
+              <a class="ant-dropdown-link">
+                更多 <a-icon type="down" />
+              </a>
+              <a-menu slot="overlay">
+                <a-menu-item>
+                  <a href="javascript:;" @click="$message.success('修改密码')">修改密码</a>
+                </a-menu-item>
+              </a-menu>
+            </a-dropdown>
           </template>
         </span>
       </s-table>
 
-      <create-form
-        ref="createModal"
-        :visible="visible"
-        :loading="confirmLoading"
-        :model="mdl"
-        @cancel="handleCancel"
-        @ok="handleOk"
-      />
-      <step-by-step-modal ref="modal" @ok="handleOk"/>
+      <user-modal ref="userModal" :visible="visible" :loading="confirmLoading" :model="mdl" @cancel="handleCancel"
+        @ok="handleOk" />
+      <step-by-step-modal ref="modal" @ok="handleOk" />
     </a-card>
   </page-header-wrapper>
 </template>
@@ -126,74 +129,19 @@
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
 import { getRoleList } from '@/api/manage'
-
 import StepByStepModal from '../list/modules/StepByStepModal'
-import CreateForm from '../list/modules/CreateForm'
+import UserModal from './modules/UserModal'
 
-const columns = [
-  // {
-  //   title: '#',
-  //   scopedSlots: { customRender: 'serial' }
-  // },
-  {
-    title: '用户',
-    dataIndex: 'name'
-  },
-  {
-    title: '头像',
-    dataIndex: 'avatar',
-    scopedSlots: { customRender: 'avatar' }
-  },
-  {
-    title: '语言',
-    dataIndex: 'language',
-    scopedSlots: { customRender: 'language' }
-  },
-  {
-    title: '登陆名',
-    dataIndex: 'userName'
-  },
-  {
-    title: '用户状态',
-    dataIndex: 'enable',
-    scopedSlots: { customRender: 'enable' }
-  },
-  {
-    title: '最后登陆时间',
-    dataIndex: 'lastLoginTime',
-    customRender: (text, row, index) => {
-      return moment(text).format('YYYY-MM-DD HH:mm:ss')
-    },
-    sorter: true
-  },
-  {
-    title: '操作',
-    dataIndex: 'action',
-    width: '150px',
-    scopedSlots: { customRender: 'action' }
-  }
-]
-
-const languageMap = {
-  0: {
-    status: '0',
-    text: '中文'
-  },
-  1: {
-    status: '1',
-    text: '英语'
-  }
-}
 
 export default {
   name: 'TableList',
   components: {
     STable,
     Ellipsis,
-    CreateForm,
+    UserModal,
     StepByStepModal
   },
-  data () {
+  data() {
     this.columns = columns
     return {
       // create model
@@ -216,23 +164,23 @@ export default {
     }
   },
   filters: {
-    enableFilter (type) {
-      if(type === true){
+    enableFilter(type) {
+      if (type === true) {
         return '启用'
       }
-      else{
+      else {
         return '禁用'
       }
     },
-    languageFilter (type) {
+    languageFilter(type) {
       return languageMap[type].text
     }
   },
-  created () {
+  created() {
     getRoleList({ t: new Date() })
   },
   computed: {
-    rowSelection () {
+    rowSelection() {
       return {
         selectedRowKeys: this.selectedRowKeys,
         onChange: this.onSelectChange
@@ -240,83 +188,92 @@ export default {
     }
   },
   methods: {
-    handleAdd () {
-      this.mdl = null
-      this.visible = true
-    },
-    handleEdit (record) {
-      this.visible = true
-      this.mdl = { ...record }
-    },
-    handleOk () {
-      const form = this.$refs.createModal.form
-      this.confirmLoading = true
-      form.validateFields((errors, values) => {
-        if (!errors) {
-          console.log('values', values)
-          if (values.id > 0) {
-            // 修改 e.g.
-            new Promise((resolve, reject) => {
-              setTimeout(() => {
-                resolve()
-              }, 1000)
-            }).then(res => {
-              this.visible = false
-              this.confirmLoading = false
-              // 重置表单数据
-              form.resetFields()
-              // 刷新表格
-              // this.$refs.table.refresh()
-
-              this.$message.info('修改成功')
-            })
-          } else {
-            // 新增
-            new Promise((resolve, reject) => {
-              setTimeout(() => {
-                resolve()
-              }, 1000)
-            }).then(res => {
-              this.visible = false
-              this.confirmLoading = false
-              // 重置表单数据
-              form.resetFields()
-              // 刷新表格
-              // this.$refs.table.refresh()
-
-              this.$message.info('新增成功')
-            })
+    remove(key, multipleChoice) {
+      this.$http.delete('/sysUser', { data: { Id: key.toString() } }).then(res => {
+        if (res.code === 200) {
+          this.$message.success('删除成功')
+          this.$refs.table.refresh()
+          // 是否多选
+          if (multipleChoice) {
+            this.selectedRowKeys = []
+            this.selectedRows = []
           }
-        } else {
-          this.confirmLoading = false
         }
       })
     },
-    handleCancel () {
+    handleAdd() {
+      this.mdl = null
+      this.visible = true
+    },
+    handleOk() {
+      this.$refs.table.refresh()
+    },
+    handleCancel() {
       this.visible = false
-
       const form = this.$refs.createModal.form
       form.resetFields() // 清理表单数据（可不做）
     },
-    handleSub (record) {
-      if (record.status !== 0) {
-        this.$message.info(`${record.no} 订阅成功`)
-      } else {
-        this.$message.error(`${record.no} 订阅失败，规则已关闭`)
-      }
-    },
-    onSelectChange (selectedRowKeys, selectedRows) {
+    onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
-    toggleAdvanced () {
+    toggleAdvanced() {
       this.advanced = !this.advanced
-    },
-    resetSearchForm () {
-      this.queryParam = {
-        date: moment(new Date())
-      }
     }
   }
 }
+const columns = [
+  {
+    title: '登陆名',
+    dataIndex: 'userName'
+  },
+  {
+    title: '用户名',
+    dataIndex: 'name'
+  },
+  {
+    title: '头像',
+    dataIndex: 'avatar',
+    scopedSlots: { customRender: 'avatar' }
+  },
+  {
+    title: '语言',
+    dataIndex: 'language',
+    scopedSlots: { customRender: 'language' }
+  },
+  {
+    title: '用户状态',
+    dataIndex: 'enable',
+    scopedSlots: { customRender: 'enable' }
+  },
+  {
+    title: '最后登陆时间',
+    dataIndex: 'lastLoginTime',
+    customRender: (text, row, index) => {
+      if (!text) {
+        return '无'
+      }
+      return moment(text).format('YYYY-MM-DD HH:mm:ss')
+    },
+    sorter: true
+  },
+  {
+    title: '操作',
+    dataIndex: 'action',
+    width: '200px',
+    scopedSlots: { customRender: 'action' }
+  }
+]
+
+const languageMap = {
+  0: {
+    status: '0',
+    text: '中文'
+  },
+  1: {
+    status: '1',
+    text: '英语'
+  }
+}
+
 </script>

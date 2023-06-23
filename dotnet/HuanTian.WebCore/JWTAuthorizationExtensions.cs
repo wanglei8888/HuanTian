@@ -61,7 +61,7 @@ namespace HuanTian.WebCore
                         // 验证私钥
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes((string)App.Configuration["JWTAuthentication:SecretKey"])),
                         // 允许的服务器时间偏移量  总的有效时间等于这个时间加上jwt的过期时间，如果不配置，默认是5分钟
-                        ClockSkew = TimeSpan.FromMinutes(1)
+                        ClockSkew = TimeSpan.FromMinutes(5)
 
                     };
                     options.Events = new JwtBearerEvents

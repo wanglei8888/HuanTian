@@ -64,9 +64,6 @@ export default {
       form: {}
     }
   },
-  created() {
-    this.loadPermissions()
-  },
   methods: {
     // 打开页面初始化
     detail(value) {
@@ -145,37 +142,6 @@ export default {
     handleCancel() {
       this.close()
     },
-    onChangeCheck(permission) {
-      permission.indeterminate = !!permission.selected.length && (permission.selected.length < permission.actionsOptions.length)
-      permission.checkedAll = permission.selected.length === permission.actionsOptions.length
-    },
-    onChangeCheckAll(e, permission) {
-      Object.assign(permission, {
-        selected: e.target.checked ? permission.actionsOptions.map(obj => obj.value) : [],
-        indeterminate: false,
-        checkedAll: e.target.checked
-      })
-    },
-    loadPermissions() {
-      // const that = this
-      // getPermissions().then(res => {
-      //   const result = res.result
-      //   that.permissions = result.map(permission => {
-      //     const options = JSON.parse(permission.actionData) || []
-      //     permission.checkedAll = false
-      //     permission.selected = []
-      //     permission.indeterminate = false
-      //     permission.actionsOptions = options.map(option => {
-      //       return {
-      //         label: option.describe,
-      //         value: option.action
-      //       }
-      //     })
-      //     return permission
-      //   })
-      // })
-    }
-
   }
 }
 </script>

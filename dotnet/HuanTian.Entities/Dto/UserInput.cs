@@ -28,6 +28,7 @@ namespace HuanTian.Entities
     public class UserInput : PageInput
     {
         public string Name { get; set; }
+        public string UserName { get; set; }
         public string Enable { get; set; }
     }
 }
