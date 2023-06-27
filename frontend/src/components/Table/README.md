@@ -11,6 +11,7 @@ Table 重封装组件说明
 
 该 `table` 由 [@Saraka](https://github.com/saraka-tsukai) 完成封装
 
+由 `小诺` 完成二次改进使用
 
 例子1
 ----
@@ -21,7 +22,6 @@ Table 重封装组件说明
 <template>
   <s-table
     ref="table"
-    size="default"
     :rowKey="(record) => record.data.id"
     :columns="columns"
     :data="loadData"
@@ -102,7 +102,6 @@ Table 重封装组件说明
 <template>
   <s-table
     ref="table"
-    size="default"
     :columns="columns"
     :data="loadData"
   >
@@ -301,7 +300,7 @@ result.then(r => {
       {
         id: 4,
         cover: 'https://gw.alipayobjects.com/zos/rmsportal/sfjbOqnsXXJgNCjCzDBL.png',
-        title: 'Ant Design Pro',
+        title: 'Snowy',
         description: '那时候我只会想自己想要什么，从不想自己拥有什么',
         status: 1,
         updatedAt: '2018-07-26 00:00:00'

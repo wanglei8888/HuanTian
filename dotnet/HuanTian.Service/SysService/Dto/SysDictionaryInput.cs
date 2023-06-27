@@ -27,6 +27,10 @@ namespace HuanTian.Service
 {
     public class SysDictionaryInput
     {
-        public string Code { get; set; }    
+        public string Code { get; set; }
+    }
+    public class SysDictionaryPageInput : PageInput
+    {
+        public string Code { get; set; }
     }
 }

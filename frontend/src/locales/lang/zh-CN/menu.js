@@ -26,6 +26,7 @@ export default {
     'menu.sysManage.permissionList': '权限列表',
     'menu.sysManage.roleList': '角色列表',
     'menu.sysManage.userList': '用户列表',
+    'menu.sysManage.dicList':'字典列表',
     'menu.other.IconSelector': '图标列表',
     // 新加
     'menu.profile': '详情页',

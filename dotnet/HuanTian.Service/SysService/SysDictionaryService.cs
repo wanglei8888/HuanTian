@@ -41,5 +41,13 @@ namespace HuanTian.Service.SysService
                 .WhereIf(!string.IsNullOrEmpty(input.Code),t=>t.Code == input.Code).ToListAsync();
             return list;
         }
+        [HttpGet]
+        public async Task<PageData> Page([FromQuery] SysDictionaryPageInput input)
+        {
+            var list = await _sysDictionary
+                .WhereIf(!string.IsNullOrEmpty(input.Code), t => t.Code == input.Code)
+                .ToPageListAsync(input.PageNo,input.PageSize);
+            return list;
+        }
     }
 }

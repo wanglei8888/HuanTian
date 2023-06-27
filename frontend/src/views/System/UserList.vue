@@ -84,8 +84,7 @@
       </div>
 
       <s-table ref="table" size="default" rowKey="id" :columns="columns" :data="loadData" :alert="true"
-        :rowSelection="rowSelection" showPagination="auto">
-        <!-- :showPagination="false" -->
+        :rowSelection="rowSelection" showPagination="true">
         <span slot="enable" slot-scope="text">
           <a-tag :color="text ? 'green' : 'red'">{{ text | enableFilter }}</a-tag>
         </span>
@@ -127,19 +126,14 @@
 
 <script>
 import moment from 'moment'
-import { STable, Ellipsis } from '@/components'
-import { getRoleList } from '@/api/manage'
-import StepByStepModal from '../list/modules/StepByStepModal'
+import { STable } from '@/components'
 import UserModal from './modules/UserModal'
 
 
 export default {
-  name: 'TableList',
   components: {
     STable,
-    Ellipsis,
-    UserModal,
-    StepByStepModal
+    UserModal
   },
   data() {
     this.columns = columns
@@ -177,7 +171,7 @@ export default {
     }
   },
   created() {
-    getRoleList({ t: new Date() })
+    
   },
   computed: {
     rowSelection() {
@@ -195,8 +189,7 @@ export default {
           this.$refs.table.refresh()
           // 是否多选
           if (multipleChoice) {
-            this.selectedRowKeys = []
-            this.selectedRows = []
+            this.$refs.table.clearSelected()
           }
         }
       })

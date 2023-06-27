@@ -25,6 +25,9 @@
 
 namespace HuanTian.Entities
 {
+    /// <summary>
+    /// 分页入参
+    /// </summary>
     public class PageInput
     {
         /// <summary>

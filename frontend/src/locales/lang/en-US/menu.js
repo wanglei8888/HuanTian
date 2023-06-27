@@ -24,6 +24,7 @@ export default {
     'menu.sysManage': 'sysManage',
     'menu.sysManage.menuList': 'menuList',
     'menu.sysManage.permissionList': 'permissionList',
+    'menu.sysManage.dicList':'dicList',
     'menu.sysManage.roleList': 'roleList',
     'menu.sysManage.userList': 'userList',
     'menu.other.IconSelector': 'IconSelector',
