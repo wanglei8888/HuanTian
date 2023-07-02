@@ -29,7 +29,7 @@
               slot-scope="text, record, index">
               <div :key="col">
                 <a-select v-if="col === 'enable'" style="width: 120px" @change="(e) => enableChange(index, e)"
-                  :default-value="text == 'true' ? true : false" :disabled="record.editable ? false : true">
+                  :value="text" :disabled="record.editable ? false : true">
                   <a-select-option :value="true">
                     启用
                   </a-select-option>
@@ -52,8 +52,11 @@
                     <a style="margin-right: 10px;">取消</a>
                   </a-popconfirm>
                 </span>
-                <span v-else>
-                  <a :disabled="editingKey !== ''" @click="() => edit(record.id)">编辑</a>
+                <span v-else style="display: flex;">
+                  <a :disabled="editingKey !== ''" @click="() => edit(record.id)" style="padding-right: 20px;">编辑</a>
+                  <a-popconfirm title="确定删除吗?" @confirm="() => remove(record.id)">
+                    <a style="margin-right: 10px;">删除</a>
+                  </a-popconfirm>
                 </span>
               </div>
             </template>
@@ -110,6 +113,12 @@ export default {
         this.tableLoading = false
       })
     },
+    remove(key) {
+      const target = this.data.find(item => key === item.id);
+      if (target) {
+        this.data = this.data.filter(item => item.id !== key);
+      }
+    },
     handleAdd() {
       const count = this.data.length + 1;
       const newData = {
@@ -119,9 +128,7 @@ export default {
         order: count,
         masterId: this.info.id,
         enable: true,
-        deleted: false,
-        createBy: null,
-        createOn: null
+        deleted: false
       };
       this.data = [...this.data, newData];
       this.edit(count)
@@ -201,6 +208,7 @@ export default {
     }
   }
 }
+
 const columns = [
   {
     title: '字典名称',

@@ -92,21 +92,12 @@ namespace HuanTian.Service
             {
                 throw new Exception("存在相同字典名称,请修改后再试");
             }
-            // 判断数据是否存在
-            var dicInfo = await _sysDicDetail
-                .Where(t => input.SysDicDetail.Select(x => x.Id).Contains(t.Id))
-                .ToListAsync();
-            if (dicInfo.Any())
-            {
-                // 修改数据
-                count += await _sysDicDetail.InitTable(input.SysDicDetail.Where(t => dicInfo.Select(q => q.Id).Contains(t.Id)))
-                    .UpdateAsync();
-            }
+            // 删除数据
+            await _sysDicDetail.DeleteAsync(t=> t.MasterId == input.MasterId);
             // 添加数据
-            var dicAddList = input.SysDicDetail.Where(t => !dicInfo.Select(q => q.Id).Contains(t.Id)).ToList();
-            if (dicAddList.Any())
+            if (input.SysDicDetail.Any())
             {
-                count += await _sysDicDetail.InitTable(dicAddList)
+                count += await _sysDicDetail.InitTable(input.SysDicDetail)
                 .CallEntityMethod(t => t.CreateFunc())
                 .CallEntityMethod(t => t.SetPropertyValue<SysDicDetailDO, long>(q => q.MasterId, input.MasterId))
                 .AddAsync();
