@@ -142,7 +142,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         });
                 });
 
-            modelBuilder.Entity("HuanTian.Entities.SysDictionaryDO", b =>
+            modelBuilder.Entity("HuanTian.Entities.SysDicDO", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -155,6 +155,38 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnType("varchar(50)")
                         .HasColumnName("code")
                         .HasComment("系统字典表");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("deleted")
+                        .HasComment("软删除");
+
+                    b.Property<bool>("Enable")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("enable")
+                        .HasComment("是否启用");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("name")
+                        .HasComment("字典名字");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("sys_dic", t =>
+                        {
+                            t.HasComment("系统字典表");
+                        });
+                });
+
+            modelBuilder.Entity("HuanTian.Entities.SysDicDetailDO", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
 
                     b.Property<long?>("CreateBy")
                         .HasColumnType("bigint")
@@ -171,12 +203,27 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnName("deleted")
                         .HasComment("软删除");
 
+                    b.Property<bool>("Enable")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("enable")
+                        .HasComment("是否启用");
+
+                    b.Property<long>("MasterId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("master_id")
+                        .HasComment("主表Id");
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(60)
-                        .HasColumnType("varchar(60)")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("name")
                         .HasComment("字典名字");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int")
+                        .HasColumnName("order")
+                        .HasComment("排序");
 
                     b.Property<string>("Value")
                         .IsRequired()
@@ -187,9 +234,9 @@ namespace HuanTian.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("sys_dictionary", t =>
+                    b.ToTable("sys_dic_detail", t =>
                         {
-                            t.HasComment("系统字典表");
+                            t.HasComment("系统字典详情表");
                         });
                 });
 

@@ -11,7 +11,8 @@ namespace HuanTian.EntityFrameworkCore
         public DbSet<SysRoleDO> SysRoleInfoDO { get; set; }
         public DbSet<SysUserRoleDO> SysUserRoleDO { get; set; }
         public DbSet<SysMenuDO> SysMenuDO { get; set; }
-        public DbSet<SysDictionaryDO> SysDictionaryDO { get; set; }
+        public DbSet<SysDicDO> SysDictionaryDO { get; set; }
+        public DbSet<SysDicDetailDO> SysDictionaryDetailDO { get; set; }
         public DbSet<SysCodeGenDO> SysCodeGenDO { get; set; }
         public DbSet<SysMenuRoleDO> SysMenuRoleDO { get; set; }
         public DbSet<SysDeptDO> SysDeptDO { get; set; }

@@ -1,0 +1,132 @@
+﻿#region << 版 本 注 释 >>
+/*----------------------------------------------------------------
+ * 版权所有 (c) 2023 HP NJRN 保留所有权利。
+ * CLR版本：4.0.30319.42000
+ * 机器名称：WEIHAN
+ * 公司名称：HP
+ * 命名空间：HuanTian.Service.SysService
+ * 唯一标识：b96e7e23-a5e3-4848-8905-7de0be1f9f70
+ * 文件名：SysDicService
+ * 当前用户域：weihan
+ * 
+ * 创建者：wanglei
+ * 创建时间：2023/5/24 14:46:50
+ * 版本：V1.0.0
+ * 描述：
+ *
+ * ----------------------------------------------------------------
+ * 修改人：
+ * 时间：
+ * 修改说明：
+ *
+ * 版本：V1.0.1
+ *----------------------------------------------------------------*/
+#endregion << 版 本 注 释 >>
+
+
+using HuanTian.Infrastructure;
+using System.Linq;
+
+namespace HuanTian.Service
+{
+    /// <summary>
+    /// 系统字典服务
+    /// </summary>
+    public class SysDicService : IDynamicApiController
+    {
+        private readonly IRepository<SysDicDetailDO> _sysDicDetail;
+        private readonly IRepository<SysDicDO> _sysDic;
+        public SysDicService(IRepository<SysDicDetailDO> sysDicDetail, IRepository<SysDicDO> sysDic)
+        {
+            _sysDicDetail = sysDicDetail;
+            _sysDic = sysDic;
+        }
+        public async Task<IEnumerable<SysDicDetailDO>> Get([FromQuery] SysDicInput input)
+        {
+            var dicMaster = await _sysDic.FirstOrDefaultAsync(t => t.Code == input.Code);
+            var list = await _sysDicDetail
+                .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name == input.Name)
+                .Where(t => t.MasterId == dicMaster.Id)
+                .OrderBy(t => t.Order)
+                .ToListAsync();
+            return list;
+        }
+        public async Task<int> Add(SysDicFormInput input)
+        {
+            var entity = input.Adapt<SysDicDO>();
+            var info = await _sysDic.FirstOrDefaultAsync(t => t.Code == input.Code);
+            if (info != null)
+            {
+                throw new Exception("字典编码已存在");
+            }
+            var count = await _sysDic.InitTable(entity)
+                .CallEntityMethod(t => t.CreateFunc())
+                .AddAsync();
+            return count;
+        }
+        public async Task<int> Update(SysDicFormInput input)
+        {
+            var entity = input.Adapt<SysDicDO>();
+            var count = await _sysDic.InitTable(entity)
+                .UpdateAsync();
+            return count;
+        }
+        public async Task<int> Delete(IdInput input)
+        {
+            var count = await _sysDic.DeleteAsync(input.Id.Split(',').Adapt<long[]>());
+            return count;
+        }
+        [HttpPost("Detail")]
+        public async Task<int> DetailAdd(SysDicDetaiLFormInput input)
+        {
+            var count = 0;
+            // 数据过滤
+            bool valueDuplicate = input.SysDicDetail.GroupBy(m => m.Value).Count() != input.SysDicDetail.Count();
+            bool nameDuplicate = input.SysDicDetail.GroupBy(m => m.Name).Count() != input.SysDicDetail.Count();
+
+            if (valueDuplicate)
+            {
+                throw new Exception("存在相同字典值,请修改后再试");
+            }
+            if (nameDuplicate)
+            {
+                throw new Exception("存在相同字典名称,请修改后再试");
+            }
+            // 判断数据是否存在
+            var dicInfo = await _sysDicDetail
+                .Where(t => input.SysDicDetail.Select(x => x.Id).Contains(t.Id))
+                .ToListAsync();
+            if (dicInfo.Any())
+            {
+                // 修改数据
+                count += await _sysDicDetail.InitTable(input.SysDicDetail.Where(t => dicInfo.Select(q => q.Id).Contains(t.Id)))
+                    .UpdateAsync();
+            }
+            // 添加数据
+            var dicAddList = input.SysDicDetail.Where(t => !dicInfo.Select(q => q.Id).Contains(t.Id)).ToList();
+            if (dicAddList.Any())
+            {
+                count += await _sysDicDetail.InitTable(dicAddList)
+                .CallEntityMethod(t => t.CreateFunc())
+                .CallEntityMethod(t => t.SetPropertyValue<SysDicDetailDO, long>(q => q.MasterId, input.MasterId))
+                .AddAsync();
+            }
+            return count;
+        }
+        [HttpDelete("Detail")]
+        public async Task<int> DetailDelete(IdInput input)
+        {
+            var count = await _sysDicDetail.DeleteAsync(input.Id.Split(',').Adapt<long[]>());
+            return count;
+        }
+        [HttpGet]
+        public async Task<PageData> Page([FromQuery] SysDicPageInput input)
+        {
+            var list = await _sysDic
+                .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name == input.Name)
+                .WhereIf(!string.IsNullOrEmpty(input.Code), t => t.Code == input.Code)
+                .ToPageListAsync(input.PageNo, input.PageSize);
+            return list;
+        }
+    }
+}

@@ -1,7 +1,7 @@
 import {axios} from '@/utils/request'
 
 const userApi = {
-  sysDictionary: '/SysDictionary'
+  sysDictionary: '/SysDic'
 }
 
 /**

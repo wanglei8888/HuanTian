@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SqlSugar;
 using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
 using Yitter.IdGenerator;
 
 namespace HuanTian.Entities
@@ -26,6 +27,24 @@ namespace HuanTian.Entities
         {
             Id = YitIdHelper.NextId();
             Deleted = false;
+        }
+        /// <summary>
+        /// 设置属性的值-大量数据请勿使用,性能较差
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="propertyExpression"></param>
+        /// <param name="value"></param>
+        public virtual void SetPropertyValue<T, TValue>(Expression<Func<T, TValue>> propertyExpression, TValue value)
+        {
+            if (propertyExpression.Body is MemberExpression memberExpression)
+            {
+                var propertyInfo = memberExpression.Member as System.Reflection.PropertyInfo;
+                if (propertyInfo != null)
+                {
+                    propertyInfo.SetValue(this, value);
+                }
+            }
         }
     }
 }

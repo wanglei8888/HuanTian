@@ -222,14 +222,14 @@ export default {
     },
     // 获取下拉数据
     getDropdown() {
-      sysDict({ code: 'SysMenuType' }).then((res) => {
+      sysDict({ code: 'MenuType' }).then((res) => {
         if (res.code === 200) {
           this.appData = res.result
         } else {
           this.$message.warning(res.message)
         }
       })
-      sysDict({ code: 'SysMenuChild' }).then((res) => {
+      sysDict({ code: 'MenuLevel' }).then((res) => {
         if (res.code === 200) {
           this.typeData = res.result
         } else {

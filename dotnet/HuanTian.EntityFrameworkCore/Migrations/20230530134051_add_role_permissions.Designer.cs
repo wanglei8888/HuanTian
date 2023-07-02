@@ -145,7 +145,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         });
                 });
 
-            modelBuilder.Entity("HuanTian.Entities.SysDictionaryDO", b =>
+            modelBuilder.Entity("HuanTian.Entities.SysDicDetailDO", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()

@@ -13,7 +13,6 @@ namespace HuanTian.Entities
         /// 创建人
         /// </summary>
         [Comment("创建人")]
-        [DefaultValue("test123")]
         public virtual long? CreateBy { get; set; }
         /// <summary>
         /// 创建时间

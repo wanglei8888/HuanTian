@@ -150,24 +150,12 @@ export default {
       const form = this.$refs.createModal.form
       form.resetFields() // 清理表单数据（可不做）
     },
-    handleSub(record) {
-      if (record.status !== 0) {
-        this.$message.info(`${record.no} 订阅成功`)
-      } else {
-        this.$message.error(`${record.no} 订阅失败，规则已关闭`)
-      }
-    },
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
     toggleAdvanced() {
       this.advanced = !this.advanced
-    },
-    resetSearchForm() {
-      this.queryParam = {
-        date: moment(new Date())
-      }
     }
   }
 }

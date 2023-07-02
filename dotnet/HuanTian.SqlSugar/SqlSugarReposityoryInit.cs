@@ -79,11 +79,15 @@ namespace HuanTian.SqlSugar
             {
                 throw new ArgumentException("使用CallEntityMethod必须先调用InitTable", nameof(method));
             }
+            var action = method.Compile();
             foreach (var item in _entityList)
             {
-                callExpresion.Method.Invoke(item, null);
+                action.Invoke(item);
             }
-
+            //foreach (var item in _entityList)
+            //{
+            //    callExpresion.Method.Invoke(item, null);
+            //}
             return this;
         }
     }

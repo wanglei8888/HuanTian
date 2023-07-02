@@ -88,7 +88,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                     b.ToTable("sys_code_gen");
                 });
 
-            modelBuilder.Entity("HuanTian.Entities.SysDictionaryDO", b =>
+            modelBuilder.Entity("HuanTian.Entities.SysDicDetailDO", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()

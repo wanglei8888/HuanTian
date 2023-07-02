@@ -6,7 +6,7 @@
  * 公司名称：HP
  * 命名空间：HuanTian.Service.SysService.Dto
  * 唯一标识：1279abe7-6c68-4e09-b4a5-e26762fb12ae
- * 文件名：SysDictionaryInput
+ * 文件名：SysDicInput
  * 当前用户域：weihan
  * 
  * 创建者：wanglei
@@ -25,12 +25,24 @@
 
 namespace HuanTian.Service
 {
-    public class SysDictionaryInput
+    public class SysDicInput
     {
+        public long MasterId { get; set; }
         public string Code { get; set; }
+        public string Name { get; set; }
     }
-    public class SysDictionaryPageInput : PageInput
+    public class SysDicFormInput : SysDicDO
+    {
+
+    }
+    public class SysDicDetaiLFormInput
+    {
+        public long MasterId { get; set; }
+        public List<SysDicDetailDO> SysDicDetail { get; set; }
+    }
+    public class SysDicPageInput : PageInput
     {
         public string Code { get; set; }
+        public string Name { get; set; }
     }
 }
