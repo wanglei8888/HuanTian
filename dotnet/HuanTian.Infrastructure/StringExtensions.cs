@@ -175,13 +175,13 @@ namespace HuanTian.Infrastructure
                 return input;
             }
 
-            var words = input.Split(new[] { ' ', '-', '_' }, StringSplitOptions.RemoveEmptyEntries);
+            var words = Regex.Split(input, @"(?<!^)(?=[A-Z])|_"); // 使用正则表达式拆分单词
             var result = new StringBuilder();
 
             foreach (var word in words)
             {
-                result.Append(char.ToUpper(word[0]));
-                result.Append(word.Substring(1).ToLower());
+                result.Append(char.ToUpper(word[0])); // 首字母大写
+                result.Append(word.Substring(1).ToLower()); // 其余字母小写
             }
 
             return result.ToString();
@@ -198,13 +198,20 @@ namespace HuanTian.Infrastructure
                 return input;
             }
 
-            var words = input.Split(new[] { ' ', '-', '_' }, StringSplitOptions.RemoveEmptyEntries);
-            var result = new StringBuilder(words[0].ToLower());
+            var words = Regex.Split(input, @"(?<!^)(?=[A-Z])|_| "); // 使用正则表达式拆分单词
+            var result = new StringBuilder();
 
-            for (int i = 1; i < words.Length; i++)
+            foreach (var word in words)
             {
-                result.Append(char.ToUpper(words[i][0]));
-                result.Append(words[i].Substring(1).ToLower());
+                if (result.Length == 0)
+                {
+                    result.Append(word.ToLower()); // 第一个单词直接转为小写
+                }
+                else
+                {
+                    result.Append(char.ToUpper(word[0])); // 首字母大写
+                    result.Append(word.Substring(1).ToLower()); // 其余字母小写
+                }
             }
 
             return result.ToString();

@@ -43,12 +43,40 @@ namespace HuanTian.Service
         }
         public async Task<IEnumerable<SysDicDetailDO>> Get([FromQuery] SysDicInput input)
         {
-            var dicMaster = await _sysDic.FirstOrDefaultAsync(t => t.Code == input.Code);
+            long masterId = 0;
+            if (!string.IsNullOrEmpty(input.Code))
+            {
+                var dicMaster = await _sysDic.FirstOrDefaultAsync(t => t.Code == input.Code);
+                masterId = dicMaster.Id;
+            }
             var list = await _sysDicDetail
                 .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name == input.Name)
-                .Where(t => t.MasterId == dicMaster.Id)
+                .WhereIf(!string.IsNullOrEmpty(input.Code),t => t.MasterId == masterId)
                 .OrderBy(t => t.Order)
                 .ToListAsync();
+            return list;
+        }
+        /// <summary>
+        /// 获取主表数据
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IEnumerable<SysDicDO>> GetMasterList([FromQuery] SysDicInput input)
+        {
+            var list = await _sysDic
+                .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name == input.Name)
+                .WhereIf(!string.IsNullOrEmpty(input.Code), t => t.Code == input.Code)
+                .ToListAsync();
+            return list;
+        }
+        [HttpGet]
+        public async Task<PageData> Page([FromQuery] SysDicPageInput input)
+        {
+            var list = await _sysDic
+                .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name == input.Name)
+                .WhereIf(!string.IsNullOrEmpty(input.Code), t => t.Code == input.Code)
+                .ToPageListAsync(input.PageNo, input.PageSize);
             return list;
         }
         public async Task<int> Add(SysDicFormInput input)
@@ -74,8 +102,17 @@ namespace HuanTian.Service
         public async Task<int> Delete(IdInput input)
         {
             var count = await _sysDic.DeleteAsync(input.Id.Split(',').Adapt<long[]>());
+            // 删除从表数据
+            count += await _sysDicDetail.DeleteAsync(t => t.MasterId == long.Parse(input.Id));
+
             return count;
         }
+        /// <summary>
+        /// 字典详情新增
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         [HttpPost("Detail")]
         public async Task<int> DetailAdd(SysDicDetaiLFormInput input)
         {
@@ -103,21 +140,6 @@ namespace HuanTian.Service
                 .AddAsync();
             }
             return count;
-        }
-        [HttpDelete("Detail")]
-        public async Task<int> DetailDelete(IdInput input)
-        {
-            var count = await _sysDicDetail.DeleteAsync(input.Id.Split(',').Adapt<long[]>());
-            return count;
-        }
-        [HttpGet]
-        public async Task<PageData> Page([FromQuery] SysDicPageInput input)
-        {
-            var list = await _sysDic
-                .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name == input.Name)
-                .WhereIf(!string.IsNullOrEmpty(input.Code), t => t.Code == input.Code)
-                .ToPageListAsync(input.PageNo, input.PageSize);
-            return list;
         }
     }
 }

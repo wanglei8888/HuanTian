@@ -30,5 +30,7 @@ namespace HuanTian.Entities
         public string Name { get; set; }
         public string UserName { get; set; }
         public string Enable { get; set; }
+        public int PageSize { get; set; }
+        public int PageNo { get; set; }
     }
 }

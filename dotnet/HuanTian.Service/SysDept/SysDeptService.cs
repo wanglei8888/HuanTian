@@ -2,7 +2,7 @@
 /*----------------------------------------------------------------
  * 文件名：SysDeptInput
  * 代码生成文件
- * 创建时间：2023-06-15 17:15:23
+ * 创建时间：2023-07-07 16:56:56
  * 版本：V1.0.0
  * 描述：
  *
@@ -32,9 +32,10 @@ public class SysDeptService : ISysDeptService, IDynamicApiController, IScoped
     public async Task<PageData> Page([FromQuery] SysDeptInput input)
     {
         var list  = await _sysDept
-            .WhereIf(!string.IsNullOrEmpty(input.Id), t => t.Id == long.Parse(input.Id))
-            .WhereIf(!string.IsNullOrEmpty(input.ParentId), t => t.ParentId == long.Parse(input.ParentId))
+            .WhereIf(input.ParentId != 0, t => t.ParentId == input.ParentId)
             .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name == input.Name)
+            .WhereIf(!string.IsNullOrEmpty(input.Describe), t => t.Describe == input.Describe)
+            .WhereIf(!string.IsNullOrEmpty(input.Enable), t => t.Enable == Convert.ToBoolean(input.Enable))
             .ToPageListAsync(input.PageNo,input.PageSize);
         return list;
     }
@@ -61,9 +62,11 @@ public class SysDeptService : ISysDeptService, IDynamicApiController, IScoped
     public async Task<IEnumerable<SysDeptDO>> Get([FromQuery] SysDeptInput input)
     {
         var list  = await _sysDept
-            .WhereIf(!string.IsNullOrEmpty(input.Id), t => t.Id == long.Parse(input.Id))
-            .WhereIf(!string.IsNullOrEmpty(input.ParentId), t => t.ParentId == long.Parse(input.ParentId))
+              .WhereIf(input.Id != 0, t => t.Id == input.Id)
+            .WhereIf(input.ParentId != 0, t => t.ParentId == input.ParentId)
             .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name == input.Name)
+            .WhereIf(!string.IsNullOrEmpty(input.Describe), t => t.Describe == input.Describe)
+            .WhereIf(!string.IsNullOrEmpty(input.Enable), t => t.Enable == Convert.ToBoolean(input.Enable))
             .ToListAsync();
         return list;
     }

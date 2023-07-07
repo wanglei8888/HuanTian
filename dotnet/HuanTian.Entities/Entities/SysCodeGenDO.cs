@@ -5,13 +5,13 @@
  * 机器名称：DESKTOP-6BOHDBE
  * 公司名称：
  * 命名空间：HuanTian.Entities.Entities
- * 唯一标识：ff7f56fd-f84d-4aa0-9d6e-5ecc5cf67e77
- * 文件名：SysCodeGenDO
+ * 唯一标识：0e454076-1544-43d2-8e92-26cdd4bdb409
+ * 文件名：Class1
  * 当前用户域：DESKTOP-6BOHDBE
  * 
  * 创建者：wanglei
  * 电子邮箱：271976304@qq.com
- * 创建时间：2023/5/26 23:02:04
+ * 创建时间：2023/7/2 21:37:34
  * 版本：V1.0.0
  * 描述：
  *
@@ -25,17 +25,28 @@
 #endregion << 版 本 注 释 >>
 
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 
 namespace HuanTian.Entities
 {
     /// <summary>
-    /// 代码生成数据表格
+    /// 代码生成数据表
     /// </summary>
-    [Comment("代码生成数据表格")]
+    [Comment("代码生成数据表")]
     public class SysCodeGenDO : BaseEntityCreate
     {
+        /// <summary>
+        /// 名称
+        /// </summary>
+        [MaxLength(30)]
+        [Comment("名称")]
+        public string Name { get; set; }
         /// <summary>
         /// 表格名字
         /// </summary>
@@ -43,33 +54,26 @@ namespace HuanTian.Entities
         [Comment("表格名字")]
         public string TableName { get; set; }
         /// <summary>
-        /// 列类型
+        /// 所属菜单
         /// </summary>
-        [MaxLength(30)]
-        [Comment("列类型")]
-        public string DataType { get; set; }
+        [Comment("所属菜单")]
+        public long MenuId { get; set; }
         /// <summary>
-        /// 列名字
+        /// 生成方式
         /// </summary>
-        [MaxLength(30)]
-        [Comment("列名字")]
-        public string DbColumnName { get; set; }
+        [Comment("生成方式")]
+        public GenerationWayEnum GenerationWay { get; set; }
+    }
+    public enum GenerationWayEnum
+    {
         /// <summary>
-        /// 列备注
+        /// 生成到项目
         /// </summary>
-        [MaxLength(30)]
-        [Comment("列备注")]
-        public string ColumnDescription { get; set; }
+        GenToProj,
         /// <summary>
-        /// 下拉框绑定字典值 如果没有就是不是下拉框
+        /// 打包生成
         /// </summary>
-        [MaxLength(30)]
-        [Comment("下拉框绑定字典值 如果没有就是不是下拉框")]
-        public string? DropDownList { get; set; }
-        /// <summary>
-        /// 是否是查询参数
-        /// </summary>
-        [Comment("是否是查询参数")]
-        public bool QueryParameters { get; set; }
+        GenToPack
+
     }
 }

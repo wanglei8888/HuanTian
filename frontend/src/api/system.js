@@ -1,4 +1,4 @@
-import {axios} from '@/utils/request'
+import { axios } from '@/utils/request'
 
 const userApi = {
   sysDictionary: '/SysDic'
@@ -15,7 +15,7 @@ const userApi = {
  * @param parameter
  * @returns {*}
  */
-export function sysDict (parameter) {
+export function sysDict(parameter) {
   return axios({
     url: userApi.sysDictionary,
     method: 'get',

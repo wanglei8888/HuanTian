@@ -1,0 +1,288 @@
+﻿@{
+    // 遍历有无下拉框值
+    var dropDownCode = new List<string>();
+    // 判断是否有启用禁用类型
+    var radioList = new List<string>();
+    foreach (var item in @Model.TableFieldCamelCase)
+    {
+        if (!string.IsNullOrEmpty(item.DropDownCode))
+        {
+            dropDownCode.Add(item.DropDownCode);
+        }
+        if (item.FrontendType == "radio")
+        {
+            radioList.Add(item.DbColumnName);
+        }
+    }
+    var num = 0;
+    var mdSize = 6;
+}
+<template>
+  <page-header-wrapper>
+    <a-card :bordered="false">
+      <div class="table-page-search-wrapper">
+        <a-form layout="inline">
+          <a-row :gutter="gutter">
+                 @foreach (var item in @Model.TableFieldCamelCase)
+                {
+                    @if (@item.QueryParameters == true)
+                    {
+                        @if (Model.TableFieldCamelCase.IndexOf(item) > 2 && num == 0)
+                        {        
+                            num++;
+         @:<template v-if="advanced">
+                        }
+                        @switch (item.FrontendType)
+                        {
+                            case "datetime":
+           <a-col :md="mdSize" :sm="24">
+              <a-form-item label="@item.ColumnDescription">
+                  <a-date-picker v-model="queryParam.@item.DbColumnName" @@change="onChange" placeholder="" />
+              </a-form-item>
+           </a-col> 
+                            break;
+                            case "radio":
+           <a-col :md="mdSize" :sm="24">
+              <a-form-item label="@item.ColumnDescription">
+                  <a-select v-model="queryParam.@item.DbColumnName">
+                      <a-select-option :value="true">
+                          启用
+                      </a-select-option>
+                      <a-select-option :value="false">
+                          禁用
+                      </a-select-option>
+                  </a-select>
+              </a-form-item>
+           </a-col>
+                            break;
+                            case "dropDown":
+                            if (string.IsNullOrEmpty(item.DropDownCode))
+                            {
+                                goto default;   
+                            }
+           <a-col :md="mdSize" :sm="24">
+              <a-form-item label="@item.ColumnDescription">
+                   <a-select v-model="queryParam.@item.DbColumnName">
+                      <a-select-option v-for="(item, index) in @(item.DropDownCode)Data" :key="index" :value="item.value">
+                           {{ item.name }}
+                      </a-select-option>
+                   </a-select>
+              </a-form-item>
+           </a-col>
+                            break;
+                            case "numBox":
+           <a-col :md="mdSize" :sm="24">
+              <a-form-item label="@item.ColumnDescription">
+                 <a-input-number v-model="queryParam.@item.DbColumnName" placeholder="" />
+              </a-form-item>
+           </a-col>
+                            break;
+                            default:
+           <a-col :md="mdSize" :sm="24">
+              <a-form-item label="@item.ColumnDescription">
+                 <a-input v-model="queryParam.@item.DbColumnName" placeholder="" />
+              </a-form-item>
+           </a-col>
+                            break;
+                        }
+                        @if (Model.TableFieldCamelCase.IndexOf(item) == (Model.TableFieldCamelCase.Count() - 1) && Model.TableFieldCamelCase.IndexOf(item) > 2)
+                        {
+         @:</template>
+                        }
+                    }
+                }
+           <a-col :md="!advanced && mdSize || 24" :sm="24">
+              <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {}">
+                 <a-button type="primary" @@click="$refs.table.refresh(true)">查询</a-button>
+                 <a-button style="margin-left: 8px" @@click="() => this.queryParam = {}">重置</a-button>
+                 <a @@click="toggleAdvanced" style="margin-left: 8px">
+                     {{ advanced ? '收起' : '展开' }}
+                    <a-icon :type="advanced ? 'up' : 'down'" />
+                 </a>
+               </span>
+           </a-col>
+          </a-row>
+        </a-form>
+      </div>
+
+      <div class="table-operator">
+        <a-button type="primary" icon="plus" @@click="$refs.infoModel.detail()">新建</a-button>
+        <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
+          <a-menu slot="overlay">
+            <a-menu-item key="1">
+              <a-popconfirm title="是否要批量删除？" @@confirm="remove(selectedRowKeys.join(','), true)">
+                <a-icon type="delete" />删除
+              </a-popconfirm></a-menu-item>
+          </a-menu>
+          <a-button style="margin-left: 8px">
+            批量操作 <a-icon type="down" />
+          </a-button>
+        </a-dropdown>
+      </div>
+
+      <s-table ref="table" size="default" rowKey="id" :columns="columns" :data="loadData" :alert="true"
+        :rowSelection="rowSelection" showPagination="true">
+        @foreach (var item in radioList)
+        {
+        <span slot="@(item)Radio" slot-scope="text">
+          <a-tag :color="text ? 'green' : 'red'">{{ text == 1 ? '启用': '禁用' }}</a-tag>
+        </span>       
+        }
+        <span slot="action" slot-scope="text, record">
+          <template>
+            <a @@click="$refs.infoModel.detail(record)">编辑</a>
+            <a-divider type="vertical" />
+            <a-popconfirm title="是否要删除此行？" @@confirm="remove(record.id)">
+              <a>删除</a>
+            </a-popconfirm>
+           <!-- <a-divider type="vertical" />
+            <a-dropdown>
+              <a class="ant-dropdown-link">
+                更多 <a-icon type="down" />
+              </a>
+              <a-menu slot="overlay">
+                <a-menu-item>
+                  <a href="javascript:;" @@click="">新</a>
+                </a-menu-item>
+              </a-menu>
+            </a-dropdown>-->
+          </template>
+        </span>
+      </s-table>
+      <info-model ref="infoModel" @@ok="handleOk" />
+    </a-card>
+  </page-header-wrapper>
+</template>
+
+<script>
+import moment from 'moment'
+@if (dropDownCode.Any())
+{
+@:import { sysDict } from '@@/api/system'
+}
+import { STable } from '@@/components'
+import infoModel from './@(Model.ClassName)Model'
+
+export default {
+  components: {
+    STable,
+    infoModel
+  },
+  data() {
+    this.columns = columns
+    return {
+      // 高级搜索 展开/关闭
+      advanced: false,
+      mdSize: @(mdSize),
+      gutter: 48,
+      // 查询参数
+      queryParam: {},
+    @if (dropDownCode.Any()){
+       foreach (var item in dropDownCode)
+       {
+      @:@(item)Data:[],
+       }
+    }
+      // 加载数据方法 必须为 Promise 对象
+      loadData: parameter => {
+        const requestParameters = Object.assign({}, parameter, this.queryParam)
+        return this.$http.get('/@(Model.ClassNameLow)/page', { params: requestParameters }).then(res => {
+          return res.result
+        })
+      },
+      selectedRowKeys: [],
+      selectedRows: []
+    }
+  },
+  @if (dropDownCode.Any()){
+  @:created () {
+  @:  this.dromdownList()
+  @:},
+  }
+  methods: {
+    remove(key, multipleChoice) {
+      this.$http.delete('/@(Model.ClassNameLow)', { data: { Id: key.toString() } }).then(res => {
+        if (res.code === 200) {
+          this.$message.success('删除成功')
+          this.$refs.table.refresh()
+          // 是否多选
+          if (multipleChoice) {
+            this.$refs.table.clearSelected()
+          }
+        }
+      })
+    },
+    @if (dropDownCode.Any()){
+    @:dromdownList() {
+    @foreach (var item in dropDownCode)
+    {
+
+      @:sysDict({ code: '@item' }).then((res) => {
+      @:  if (res.code === 200) {
+      @:    this.@(item)Data = res.result
+      @:  } else {
+      @:   this.$message.warning(res.message)
+      @:  }
+      @:})
+    }
+    @:},
+    }
+    handleOk() {
+      this.$refs.table.refresh()
+    },
+    onSelectChange(selectedRowKeys, selectedRows) {
+      this.selectedRowKeys = selectedRowKeys
+      this.selectedRows = selectedRows
+    },
+    toggleAdvanced() {
+      this.advanced = !this.advanced
+    }
+  },
+  computed: {
+    rowSelection() {
+      return {
+        selectedRowKeys: this.selectedRowKeys,
+        onChange: this.onSelectChange
+      }
+    }
+  }
+}
+const columns = [
+@foreach (var item in Model.TableFieldCamelCase)
+{
+    switch (item.DataType)
+    {
+        case "datetime":
+    
+@:  {
+@:    title: '@item.ColumnDescription',
+@:    dataIndex: '@item.DbColumnName', 
+@:    customRender: (text, row, index) => {
+        @:return moment(text).format('YYYY-MM-DD HH:mm:ss')
+@:   },
+@:    sorter: true
+@:   },
+        break;
+        case "tinyint":
+@:  {
+@:    title: '@item.ColumnDescription',
+@:    dataIndex: '@item.DbColumnName',
+@:    scopedSlots: { customRender: '@(item.DbColumnName)Radio' }
+@:  },
+        break;
+        default:
+@:  {
+@:    title: '@item.ColumnDescription',
+@:    dataIndex: '@item.DbColumnName'
+@:  },
+
+    break;
+}
+}
+  {
+    title: '操作',
+    dataIndex: 'action',
+    scopedSlots: { customRender: 'action' }
+  }
+]
+</script>

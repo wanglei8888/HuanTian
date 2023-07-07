@@ -26,6 +26,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
+using System.Runtime.CompilerServices;
 
 namespace HuanTian.WebCore
 {
@@ -39,11 +40,14 @@ namespace HuanTian.WebCore
             var result = context.Result is EmptyResult ? null : context.Result; // 如果是空结果则返回null
             switch (result)
             {
+                // 文件数据
                 case FileResult:
+                // 如果是ObjectResult类型，并且其Value属性的类型是APIResult，则不做任何操作
+                case ObjectResult objectResult when objectResult.Value is APIResult:
                     break;
                 default:
                     // 统一返回结果
-                    context.Result = RequestHelper.ErroRequestEntity("success", HttpStatusCode.OK, result);
+                    context.Result = RequestHelper.RequestInfo("success", HttpStatusCode.OK, result);
                     break;
             }
 

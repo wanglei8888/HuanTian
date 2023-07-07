@@ -27,6 +27,7 @@ export default {
     'menu.sysManage.dicList':'dicList',
     'menu.sysManage.roleList': 'roleList',
     'menu.sysManage.userList': 'userList',
+    'menu.sysManage.codeGen':'codeGen',
     'menu.other.IconSelector': 'IconSelector',
     // 新加
     'menu.profile': 'Profile',

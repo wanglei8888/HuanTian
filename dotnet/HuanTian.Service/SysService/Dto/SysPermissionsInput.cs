@@ -39,6 +39,8 @@ public class SysPermissionsInput : PageInput
     /// </summary>
     public string MenuId { get; set; }
     public PermissionTypeEnum Type { get; set; }
+    public int PageSize { get; set; }
+    public int PageNo { get; set; }
 }
 
 public class SysRolePermissionsInput

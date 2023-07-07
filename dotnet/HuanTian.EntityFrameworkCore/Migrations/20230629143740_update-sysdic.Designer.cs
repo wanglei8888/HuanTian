@@ -22,7 +22,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                 .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("HuanTian.Entities.SysCodeGenDO", b =>
+            modelBuilder.Entity("HuanTian.Entities.SysCodeGenDetailDO", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()

@@ -39,11 +39,21 @@ public class @(@Model.ClassName)Service : I@(@Model.ClassName)Service, IDynamicA
                 @switch (@column.DataType)
                 {
                     case "bigint":
-            @:.WhereIf(!string.IsNullOrEmpty(input.@column.DbColumnName), t => t.@column.DbColumnName == long.Parse(input.@column.DbColumnName))
+            @:.WhereIf(input.@column.DbColumnName != 0, t => t.@column.DbColumnName == input.@column.DbColumnName)
+                        break;
+                    case "tinyint":
+            @:.WhereIf(!string.IsNullOrEmpty(input.@column.DbColumnName), t => t.@column.DbColumnName == Convert.ToBoolean(input.@(column.DbColumnName)))
                         break;
                     default:
-            @:.WhereIf(!string.IsNullOrEmpty(input.@column.DbColumnName), t => t.@column.DbColumnName == input.@column.DbColumnName)
-                        break;
+            @if (@column.QueryType == "like")
+            {
+            @:.WhereIf(!string.IsNullOrEmpty(input.@column.DbColumnName), t => t.@(column.DbColumnName).Contains(input.@column.DbColumnName))
+            }
+            else
+            {
+            @:.WhereIf(!string.IsNullOrEmpty(input.@column.DbColumnName), t => t.@column.DbColumnName == input.@column.DbColumnName)                   
+            }
+                   break;
                 }
 			}
 		}
@@ -77,6 +87,7 @@ public class @(@Model.ClassName)Service : I@(@Model.ClassName)Service, IDynamicA
     public async Task<IEnumerable<@(@Model.EntityName)>> Get([FromQuery] @(@Model.ClassName)Input input)
     {
         var list  = await _@(Model.ClassNameLow)
+              .WhereIf(input.Id != 0, t => t.Id == input.Id)
         @foreach (var column in Model.TableField)
 		{
 			@if (@column.QueryParameters == true)
@@ -84,7 +95,10 @@ public class @(@Model.ClassName)Service : I@(@Model.ClassName)Service, IDynamicA
                 @switch (@column.DataType)
                 {
                     case "bigint":
-            @:.WhereIf(!string.IsNullOrEmpty(input.@column.DbColumnName), t => t.@column.DbColumnName == long.Parse(input.@column.DbColumnName))
+            @:.WhereIf(input.@column.DbColumnName != 0, t => t.@column.DbColumnName == input.@column.DbColumnName)
+                        break;
+                    case "tinyint":
+            @:.WhereIf(!string.IsNullOrEmpty(input.@column.DbColumnName), t => t.@column.DbColumnName == Convert.ToBoolean(input.@(column.DbColumnName)))
                         break;
                     default:
             @:.WhereIf(!string.IsNullOrEmpty(input.@column.DbColumnName), t => t.@column.DbColumnName == input.@column.DbColumnName)

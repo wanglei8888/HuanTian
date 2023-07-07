@@ -86,7 +86,7 @@
       <s-table ref="table" size="default" rowKey="id" :columns="columns" :data="loadData" :alert="true"
         :rowSelection="rowSelection" showPagination="true">
         <span slot="enable" slot-scope="text">
-          <a-tag :color="text ? 'green' : 'red'">{{ text | enableFilter }}</a-tag>
+          <a-tag :color="text ? 'green' : 'red'">{{ text == 1 ? '启用': '禁用' }}</a-tag>
         </span>
         <span slot="language" slot-scope="text">
           {{ text | languageFilter }}
@@ -116,10 +116,7 @@
           </template>
         </span>
       </s-table>
-
-      <user-modal ref="userModal" :visible="visible" :loading="confirmLoading" :model="mdl" @cancel="handleCancel"
-        @ok="handleOk" />
-      <step-by-step-modal ref="modal" @ok="handleOk" />
+      <user-modal ref="userModal" @ok="handleOk" />
     </a-card>
   </page-header-wrapper>
 </template>
@@ -138,10 +135,8 @@ export default {
   data() {
     this.columns = columns
     return {
-      // create model
       visible: false,
       confirmLoading: false,
-      mdl: null,
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
@@ -158,27 +153,8 @@ export default {
     }
   },
   filters: {
-    enableFilter(type) {
-      if (type === true) {
-        return '启用'
-      }
-      else {
-        return '禁用'
-      }
-    },
     languageFilter(type) {
       return languageMap[type].text
-    }
-  },
-  created() {
-    
-  },
-  computed: {
-    rowSelection() {
-      return {
-        selectedRowKeys: this.selectedRowKeys,
-        onChange: this.onSelectChange
-      }
     }
   },
   methods: {
@@ -194,17 +170,8 @@ export default {
         }
       })
     },
-    handleAdd() {
-      this.mdl = null
-      this.visible = true
-    },
     handleOk() {
       this.$refs.table.refresh()
-    },
-    handleCancel() {
-      this.visible = false
-      const form = this.$refs.createModal.form
-      form.resetFields() // 清理表单数据（可不做）
     },
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
@@ -212,6 +179,14 @@ export default {
     },
     toggleAdvanced() {
       this.advanced = !this.advanced
+    }
+  },
+  computed: {
+    rowSelection() {
+      return {
+        selectedRowKeys: this.selectedRowKeys,
+        onChange: this.onSelectChange
+      }
     }
   }
 }

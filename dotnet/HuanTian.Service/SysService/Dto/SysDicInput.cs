@@ -44,5 +44,7 @@ namespace HuanTian.Service
     {
         public string Code { get; set; }
         public string Name { get; set; }
+        public int PageSize { get; set; }
+        public int PageNo { get; set; }
     }
 }

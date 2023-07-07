@@ -190,7 +190,6 @@ export default {
         SysDicDetail: this.data,
         masterId: this.info.id
       }
-      debugger
       this.$http.post('/sysDic/Detail', paramas).then(res => {
         if (res.code === 200) {
           this.$emit('ok')

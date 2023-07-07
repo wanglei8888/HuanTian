@@ -1,0 +1,213 @@
+﻿@{
+    var mdSize = 12;
+    var remainder = 2;
+    // 遍历有无下拉框值
+    var dropDownCode = new List<string>();
+    var modelWidth = 1000;
+    if (Model.TableFieldCamelCase.Count() <= 6 )    {        mdSize = 24;        remainder = 1;        modelWidth = 800;    }
+    // 判断是否有启用禁用类型
+    var radioList = new List<string>();
+    foreach (var item in @Model.TableFieldCamelCase)
+    {
+        if (!string.IsNullOrEmpty(item.DropDownCode))
+        {
+            dropDownCode.Add(item.DropDownCode);
+        }
+        if (item.FrontendType == "radio")
+        {
+            radioList.Add(item.DbColumnName);
+        }
+    }
+}
+<template>
+  <a-modal :title="title" :width="1000" :visible="@modelWidth" :confirmLoading="confirmLoading" @@ok="handleOk"
+    @@cancel="handleCancel">
+    <a-spin :spinning="spinningLoading">
+      <a-form-model ref="form" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :rules="rules">
+          @foreach (var item in @Model.TableFieldCamelCase)
+          {
+                    // 1、除数为1,商为 0 列小于等于6条的时候,一行一列   2、 余数为2 商为1  列大于6条的时候,一行二列
+                    @if ((remainder == 1 && (Model.TableFieldCamelCase.IndexOf(item) + 1) % remainder == 0) || (remainder == 2 && (Model.TableFieldCamelCase.IndexOf(item) + 1) % remainder == 1))
+                    {
+        @:<a-row :gutter="gutter">
+                    }
+                    @switch (item.FrontendType)
+                    {
+                        case "datetime":
+            <a-col :md="mdSize" :sm="smSize">
+              <a-form-model-item label="@item.ColumnDescription" prop="@item.DbColumnName" hasFeedback>
+                 <a-date-picker v-model="form.@item.DbColumnName" @@change="onChange" placeholder="" />
+              </a-form-model-item>
+            </a-col> 
+                        break;
+                        case "radio":
+            <a-col :md="mdSize" :sm="smSize">
+              <a-form-model-item label="@item.ColumnDescription" prop="@item.DbColumnName" hasFeedback>
+                 <a-switch id="visible" checkedChildren="启用" v-model="form.@item.DbColumnName" unCheckedChildren="禁用" />
+               </a-form-model-item>
+            </a-col>
+                        break;
+                        case "dropDown":
+                        if (string.IsNullOrEmpty(item.DropDownCode))
+                        {
+                            goto default;   
+                        }
+            <a-col :md="mdSize" :sm="smSize">
+               <a-form-model-item label="@item.ColumnDescription" prop="@item.DbColumnName" hasFeedback>
+                  <a-select v-model="form.@item.DbColumnName">
+                     <a-select-option v-for="(item, index) in @(item.DropDownCode)Data" :key="index" :value="item.value">
+                          {{ item.name }}
+                     </a-select-option>
+                  </a-select>
+               </a-form-model-item>
+            </a-col>
+                        break;
+                        case "numBox":
+            <a-col :md="mdSize" :sm="smSize">
+              <a-form-model-item label="@item.ColumnDescription" prop="@item.DbColumnName" hasFeedback>
+                 <a-input-number v-model="form.@item.DbColumnName" placeholder="" />
+              </a-form-model-item>
+            </a-col>
+                        break;
+                        default:
+            <a-col :md="mdSize" :sm="smSize">
+              <a-form-model-item label="@item.ColumnDescription" prop="@item.DbColumnName" hasFeedback>
+                 <a-input v-model="form.@item.DbColumnName" placeholder="" />
+              </a-form-model-item>
+            </a-col>
+                        break;
+                    }  
+                    @if ((Model.TableFieldCamelCase.IndexOf(item) + 1) % remainder == 0 || (Model.TableFieldCamelCase.IndexOf(item) + 1) == Model.TableFieldCamelCase.Count()){        
+        @:</a-row>
+                    }
+          }         
+      </a-form-model>
+    </a-spin>
+  </a-modal>
+</template>
+
+<script>
+@if (dropDownCode.Any())
+{
+@:import { sysDict } from '@@/api/system'
+}
+export default {
+  data() {
+    return {
+      labelCol: {
+        md: { span: 6 },
+        sm: { span: 4 }
+      },
+      wrapperCol: {
+        md: { span: 14 },
+        sm: { span: 20 }
+      },
+      gutter: 48,
+      mdSize: @(mdSize),
+      smSize: 24,
+  @if (dropDownCode.Any()){
+    foreach (var item in dropDownCode)
+    {
+      @:@(item)Data:[],
+    }
+  }
+      formType: 'add',
+      title: '添加数据',
+      spinningLoading: false,
+      visible: false,
+      confirmLoading: false,
+      rules: {
+        @foreach (var item in Model.TableFieldCamelCase)
+        {
+            if (item.Required)
+            {
+          @:@(item.DbColumnName):[{ required: true,message: '请输入@(item.ColumnDescription)！'}],
+            }
+        }
+      },
+      form: {}
+    }
+  },
+  methods: {
+    // 打开页面初始化
+    detail(value) {
+      this.visible = true
+      this.confirmLoading = false
+      if (this.$refs.form) {
+        this.$refs.form.clearValidate()
+      }
+      @if (dropDownCode.Any())
+      {
+      @:this.dromdownList()
+      }
+      if (value) {
+        this.form = JSON.parse(JSON.stringify(value))
+        this.formType = 'edit'
+        this.title = '编辑数据'
+      }
+      else {
+        this.title = '新建数据'
+        this.formType = 'add'
+        this.form = createForm()
+      }
+    },
+    @if (dropDownCode.Any()){
+    @:dromdownList() {
+    @foreach (var item in dropDownCode)
+    {
+      @:sysDict({ code: '@item' }).then((res) => {
+      @:  if (res.code === 200) {
+      @:    this.@(item)Data = res.result
+      @:  } else {
+      @:   this.$message.warning(res.message)
+      @:  }
+      @:})
+    }
+    @:},
+    }
+    async handleOk() {
+      this.$refs.form.validate(async valid => {
+        if (valid) {
+          this.confirmLoading = true    
+          // 修改数据
+          if (this.formType === 'edit') {
+            await this.$http.put('/@(Model.ClassNameLow)', this.form).then(res => {
+              if (res.code === 200) {
+                this.$message.success('保存成功')
+                this.$emit('ok')
+                this.visible = false
+              }
+            }).finally(err => {
+              this.confirmLoading = false
+            })
+          } else {
+            // 保存数据
+            // 先上传文件
+            await this.$http.post('/@(Model.ClassNameLow)', this.form).then(res => {
+              if (res.code === 200) {
+                this.$message.success('保存成功')
+                this.$emit('ok')
+                this.visible = false
+              }
+            }).finally(err => {
+              this.confirmLoading = false
+            })
+          }
+        }
+      })
+    },
+    handleCancel() {
+      this.close()
+    },
+    close() {
+      this.$emit('close')
+      this.visible = false
+    }
+  }
+}
+function createForm() {
+  return {
+   
+  }
+}
+</script>

@@ -26,6 +26,7 @@ namespace HuanTian.Service
         {
             var allMenu = await _menu
                 .WhereIf(!string.IsNullOrEmpty(input.MenuType), t => t.MenuType == input.MenuType)
+                .WhereIf(input.Id != 0, t => t.Id == input.Id)
                 .ToListAsync();
             var tree = TreeHelper<SysMenuTreeOutput>.DoTreeBuild(allMenu.Adapt<List<SysMenuTreeOutput>>());
             return tree;
@@ -43,6 +44,12 @@ namespace HuanTian.Service
         }
         public async Task<int> Add(SysMenuDO input)
         {
+            // 判断是否存在相同的菜单名称
+            var isExist = await _menu.FirstOrDefaultAsync(t => t.Name == input.Name);
+            if (isExist != null)
+            {
+                throw new Exception($"{input.Name}菜单名称已存在,请修改后再试");
+            }
             var count = await _menu.InitTable(input)
                 .CallEntityMethod(t => t.CreateFunc())
                 .AddAsync();

@@ -12,6 +12,12 @@
         /// <returns></returns>
         Task<IEnumerable<SysMenuDO>> Get(SysMenuTypeInput input);
         /// <summary>
+        /// 新增菜单
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<int> Add(SysMenuDO input);
+        /// <summary>
         /// 获取角色的菜单列表
         /// </summary>
         /// <param name="input"></param>

@@ -25,14 +25,38 @@ public class @(@Model.ClassName)Input : PageInput
     @foreach (var column in Model.TableField){
         @if (@column.QueryParameters == true)
         {
+            switch (column.DataType)
+            {
+                    case "bigint":
+    @:/// <summary>
+    @:/// @column.ColumnDescription
+    @:/// </summary>
+    @:public long @column.DbColumnName { get; set; }
+                        break;
+                    case "int":
+    @:/// <summary>
+    @:/// @column.ColumnDescription
+    @:/// </summary>
+    @:public int @column.DbColumnName { get; set; } 
+                        break;
+                    case "tinyint":
     @:/// <summary>
     @:/// @column.ColumnDescription
     @:/// </summary>
     @:public string @column.DbColumnName { get; set; } 
-             
-            
+                        break;
+                    default:
+    @:/// <summary>
+    @:/// @column.ColumnDescription
+    @:/// </summary>
+    @:public string @column.DbColumnName { get; set; } 
+                        break;
+                }                
         }   
     }
+    public long Id { get; set; }
+    public int PageSize { get; set ; }
+    public int PageNo { get; set; }
 }
 
 /// <summary>

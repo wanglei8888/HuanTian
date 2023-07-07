@@ -32,11 +32,13 @@ namespace HuanTian.Service
     /// </summary>
     public class SysMenuInput : PageInput
     {
-
+        public int PageSize { get; set; }
+        public int PageNo { get; set; }
     }
     public class SysMenuTypeInput
     {
         public string MenuType { get; set; }
+        public long Id { get; set; }
     }
     public class SysRoleMenuTypeInput
     {

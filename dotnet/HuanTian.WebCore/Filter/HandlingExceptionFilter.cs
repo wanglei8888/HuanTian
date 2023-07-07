@@ -55,7 +55,7 @@ namespace HuanTian.WebCore
                         context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                         break;
                 }
-                context.Result = RequestHelper.ErroRequestEntity(context.Exception.Message, HttpStatusCode.InternalServerError);
+                context.Result = RequestHelper.RequestInfo(context.Exception.Message, HttpStatusCode.InternalServerError);
             }
             // 设置为true，表示异常已经被处理了
             context.ExceptionHandled = true;

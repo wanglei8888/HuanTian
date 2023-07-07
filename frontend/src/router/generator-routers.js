@@ -57,13 +57,15 @@ const constantRouterComponents = {
   TableInnerEditList: () => import('@/views/other/TableInnerEditList'),
 
   // system
-  TreeList: () => import('@/views/System/TreeList'),
-  RoleList: () => import('@/views/System/RoleList'),
-  PermissionList: () => import('@/views/System/PermissionList'),
-  MenuList: () => import('@/views/System/MenuList'),
+  TreeList: () => import('@/views/system/TreeList'),
+  RoleList: () => import('@/views/system/RoleList'),
+  PermissionList: () => import('@/views/system/PermissionList'),
+  MenuList: () => import('@/views/system/MenuList'),
   // userinfo
-  UserList: () => import('@/views/System/UserList'),
-  DicList : () => import('@/views/System/DicList'),
+  UserList: () => import('@/views/system/UserList'),
+  DicList : () => import('@/views/system/DicList'),
+  CodeGen : () => import('@/views/system/CodeGen'),
+  SysDept : () => import('@/views/sysDept/SysDeptList'),
   // 'TestWork': () => import(/* webpackChunkName: "TestWork" */ '@/views/dashboard/TestWork')
 }
 

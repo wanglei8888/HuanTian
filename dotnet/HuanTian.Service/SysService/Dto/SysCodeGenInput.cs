@@ -42,20 +42,53 @@ namespace HuanTian.Service
         /// <summary>
         /// 表格名字
         /// </summary>
-        public string TableName { get; set; }
-        /// <summary>
-        /// 项目名称
-        /// </summary>
-        public string ApplicationName { get; set; } = "HuanTian.Service";
+        public long Id { get; set; }
         /// <summary>
         /// 是否强制执行
         /// </summary>
         public bool Enforcement { get; set; } = false;
     }
-
+    public class SysCodeGenFileInput
+    {
+        public string TableName { get; set; }
+        public string ApplicationName { get; set; }
+    }
+    public class SysCodeGenTableInput : PageInput
+    {
+        /// <summary>
+        /// 表格名字
+        /// </summary>
+        public string TableName { get; set; }
+        /// <summary>
+        /// 名称
+        /// </summary>
+        public string Name { get; set; }
+        public int PageSize { get; set; }
+        public int PageNo { get; set; }
+    }
+    public class SysCodeGenGetInput
+    {
+        /// <summary>
+        /// 表格名字
+        /// </summary>
+        public string TableName { get; set; }
+        /// <summary>
+        /// 名称
+        /// </summary>
+        public string Name { get; set; }
+        public long MasterId { get; set; }
+    }
+    public class SysCodeGenFormInput:SysCodeGenDO
+    {
+        
+    }
+    public class SysCodeGenDetailFormInput
+    {
+        public List<SysCodeGenDetailDO> Detail { get; set; }
+    }
     public class SysCodeGenTemplateInfo
     {
-        public SysCodeGenTemplateInfo(string templatePath,string filePath)
+        public SysCodeGenTemplateInfo(string templatePath, string filePath)
         {
             TemplatePath = templatePath;
             FilePath = filePath;
@@ -69,11 +102,17 @@ namespace HuanTian.Service
         public string ClassNameLow { get; set; }
         public string EntityName { get; set; }
         public string EntityDescribe { get; set; }
-        /// <summary>
-        /// 是否包含修改信息
-        /// </summary>
-        public bool IsContailUpdate { get; set; }
         public string NameSpace { get; set; }
-        public List<SysCodeGenDO> TableField { get; set; }
+        public bool IsContailUpdate { get; set; }
+        /// <summary>
+        /// 后端命名为帕斯卡
+        /// </summary>
+        public List<SysCodeGenDetailDO> TableField { get; set; }
+        /// <summary>
+        /// 前端命名为驼峰
+        /// </summary>
+        public List<SysCodeGenDetailDO> TableFieldCamelCase { get; set; }
+        public int QueryLineCount { get; set; }
+        public int TableFieldCount { get; set; }
     }
 }

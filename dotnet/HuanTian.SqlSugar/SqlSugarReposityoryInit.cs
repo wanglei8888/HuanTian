@@ -82,7 +82,10 @@ namespace HuanTian.SqlSugar
             var action = method.Compile();
             foreach (var item in _entityList)
             {
-                action.Invoke(item);
+                if (item != null )
+                {
+                    action.Invoke(item);
+                }
             }
             //foreach (var item in _entityList)
             //{

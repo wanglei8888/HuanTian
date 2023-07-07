@@ -33,6 +33,8 @@ public class SysRoleInput : PageInput
     /// </summary>
     public string RoleName { get; set; }
     public string Enable { get; set; }
+    public int PageSize { get; set; }
+    public int PageNo { get; set; }
 }
 
 /// <summary>

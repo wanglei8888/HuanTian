@@ -38,17 +38,17 @@ namespace HuanTian.Infrastructure
     public class RequestHelper
     {
         /// <summary>
-        /// 失败请求返回信息 返回实体
+        /// 请求返回信息 返回实体
         /// </summary>
-        /// <param name="erroMessage">错误信息</param>
+        /// <param name="erroMessage">信息</param>
         /// <param name="code">状态码</param>
         /// <returns>Entity Value</returns>
-        public static ObjectResult ErroRequestEntity(string erroMessage, HttpStatusCode code, dynamic result = default)
+        public static ObjectResult RequestInfo(string message, HttpStatusCode code, dynamic result = default)
         {
             return new ObjectResult( new APIResult
             {
                 Code = code,
-                Message = erroMessage,
+                Message = message,
                 Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                 Result = (result as ObjectResult)?.Value
             });

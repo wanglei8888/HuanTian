@@ -26,6 +26,60 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
+                    b.Property<long?>("CreateBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("create_by")
+                        .HasComment("创建人");
+
+                    b.Property<DateTime?>("CreateOn")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("create_on")
+                        .HasComment("创建时间");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("deleted")
+                        .HasComment("软删除");
+
+                    b.Property<int>("GenerationWay")
+                        .HasColumnType("int")
+                        .HasColumnName("generation_way")
+                        .HasComment("生成方式");
+
+                    b.Property<long>("MenuId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("menu_id")
+                        .HasComment("所属菜单");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)")
+                        .HasColumnName("name")
+                        .HasComment("名称");
+
+                    b.Property<string>("TableName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("table_name")
+                        .HasComment("表格名字");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("sys_code_gen", t =>
+                        {
+                            t.HasComment("代码生成数据表");
+                        });
+                });
+
+            modelBuilder.Entity("HuanTian.Entities.SysCodeGenDetailDO", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
                     b.Property<string>("ColumnDescription")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -62,29 +116,51 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnName("deleted")
                         .HasComment("软删除");
 
-                    b.Property<string>("DropDownList")
+                    b.Property<string>("DropDownCode")
                         .HasMaxLength(30)
                         .HasColumnType("varchar(30)")
-                        .HasColumnName("drop_down_list")
+                        .HasColumnName("drop_down_code")
                         .HasComment("下拉框绑定字典值 如果没有就是不是下拉框");
+
+                    b.Property<string>("FrontendType")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)")
+                        .HasColumnName("frontend_type")
+                        .HasComment("前端显示类型");
+
+                    b.Property<long>("MasterId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("master_id")
+                        .HasComment("主表ID");
+
+                    b.Property<int>("Order")
+                        .HasMaxLength(30)
+                        .HasColumnType("int")
+                        .HasColumnName("order")
+                        .HasComment("排序");
 
                     b.Property<bool>("QueryParameters")
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("query_parameters")
                         .HasComment("是否是查询参数");
 
-                    b.Property<string>("TableName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("table_name")
-                        .HasComment("表格名字");
+                    b.Property<string>("QueryType")
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)")
+                        .HasColumnName("query_type")
+                        .HasComment("查询方式");
+
+                    b.Property<bool>("Required")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("required")
+                        .HasComment("是否必填");
 
                     b.HasKey("Id");
 
-                    b.ToTable("sys_code_gen", t =>
+                    b.ToTable("sys_code_gen_detail", t =>
                         {
-                            t.HasComment("代码生成数据表格");
+                            t.HasComment("代码生成数据详情表");
                         });
                 });
 
