@@ -15,6 +15,8 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+using NPOI.Util;
+
 namespace HuanTian.Service;
 
 /// <summary>
@@ -37,6 +39,31 @@ public class SysDeptService : ISysDeptService, IDynamicApiController, IScoped
             .WhereIf(!string.IsNullOrEmpty(input.Describe), t => t.Describe == input.Describe)
             .WhereIf(!string.IsNullOrEmpty(input.Enable), t => t.Enable == Convert.ToBoolean(input.Enable))
             .ToPageListAsync(input.PageNo,input.PageSize);
+       
+        // 查询所属的父级ID
+        var data = list.Data.Adapt<List<SysDeptOutput>>();
+        var parentIds = data.Select(t => t.ParentId).Distinct().ToArray();
+
+        var parentList = await _sysDept.Where(t => parentIds.Contains(t.Id))
+            .ToListAsync();
+        var result = from child in data
+                     join parent in parentList on child.ParentId equals parent.Id into parentGroup
+                     from parent in parentGroup.DefaultIfEmpty()
+                     select new SysDeptOutput
+                     {
+                         Id = child.Id,
+                         Name = child.Name,
+                         Describe = child.Describe,
+                         Enable = child.Enable,
+                         ParentId = child.ParentId,
+                         ParentName = parent?.Name
+                     };
+        data.ForEach(t =>
+        {
+            t.ParentName = parentList.ToList().FirstOrDefault(p => p.Id == t.ParentId)?.Name;
+        });
+
+        list.Data = data;
         return list;
     }
     public async Task<int> Add(SysDeptFormInput input)
@@ -62,7 +89,7 @@ public class SysDeptService : ISysDeptService, IDynamicApiController, IScoped
     public async Task<IEnumerable<SysDeptDO>> Get([FromQuery] SysDeptInput input)
     {
         var list  = await _sysDept
-              .WhereIf(input.Id != 0, t => t.Id == input.Id)
+            .WhereIf(input.Id != 0, t => t.Id == input.Id)
             .WhereIf(input.ParentId != 0, t => t.ParentId == input.ParentId)
             .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name == input.Name)
             .WhereIf(!string.IsNullOrEmpty(input.Describe), t => t.Describe == input.Describe)

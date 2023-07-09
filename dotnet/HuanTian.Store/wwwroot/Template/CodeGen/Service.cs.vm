@@ -87,7 +87,7 @@ public class @(@Model.ClassName)Service : I@(@Model.ClassName)Service, IDynamicA
     public async Task<IEnumerable<@(@Model.EntityName)>> Get([FromQuery] @(@Model.ClassName)Input input)
     {
         var list  = await _@(Model.ClassNameLow)
-              .WhereIf(input.Id != 0, t => t.Id == input.Id)
+            .WhereIf(input.Id != 0, t => t.Id == input.Id)
         @foreach (var column in Model.TableField)
 		{
 			@if (@column.QueryParameters == true)

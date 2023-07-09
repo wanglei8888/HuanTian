@@ -121,7 +121,7 @@
       </div>
 
       <s-table ref="table" size="default" rowKey="id" :columns="columns" :data="loadData" :alert="true"
-        :rowSelection="rowSelection" showPagination="true">
+        :rowSelection="rowSelection">
         @foreach (var item in radioList)
         {
         <span slot="@(item)Radio" slot-scope="text">

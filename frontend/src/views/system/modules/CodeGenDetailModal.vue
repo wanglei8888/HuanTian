@@ -26,15 +26,15 @@
         <a-input-number v-model="record.order" />
       </template>
       <template slot="frontendType" slot-scope="text, record, indexs">
-        <a-select style="width: 120px" v-model="record.frontendType" :disabled="false">
+        <a-select style="width: 180px" v-model="record.frontendType" :disabled="false" @change="(e) => frontendTypeChange(record, e)">
           <a-select-option v-for="(item, index) in frontendTypeData" :key="index" :value="item.value">{{
             item.name
           }}</a-select-option>
         </a-select>
       </template>
       <template slot="dropDownCode" slot-scope="text, record">
-        <a-select show-search :filter-option="filterOption" style="width: 120px" v-model="record.dropDownCode"
-          :disabled="record.frontendType != 'dropDown'" @change="(e) => dropDownCodeChange(index, e)">
+        <a-select show-search :filter-option="filterOption" style="width: 180px" v-model="record.dropDownCode"
+          :disabled="record.frontendType != 'dropDown'" >
           <a-select-option v-for="(item, index) in dropDownCodeData" :key="index" :value="item.code">{{
             item.name
           }}</a-select-option>
@@ -116,13 +116,9 @@ export default {
       })
 
     },
-    dropDownCodeChange(index, value) {
-      this.$set(this.loadData[index], 'dropDownCode', value)
+    frontendTypeChange(record, value) {
+      record.dropDownCode = ''
     },
-    frontendTypeChange(index, value) {
-      this.$set(this.loadData[index], 'frontendType', value)
-    },
-
     /**
      * 提交表单
      */

@@ -94,7 +94,7 @@
           </a-col>
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item label="是否可见">
-              <a-switch id="visible" checkedChildren="是" v-model="form.show" unCheckedChildren="否" />
+              <a-switch checkedChildren="是" v-model="form.show" unCheckedChildren="否" />
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -110,7 +110,7 @@
           </a-col>
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item label="是否缓存">
-              <a-switch id="visible" checkedChildren="是" v-model="form.keepAlive" unCheckedChildren="否" />
+              <a-switch  checkedChildren="是" v-model="form.keepAlive" unCheckedChildren="否" />
             </a-form-model-item>
           </a-col>
         </a-row>

@@ -258,7 +258,7 @@ namespace HuanTian.Service
             foreach (var item in templatePathList)
             {
                 var templateString = File.ReadAllText(item.TemplatePath);
-                var templateResult = Engine.Razor.RunCompile(templateString, Guid.NewGuid().ToString(), typeof(SysCodeGenTemplateInput), info);
+                var templateResult = Engine.Razor.RunCompile(templateString, item.TemplatePath, typeof(SysCodeGenTemplateInput), info);
 
                 // 生成到项目
                 if (masterInfo.GenerationWay == GenerationWayEnum.GenToProj)

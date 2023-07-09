@@ -69,7 +69,7 @@
           </a-col>
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item label="是否启用">
-              <a-switch id="visible" checkedChildren="是" v-model="form.enable" unCheckedChildren="否" />
+              <a-switch checkedChildren="是" v-model="form.enable" unCheckedChildren="否" />
             </a-form-model-item>
           </a-col>
         </a-row>

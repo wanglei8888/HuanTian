@@ -22,6 +22,6 @@ namespace HuanTian.Service;
 /// </summary>
 public class SysDeptOutput : SysDeptDO
 {
-        
+    public string ParentName { get; set; }
 }
 

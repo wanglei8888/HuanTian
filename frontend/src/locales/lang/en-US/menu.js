@@ -29,6 +29,7 @@ export default {
     'menu.sysManage.userList': 'userList',
     'menu.sysManage.codeGen':'codeGen',
     'menu.other.IconSelector': 'IconSelector',
+    'menu.sysManage.sysDept' : 'sysDept',
     // 新加
     'menu.profile': 'Profile',
     'menu.profile.basic': 'Basic Profile',

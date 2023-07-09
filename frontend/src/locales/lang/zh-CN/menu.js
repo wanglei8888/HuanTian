@@ -29,6 +29,7 @@ export default {
     'menu.sysManage.dicList':'字典列表',
     'menu.sysManage.codeGen':'代码生成',
     'menu.other.IconSelector': '图标列表',
+    'menu.sysManage.sysDept' : '部门列表',
     // 新加
     'menu.profile': '详情页',
     'menu.profile.basic': '基础详情页',

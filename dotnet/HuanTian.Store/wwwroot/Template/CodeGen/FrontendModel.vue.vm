@@ -20,7 +20,7 @@
     }
 }
 <template>
-  <a-modal :title="title" :width="1000" :visible="@modelWidth" :confirmLoading="confirmLoading" @@ok="handleOk"
+  <a-modal :title="title" :width="@modelWidth" :visible="visible" :confirmLoading="confirmLoading" @@ok="handleOk"
     @@cancel="handleCancel">
     <a-spin :spinning="spinningLoading">
       <a-form-model ref="form" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :rules="rules">
@@ -42,8 +42,8 @@
                         break;
                         case "radio":
             <a-col :md="mdSize" :sm="smSize">
-              <a-form-model-item label="@item.ColumnDescription" prop="@item.DbColumnName" hasFeedback>
-                 <a-switch id="visible" checkedChildren="启用" v-model="form.@item.DbColumnName" unCheckedChildren="禁用" />
+              <a-form-model-item label="@item.ColumnDescription" prop="@item.DbColumnName">
+                 <a-switch checkedChildren="启用" v-model="form.@item.DbColumnName" unCheckedChildren="禁用" />
                </a-form-model-item>
             </a-col>
                         break;
