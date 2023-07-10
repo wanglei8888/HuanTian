@@ -193,14 +193,4 @@ const columns = [
   }
 ]
 
-const statusMap = {
-  0: {
-    status: '0',
-    text: '启用'
-  },
-  1: {
-    status: '1',
-    text: '禁用'
-  }
-}
 </script>

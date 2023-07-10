@@ -20,6 +20,7 @@ export default {
   fixedHeader: false, // sticky header
   fixSiderbar: false, // sticky siderbar
   colorWeak: false,
+  multiTab: true,
   menu: {
     locale: true
   },

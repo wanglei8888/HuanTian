@@ -42,7 +42,7 @@ namespace HuanTian.WebCore
 
             basePath = Directory.GetCurrentDirectory().Replace("\\", "/") + "/Logs/";
 
-            if (Directory.Exists(basePath) == false)
+            if (Directory.Exists(basePath +"/Info/") == false)
             {
                 Directory.CreateDirectory(basePath + "/Info/");
                 Directory.CreateDirectory(basePath + "/Error/");

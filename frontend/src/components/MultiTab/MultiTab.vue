@@ -1,6 +1,6 @@
 <script>
 import events from './events'
-
+import { i18nRender } from '@/locales'
 export default {
   name: 'MultiTab',
   data () {
@@ -112,10 +112,9 @@ export default {
     // render
     renderTabPane (title, keyPath) {
       const menu = this.renderTabPaneMenu(keyPath)
-
       return (
         <a-dropdown overlay={menu} trigger={['contextmenu']}>
-          <span style={{ userSelect: 'none' }}>{ title }</span>
+          <span style={{ userSelect: 'none' }}>{ i18nRender(title) }</span>
         </a-dropdown>
       )
     }
@@ -137,7 +136,7 @@ export default {
     const panes = pages.map(page => {
       return (
         <a-tab-pane
-          style={{ height: 0 }}
+          style={{ height: 50 }}
           tab={this.renderTabPane(page.meta.customTitle || page.meta.title, page.fullPath)}
           key={page.fullPath} closable={pages.length > 1}
         >
@@ -145,7 +144,7 @@ export default {
     })
 
     return (
-      <div class="ant-pro-multi-tab">
+      <div class="ant-pro-multi-tab2">
         <div class="ant-pro-multi-tab-wrapper">
           <a-tabs
             hideAdd
@@ -161,3 +160,9 @@ export default {
   }
 }
 </script>
+<style lang="less" scoped>
+.ant-pro-multi-tab2 {
+  margin: -40px -40px 9px;
+  background: #fff;
+}
+</style>

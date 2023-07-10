@@ -9,7 +9,7 @@ import { i18nRender } from '@/locales'
 const request = axios.create({
   // API 请求的默认前缀
   baseURL: process.env.VUE_APP_API_BASE_URL,
-  timeout: 10000 // 请求超时时间
+  timeout: 8000 // 请求超时时间
 })
 
 // 异常拦截处理器
@@ -60,7 +60,7 @@ const errorHandler = (error) => {
       // 普通异常报错信息
       notification.error({
         message: i18nRender('Error message'),
-        description: error.response.data.message
+        description: error.response.data.message ? error.response.data.message : i18nRender('The server is abnormal. Please try again later!')
       })
     }
   }

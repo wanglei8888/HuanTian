@@ -6,7 +6,7 @@ import { message } from 'ant-design-vue'
 
 export function downLoadGet({ url, params, callback }) {
   // 卧槽了，http.get设置响应头会被清空，只能这么写
-  message.loading({ content: '正在下载，请稍候...', key: url, duration: 10 })
+  message.loading({ content: '正在下载，请稍候...', key: url, duration: 8 })
 
   http({
     url: url,
@@ -42,7 +42,7 @@ export function downLoadGet({ url, params, callback }) {
 }
 export function downLoadPost({ url, params, callback }) {
   // 卧槽了，http.get设置响应头会被清空，只能这么写
-  message.loading({ content: '正在下载，请稍候...', key: url, duration: 5 });
+  message.loading({ content: '正在下载，请稍候...', key: url, duration: 8 });
   http({
     url: url,
     data: params || {},

@@ -28,6 +28,12 @@
     <!-- 1.0.0+ 版本 pro-layout 提供 API,
           增加 Header 左侧内容区自定义
     -->
+    <a-layout-content :style="{ height: '100%', margin: '16px 16px 0', paddingTop: fixedHeader ? '60px' : '0', paddingBottom:'16px' }">
+        <multi-tab v-if="multiTab"></multi-tab>
+        <transition name="page-transition">
+          <route-view />
+        </transition>
+      </a-layout-content>
     <template v-slot:headerContentRender>
       <div>
         <a-tooltip title="刷新页面">
@@ -58,6 +64,7 @@ import { i18nRender } from '@/locales'
 import { mapState } from 'vuex'
 import { CONTENT_WIDTH_TYPE, SIDEBAR_TYPE, TOGGLE_MOBILE_TYPE } from '@/store/mutation-types'
 
+import MultiTab from '@/components/MultiTab'
 import defaultSettings from '@/config/defaultSettings'
 import RightContent from '@/components/GlobalHeader/RightContent'
 import GlobalFooter from '@/components/GlobalFooter'
@@ -69,7 +76,8 @@ export default {
     SettingDrawer,
     RightContent,
     GlobalFooter,
-    Ads
+    Ads,
+    MultiTab
   },
   data () {
     return {
@@ -77,7 +85,8 @@ export default {
       isProPreviewSite: process.env.VUE_APP_PREVIEW === 'true' && process.env.NODE_ENV !== 'development',
       // end
       isDev: process.env.NODE_ENV === 'development' || process.env.VUE_APP_PREVIEW === 'true',
-
+      multiTab: defaultSettings.multiTab,
+      fixedHeader: defaultSettings.fixedHeader, //
       // base
       menus: [],
       // 侧栏收起状态

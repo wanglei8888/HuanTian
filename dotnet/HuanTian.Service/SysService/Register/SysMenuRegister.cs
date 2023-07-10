@@ -38,6 +38,7 @@ namespace HuanTian.Service
                 .Map(dest => dest.Meta.Icon, src => src.Icon)
                 .Map(dest => dest.Meta.Title, src => src.Title)
                 .Map(dest => dest.Meta.Show, src => src.Show)
+                .Map(dest => dest.Meta.KeepAlive, src => src.KeepAlive)
                 .Map(dest => dest.Meta.HideChildren, src => src.HideChildren);
         }
     }

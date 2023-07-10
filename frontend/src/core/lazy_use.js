@@ -1,5 +1,5 @@
 import Vue from 'vue'
-
+import VueRouter from 'vue-router';
 // base library
 import {
   ConfigProvider,
@@ -48,7 +48,7 @@ import {
   message,
   notification,
   treeSelect,
-  Tree
+  Tree,
 } from 'ant-design-vue'
 import Viser from 'viser-vue'
 
@@ -60,6 +60,7 @@ import PageLoading from '@/components/PageLoading'
 import PermissionHelper from '@/core/permission/permission'
 import './directives/action'
 
+Vue.use(VueRouter)
 Vue.use(ConfigProvider)
 Vue.use(Layout)
 Vue.use(Input)

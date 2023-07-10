@@ -95,6 +95,11 @@ namespace HuanTian.Service
         /// 隐藏子类
         /// </summary>
         public bool HideChildren { get; set; }
+
+        /// <summary>
+        /// 是否缓存
+        /// </summary>
+        public bool KeepAlive { get; set; }
     }
 
     public class SysMenuTreeOutput : SysMenuDO, ITreeBuild

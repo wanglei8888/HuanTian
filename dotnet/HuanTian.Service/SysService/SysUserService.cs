@@ -94,7 +94,7 @@ namespace HuanTian.Service
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<dynamic> Page([FromQuery] UserInput input)
+        public async Task<PageData> Page([FromQuery] UserInput input)
         {
             var pageData = await _userInfo
                 .WhereIf(!string.IsNullOrEmpty(input.Name),t => t.Name.Contains(input.Name))
@@ -102,6 +102,17 @@ namespace HuanTian.Service
                 .WhereIf(!string.IsNullOrEmpty(input.Enable), t => t.Enable == input.Enable.ObjToBool())
                 .ToPageListAsync(input.PageNo,input.PageSize);
             return pageData;
+        }
+        /// <summary>
+        /// 获取当前登陆用户信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<dynamic> UserInfo()
+        { 
+            var info = await _userInfo
+                .FirstOrDefaultAsync(t => t.Id == App.GetUserId());
+            return info;
         }
     }
 }
