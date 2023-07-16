@@ -47,6 +47,10 @@ namespace HuanTian.Service
             if (!string.IsNullOrEmpty(input.Code))
             {
                 var dicMaster = await _sysDic.FirstOrDefaultAsync(t => t.Code == input.Code);
+                if (dicMaster == null)
+                {
+                    throw new FriendlyException($"字典不存在{input.Code}的数据");
+                }
                 masterId = dicMaster.Id;
             }
             var list = await _sysDicDetail

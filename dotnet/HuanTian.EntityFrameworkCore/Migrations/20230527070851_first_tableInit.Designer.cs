@@ -22,7 +22,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                 .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("HuanTian.Entities.SysCodeGenDetailDO", b =>
+            modelBuilder.Entity("HuanTian.Infrastructure.SysCodeGenDetailDO", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -88,7 +88,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                     b.ToTable("sys_code_gen");
                 });
 
-            modelBuilder.Entity("HuanTian.Entities.SysDicDetailDO", b =>
+            modelBuilder.Entity("HuanTian.Infrastructure.SysDicDetailDO", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -139,7 +139,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         });
                 });
 
-            modelBuilder.Entity("HuanTian.Entities.SysMenuDO", b =>
+            modelBuilder.Entity("HuanTian.Infrastructure.SysMenuDO", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -236,7 +236,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         });
                 });
 
-            modelBuilder.Entity("HuanTian.Entities.SysMenuRoleDO", b =>
+            modelBuilder.Entity("HuanTian.Infrastructure.SysMenuRoleDO", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -274,7 +274,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         });
                 });
 
-            modelBuilder.Entity("HuanTian.Entities.SysRoleDO", b =>
+            modelBuilder.Entity("HuanTian.Infrastructure.SysRoleDO", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -323,7 +323,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         });
                 });
 
-            modelBuilder.Entity("HuanTian.Entities.SysUserDO", b =>
+            modelBuilder.Entity("HuanTian.Infrastructure.SysUserDO", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -422,7 +422,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         });
                 });
 
-            modelBuilder.Entity("HuanTian.Entities.SysUserRoleDO", b =>
+            modelBuilder.Entity("HuanTian.Infrastructure.SysUserRoleDO", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()

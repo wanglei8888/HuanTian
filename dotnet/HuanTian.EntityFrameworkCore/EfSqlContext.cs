@@ -1,4 +1,4 @@
-﻿using HuanTian.Entities;
+﻿using HuanTian.Infrastructure;
 using HuanTian.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +15,6 @@ namespace HuanTian.EntityFrameworkCore
         public DbSet<SysDicDetailDO> SysDictionaryDetailDO { get; set; }
         public DbSet<SysCodeGenDO> SysCodeGenDO { get; set; }
         public DbSet<SysCodeGenDetailDO> SysCodeGenDetailDO { get; set; }
-        public DbSet<SysMenuRoleDO> SysMenuRoleDO { get; set; }
         public DbSet<SysDeptDO> SysDeptDO { get; set; }
         public DbSet<SysPermissionsDO> SysPermissionsDO { get; set; }
         public DbSet<SysRolePermissionsDO> SysRolePermissionsDO { get; set; }

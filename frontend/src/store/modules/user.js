@@ -36,7 +36,7 @@ const user = {
 
   actions: {
     // 登录
-    Login ({ commit }, userInfo) {
+    Login({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
           const result = response.result
@@ -50,24 +50,23 @@ const user = {
     },
 
     // 获取用户信息
-    GetInfo ({ commit }) {
+    GetInfo({ commit }) {
       return new Promise((resolve, reject) => {
         // 请求后端获取用户信息 /api/user/info
         getInfo().then(response => {
           const { result } = response
-          if (result.role && result.role.permissions.length > 0) {
+          if (result.role) {
             const role = { ...result.role }
-            role.permissions = result.role.permissions.map(permission => {
+            role.permissions = result.role.map(permission => {
               const per = {
                 ...permission,
                 actionList: (permission.actionEntitySet || {}).map(item => item.action)
-               }
+              }
               return per
             })
-            role.permissionList = role.permissions.map(permission => { return permission.permissionId })
+            role.permissionList = result.role.map(permission => { return permission.menuId })
             // 覆盖响应体的 role, 供下游使用
             result.role = role
-
             commit('SET_ROLES', role)
             commit('SET_INFO', result)
             commit('SET_NAME', { name: result.name, welcome: welcome() })
@@ -84,7 +83,7 @@ const user = {
     },
 
     // 登出
-    Logout ({ commit, state }) {
+    Logout({ commit, state }) {
       return new Promise((resolve) => {
         logout(state.token).then(() => {
           commit('SET_TOKEN', '')
@@ -95,6 +94,37 @@ const user = {
           console.log('logout fail:', err)
           // resolve()
         }).finally(() => {
+        })
+      })
+    },
+    // 切换应用菜单
+    MenuChange({ commit }, application) {
+      return new Promise((resolve, reject) => {
+        const appCode = application.code
+        // 缓存获取所有应用
+        const allAppMenu = Vue.ls.get(ALL_APPS_MENU)
+        // 切换应用
+        let appMenu
+        allAppMenu.forEach(item => {
+          if (item.code === appCode) {
+            appMenu = item
+            item.active = true
+          } else {
+            item.active = false
+          }
+        })
+        // 如果找不到
+        if (!appMenu) {
+          reject(new Error(`找不到应用: ${appCode}`))
+          return
+        }
+        // 找到对应的应用，设置新的缓存
+        Vue.ls.set(ALL_APPS_MENU, allAppMenu)
+        resolve(appMenu)
+        // 切换路由表
+        const antDesignmenus = appMenu.menu
+        store.dispatch('GenerateRoutes', { antDesignmenus }).then(() => {
+          router.addRoutes(store.getters.addRouters)
         })
       })
     }

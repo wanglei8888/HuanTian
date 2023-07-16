@@ -31,15 +31,11 @@
     <a-layout-content :style="{ height: '100%', margin: '16px 16px 0', paddingTop: fixedHeader ? '60px' : '0', paddingBottom:'16px' }">
         <multi-tab v-if="multiTab"></multi-tab>
         <transition name="page-transition">
-          <route-view />
+          <!-- <route-view /> -->
         </transition>
       </a-layout-content>
     <template v-slot:headerContentRender>
-      <div>
-        <a-tooltip title="刷新页面">
-          <a-icon type="reload" style="font-size: 18px;cursor: pointer;" @click="() => { $message.info('只是一个DEMO') }" />
-        </a-tooltip>
-      </div>
+      <hearder-switch-menu></hearder-switch-menu>
     </template>
 
     <setting-drawer v-if="isDev" :settings="settings" @change="handleSettingChange">
@@ -69,6 +65,7 @@ import defaultSettings from '@/config/defaultSettings'
 import RightContent from '@/components/GlobalHeader/RightContent'
 import GlobalFooter from '@/components/GlobalFooter'
 import Ads from '@/components/Other/CarbonAds'
+import HearderSwitchMenu from '@/components/GlobalHeader/HearderSwitchMenu'
 
 export default {
   name: 'BasicLayout',
@@ -77,7 +74,8 @@ export default {
     RightContent,
     GlobalFooter,
     Ads,
-    MultiTab
+    MultiTab,
+    HearderSwitchMenu
   },
   data () {
     return {

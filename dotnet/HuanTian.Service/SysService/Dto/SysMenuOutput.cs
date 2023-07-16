@@ -38,7 +38,7 @@ namespace HuanTian.Service
         /// <summary>
         /// 菜单ID
         /// </summary>
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// 菜单名称
@@ -48,7 +48,7 @@ namespace HuanTian.Service
         /// <summary>
         /// 父菜单ID
         /// </summary>
-        public int ParentId { get; set; }
+        public long ParentId { get; set; }
 
         /// <summary>
         /// 菜单元信息

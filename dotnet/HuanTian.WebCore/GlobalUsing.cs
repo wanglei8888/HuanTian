@@ -24,7 +24,7 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-global using HuanTian.Entities;
+global using HuanTian.Infrastructure;
 global using Microsoft.AspNetCore.Hosting;
 global using HuanTian.Infrastructure;
 global using Microsoft.AspNetCore.Http;

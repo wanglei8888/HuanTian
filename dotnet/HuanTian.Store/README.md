@@ -43,9 +43,9 @@
 
 五：项目关于Swagger备注的实现
 
-    1、Swagger备注默认是加载HuanTian.Entities、HuanTian.Service两个项目的xml文件，如果需要添加的话，
+    1、Swagger备注默认是加载HuanTian.Infrastructure、HuanTian.Service两个项目的xml文件，如果需要添加的话，
         (1)需要在HuanTian.Store引用该项目 
-        (2)需要修改在项目文件添加 <GenerateDocumentationFile>true</GenerateDocumentationFile> <DocumentationFile>项目名称.xml</DocumentationFile> 这两行代码，可以参考HuanTian.Entities的实现方式
+        (2)需要修改在项目文件添加 <GenerateDocumentationFile>true</GenerateDocumentationFile> <DocumentationFile>项目名称.xml</DocumentationFile> 这两行代码，可以参考HuanTian.Infrastructure的实现方式
     2、为了更方便面向接口编程,如果在接口跟接口实现类中,只有接口中有备注那么接口中的备注就会替换到实现类中,因为Swagger默认只会读取实现类生成的controle的备注，
        **注意**：但是需要谨遵命名规范  IService 和 Service 两个类名的接口实现类才会被替换(你也可以进行修改,在HuanTian.WebCore-SwaggerExtensions.cs),如果不是这两个命名规范的话,那么就需要在接口实现类中添加备注了。
     3、可以对 Controle 进行分组、ApiDescriptionSettingsAttribute["",order=10]特性。 对分组的Swagger配置则在 HuanTian.Store-appsettings.json 中

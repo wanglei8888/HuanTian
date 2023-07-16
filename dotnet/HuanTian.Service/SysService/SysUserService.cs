@@ -24,8 +24,10 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using SqlSugar.Extensions;
+using System.Linq;
 
 namespace HuanTian.Service
 {
@@ -36,28 +38,33 @@ namespace HuanTian.Service
     {
         private readonly ILogger<SysUserService> _logger;
         private readonly IRepository<SysUserDO> _userInfo;
+        private readonly ISysRoleService _sysRoleService;
 
         public SysUserService(
             ILogger<SysUserService> logger,
-            IRepository<SysUserDO> userInfo)
+            IRepository<SysUserDO> userInfo,
+            ISysRoleService sysRoleService)
         {
             _logger = logger;
             _userInfo = userInfo;
+            _sysRoleService = sysRoleService;
         }
         /// <summary>
         /// 获取用户信息跟用户权限信息
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public dynamic Info()
+        public async Task<dynamic> Info()
         {
-            var user = App.GetUserId().ToString();
-            // 解密
-            user = EncryptionHelper.Decrypt(user, CommonConst.UserToken);
-
-            var jsonString = File.ReadAllText(Path.Combine(App.WebHostEnvironment.WebRootPath, "UserInfo.json"));
-            var userInfo = JsonConvert.DeserializeObject<User_Test>(jsonString);
-            
+            var userId = App.GetUserId();
+            // 获取用户信息
+            var userInfo = (await _userInfo.FirstOrDefaultAsync(t => t.Id == userId)).Adapt<SysUserOutput>();
+            var roleList = await _sysRoleService.UserGetRoleButton(userId);
+            // 剔除多个角色重复的权限
+            var permissionList = roleList
+                .SelectMany(roleItem => roleItem.Permissions)
+                .DistinctBy(t => t.MenuId);
+            userInfo.Role = permissionList;
             return userInfo;
         }
         public async Task<int> Add(SysUserDO input)
@@ -68,7 +75,7 @@ namespace HuanTian.Service
                 throw new Exception("登陆名已存在");
             }
             var count = await _userInfo.InitTable(input)
-                .CallEntityMethod(t=>t.CreateFunc())
+                .CallEntityMethod(t => t.CreateFunc())
                 .AddAsync();
             return count;
         }
@@ -97,22 +104,12 @@ namespace HuanTian.Service
         public async Task<PageData> Page([FromQuery] UserInput input)
         {
             var pageData = await _userInfo
-                .WhereIf(!string.IsNullOrEmpty(input.Name),t => t.Name.Contains(input.Name))
+                .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name.Contains(input.Name))
                 .WhereIf(!string.IsNullOrEmpty(input.UserName), t => t.UserName.Contains(input.UserName))
+                .WhereIf(input.DeptId != 0, t => t.DeptId == input.DeptId)
                 .WhereIf(!string.IsNullOrEmpty(input.Enable), t => t.Enable == input.Enable.ObjToBool())
-                .ToPageListAsync(input.PageNo,input.PageSize);
+                .ToPageListAsync(input.PageNo, input.PageSize);
             return pageData;
-        }
-        /// <summary>
-        /// 获取当前登陆用户信息
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public async Task<dynamic> UserInfo()
-        { 
-            var info = await _userInfo
-                .FirstOrDefaultAsync(t => t.Id == App.GetUserId());
-            return info;
         }
     }
 }

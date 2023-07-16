@@ -24,7 +24,7 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-using HuanTian.Entities;
+using HuanTian.Infrastructure;
 using SqlSugar;
 using System;
 using System.Collections.Generic;

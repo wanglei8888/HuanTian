@@ -27,7 +27,7 @@ public interface ISysDeptService
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    Task<PageData> Page(SysDeptInput input);
+    Task<IEnumerable<SysDeptTreeOutput>> Tree(SysDeptInput input);
     /// <summary>
     /// 新增数据
     /// </summary>

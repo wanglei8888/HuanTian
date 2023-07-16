@@ -38,6 +38,7 @@
 
       <div class="table-operator">
         <a-button type="primary" icon="plus" @click="$refs.infoModel.detail()">新建</a-button>
+        <a-button type="primary" icon="plus" @click="$refs.infoModel.detail()">新建2</a-button>
         <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
           <a-menu slot="overlay">
             <a-menu-item key="1">
@@ -51,8 +52,8 @@
         </a-dropdown>
       </div>
 
-      <s-table ref="table" size="default" rowKey="id" :columns="columns" :data="loadData" :alert="true"
-        :rowSelection="rowSelection">
+      <s-table ref="table" size="default" rowKey="id" :columns="columns" :data="loadData" :alert="false"
+        :showPagination="false">
         <span slot="enableRadio" slot-scope="text">
           <a-tag :color="text ? 'green' : 'red'">{{ text == 1 ? '启用' : '禁用' }}</a-tag>
         </span>
@@ -104,7 +105,7 @@ export default {
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
-        return this.$http.get('/sysDept/page', { params: requestParameters }).then(res => {
+        return this.$http.get('/sysDept/tree', { params: requestParameters }).then(res => {
           return res.result
         })
       },

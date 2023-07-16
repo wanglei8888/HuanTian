@@ -1,5 +1,4 @@
-﻿using MathNet.Numerics.Statistics.Mcmc;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace HuanTian.Service
 {
@@ -22,7 +21,8 @@ namespace HuanTian.Service
             _userRole = userRole;
             _user = user;
         }
-        public async Task<IEnumerable<SysMenuDO>> Get([FromQuery] SysMenuTypeInput input)
+        [HttpGet]
+        public async Task<IEnumerable<SysMenuDO>> Tree([FromQuery] SysMenuTypeInput input)
         {
             var allMenu = await _menu
                 .WhereIf(!string.IsNullOrEmpty(input.MenuType), t => t.MenuType == input.MenuType)
@@ -30,6 +30,15 @@ namespace HuanTian.Service
                 .ToListAsync();
             var tree = TreeHelper<SysMenuTreeOutput>.DoTreeBuild(allMenu.Adapt<List<SysMenuTreeOutput>>());
             return tree;
+        }
+        [HttpGet]
+        public async Task<IEnumerable<SysMenuDO>> Get([FromQuery] SysMenuTypeInput input)
+        {
+            var allMenu = await _menu
+                .WhereIf(!string.IsNullOrEmpty(input.MenuType), t => t.MenuType == input.MenuType)
+                .WhereIf(input.Id != 0, t => t.Id == input.Id)
+                .ToListAsync();
+            return allMenu;
         }
         [HttpGet]
         public async Task<IEnumerable<SysMenuDO>> RoleMenu([FromQuery] SysRoleMenuTypeInput input)
@@ -85,7 +94,29 @@ namespace HuanTian.Service
                 .OrderBy(t => t.Order, false)
                 .ToListAsync();
             var menuInfo = allMenu.Adapt<List<SysMenuOutput>>();
+            
             return menuInfo;
+        }
+        public async Task<IEnumerable<SysMenuOutput>> GetUserMenu2([FromQuery] SysUserMenyInput input)
+        {
+            // 优先读取入参，否则读取当前登陆账户
+            var userId = input.UserId != 0 ? input.UserId : App.GetUserId();
+            Expression<Func<SysMenuDO, bool>> menuExpression = t => true;
+            // 读取用户角色权限下的所有菜单权限
+            var roleId = await _userRole.FirstOrDefaultAsync(t => t.UserId == userId);
+
+            // 判断是否是超级管理员  是，就返回所有菜单信息
+            if ((await _user.FirstOrDefaultAsync(t => t.Id == userId)).Type != SysUserTypeEnum.SuperAdmin)
+            {
+                var menuRoleList = await _menuRole.ToListAsync(t => t.RoleId == roleId.RoleId);
+                menuExpression = t => menuRoleList.Select(q => q.MenuId).Contains(t.Id);
+            }
+
+            var allMenu = await _menu.Where(menuExpression)
+                .OrderBy(t => t.Order, false)
+                .ToListAsync();
+            var menuInfo = allMenu.Adapt<List<SysMenuOutput>>();
+            return menuInfo.Where(t => t.Id != long.Parse("417244902117886") && t.Id != long.Parse("417244902117893"));
         }
 
     }

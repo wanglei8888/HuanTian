@@ -93,17 +93,11 @@ export default {
       this.visible = true
       this.confirmLoading = false
       this.modelLoadData = []
-    },
-    handSerachRoleMenu(){
-      this.$http.get('/sysMenu', { params: this.queryParam }).then(res => {
-        this.modelLoadData = res.result
-      }).finally(() => {
-        this.selectLoading = false
-      })
+      this.handSerach()
     },
     handSerach() {
       this.selectLoading = true
-      this.$http.get('/sysMenu', { params: this.queryParam }).then(res => {
+      this.$http.get('/sysMenu/tree', { params: this.queryParam }).then(res => {
         this.modelLoadData = res.result
       }).finally(() => {
         this.selectLoading = false

@@ -1,4 +1,4 @@
-﻿using HuanTian.Entities;
+﻿using HuanTian.Infrastructure;
 using HuanTian.Infrastructure;
 using MathNet.Numerics.Distributions;
 using SqlSugar;

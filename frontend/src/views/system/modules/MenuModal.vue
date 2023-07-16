@@ -251,7 +251,7 @@ export default {
 
     },
     changeApplication(value) {
-      this.$http.get('/sysMenu', { params: { menuType: value } }).then(res => {
+      this.$http.get('/sysMenu/tree', { params: { menuType: value } }).then(res => {
         if (res.code === 200) {
           this.menuTreeData = res.result
         } else {

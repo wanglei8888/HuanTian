@@ -28,6 +28,6 @@ namespace HuanTian.Service
 {
     public interface ISysUserService
     {
-        dynamic Info();
+        Task<dynamic> Info();
     }
 }

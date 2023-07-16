@@ -1,6 +1,6 @@
 using Autofac;
 using Autofac.Core;
-using HuanTian.Entities;
+using HuanTian.Infrastructure;
 using HuanTian.EntityFrameworkCore;
 using HuanTian.Service;
 using HuanTian.WebCore;

@@ -4,7 +4,7 @@
  * CLR版本：4.0.30319.42000
  * 机器名称：DESKTOP-6BOHDBE
  * 公司名称：
- * 命名空间：HuanTian.Entities.IRegister
+ * 命名空间：HuanTian.Infrastructure.IRegister
  * 唯一标识：b3257fff-9527-40b6-b72c-c4d1f28b6aff
  * 文件名：SysMenuRegister
  * 当前用户域：DESKTOP-6BOHDBE

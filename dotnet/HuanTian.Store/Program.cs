@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using HuanTian.Entities;
+using HuanTian.Infrastructure;
 using HuanTian.Infrastructure;
 using HuanTian.Service;
 using HuanTian.SqlSugar;

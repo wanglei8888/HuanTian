@@ -59,8 +59,8 @@ public class RoleMenuInput
 /// </summary>
 public class RolePermsInput
 {
-    [Required(ErrorMessage = "Id不能为空")]
-    public string RoleId { get; set; }
+    [Required(ErrorMessage = "RoleId不能为空")]
+    public long RoleId { get; set; }
     [Required(ErrorMessage = "PermissionsId不能为空")]
     public long[] PermissionsId { get; set; }
 }

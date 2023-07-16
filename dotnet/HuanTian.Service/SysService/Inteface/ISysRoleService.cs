@@ -52,4 +52,16 @@ public interface ISysRoleService
     /// <param name="input"></param>
     /// <returns></returns>
     Task<IEnumerable<SysRoleDO>> Get(SysRoleInput input);
+    /// <summary>
+    /// 获取角色权限-按钮格式
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<IEnumerable<Role>> RolePermisionButton(IEnumerable<SysRoleDO> input);
+    /// <summary>
+    /// 获取用户角色权限-按钮格式
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    Task<IEnumerable<Role>> UserGetRoleButton(long userId);
 }

@@ -35,8 +35,7 @@ export default {
   },
   data() {
     return {
-      showMenu: true,
-      currentUser: {}
+      showMenu: true
     }
   },
   computed: {
@@ -45,14 +44,10 @@ export default {
         'ant-pro-global-header-index-right': true,
         [`ant-pro-global-header-index-${(this.isMobile || !this.topMenu) ? 'light' : this.theme}`]: true
       }
+    },
+    currentUser() {
+      return this.$store.getters.userInfo
     }
-  },
-  created() {
-    this.$http.get('/sysUser/userInfo').then(res => {
-      if (res.code === 200) {
-        this.currentUser = res.result
-      }
-    })
   }
 }
 </script>

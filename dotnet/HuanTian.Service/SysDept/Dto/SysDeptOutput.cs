@@ -15,6 +15,8 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+using System.Collections;
+
 namespace HuanTian.Service;
 
 /// <summary>
@@ -23,5 +25,24 @@ namespace HuanTian.Service;
 public class SysDeptOutput : SysDeptDO
 {
     public string ParentName { get; set; }
+}
+public class SysDeptTreeOutput : SysDeptDO, ITreeBuild
+{
+    public List<SysDeptTreeOutput> Children { get; set; }
+
+    public long GetId()
+    {
+        return Id;
+    }
+
+    public long GetParentId()
+    {
+        return ParentId;
+    }
+
+    public void SetChildren(IList children)
+    {
+        Children = (List<SysDeptTreeOutput>)children;
+    }
 }
 
