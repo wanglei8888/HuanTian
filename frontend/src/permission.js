@@ -30,11 +30,21 @@ router.beforeEach((to, from, next) => {
         store
           .dispatch('GetInfo')
           .then(res => {
-            storage.set(ALL_APP_MENU, res.menu)
+            const { menu, app } = res
+            storage.set(ALL_APP_MENU, menu)
             // 根据用户权限信息生成可访问的路由表
-            store.dispatch('GenerateRoutes', res.menu).then((routers) => {
+            store.dispatch('GenerateRoutes', menu).then((routers) => {
+              // 保存路由
               store.commit('SET_ROUTERS', routers)
-              store.commit('SET_APPCODE', res.app[0].code)
+              // 判断目的路由的appCode是否需要切换应用
+              const toMenu = menu.filter(item => item.path === to.path)[0]
+              if (toMenu && toMenu.appCode !== app[0].code) {
+                store.commit('SET_APPCODE', toMenu.menuType)
+              }
+              else {
+                store.commit('SET_APPCODE', app[0].code)
+              }
+
               // 动态添加可访问路由表
               // VueRouter@3.5.0+ New API
               resetRouter() // 重置路由 防止退出重新登录或者 token 过期后页面未刷新，导致的路由重复添加
@@ -61,8 +71,6 @@ router.beforeEach((to, from, next) => {
             })
           })
       } else {
-        console.log('to:', to, from, next)
-        console.log('from:', from, next)
         next()
       }
     }

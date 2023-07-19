@@ -86,7 +86,7 @@
 <script>
 import moment from 'moment'
 import { STable } from '@/components'
-import infoModel from './SysDeptModel'
+import infoModel from './modules/deptModel'
 
 export default {
   components: {

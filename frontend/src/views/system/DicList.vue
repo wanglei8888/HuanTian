@@ -58,8 +58,8 @@
 </template>
 <script>
 import { STable } from '@/components'
-import dicModal from './modules/DicModal'
-import dicDetailModal from './modules/DicDetailModal'
+import dicModal from './modules/dicModal'
+import dicDetailModal from './modules/dicDetailModal'
 export default {
   components: {
     STable,

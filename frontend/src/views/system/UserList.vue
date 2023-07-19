@@ -141,7 +141,7 @@
 <script>
 import moment from 'moment'
 import { STable } from '@/components'
-import UserModal from './modules/UserModal'
+import UserModal from './modules/userModal'
 
 
 export default {

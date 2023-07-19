@@ -81,9 +81,9 @@
 
 <script>
 import { STable } from '@/components'
-import RoleModal from './modules/RoleModal'
-import RoleMenuModal from './modules/RoleMenuModal'
-import RoleMenuPermsModal from './modules/RoleMenuPermsModal'
+import RoleModal from './modules/roleModal'
+import RoleMenuModal from './modules/roleMenuModal'
+import RoleMenuPermsModal from './modules/roleMenuPermsModal'
 
 export default {
   components: {

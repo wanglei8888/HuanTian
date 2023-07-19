@@ -52,17 +52,6 @@ const constantRouterComponents = {
   // Other
   IconSelectorView: () => import('@/views/other/IconSelectorView'),
   TableInnerEditList: () => import('@/views/other/TableInnerEditList'),
-
-  // system
-  TreeList: () => import('@/views/system/TreeList'),
-  RoleList: () => import('@/views/system/RoleList'),
-  PermissionList: () => import('@/views/system/PermissionList'),
-  // MenuList: () => import('@/views/system/MenuList'),
-  // userinfo
-  UserList: () => import('@/views/system/UserList'),
-  DicList: () => import('@/views/system/DicList'),
-  CodeGen: () => import('@/views/system/CodeGen'),
-  SysDept: () => import('@/views/sysDept/SysDeptList'),
 }
 
 // 前端未找到页面路由（固定不用改）
@@ -81,7 +70,7 @@ const rootRouter = {
   component: 'BasicLayout',
   redirect: '/dashboard',
   meta: {
-    title: '首页'
+    title: 'menu.home'
   },
   children: []
 }

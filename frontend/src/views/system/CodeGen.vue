@@ -95,8 +95,8 @@
 import moment from 'moment'
 import { STable } from '@/components'
 import { downLoadPost } from '@/api/downLoad'
-import codeGenModal from './modules/CodeGenModal'
-import codeGenDetailModal from './modules/CodeGenDetailModal'
+import codeGenModal from './modules/codeGenModal'
+import codeGenDetailModal from './modules/codeGenDetailModal'
 
 
 export default {

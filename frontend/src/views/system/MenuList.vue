@@ -92,16 +92,14 @@
 import moment from 'moment'
 import { STable } from '@/components'
 import { sysDict } from '@/api/system'
-import StepByStepModal from '../list/modules/StepByStepModal'
-import MenuModal from './modules/MenuModal'
-import menuPermsModal from './modules/MenuPermsModal'
+import menuModal from './modules/menuModal'
+import menuPermsModal from './modules/menuPermsModal'
 
 export default {
   name: 'TableList',
   components: {
     STable,
-    MenuModal,
-    StepByStepModal,
+    menuModal,
     menuPermsModal
   },
   data() {
