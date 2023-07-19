@@ -38,16 +38,22 @@ namespace HuanTian.Service
     {
         private readonly ILogger<SysUserService> _logger;
         private readonly IRepository<SysUserDO> _userInfo;
+        private readonly IRepository<SysAppDO> _app;
         private readonly ISysRoleService _sysRoleService;
+        private readonly ISysMenuService _sysMenuService;
 
         public SysUserService(
             ILogger<SysUserService> logger,
             IRepository<SysUserDO> userInfo,
-            ISysRoleService sysRoleService)
+            ISysRoleService sysRoleService,
+            IRepository<SysAppDO> app,
+            ISysMenuService sysMenuService)
         {
             _logger = logger;
             _userInfo = userInfo;
             _sysRoleService = sysRoleService;
+            _app = app;
+            _sysMenuService = sysMenuService;
         }
         /// <summary>
         /// 获取用户信息跟用户权限信息
@@ -65,6 +71,8 @@ namespace HuanTian.Service
                 .SelectMany(roleItem => roleItem.Permissions)
                 .DistinctBy(t => t.MenuId);
             userInfo.Role = permissionList;
+            userInfo.App = await _app.OrderBy(t => t.Order).ToListAsync();
+            userInfo.Menu = await _sysMenuService.GetUserMenu(null);
             return userInfo;
         }
         public async Task<int> Add(SysUserDO input)

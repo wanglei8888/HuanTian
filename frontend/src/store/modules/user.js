@@ -1,8 +1,10 @@
 import storage from 'store'
+import store from '@/store'
 import expirePlugin from 'store/plugins/expire'
 import { login, getInfo, logout } from '@/api/login'
-import { ACCESS_TOKEN } from '@/store/mutation-types'
+import { ACCESS_TOKEN, ALL_APP_MENU } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
+import router, { resetRouter } from '@/router'
 
 storage.addPlugin(expirePlugin)
 const user = {
@@ -102,33 +104,20 @@ const user = {
       return new Promise((resolve, reject) => {
         const appCode = application.code
         // 缓存获取所有应用
-        const allAppMenu = Vue.ls.get(ALL_APPS_MENU)
+        const allAppMenu = storage.get(ALL_APP_MENU)
         // 切换应用
-        let appMenu
-        allAppMenu.forEach(item => {
-          if (item.code === appCode) {
-            appMenu = item
-            item.active = true
-          } else {
-            item.active = false
-          }
-        })
+        let appMenu = allAppMenu.filter(item => item.menuType == appCode)
         // 如果找不到
         if (!appMenu) {
           reject(new Error(`找不到应用: ${appCode}`))
           return
         }
-        // 找到对应的应用，设置新的缓存
-        Vue.ls.set(ALL_APPS_MENU, allAppMenu)
         resolve(appMenu)
-        // 切换路由表
-        const antDesignmenus = appMenu.menu
-        store.dispatch('GenerateRoutes', { antDesignmenus }).then(() => {
-          router.addRoutes(store.getters.addRouters)
+        store.dispatch('GenerateRoutes', appMenu).then((routers) => {
+          commit('SET_ROUTERS', routers)
         })
       })
     }
-
   }
 }
 

@@ -247,7 +247,6 @@ export default {
     },
     initRadar () {
       this.radarLoading = true
-
       this.$http.get('/workplace/radar').then(res => {
         const dv = new DataSet.View().source(res.result)
         dv.transform({

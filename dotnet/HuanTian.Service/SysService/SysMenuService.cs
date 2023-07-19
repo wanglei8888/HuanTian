@@ -78,11 +78,11 @@ namespace HuanTian.Service
         public async Task<List<SysMenuOutput>> GetUserMenu([FromQuery] SysUserMenyInput input)
         {
             // 优先读取入参，否则读取当前登陆账户
-            var userId = input.UserId != 0 ? input.UserId : App.GetUserId();
+            var userId = (input == null || input.UserId == 0) ? App.GetUserId() : input.UserId;
             Expression<Func<SysMenuDO, bool>> menuExpression = t => true;
             // 读取用户角色权限下的所有菜单权限
             var roleId = await _userRole.FirstOrDefaultAsync(t => t.UserId == userId);
-            
+
             // 判断是否是超级管理员  是，就返回所有菜单信息
             if ((await _user.FirstOrDefaultAsync(t => t.Id == userId)).Type != SysUserTypeEnum.SuperAdmin)
             {
@@ -94,7 +94,7 @@ namespace HuanTian.Service
                 .OrderBy(t => t.Order, false)
                 .ToListAsync();
             var menuInfo = allMenu.Adapt<List<SysMenuOutput>>();
-            
+
             return menuInfo;
         }
         public async Task<IEnumerable<SysMenuOutput>> GetUserMenu2([FromQuery] SysUserMenyInput input)

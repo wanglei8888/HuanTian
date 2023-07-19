@@ -35,6 +35,14 @@ namespace HuanTian.Service
         /// 权限列表
         /// </summary>
         public IEnumerable<Permission> Role { get; set; }
+        /// <summary>
+        /// 应用列表
+        /// </summary>
+        public IEnumerable<SysAppDO> App { get; set; }
+        /// <summary>
+        /// 菜单列表
+        /// </summary>
+        public IEnumerable<SysMenuOutput> Menu { get; set; }
     }
     public class UserRole
     {

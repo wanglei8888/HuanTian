@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router';
 // base library
 import {
   ConfigProvider,

@@ -5,7 +5,7 @@ import NProgress from 'nprogress' // progress bar
 import '@/components/NProgress/nprogress.less' // progress bar custom style
 import notification from 'ant-design-vue/es/notification'
 import { setDocumentTitle, domTitle } from '@/utils/domUtil'
-import { ACCESS_TOKEN } from '@/store/mutation-types'
+import { ACCESS_TOKEN, ALL_APP_MENU } from '@/store/mutation-types'
 import { i18nRender } from '@/locales'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
@@ -30,14 +30,15 @@ router.beforeEach((to, from, next) => {
         store
           .dispatch('GetInfo')
           .then(res => {
+            storage.set(ALL_APP_MENU, res.menu)
             // 根据用户权限信息生成可访问的路由表
-            store.dispatch('GenerateRoutes', { token, ...res }).then(() => {
+            store.dispatch('GenerateRoutes', res.menu).then((routers) => {
+              store.commit('SET_ROUTERS', routers)
+              store.commit('SET_APPCODE', res.app[0].code)
               // 动态添加可访问路由表
               // VueRouter@3.5.0+ New API
               resetRouter() // 重置路由 防止退出重新登录或者 token 过期后页面未刷新，导致的路由重复添加
-              store.getters.addRouters.forEach(r => {
-                router.addRoute(r)
-              })
+              router.addRoutes(store.getters.addRouters)
               // 请求带有 redirect 重定向时，登录自动重定向到该地址
               const redirect = decodeURIComponent(from.query.redirect || to.path)
               if (to.path === redirect) {
@@ -60,6 +61,8 @@ router.beforeEach((to, from, next) => {
             })
           })
       } else {
+        console.log('to:', to, from, next)
+        console.log('from:', from, next)
         next()
       }
     }

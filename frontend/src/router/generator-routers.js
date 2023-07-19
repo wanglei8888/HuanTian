@@ -1,8 +1,4 @@
-// eslint-disable-next-line
-import * as loginService from '@/api/login'
-// eslint-disable-next-line
 import { BasicLayout, BlankLayout, PageView, RouteView } from '@/layouts'
-
 // 前端路由表 (基于动态)
 const constantRouterComponents = {
   // 基础页面 layout 必须引入
@@ -13,6 +9,7 @@ const constantRouterComponents = {
   '403': () => import(/* webpackChunkName: "error" */ '@/views/exception/403'),
   '404': () => import(/* webpackChunkName: "error" */ '@/views/exception/404'),
   '500': () => import(/* webpackChunkName: "error" */ '@/views/exception/500'),
+  'welcome': () => import(/* webpackChunkName: "error" */ '@/views/system/welcome'),
 
   // 你需要动态引入的页面组件
   Workplace: () => import('@/views/dashboard/Workplace'),
@@ -60,16 +57,16 @@ const constantRouterComponents = {
   TreeList: () => import('@/views/system/TreeList'),
   RoleList: () => import('@/views/system/RoleList'),
   PermissionList: () => import('@/views/system/PermissionList'),
-  MenuList: () => import('@/views/system/MenuList'),
+  // MenuList: () => import('@/views/system/MenuList'),
   // userinfo
   UserList: () => import('@/views/system/UserList'),
-  DicList : () => import('@/views/system/DicList'),
-  CodeGen : () => import('@/views/system/CodeGen'),
-  SysDept : () => import('@/views/sysDept/SysDeptList'),
-  // 'TestWork': () => import(/* webpackChunkName: "TestWork" */ '@/views/dashboard/TestWork')
+  DicList: () => import('@/views/system/DicList'),
+  CodeGen: () => import('@/views/system/CodeGen'),
+  SysDept: () => import('@/views/sysDept/SysDeptList'),
 }
 
 // 前端未找到页面路由（固定不用改）
+// 前端未找到页面路由（固定不用改）、原来为 /404
 const notFoundRouter = {
   path: '*',
   redirect: '/404',
@@ -98,25 +95,19 @@ const rootRouter = {
  * @param token
  * @returns {Promise<Router>}
  */
-export const generatorDynamicRouter = token => {
+export const generatorDynamicRouter = menu => {
   return new Promise((resolve, reject) => {
-    loginService
-      .getCurrentUserNav(token)
-      .then(res => {
-        const { result } = res
-        const menuNav = []
-        const childrenNav = []
-        //      后端数据, 根级树数组,  根级 PID
-        listToTree(result, childrenNav, 0)
-        rootRouter.children = childrenNav
-        menuNav.push(rootRouter)
-        const routers = generator(menuNav)
-        routers.push(notFoundRouter)
-        resolve(routers)
-      })
-      .catch(err => {
-        reject(err)
-      })
+    const menuNav = []
+    const childrenNav = []
+    //      后端数据, 根级树数组,  根级 PID
+    listToTree(menu, childrenNav, 0)
+    rootRouter.children = childrenNav
+    menuNav.push(rootRouter)
+    const routers = generator(menuNav)
+    routers.push(notFoundRouter)
+    resolve(routers)
+  }).catch(err => {
+    reject(err)
   })
 }
 
@@ -135,6 +126,7 @@ export const generator = (routerMap, parent) => {
       path: item.path || `${(parent && parent.path) || ''}/${item.key}`,
       // 路由名称，建议唯一
       name: item.name || item.key || '',
+      appCode: item.menuType,
       // 该路由对应页面的 组件 :方案1
       // component: constantRouterComponents[item.component || item.key],
       // 该路由对应页面的 组件 :方案2 (动态加载)

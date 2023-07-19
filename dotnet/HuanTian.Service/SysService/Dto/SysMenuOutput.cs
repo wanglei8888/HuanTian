@@ -64,7 +64,10 @@ namespace HuanTian.Service
         /// 路由重定向地址
         /// </summary>
         public string Redirect { get; set; }
-
+        /// <summary>
+        /// 菜单类型
+        /// </summary>
+        public string MenuType { get; set; }
         /// <summary>
         /// 路由路径
         /// </summary>

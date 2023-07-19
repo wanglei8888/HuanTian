@@ -119,9 +119,14 @@ export default {
       mainMenu: state => state.permission.addRouters
     })
   },
+  watch: {
+    // 菜单变化
+    mainMenu () {
+      this.setMenus()
+    }
+  },
   created () {
-    const routes = this.mainMenu.find(item => item.path === '/')
-    this.menus = (routes && routes.children) || []
+    this.setMenus()
     // 处理侧栏收起状态
     this.$watch('collapsed', () => {
       this.$store.commit(SIDEBAR_TYPE, this.collapsed)
@@ -161,6 +166,17 @@ export default {
         this.settings.contentWidth = CONTENT_WIDTH_TYPE.Fluid
         // this.settings.fixSiderbar = false
       }
+    },
+    setMenus () {
+      const appCode = this.$store.getters.appCode
+      let routes = this.mainMenu.find(item => item.path === '/')
+      const children = routes.children.filter(element => {
+          if(element.appCode === appCode){
+            return element
+          }
+      });
+      routes.children = children
+      this.menus = (routes && routes.children) || []
     },
     handleCollapse (val) {
       this.collapsed = val
