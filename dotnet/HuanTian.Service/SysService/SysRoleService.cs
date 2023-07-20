@@ -15,9 +15,9 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-using HuanTian.Infrastructure;
 using Newtonsoft.Json;
 using SqlSugar.Extensions;
+using Yitter.IdGenerator;
 
 namespace HuanTian.Service;
 
@@ -59,7 +59,7 @@ public class SysRoleService : ISysRoleService, IDynamicApiController, IScoped
 
         // 角色
         var roleData = pageData.Data.Adapt<List<SysRoleDO>>();
-        var roleList = await RolePermisionButton(roleData);
+        var roleList = await RolePermisionButton(roleData,false);
 
         pageData.Data = roleList;
         return pageData;
@@ -99,11 +99,11 @@ public class SysRoleService : ISysRoleService, IDynamicApiController, IScoped
         {
             var perms = new SysMenuRoleDO();
             perms.MenuId = item;
-            perms.RoleId = long.Parse(input.RoleId);
+            perms.RoleId = input.RoleId;
             permsList.Add(perms);
         }
         // 删除已经存在的数据
-        var num = await _sysMenuRole.DeleteAsync(t => t.RoleId == long.Parse(input.RoleId));
+        var num = await _sysMenuRole.DeleteAsync(t => t.RoleId == input.RoleId);
         var count = await _sysMenuRole.InitTable(permsList)
             .CallEntityMethod(t => t.CreateFunc())
             .AddAsync();
@@ -149,13 +149,13 @@ public class SysRoleService : ISysRoleService, IDynamicApiController, IScoped
     }
 
     [NonAction]
-    public async Task<IEnumerable<Role>> UserGetRoleButton(long userId)
+    public async Task<IEnumerable<Role>> UserGetRoleButton(long userId, bool ignoreNull = true)
     {
         // 获取用户角色
         var userRole = await _sysUserRole.Where(t => t.UserId == userId).ToListAsync();
         var roleList = await _sysRole.Where(t => userRole.Select(x => x.RoleId).Contains(t.Id)).ToListAsync();
 
-        return await RolePermisionButton(roleList);
+        return await RolePermisionButton(roleList, ignoreNull);
     }
 
     /// <summary>
@@ -164,7 +164,7 @@ public class SysRoleService : ISysRoleService, IDynamicApiController, IScoped
     /// <param name="input"></param>
     /// <returns></returns>
     [NonAction]
-    public async Task<IEnumerable<Role>> RolePermisionButton(IEnumerable<SysRoleDO> input)
+    public async Task<IEnumerable<Role>> RolePermisionButton(IEnumerable<SysRoleDO> input,bool ignoreNull = true)
     {
         //根据角色信息获取该角色包含的菜单按钮权限
 
@@ -200,7 +200,7 @@ public class SysRoleService : ISysRoleService, IDynamicApiController, IScoped
                 var perm = new Permission();
                 var actionList = new List<ActionEntity>();
                 var permListDataItem = permListMenuItem.Where(t => t.MenuId == menu.Id);
-                if (!permListDataItem.Any())
+                if (!permListDataItem.Any() && ignoreNull)
                 {
                     continue;
                 }
@@ -209,13 +209,13 @@ public class SysRoleService : ISysRoleService, IDynamicApiController, IScoped
                     var model = new ActionEntity();
                     model.Action = permItem.Code;
                     model.Describe = permItem.Name ?? "";
-                    model.DefaultCheck = true;
+                    model.Id = permItem.Id;
                     actionList.Add(model);
                 }
-                perm.MenuId = menu.Id;
                 perm.PermissionName = menu?.Name ?? "";
-                perm.actionEntitySet = actionList;
-                perm.Actions = permList.Where(t => t.MenuId == menu.Id).Select(t => t.Code).ToJsonString();
+                perm.ActionEntitySet = actionList;
+                //perm.MenuId = menu.Id;
+                //perm.Actions = permList.Where(t => t.MenuId == menu.Id).Select(t => t.Code).ToJsonString();
                 permListData.Add(perm);
             }
             data.Permissions = permListData;

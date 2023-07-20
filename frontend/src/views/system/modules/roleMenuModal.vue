@@ -88,6 +88,9 @@ export default {
     },
     // 打开页面初始化
     create(value) {
+      if (this.$refs.form) {
+        this.$refs.form.clearValidate()
+      }
       this.id = value
       this.selectLoading = false
       this.visible = true

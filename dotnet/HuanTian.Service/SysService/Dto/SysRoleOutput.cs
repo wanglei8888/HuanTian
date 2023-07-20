@@ -25,3 +25,39 @@ public class SysRoleOutput : SysRoleDO
         
 }
 
+public class Permission
+{
+    /// <summary>
+    /// 权限名称
+    /// </summary>
+    public string PermissionName { get; set; }
+    //public long MenuId { get; set; }
+    //public string Actions { get; set; }
+    /// <summary>
+    /// 动作列表
+    /// </summary>
+    public List<ActionEntity> ActionEntitySet { get; set; }
+}
+
+public class ActionEntity
+{
+    public long Id { get; set; }
+    /// <summary>
+    /// 动作
+    /// </summary>
+    public string Action { get; set; }
+
+    /// <summary>
+    /// 描述
+    /// </summary>
+    public string Describe { get; set; }
+}
+
+public class Role : SysRoleDO
+{
+    /// <summary>
+    /// 权限列表
+    /// </summary>
+    public List<Permission> Permissions { get; set; }
+}
+

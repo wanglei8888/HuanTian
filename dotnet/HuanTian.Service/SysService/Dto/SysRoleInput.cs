@@ -50,7 +50,7 @@ public class SysRoleFormInput : SysRoleDO
 public class RoleMenuInput
 {
     [Required(ErrorMessage = "RoleId不能为空")]
-    public string RoleId { get; set; }
+    public long RoleId { get; set; }
     [Required(ErrorMessage = "MenuId不能为空")]
     public long[] MenuId { get; set; }
 }

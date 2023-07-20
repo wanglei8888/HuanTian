@@ -66,7 +66,7 @@ const user = {
               }
               return per
             })
-            role.permissionList = result.role.map(permission => { return permission.menuId })
+            // role.permissionList = result.role.map(permission => { return permission.menuId })
             // 覆盖响应体的 role, 供下游使用
             result.role = role
             commit('SET_ROLES', role)

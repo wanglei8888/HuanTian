@@ -84,6 +84,7 @@
 
           <div class="table-operator">
             <a-button type="primary" icon="plus" @click="$refs.userModal.detail()">新建</a-button>
+            <a-button type="primary" icon="plus" v-action:Add >新建(测试权限)</a-button>
             <a-dropdown  v-if="selectedRowKeys.length > 0">
               <a-menu slot="overlay">
                 <a-menu-item key="1">

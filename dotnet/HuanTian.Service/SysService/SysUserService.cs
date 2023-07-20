@@ -24,10 +24,7 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 using SqlSugar.Extensions;
-using System.Linq;
 
 namespace HuanTian.Service
 {
@@ -66,11 +63,21 @@ namespace HuanTian.Service
             // 获取用户信息
             var userInfo = (await _userInfo.FirstOrDefaultAsync(t => t.Id == userId)).Adapt<SysUserOutput>();
             var roleList = await _sysRoleService.UserGetRoleButton(userId);
-            // 剔除多个角色重复的权限
-            var permissionList = roleList
+
+            // 剔除多个角色重复的权限 如果menuId相同，合并ActionEntitySet
+            var distinctPermissionList = roleList
                 .SelectMany(roleItem => roleItem.Permissions)
-                .DistinctBy(t => t.MenuId);
-            userInfo.Role = permissionList;
+                .GroupBy(t => new { t.PermissionName })
+                .Select(t =>
+                new Permission
+                {
+                    PermissionName = t.Key.PermissionName,
+                    ActionEntitySet = t.SelectMany(t => t.ActionEntitySet)
+                    .DistinctBy(t => t.Id)
+                    .ToList()
+                });
+
+            userInfo.Role = distinctPermissionList;
             userInfo.App = await _app.OrderBy(t => t.Order).ToListAsync();
             userInfo.Menu = await _sysMenuService.GetUserMenu(null);
             return userInfo;

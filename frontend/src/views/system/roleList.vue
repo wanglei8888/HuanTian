@@ -138,18 +138,6 @@ export default {
     }
   },
   methods: {
-    handleEdit(record) {
-      this.mdl = Object.assign({}, record)
-
-      this.mdl.permissions.forEach(permission => {
-        permission.actionsOptions = permission.actionEntitySet.map(action => {
-          return { label: action.describe, value: action.action, defaultCheck: action.defaultCheck }
-        })
-      })
-
-      console.log(this.mdl)
-      this.visible = true
-    },
     handleOk() {
       // 新增/修改 成功时，重载列表
       this.$refs.table.refresh()

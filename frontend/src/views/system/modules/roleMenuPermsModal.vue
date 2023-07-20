@@ -83,14 +83,17 @@ export default {
   methods: {
     // 打开页面初始化
     create(roleInfo) {
+      if (this.$refs.form) {
+        this.$refs.form.clearValidate()
+      }
       // 获取下拉数据
       this.getDropdown()
       this.form = createForm()
       this.form.roleId = roleInfo
       this.visible = true
-      this.formLoading = true
+      // this.formLoading = true
       this.changeApplication(this.form.menuType)
-      this.handSerachMenuPerms()
+      // this.handSerachMenuPerms()
     },
     filterOption(input, option) {
       return (
@@ -133,7 +136,7 @@ export default {
       })
     },
     changeApplication(value) {
-      this.$http.get('/sysMenu', { params: { menuType: value } }).then(res => {
+      this.$http.get('/sysMenu/tree', { params: { menuType: value } }).then(res => {
         if (res.code === 200) {
           this.menuTreeData = res.result
         } else {
@@ -175,7 +178,7 @@ function createForm() {
     menuType: 'Business',
     icon: 'none',
     show: true,
-    menuId: '417244902117909',
+    // menuId: '417244902117909',
     permissionsId: []
   }
 }
