@@ -1,13 +1,6 @@
 ﻿using HuanTian.Infrastructure;
-using HuanTian.Infrastructure;
-using iText.Commons.Actions.Contexts;
 using Microsoft.EntityFrameworkCore;
-using NPOI.SS.Formula.Functions;
-using NPOI.XSSF.Streaming.Values;
 using SqlSugar;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace HuanTian.EntityFrameworkCore
@@ -19,9 +12,9 @@ namespace HuanTian.EntityFrameworkCore
     public class EfRepository<TEntity> : IRepository<TEntity> where TEntity : class, new()
     {
         private readonly EfSqlContext _db;
-        private bool _isAsc;
-        private Expression<Func<TEntity, object>>? _orderByExpression;
-        private Expression<Func<TEntity, bool>>? _sqlWhereExpression;
+        private readonly bool _isAsc;
+        private readonly Expression<Func<TEntity, object>>? _orderByExpression;
+        private readonly Expression<Func<TEntity, bool>>? _sqlWhereExpression;
 
         #region 构造参数
         public EfRepository(EfSqlContext dbContext)

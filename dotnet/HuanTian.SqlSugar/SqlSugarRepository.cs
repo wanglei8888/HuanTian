@@ -1,9 +1,6 @@
 ﻿using HuanTian.Infrastructure;
-using HuanTian.Infrastructure;
-using MathNet.Numerics.Distributions;
 using SqlSugar;
 using System.Linq.Expressions;
-using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace HuanTian.SqlSugar
 {
@@ -14,9 +11,9 @@ namespace HuanTian.SqlSugar
     public class SqlSugarRepository<TEntity> : IRepository<TEntity> where TEntity : class, new()
     {
         private readonly ISqlSugarClient _db;
-        private bool _isAsc;
-        private Expression<Func<TEntity, object>>? _orderByExpression;
-        private Expression<Func<TEntity, bool>>? _sqlWhereExpression;
+        private readonly bool _isAsc;
+        private readonly Expression<Func<TEntity, object>>? _orderByExpression;
+        private readonly Expression<Func<TEntity, bool>>? _sqlWhereExpression;
 
         #region 构造函数
         public SqlSugarRepository(ISqlSugarClient db)

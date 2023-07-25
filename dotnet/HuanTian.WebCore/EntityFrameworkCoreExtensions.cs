@@ -44,11 +44,16 @@ namespace HuanTian.WebCore
             switch (dbType)
             {
                 case DbType.MySql:
-                    services.AddDbContext<EfSqlContext>(options => options.UseMySql(ConnectionStrings,
-                        ServerVersion.AutoDetect(ConnectionStrings)));
+                    services.AddDbContext<EfSqlContext>(options => {
+                        options.UseMySql(ConnectionStrings, ServerVersion.AutoDetect(ConnectionStrings));
+                        options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking); 
+                    });
                     break;
                 case DbType.SqlServer:
-                    services.AddDbContext<EfSqlContext>(options => options.UseSqlServer(ConnectionStrings));
+                    services.AddDbContext<EfSqlContext>(options => { 
+                        options.UseSqlServer(ConnectionStrings);
+                        options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                    });
                     break;
             }
             return services;

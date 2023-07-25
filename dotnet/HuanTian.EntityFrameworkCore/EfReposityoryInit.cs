@@ -25,13 +25,9 @@
 #endregion << 版 本 注 释 >>
 
 using HuanTian.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using SqlSugar;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace HuanTian.EntityFrameworkCore
@@ -41,7 +37,8 @@ namespace HuanTian.EntityFrameworkCore
     /// </summary>
     public class EfReposityoryInit<TEntity> : IReposityoryInit<TEntity> where TEntity : class, new()
     {
-        private IEnumerable<TEntity>? _entityList;
+        private readonly List<Expression<Func<TEntity, object>>> _ignoredColumns = new List<Expression<Func<TEntity, object>>>();
+        private readonly IEnumerable<TEntity> _entityList;
         private readonly EfSqlContext _db;
         public EfReposityoryInit(EfSqlContext db)
         {
@@ -51,6 +48,11 @@ namespace HuanTian.EntityFrameworkCore
             : this(db)
         {
             _entityList = entityList;
+        }
+        public EfReposityoryInit(EfSqlContext db, IEnumerable<TEntity> entityList, List<Expression<Func<TEntity, object>>> ignoredColumns)
+            : this(db, entityList)
+        {
+            _ignoredColumns = ignoredColumns;
         }
 
         public async Task<int> AddAsync()
@@ -67,9 +69,26 @@ namespace HuanTian.EntityFrameworkCore
 
         public async Task<int> UpdateAsync()
         {
-            _db.Set<TEntity>().UpdateRange(_entityList);
+            // 正常修改
+            if (!_ignoredColumns.Any())
+            {
+                _db.Set<TEntity>().UpdateRange(_entityList);
+                return await _db.SaveChangesAsync();
+            }
+            // 如果需要忽略列进行修改
+            foreach (var entity in _entityList)
+            {
+                var entry = _db.Entry(entity);
+                entry.State = EntityState.Modified;
+
+                // 忽略需要忽略的属性
+                foreach (var expression in _ignoredColumns)
+                {
+                    entry.Property(expression).IsModified = false;
+                }
+            }
             return await _db.SaveChangesAsync();
-        }
+        } 
 
         public IReposityoryInit<TEntity> CallEntityMethod(Expression<Action<TEntity>> method)
         {
@@ -87,6 +106,24 @@ namespace HuanTian.EntityFrameworkCore
             }
 
             return this;
+        }
+
+        public IReposityoryInit<TEntity> IgnoreColumns(Expression<Func<TEntity, object>> expression)
+        {
+            var ignoredColumns = new List<Expression<Func<TEntity, object>>>();
+            // 将若干个lambda表达式转换成成员表达式  new {a.name,a.pwd} 转换成 a.name,a.pwd
+            if (expression.Body is NewExpression newExpression)
+            {
+                foreach (var argument in newExpression.Arguments)
+                {
+                    if (argument is MemberExpression memberExpression)
+                    {
+                        var lambdaExpression = Expression.Lambda<Func<TEntity, object>>(memberExpression, expression.Parameters);
+                        ignoredColumns.Add(lambdaExpression);
+                    }
+                }
+            }
+            return new EfReposityoryInit<TEntity>(_db, _entityList, ignoredColumns);
         }
     }
 }

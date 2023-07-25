@@ -26,13 +26,7 @@
 
 using HuanTian.Infrastructure;
 using SqlSugar;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace HuanTian.SqlSugar
 {
@@ -41,17 +35,22 @@ namespace HuanTian.SqlSugar
     /// </summary>
     public class SqlSugarReposityoryInit<TEntity> : IReposityoryInit<TEntity> where TEntity : class, new()
     {
-        private IEnumerable<TEntity>? _entityList;
-
+        private readonly IEnumerable<TEntity> _entityList;
+        private readonly Expression<Func<TEntity, object>> _ignoredColumns;
         private readonly ISqlSugarClient _db;
         public SqlSugarReposityoryInit(ISqlSugarClient db)
         {
             _db = db;
         }
         public SqlSugarReposityoryInit(ISqlSugarClient db, IEnumerable<TEntity> entityList)
-            :this(db)
+            : this(db)
         {
             _entityList = entityList;
+        }
+        public SqlSugarReposityoryInit(ISqlSugarClient db, IEnumerable<TEntity> entityList, Expression<Func<TEntity, object>> ignoredColumns)
+            : this(db, entityList)
+        {
+            _ignoredColumns = ignoredColumns;
         }
 
         public async Task<int> AddAsync()
@@ -66,7 +65,12 @@ namespace HuanTian.SqlSugar
 
         public async Task<int> UpdateAsync()
         {
-            return await _db.Updateable(_entityList.ToList()).ExecuteCommandAsync();
+            var updateable = _db.Updateable(_entityList.ToList());
+            if (_ignoredColumns != null)
+            {
+                updateable = updateable.IgnoreColumns(_ignoredColumns);
+            }
+            return await updateable.ExecuteCommandAsync();
         }
 
         public IReposityoryInit<TEntity> CallEntityMethod(Expression<Action<TEntity>> method)
@@ -82,16 +86,24 @@ namespace HuanTian.SqlSugar
             var action = method.Compile();
             foreach (var item in _entityList)
             {
-                if (item != null )
+                if (item != null)
                 {
                     action.Invoke(item);
                 }
             }
-            //foreach (var item in _entityList)
-            //{
-            //    callExpresion.Method.Invoke(item, null);
-            //}
             return this;
         }
+
+        public IReposityoryInit<TEntity> IgnoreColumns(Expression<Func<TEntity, object>> expression)
+        {
+            // SqlSugar忽略列支持多个属性,所以储存就行了
+            var newExpression = expression.Body as NewExpression;
+            if (newExpression == null)
+            {
+                throw new ArgumentException("Expression must be a NewExpression.", nameof(expression));
+            }
+            return new SqlSugarReposityoryInit<TEntity>(_db, _entityList, expression);
+        }
+
     }
 }

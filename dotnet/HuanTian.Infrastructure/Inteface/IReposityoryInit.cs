@@ -46,6 +46,12 @@ namespace HuanTian.Infrastructure
         /// <returns></returns>
         IReposityoryInit<TEntity> CallEntityMethod(Expression<Action<TEntity>> method);
         /// <summary>
+        /// 忽略指定列
+        /// </summary>
+        /// <param name="method"></param>
+        /// <returns></returns>
+        IReposityoryInit<TEntity> IgnoreColumns(Expression<Func<TEntity, object>> expression);
+        /// <summary>
         /// 新增数据
         /// </summary>
         /// <returns></returns>
