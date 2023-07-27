@@ -86,6 +86,7 @@
 import moment from 'moment'
 import { STable } from '@/components'
 import infoModel from './modules/deptModel'
+import { removeEmptyChildren } from '@/utils/common'
 
 export default {
   components: {
@@ -105,6 +106,7 @@ export default {
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
         return this.$http.get('/sysDept/tree', { params: requestParameters }).then(res => {
+          removeEmptyChildren(res.result)
           return res.result
         })
       },

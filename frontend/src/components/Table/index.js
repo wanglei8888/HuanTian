@@ -174,7 +174,6 @@ export default {
       if ((typeof result === 'object' || typeof result === 'function') && typeof result.then === 'function') {
         result.then(r => {
           if (r == null) {
-            this.localLoading = false
             return
           }
           this.localPagination = this.showPagination && Object.assign({}, this.localPagination, {
@@ -211,6 +210,7 @@ export default {
           } else {
             this.localDataSource = r.data
           }
+        }).finally(() => {
           this.localLoading = false
         })
       }

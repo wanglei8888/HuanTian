@@ -1,85 +1,82 @@
 <template>
   <page-header-wrapper>
-  <a-card :bordered="false">
-    <div class="table-page-search-wrapper">
-      <a-form layout="inline">
-        <a-row :gutter="48">
-          <a-col :md="8" :sm="24">
-            <a-form-item label="权限Code">
-              <a-input placeholder="请输入" v-model="queryParam.code" />
-            </a-form-item>
-          </a-col>
-          <a-col :md="8" :sm="24">
-            <a-form-item label="权限类型">
-              <a-select placeholder="请选择" v-model="queryParam.type">
-                <a-select-option value="0">全部</a-select-option>
-                <a-select-option value="1">按钮</a-select-option>
-                <a-select-option value="2">路由</a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :md="8" :sm="24">
-            <span class="table-page-search-submitButtons">
-              <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
-              <a-button style="margin-left: 8px" @click="queryParam = {}">重置</a-button>
-            </span>
-          </a-col>
-        </a-row>
-      </a-form>
-    </div>
+    <a-card :bordered="false">
+      <div class="table-page-search-wrapper">
+        <a-form layout="inline">
+          <a-row :gutter="48">
+            <a-col :md="8" :sm="24">
+              <a-form-item label="权限Code">
+                <a-input placeholder="请输入" v-model="queryParam.code" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="权限类型">
+                <a-select placeholder="请选择" v-model="queryParam.type">
+                  <a-select-option value="0">全部</a-select-option>
+                  <a-select-option value="1">按钮</a-select-option>
+                  <a-select-option value="2">路由</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <span class="table-page-search-submitButtons">
+                <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+                <a-button style="margin-left: 8px" @click="queryParam = {}">重置</a-button>
+              </span>
+            </a-col>
+          </a-row>
+        </a-form>
+      </div>
 
-    <s-table ref="table" :columns="columns" :data="loadData" rowKey="id">
+      <s-table ref="table" :columns="columns" :data="loadData" rowKey="id">
+        <span slot="actions" slot-scope="text, record">
+          <a-tag v-for="(action, index) in record.actionList" :key="index">{{ action.describe }}</a-tag>
+        </span>
+        <span slot="type" slot-scope="text">
+          <a-tag :color="text == 1 ? 'blue' : 'cyan'">{{ text == 1 ? '按钮' : '路由' }}</a-tag>
+        </span>
+        <span slot="action" slot-scope="text, record">
+          <a @click="handleEdit(record)">编辑</a>
+          <a-divider type="vertical" />
+          <a-dropdown>
+            <a class="ant-dropdown-link">
+              更多 <a-icon type="down" />
+            </a>
+            <a-menu slot="overlay">
+              <a-menu-item>
+                <a @click="handleEdit(record, true)">详情</a>
+              </a-menu-item>
+              <a-menu-item>
+                <a href="javascript:;">删除</a>
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
+        </span>
+      </s-table>
 
-      <span slot="actions" slot-scope="text, record">
-        <a-tag v-for="(action, index) in record.actionList" :key="index">{{ action.describe }}</a-tag>
-      </span>
+      <a-modal title="操作" :width="800" v-model="visible" @ok="handleOk" :confirmLoading="confirmLoading">
+        <a-form-model ref="form" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :rules="rules">
+          <a-form-model-item :labelCol="labelCol" prop="code" :wrapperCol="wrapperCol" label="编码" hasFeedback>
+            <a-input placeholder="请输入权限编码！" v-model="form.code" :disabled="readonly" />
+          </a-form-model-item>
+          <a-form-model-item :labelCol="labelCol" prop="name" :wrapperCol="wrapperCol" label="权限名称" hasFeedback>
+            <a-input placeholder="请输入权限名称！" v-model="form.name" :disabled="readonly" />
+          </a-form-model-item>
+          <a-form-model-item :labelCol="labelCol" prop="type" :wrapperCol="wrapperCol" label="权限类型">
+            <a-radio-group v-model="form.type" :disabled="readonly">
+              <a-radio-button :value=1>
+                按钮
+              </a-radio-button>
+              <a-radio-button :value=2>
+                路由
+              </a-radio-button>
+            </a-radio-group>
+          </a-form-model-item>
+        </a-form-model>
+      </a-modal>
 
-      <span slot="type" slot-scope="text">
-        <a-tag color="blue">{{ text | typeFilter }}</a-tag>
-      </span>
-
-      <span slot="action" slot-scope="text, record">
-        <a @click="handleEdit(record)">编辑</a>
-        <a-divider type="vertical" />
-        <a-dropdown>
-          <a class="ant-dropdown-link">
-            更多 <a-icon type="down" />
-          </a>
-          <a-menu slot="overlay">
-            <a-menu-item>
-              <a @click="handleEdit(record, true)">详情</a>
-            </a-menu-item>
-            <a-menu-item>
-              <a href="javascript:;">删除</a>
-            </a-menu-item>
-          </a-menu>
-        </a-dropdown>
-      </span>
-    </s-table>
-
-    <a-modal title="操作" :width="800" v-model="visible" @ok="handleOk" :confirmLoading="confirmLoading">
-      <a-form-model ref="form" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :rules="rules">
-        <a-form-model-item :labelCol="labelCol" prop="code" :wrapperCol="wrapperCol" label="编码" hasFeedback>
-          <a-input placeholder="请输入权限编码！" v-model="form.code" :disabled="readonly" />
-        </a-form-model-item>
-        <a-form-model-item :labelCol="labelCol" prop="name" :wrapperCol="wrapperCol" label="权限名称" hasFeedback>
-          <a-input placeholder="请输入权限名称！" v-model="form.name" :disabled="readonly" />
-        </a-form-model-item>
-        <a-form-model-item :labelCol="labelCol" prop="type" :wrapperCol="wrapperCol" label="权限类型">
-          <a-radio-group v-model="form.type" :disabled="readonly">
-            <a-radio-button :value=1>
-              按钮
-            </a-radio-button>
-            <a-radio-button :value=2>
-              路由
-            </a-radio-button>
-          </a-radio-group>
-        </a-form-model-item>
-      </a-form-model>
-    </a-modal>
-
-  </a-card>
-</page-header-wrapper>
+    </a-card>
+  </page-header-wrapper>
 </template>
 
 <script>
@@ -150,15 +147,6 @@ export default {
 
       selectedRowKeys: [],
       selectedRows: []
-    }
-  },
-  filters: {
-    typeFilter(type) {
-      const typeMap = {
-        1: '按钮',
-        2: '路由'
-      }
-      return typeMap[type]
     }
   },
   methods: {

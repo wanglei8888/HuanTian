@@ -1,7 +1,7 @@
 <template>
   <page-header-wrapper>
     <a-row :gutter="12">
-      <a-col :md="4" :sm="24">
+      <a-col :md="3" :sm="24">
         <a-card :bordered="false" :loading="treeLoading">
           <div>
             <a-tree :treeData="treeData" @select="treeSelect" :defaultExpandAll="true"
@@ -13,7 +13,7 @@
           </div>
         </a-card>
       </a-col>
-      <a-col :md="20" :sm="24">
+      <a-col :md="21" :sm="24">
         <a-card :bordered="false">
           <div class="table-page-search-wrapper">
             <a-form layout="inline">

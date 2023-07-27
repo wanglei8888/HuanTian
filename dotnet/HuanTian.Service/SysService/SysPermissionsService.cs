@@ -24,11 +24,18 @@ namespace HuanTian.Service;
 public class SysPermissionsService : ISysPermissionsService, IDynamicApiController, IScoped
 {
     private readonly IRepository<SysPermissionsDO> _sysPermissions;
+    private readonly IRepository<SysUserRoleDO> _userRole;
     private readonly IRepository<SysRolePermissionsDO> _sysRolePermissions;
-    public SysPermissionsService(IRepository<SysPermissionsDO> sysPermissions, IRepository<SysRolePermissionsDO> sysRolePermissions)
+    private readonly IRedisCache _redisCache;
+    public SysPermissionsService(IRepository<SysPermissionsDO> sysPermissions,
+        IRepository<SysRolePermissionsDO> sysRolePermissions,
+        IRepository<SysUserRoleDO> userRole,
+        IRedisCache redisCache)
     {
         _sysPermissions = sysPermissions;
         _sysRolePermissions = sysRolePermissions;
+        _userRole = userRole;
+        _redisCache = redisCache;
     }
 
     [HttpGet]
@@ -47,12 +54,18 @@ public class SysPermissionsService : ISysPermissionsService, IDynamicApiControll
     {
         var entityList = input.Adapt<List<SysPermissionsDO>>();
         var count = 0;
-        foreach (var item in entityList.GroupBy(t => t.MenuId))
+        foreach (var item in entityList.GroupBy(t => new { t.MenuId, t.Type }))
         {
+            var codeGroup = item.Where(t => t.MenuId == item.Key.MenuId && t.Type == item.Key.Type).GroupBy(t => t.Code);
+            // 过滤是否有重复code
+            if (codeGroup.Count() != item.Count())
+            {
+                throw new Exception($"权限编码重复,请修改后再试");
+            }
             // 先删除数据
-            await _sysPermissions.DeleteAsync(t => t.MenuId == item.Key);
+            await _sysPermissions.DeleteAsync(t => t.MenuId == item.Key.MenuId);
             // 再添加数据
-            count += await _sysPermissions.InitTable(entityList.Where(t => t.MenuId == item.Key))
+            count += await _sysPermissions.InitTable(entityList.Where(t => t.MenuId == item.Key.MenuId))
                 .CallEntityMethod(t => t.CreateFunc())
                 .AddAsync();
         }
@@ -87,8 +100,29 @@ public class SysPermissionsService : ISysPermissionsService, IDynamicApiControll
         var rolePermsList = await _sysRolePermissions
             .Where(t => t.RoleId == input.RoleId).ToListAsync();
         var permsList = await _sysPermissions
+            .WhereIf(!string.IsNullOrEmpty(input.PermType), t => t.Type == input.PermType.ToEnum<PermissionTypeEnum>())
             .Where(t => rolePermsList.Select(x => x.PermissionsId).Contains(t.Id))
-            .Where(t => t.MenuId == input.MenuId).ToListAsync();
+            .Where(t => t.MenuId == input.MenuId)
+            .ToListAsync();
         return permsList;
+    }
+    [NonAction]
+    public async Task<IEnumerable<SysPermissionsDO>> UserPermission(long input)
+    {
+        // 先从缓存中获取
+        var userRouts = await _redisCache.HashGetAsync<IEnumerable<SysPermissionsDO>>(RedisKeyConst.UserRouts, input.ToString());
+        if (userRouts == null || !userRouts.Any())
+        {
+            var userRole = await _userRole
+           .Where(t => t.UserId == input).ToListAsync();
+
+            var rolePermsList = await _sysRolePermissions
+                .Where(t => userRole.Select(q => q.RoleId).Contains(t.RoleId)).ToListAsync();
+            userRouts = await _sysPermissions
+                .Where(t => rolePermsList.Select(x => x.PermissionsId).Contains(t.Id))
+                .ToListAsync();
+            await _redisCache.HashSetAsync(RedisKeyConst.UserRouts, input.ToString(), userRouts.ToJsonString());
+        }
+        return userRouts;
     }
 }

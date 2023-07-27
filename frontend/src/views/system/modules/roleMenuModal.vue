@@ -1,5 +1,10 @@
 <template>
-  <a-modal :title="title" :width="1000" :visible="visible" :confirmLoading="confirmLoading" @ok="handleOk"
+  <a-modal
+    :title="title"
+    :width="1000"
+    :visible="visible"
+    :confirmLoading="confirmLoading"
+    @ok="handleOk"
     @cancel="handleCancel">
     <div class="table-page-search-wrapper">
       <a-form layout="inline">
@@ -17,12 +22,20 @@
         </a-row>
       </a-form>
     </div>
-    <a-table rowKey="id" :columns="modelColumns" :dataSource="modelLoadData" :row-selection="{
-      onChange,
-      onSelect,
-      onSelectAll,
-      selectedRowKeys,
-    }" :pagination="false" :expandIconAsCell='false' :loading="tableLoading" :scroll="{ y: 320 }">
+    <a-table
+      rowKey="id"
+      :columns="modelColumns"
+      :dataSource="modelLoadData"
+      :row-selection="{
+        onChange,
+        onSelect,
+        onSelectAll,
+        selectedRowKeys,
+      }"
+      :pagination="false"
+      :expandIconAsCell="false"
+      :loading="tableLoading"
+      :scroll="{ y: 320 }">
       <span slot="serial" slot-scope="text">
         <a-icon slot="serial" :type="text" />
       </span>
@@ -52,7 +65,7 @@ const columns = [
 ]
 export default {
   name: 'RoleModal',
-  data() {
+  data () {
     this.modelColumns = columns
     return {
       labelCol: {
@@ -79,15 +92,15 @@ export default {
     }
   },
   methods: {
-    onChange(selectedRowKeys, selectedRows) {
-      this.selectedRowKeys = selectedRowKeys;
+    onChange (selectedRowKeys, selectedRows) {
+      this.selectedRowKeys = selectedRowKeys
     },
-    onSelect(record, selected, selectedRows) {
+    onSelect (record, selected, selectedRows) {
     },
-    onSelectAll(selected, selectedRows, changeRows) {
+    onSelectAll (selected, selectedRows, changeRows) {
     },
     // 打开页面初始化
-    create(value) {
+    create (value) {
       if (this.$refs.form) {
         this.$refs.form.clearValidate()
       }
@@ -98,7 +111,7 @@ export default {
       this.modelLoadData = []
       this.handSerach()
     },
-    handSerach() {
+    handSerach () {
       this.selectLoading = true
       this.$http.get('/sysMenu/tree', { params: this.queryParam }).then(res => {
         this.modelLoadData = res.result
@@ -106,11 +119,11 @@ export default {
         this.selectLoading = false
       })
     },
-    close() {
+    close () {
       this.$emit('close')
       this.visible = false
     },
-    handleOk() {
+    handleOk () {
       if (this.selectedRowKeys.length === 0) {
         this.$message.warning('请选择菜单')
         return
@@ -128,10 +141,10 @@ export default {
         this.confirmLoading = false
       })
     },
-    handleCancel() {
+    handleCancel () {
       this.close()
-    },
-  },
+    }
+  }
 }
 </script>
 

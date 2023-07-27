@@ -1,18 +1,22 @@
 <template>
   <page-header-wrapper>
     <a-row :gutter="12">
-      <a-col :md="4" :sm="24">
+      <a-col :md="3" :sm="24">
         <a-card :bordered="false" :loading="treeLoading">
           <div>
-            <a-tree :treeData="treeData" :defaultSelectedKeys="['Business']" @select="treeSelect" :defaultExpandAll="true" :replaceFields="{
-              key: 'value',
-              title: 'name',
-              value: 'value'
-            }" />
+            <a-tree
+              :treeData="treeData"
+              @select="treeSelect"
+              :defaultExpandAll="true"
+              :replaceFields="{
+                key: 'value',
+                title: 'name',
+                value: 'value'
+              }" />
           </div>
         </a-card>
       </a-col>
-      <a-col :md="20" :sm="24">
+      <a-col :md="21" :sm="24">
         <a-card :bordered="false">
           <div class="table-page-search-wrapper">
             <a-form layout="inline">
@@ -25,7 +29,8 @@
                 <template v-if="advanced">
                 </template>
                 <a-col :md="!advanced && 8 || 24" :sm="24">
-                  <span class="table-page-search-submitButtons"
+                  <span
+                    class="table-page-search-submitButtons"
                     :style="advanced && { float: 'right', overflow: 'hidden' } || {}">
                     <a-button type="primary" @click="handSerach()">查询</a-button>
                     <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
@@ -51,8 +56,13 @@
             </a-dropdown>
           </div>
 
-          <a-table rowKey="id" :columns="columns" :dataSource="loadData" :row-selection="rowSelection" :pagination="false"
-            :expandIconAsCell='false' :loading="tableLoading">
+          <a-table
+            rowKey="id"
+            :columns="columns"
+            :dataSource="loadData"
+            :pagination="false"
+            :expandIconAsCell="false"
+            :loading="tableLoading">
             <template slot="operation" slot-scope="text, record">
               <span>
                 <a-popconfirm title="是否要删除此行？" @confirm="remove(record.id)">
@@ -70,7 +80,7 @@
                 </a>
                 <a-menu slot="overlay">
                   <a-menu-item>
-                    <a href="javascript:;" @click="$refs.menuPermsModal.create(record)">菜单按钮</a>
+                    <a href="javascript:;" @click="$refs.menuPermsModal.detail(record)">菜单权限</a>
                   </a-menu-item>
                 </a-menu>
               </a-dropdown>
@@ -94,6 +104,7 @@ import { STable } from '@/components'
 import { sysDict } from '@/api/system'
 import menuModal from './modules/menuModal'
 import menuPermsModal from './modules/menuPermsModal'
+import { removeEmptyChildren } from '@/utils/common'
 
 export default {
   name: 'TableList',
@@ -102,7 +113,7 @@ export default {
     menuModal,
     menuPermsModal
   },
-  data() {
+  data () {
     this.columns = columns
     return {
       tableLoading: false,
@@ -119,12 +130,12 @@ export default {
       selectedRows: []
     }
   },
-  created() {
+  created () {
     this.handSerach()
     this.getTreeData()
   },
   computed: {
-    rowSelection() {
+    rowSelection () {
       return {
         selectedRowKeys: this.selectedRowKeys,
         onChange: this.onSelectChange
@@ -132,11 +143,11 @@ export default {
     }
   },
   methods: {
-    treeSelect(e) {
+    treeSelect (e) {
       this.queryParam.menuType = e[0]
       this.handSerach()
     },
-    getTreeData() {
+    getTreeData () {
       this.treeLoading = true
       sysDict({ code: 'MenuType' }).then((res) => {
         if (res.code === 200) {
@@ -146,7 +157,7 @@ export default {
         this.treeLoading = false
       })
     },
-    remove(key) {
+    remove (key) {
       this.$http.delete('/sysMenu', { data: { id: `${key}` } }).then(res => {
         if (res.code === 200) {
           this.$message.success('删除成功')
@@ -154,23 +165,34 @@ export default {
         }
       })
     },
-    handSerach() {
+    handSerach () {
       this.tableLoading = true
       this.$http.get('/sysMenu/tree', { params: this.queryParam }).then(res => {
-        this.tableLoading = false
         this.loadData = res.result
-      }).catch(() => {
+        removeEmptyChildren(this.loadData)
+      }).finally(() => {
         this.tableLoading = false
       })
     },
-    modelOk() {
+    modelOk () {
       this.handSerach()
     },
-    onSelectChange(selectedRowKeys, selectedRows) {
+    onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
-    toggleAdvanced() {
+    // removeEmptyChildren(data) {
+    //   if (data == null || data.length === 0) return
+    //   for (let i = 0; i < data.length; i++) {
+    //     const item = data[i]
+    //     if (item.children != null && item.children.length === 0) {
+    //       item.children = null
+    //     } else {
+    //       this.removeEmptyChildren(item.children)
+    //     }
+    //   }
+    // },
+    toggleAdvanced () {
       this.advanced = !this.advanced
     }
   }
@@ -184,21 +206,20 @@ const columns = [
   {
     title: '图标',
     dataIndex: 'icon',
-    width: '15%',
-    scopedSlots: { customRender: 'serial' }
+    scopedSlots: { customRender: 'serial' },
+    width: '5%'
   },
   {
     title: '多语言值',
     dataIndex: 'title',
-    width: '15%'
+    width: '25%'
   },
   {
     title: '跳转地址',
-    dataIndex: 'redirect',
-    width: '15%'
+    dataIndex: 'redirect'
   },
   {
-    title: '菜单类型',
+    title: '菜单路由',
     dataIndex: 'component',
     width: '15%'
   },

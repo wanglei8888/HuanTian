@@ -1,5 +1,10 @@
 <template>
-  <a-modal :title="title" :width="1000" :visible="visible" :confirmLoading="confirmLoading" @ok="handleOk"
+  <a-modal
+    :title="title"
+    :width="1000"
+    :visible="visible"
+    :confirmLoading="confirmLoading"
+    @ok="handleOk"
     @cancel="handleCancel">
     <a-spin :spinning="formLoading">
       <a-form-model ref="form" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :rules="rules">
@@ -7,7 +12,10 @@
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item label="所属应用" prop="menuType">
               <a-select style="width: 100%" v-model="form.menuType" placeholder="请选择应用分类">
-                <a-select-option v-for="(item, index) in appData" :key="index" :value="item.value"
+                <a-select-option
+                  v-for="(item, index) in appData"
+                  :key="index"
+                  :value="item.value"
                   @click="changeApplication(item.value)">{{ item.name }}</a-select-option>
               </a-select>
             </a-form-model-item>
@@ -15,12 +23,18 @@
           <a-col :md="mdSize" :sm="smSize">
             <div>
               <a-form-model-item label="所属菜单" prop="menuId">
-                <a-tree-select style="width: 100%" v-model="form.menuId"
-                  :dropdownStyle="{ maxHeight: '300px', overflow: 'auto' }" :treeData="menuTreeData" :replaceFields="{
+                <a-tree-select
+                  style="width: 100%"
+                  v-model="form.menuId"
+                  :dropdownStyle="{ maxHeight: '300px', overflow: 'auto' }"
+                  :treeData="menuTreeData"
+                  :replaceFields="{
                     key: 'id',
                     title: 'name',
                     value: 'id'
-                  }" @change="menuChange" treeDefaultExpandAll>
+                  }"
+                  @change="menuChange"
+                  treeDefaultExpandAll>
                   <span slot="title" slot-scope="{ title }">{{ title }}
                   </span>
                 </a-tree-select>
@@ -31,7 +45,11 @@
         <a-row :gutter="gutter">
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item label="菜单按钮" prop="permissionsId" hasFeedback>
-              <a-select mode="multiple" v-model="form.permissionsId" placeholder="请选择菜单按钮" :allowClear="true"
+              <a-select
+                mode="multiple"
+                v-model="form.permissionsId"
+                placeholder="请选择菜单按钮"
+                :allowClear="true"
                 :filterOption="filterOption">
                 <a-select-option v-for="(value, key) in menuPerms" :key="key" :value="value.id">
                   {{ value.name }}
@@ -52,7 +70,7 @@ import { sysDict } from '@/api/system'
 
 export default {
   components: { IconSelector },
-  data() {
+  data () {
     return {
       labelCol: {
         xs: { span: 24 },
@@ -75,14 +93,14 @@ export default {
       rules: {
         menuType: [{ required: true, message: '请选择应用分类' }],
         menuId: [{ required: true, message: '请选择所属菜单！' }],
-        permissionsId: [{ required: true, message: '请选择所属菜单！' }],
+        permissionsId: [{ required: true, message: '请选择所属菜单！' }]
       },
       form: {}
     }
   },
   methods: {
     // 打开页面初始化
-    create(roleInfo) {
+    create (roleInfo) {
       if (this.$refs.form) {
         this.$refs.form.clearValidate()
       }
@@ -95,16 +113,16 @@ export default {
       this.changeApplication(this.form.menuType)
       // this.handSerachMenuPerms()
     },
-    filterOption(input, option) {
+    filterOption (input, option) {
       return (
         option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
-      );
+      )
     },
-    menuChange(e) {
+    menuChange (e) {
       this.handSerachMenuPerms()
     },
     // 获取下拉数据
-    getDropdown() {
+    getDropdown () {
       sysDict({ code: 'MenuType' }).then((res) => {
         if (res.code === 200) {
           this.appData = res.result
@@ -112,7 +130,7 @@ export default {
       })
     },
     // 查询已经选中的菜单按钮信息
-    handSerachRolePerms() {
+    handSerachRolePerms () {
       this.$http.get('/sysPermissions/rolePermission', { params: { roleId: this.form.roleId, menuId: this.form.menuId } }).then(res => {
         if (res.code === 200) {
           this.form.permissionsId = res.result.map(t => t.id)
@@ -124,7 +142,7 @@ export default {
       })
     },
     // 获取菜单按钮
-    handSerachMenuPerms() {
+    handSerachMenuPerms () {
       this.form.permissionsId = []
       this.$http.get('/sysPermissions', { params: { menuId: this.form.menuId } }).then(res => {
         if (res.code === 200) {
@@ -135,7 +153,7 @@ export default {
         }
       })
     },
-    changeApplication(value) {
+    changeApplication (value) {
       this.$http.get('/sysMenu/tree', { params: { menuType: value } }).then(res => {
         if (res.code === 200) {
           this.menuTreeData = res.result
@@ -144,15 +162,15 @@ export default {
         }
       })
     },
-    close() {
+    close () {
       this.$emit('close')
       this.visible = false
     },
-    handleOk() {
+    handleOk () {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.confirmLoading = true
-          let submitData = { roleId: this.form.roleId, permissionsId: this.form.permissionsId }
+          const submitData = { roleId: this.form.roleId, permissionsId: this.form.permissionsId }
           this.$http.post('/sysRole/AddRolePerms', submitData).then(res => {
             if (res.code === 200) {
               this.$emit('ok')
@@ -167,13 +185,13 @@ export default {
         }
       })
     },
-    handleCancel() {
+    handleCancel () {
       this.close()
     }
   }
 
 }
-function createForm() {
+function createForm () {
   return {
     menuType: 'Business',
     icon: 'none',

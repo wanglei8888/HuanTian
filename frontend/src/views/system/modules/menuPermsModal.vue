@@ -1,178 +1,351 @@
 <template>
-  <a-modal :title="menuInfo.name+'权限按钮'" :width="1000" :visible="visible" :confirmLoading="confirmLoading" @ok="handleOk"
+  <a-modal
+    :title="title"
+    :width="900"
+    :visible="visible"
+    :confirmLoading="confirmLoading"
+    @ok="handleOk"
     @cancel="handleCancel">
-    <a-row>
-      <a-col :md="12" :sm="24" :style="{ marginTop: '22px' }">
-        <a-form-model ref="form" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :rules="rules">
-          <a-form-model-item label="权限名字" prop="name" hasFeedback>
-            <a-input placeholder="请输入权限名字" v-model="form.name" />
-          </a-form-model-item>
-          <a-form-model-item label="权限编码" prop="code" hasFeedback>
-            <a-input placeholder="请输入权限编码" v-model="form.code" />
-          </a-form-model-item>
-          <a-form-model-item>
-            <div style="text-align: right;">
-              <a-button type="primary" icon="plus" @click="addTable()">新建</a-button>
-            </div>
-          </a-form-model-item>
-        </a-form-model>
-      </a-col>
-      <a-col :md="12" :sm="24" :style="{ marginTop: '22px' }">
-        <a-table :columns="columns" :dataSource="loadData" :pagination="false" :loading="false"
-          :rowKey="record => record.key" :scroll="{ y: 162 }">
-          <template slot="operation" slot-scope="text, record">
-            <span>
-              <a-popconfirm title="是否要删除此行？" @confirm="remove(record.id)">
-                <a>删除</a>
-              </a-popconfirm>
-            </span>
-            <span>
-              <a-divider type="vertical" />
-              <a @click="edit(record)">编辑</a>
-            </span>
-          </template>
-        </a-table>
-      </a-col>
-    </a-row>
-
+    <a-spin :spinning="confirmLoading">
+      <div class="table-page-search-wrapper">
+        <a-row style="margin-bottom: 8px;">
+          <a-button
+            @click="handleAdd()"
+            icon="plus"
+            type="primary">新增数据</a-button>
+          <a-tooltip placement="topLeft" title="新增增删改查按钮权限">
+            <a-button
+              @click="handleCrudAdd()"
+              icon="plus"
+              style="margin-left: 8px"
+              type="primary">常规权限</a-button>
+          </a-tooltip>
+          <a-tooltip placement="topLeft" title="新增增删改查路由权限">
+            <a-button
+              @click="handleRouteAdd()"
+              icon="plus"
+              style="margin-left: 8px"
+              type="primary">常规路由</a-button>
+          </a-tooltip>
+        </a-row>
+        <a-row>
+          <a-form-model ref="form" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :rules="rules">
+            <a-table
+              ref="table"
+              :columns="columns"
+              :rowKey="(record) => record.id"
+              :data-source="form.data"
+              :loading="tableLoading"
+              :scroll="{ y: 400 }"
+              :pagination="false">
+              <template slot="type" slot-scope="text, record,index">
+                <a-form-model-item>
+                  <a-select
+                    style="width: 120px;background: #fff;color: rgba(0, 0, 0, 0.65);"
+                    v-model="record.type"
+                    :disabled="record.editable ? false : true">
+                    <a-select-option :value="1">
+                      按钮
+                    </a-select-option>
+                    <a-select-option :value="2">
+                      路由
+                    </a-select-option>
+                  </a-select>
+                </a-form-model-item>
+              </template>
+              <template v-for="(col, index) in ['name', 'code']" :slot="col" slot-scope="text, record,index">
+                <a-form-model-item :prop="`data.${index}.${col}`" :key="index" :rules="rules[col]">
+                  <template v-if="record.editable">
+                    <a-input style="margin: -5px 0" v-model="record[col]" />
+                  </template>
+                  <template v-else>
+                    <div>{{ text }}</div>
+                  </template>
+                </a-form-model-item>
+              </template>
+              <template slot="operation" slot-scope="text, record, index">
+                <a-form-model-item>
+                  <div class="editable-row-operations">
+                    <span v-if="record.editable" style="display: flex;">
+                      <a @click="() => save(record.id)" style="padding-right: 20px;">保存</a>
+                      <a-popconfirm title="确定取消吗?" @confirm="() => cancel(record.id)">
+                        <a style="margin-right: 10px;">取消</a>
+                      </a-popconfirm>
+                    </span>
+                    <span v-else style="display: flex;">
+                      <a
+                        :disabled="editingKey !== ''"
+                        @click="() => edit(record.id, false)"
+                        style="padding-right: 20px;">编辑</a>
+                      <a-popconfirm title="确定删除吗?" @confirm="() => remove(record.id)">
+                        <a style="margin-right: 10px;">删除</a>
+                      </a-popconfirm>
+                    </span>
+                  </div>
+                </a-form-model-item>
+              </template>
+            </a-table>
+          </a-form-model>
+        </a-row>
+      </div>
+    </a-spin>
   </a-modal>
 </template>
 
 <script>
-import { sysDict } from '@/api/system'
+import { STable } from '@/components'
 export default {
   components: {
+    STable
   },
-  data() {
-    this.columns = columns
+  data () {
     return {
+      gutter: 24,
+      mdSize: 24,
+      smSize: 24,
+      title: '编辑数据',
       labelCol: {
         md: { span: 6 },
         sm: { span: 4 }
       },
       wrapperCol: {
-        md: { span: 12 },
+        md: { span: 14 },
         sm: { span: 20 }
       },
-      gutter: 24,
-      mdSize: 12,
-      smSize: 24,
       visible: false,
+      queryParam: {},
+      form: { data: [] },
       confirmLoading: false,
-      menuInfo: {},
-      loadData: [],
-      form: {},
+      info: {},
+      data: [],
+      columns: columns,
+      editingKey: '',
+      tableLoading: false,
       rules: {
-        name: [{ required: true, min: 1, message: '请输入按钮名称！' }],
-        code: [{ required: true, min: 1, message: '请输入权限编码！' }]
-      },
-      expandedKeys: [],
-      autoExpandParent: true
+        name: [{ required: true, message: '请输入名称！' }],
+        code: [{ required: true, message: '请输入编码！' }]
+      }
     }
   },
   methods: {
-    onExpand(expandedKeys) {
-      this.expandedKeys = expandedKeys;
-      this.autoExpandParent = false;
-    },
-    edit(record) {
-      this.form = JSON.parse(JSON.stringify(record))
-    },
-    remove(id) {
-      this.loadData = this.loadData.filter((item) => item.id !== id)
-    },
-    // 打开页面初始化
-    create(value) {
-      this.menuInfo = value
-      this.visible = true
-      this.confirmLoading = false
-      this.loadData = []
-      this.handSerach()
-    },
-    // 查询角色菜单信息
-    handSerach() {
-      // 查询菜单存在的权限
-      this.$http.get('/sysPermissions', { params: { menuId: this.menuInfo.id } }).then(res => {
-        this.loadData = res.result
-      }).catch(() => {
-        this.$message.error(res.message)
-      })
-    },
-    addTable() {
-      const _this = this
-      // 生成一个不重复的id
-      const id = Math.round(Math.random() * 1000) + (new Date()).getTime()
-      this.$refs.form.validate(valid => {
-        if (valid) {
-          // 遍历loadData中数据，如果code相同，就提示不能重复添加
-          const isExist = _this.loadData.some(item => item.code === _this.form.code)
-          if (isExist) {
-            _this.$message.warning('权限编码不能重复')
-            return
-          }
-          // 查询loadData中id如果相同，就修改这条数据
-          const index = _this.loadData.findIndex(item => item.id === _this.form.id)
-          if (index !== -1) {
-            _this.loadData[index].name = _this.form.name
-            _this.loadData[index].code = _this.form.code
-            _this.form.id = ''
-          } else {
-            this.loadData.push({
-              id: id,
-              name: _this.form.name,
-              code: _this.form.code,
-              menuId: _this.menuInfo.id,
-              type: 0
-            })
-          }
+    handSearch () {
+      this.tableLoading = true
+      this.queryParam.menuId = this.info.id
+      this.$http.get('/sysPermissions', { params: this.queryParam }).then(res => {
+        if (res.code === 200) {
+          this.form.data = res.result
+          this.data = res.result
         }
+      }).finally(() => {
+        this.tableLoading = false
       })
     },
-    close() {
+    remove (key) {
+      const target = this.form.data.find(item => key === item.id)
+      if (target) {
+        this.form.data = this.form.data.filter(item => item.id !== key)
+      }
+    },
+    handleAdd () {
+      const count = this.form.data.length + 1
+      const newData = {
+        id: count,
+        name: '',
+        code: '',
+        menuId: this.info.id,
+        type: 1,
+        isNew: true
+      }
+      this.form.data = [...this.form.data, newData]
+      this.edit(count, true)
+    },
+    generateUniqueId () {
+      const timestamp = new Date().getTime()
+      const randomNum = Math.floor(Math.random() * 1000000)
+      return timestamp + randomNum
+    },
+    handleChange (value, key, column) {
+      const newData = [...this.form.data]
+      const target = newData.find(item => key === item.id)
+      if (target) {
+        target[column] = value
+        this.form.data = newData
+      }
+    },
+    edit (key, isNew) {
+      const newData = [...this.form.data]
+      const target = newData.find(item => key === item.id)
+      this.editingKey = key
+      if (target) {
+        target.editable = true
+        target.isNew = isNew
+        this.form.data = newData
+      }
+    },
+    save (key) {
+      this.$refs.form.validate(valid => {
+        if (!valid) return
+        const newData = [...this.form.data]
+        const target = newData.find(item => key === item.id)
+        target.isNew = false
+        if (target) {
+          delete target.editable
+          this.form.data = newData
+        }
+        this.editingKey = ''
+      })
+    },
+    cancel (key) {
+      const newData = [...this.form.data]
+      const target = newData.find(item => key === item.id)
+      this.editingKey = ''
+      if (target) {
+        delete target.editable
+        this.form.data = newData
+        if (target.isNew) {
+          this.remove(key)
+        }
+      }
+    },
+    handleCrudAdd () {
+      const newData = [
+        {
+        id: this.generateUniqueId(),
+        name: '增加按钮',
+        code: 'add',
+        menuId: this.info.id,
+        type: 1,
+        isNew: false
+      },
+      {
+        id: this.generateUniqueId(),
+        name: '修改按钮',
+        code: 'update',
+        menuId: this.info.id,
+        type: 1,
+        isNew: false
+      },
+      {
+        id: this.generateUniqueId(),
+        name: '删除按钮',
+        code: 'delete',
+        menuId: this.info.id,
+        type: 1,
+        isNew: false
+      },
+      {
+        id: this.generateUniqueId(),
+        name: '查询按钮',
+        code: 'get',
+        menuId: this.info.id,
+        type: 1,
+        isNew: false
+      }
+    ]
+      this.form.data = [...this.form.data, ...newData]
+    },
+    handleRouteAdd () {
+      const newData = [
+        {
+        id: this.generateUniqueId(),
+        name: '增加路由',
+        code: 'add',
+        menuId: this.info.id,
+        type: 2,
+        isNew: false
+      },
+      {
+        id: this.generateUniqueId(),
+        name: '修改路由',
+        code: 'update',
+        menuId: this.info.id,
+        type: 1,
+        isNew: false
+      },
+      {
+        id: this.generateUniqueId(),
+        name: '删除路由',
+        code: 'delete',
+        menuId: this.info.id,
+        type: 1,
+        isNew: false
+      },
+      {
+        id: this.generateUniqueId(),
+        name: '查询路由',
+        code: 'get',
+        menuId: this.info.id,
+        type: 1,
+        isNew: false
+      },
+      {
+        id: this.generateUniqueId(),
+        name: '分页路由',
+        code: 'page',
+        menuId: this.info.id,
+        type: 1,
+        isNew: false
+      }
+    ]
+      this.form.data = [...this.form.data, ...newData]
+    },
+    // 初始化方法
+    detail (record) {
+      this.info = record
+      this.handSearch()
+      this.visible = true
+    },
+    close () {
       this.$emit('close')
       this.visible = false
     },
-    handleOk() {
-      if (this.loadData.length === 0) {
-        this.$message.warning('请添加权限表格信息')
+    handleOk () {
+      if (!this.form.data.length) {
+        this.$message.error('请添加菜单权限')
         return
       }
       this.confirmLoading = true
-      this.$http.post('/SysPermissions', this.loadData).then(res => {
+      this.$http.post('/sysPermissions', this.form.data).then(res => {
         if (res.code === 200) {
-          this.$emit('ok')
-          this.confirmLoading = false
+          this.$message.success('保存成功')
           this.visible = false
+          this.$emit('ok')
         } else {
           this.$message.warning(res.message)
         }
+      }).finally(() => {
+        this.confirmLoading = false
       })
     },
-    handleCancel() {
+    handleCancel () {
       this.close()
-    },
-  },
+    }
+  }
 }
+
 const columns = [
   {
-    title: '权限名称',
+    title: '名称',
     dataIndex: 'name',
-    key: 'name',
-    width: '32%'
+    width: '25%',
+    scopedSlots: { customRender: 'name' }
   },
   {
-    title: '权限编码',
+    title: '编码',
     dataIndex: 'code',
-    key: 'code',
-    width: '32%'
+    width: '25%',
+    scopedSlots: { customRender: 'code' }
+  },
+  {
+    title: '类型',
+    dataIndex: 'type',
+    width: '25%',
+    scopedSlots: { customRender: 'type' }
   },
   {
     title: '操作',
-    width: '32%',
-    key: 'action',
+    dataIndex: 'operation',
     scopedSlots: { customRender: 'operation' }
   }
 ]
 </script>
-
-<style scoped lang="less"></style>

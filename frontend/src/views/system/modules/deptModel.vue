@@ -1,11 +1,16 @@
 ﻿<template>
-  <a-modal :title="title" :width="800" :visible="visible" :confirmLoading="confirmLoading" @ok="handleOk"
+  <a-modal
+    :title="title"
+    :width="800"
+    :visible="visible"
+    :confirmLoading="confirmLoading"
+    @ok="handleOk"
     @cancel="handleCancel">
     <a-spin :spinning="spinningLoading">
       <a-form-model ref="form" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :rules="rules">
         <a-row :gutter="gutter">
           <a-col :md="mdSize" :sm="smSize">
-            <a-form-model-item label="父级部门id" prop="parentId" hasFeedback>
+            <a-form-model-item label="父级部门" prop="parentId" hasFeedback>
               <a-select v-model="form.parentId">
                 <a-select-option v-for="(item, index) in parentData" :key="index" :value="item.id">{{
                   item.name
@@ -42,7 +47,7 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       labelCol: {
         md: { span: 6 },
@@ -71,7 +76,7 @@ export default {
   },
   methods: {
     // 打开页面初始化
-    detail(value) {
+    detail (value) {
       this.visible = true
       this.confirmLoading = false
       if (this.$refs.form) {
@@ -81,22 +86,27 @@ export default {
         this.form = JSON.parse(JSON.stringify(value))
         this.formType = 'edit'
         this.title = '编辑数据'
-      }
-      else {
+      } else {
         this.title = '新建数据'
         this.formType = 'add'
         this.form = createForm()
       }
       this.dropDownList()
     },
-    dropDownList() {
+    dropDownList () {
       this.$http.get('/sysDept').then(res => {
         if (res.code === 200) {
+          const menu = {
+            id: 0,
+            name: '顶级',
+            children: []
+          }
           this.parentData = res.result
+          this.parentData = [menu, ...this.parentData]
         }
       })
     },
-    async handleOk() {
+    async handleOk () {
       this.$refs.form.validate(async valid => {
         if (valid) {
           this.confirmLoading = true
@@ -108,7 +118,7 @@ export default {
                 this.$emit('ok')
                 this.visible = false
               }
-            }).finally(err => {
+            }).finally(_err => {
               this.confirmLoading = false
             })
           } else {
@@ -120,23 +130,23 @@ export default {
                 this.$emit('ok')
                 this.visible = false
               }
-            }).finally(err => {
+            }).finally(_err => {
               this.confirmLoading = false
             })
           }
         }
       })
     },
-    handleCancel() {
+    handleCancel () {
       this.close()
     },
-    close() {
+    close () {
       this.$emit('close')
       this.visible = false
     }
   }
 }
-function createForm() {
+function createForm () {
   return {
 
   }

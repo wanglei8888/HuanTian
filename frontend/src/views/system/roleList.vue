@@ -32,7 +32,7 @@
       </div>
       <s-table ref="table" size="default" :columns="columns" :data="loadData" rowKey="id">
         <div slot="expandedRowRender" slot-scope="record" style="margin: 0">
-          <a-row :gutter="24" :style="{ marginBottom: '12px' }">
+          <a-row :gutter="24">
             <a-col :span="12" v-for="(role, index) in record.permissions" :key="index" :style="{ marginBottom: '12px' }">
               <a-col :span="4">
                 <span>{{ role.permissionName }}：</span>
@@ -73,8 +73,6 @@
       <role-modal ref="detailModal" @ok="handleOk" />
       <role-menu-modal ref="roleMenuModal" @ok="handleOk" />
       <role-menu-perms-modal ref="roleMenuPermsModal" @ok="handleOk" />
-      <!-- <a-button v-action:add123>添加用户</a-button> -->
-
     </a-card>
   </page-header-wrapper>
 </template>
@@ -92,7 +90,7 @@ export default {
     RoleMenuModal,
     RoleMenuPermsModal
   },
-  data() {
+  data () {
     return {
       description: '列表使用场景：后台管理中的权限管理以及角色管理，可用于基于 RBAC 设计的角色权限控制，颗粒度细到每一个操作类型。',
       visible: false,
@@ -138,11 +136,11 @@ export default {
     }
   },
   methods: {
-    handleOk() {
+    handleOk () {
       // 新增/修改 成功时，重载列表
       this.$refs.table.refresh()
     },
-    remove(key) {
+    remove (key) {
       this.$http.delete('/sysRole', { data: { Id: key } }).then(res => {
         if (res.code === 200) {
           this.$message.success('删除成功')
@@ -150,11 +148,11 @@ export default {
         }
       })
     },
-    onChange(selectedRowKeys, selectedRows) {
+    onChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
-    toggleAdvanced() {
+    toggleAdvanced () {
       this.advanced = !this.advanced
     }
   }
