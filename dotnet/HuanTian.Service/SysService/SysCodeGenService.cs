@@ -181,6 +181,7 @@ namespace HuanTian.Service
             var columnInfo = (await _codeGenDetail
                 .Where(t => t.MasterId == masterInfo.Id)
                 .ToListAsync()).ToList();
+            var parentMenu = (await _menuService.Get(new SysMenuTypeInput() { Id = masterInfo.MenuId })).ToList()[0];
             if (columnInfo == null)
             {
                 throw new Exception("表格列属性暂未录入,请修改后再试");
@@ -198,9 +199,9 @@ namespace HuanTian.Service
                 throw new Exception("表格在数据库中不存在,请修改后再试");
             }
             // 获取模板信息
-            var templatePathList = GetTemplatePathList(new SysCodeGenFileInput { ApplicationName = applicationName, TableName = masterInfo.TableName });
+            var templatePathList = GetTemplatePathList(new SysCodeGenFileInput { ApplicationName = applicationName, TableName = masterInfo.TableName, FrontPath = parentMenu.Path });
             // 生成方式为生成到项目 && 不强制执行
-            if (masterInfo.GenerationWay == GenerationWayEnum.GenToProj 
+            if (masterInfo.GenerationWay == GenerationWayEnum.GenToProj
                 && input.Enforcement == false)
             {
                 if (Directory.Exists(templatePathList[0].FilePath.GetParentPath()))
@@ -218,17 +219,16 @@ namespace HuanTian.Service
             // 判断是否要生成菜单信息
             if (masterInfo.MenuId != 0)
             {
-                var parentMenu = (await _menuService.Get(new SysMenuTypeInput() { Id = masterInfo.MenuId })).ToList()[0];
                 var menuDo = new SysMenuDO();
                 menuDo.ParentId = masterInfo.MenuId;
                 menuDo.Name = masterInfo.Name;
                 menuDo.Path = parentMenu.Path + $"/{masterInfo.TableName.ToCamelCase()}";
                 menuDo.Title = parentMenu.Title + $".{masterInfo.TableName.ToCamelCase()}";
                 menuDo.Icon = "none";
-                menuDo.KeepAlive = parentMenu.KeepAlive;
+                //menuDo.KeepAlive = parentMenu.KeepAlive;
                 menuDo.Show = true;
                 menuDo.HideChildren = false;
-                menuDo.Component = masterInfo.TableName.ToPascalCase();
+                menuDo.Component = menuDo.Path.Substring(1) + $"/{masterInfo.TableName.ToCamelCase()}List";
                 menuDo.MenuType = parentMenu.MenuType;
                 menuDo.Order = 100;
                 await _menuService.Add(menuDo);
@@ -308,8 +308,10 @@ namespace HuanTian.Service
                 new SysCodeGenTemplateInfo(Path.Combine(templatePath, "IService.cs.vm"),Path.Combine(backendPath, "I" + tableName + "Service.cs")),
                 new SysCodeGenTemplateInfo(Path.Combine(templatePath, "Input.cs.vm"),Path.Combine(backendPath, "Dto", tableName + "Input.cs")),
                 new SysCodeGenTemplateInfo(Path.Combine(templatePath, "Output.cs.vm"), Path.Combine(backendPath, "Dto", tableName + "Output.cs")),
-                new SysCodeGenTemplateInfo(Path.Combine(templatePath, "Frontend.vue.vm"), Path.Combine(frontendPath, tableName + "List.vue")),
-                new SysCodeGenTemplateInfo(Path.Combine(templatePath, "FrontendModel.vue.vm"), Path.Combine(frontendPath, tableName + "Model.vue")),
+                new SysCodeGenTemplateInfo(Path.Combine(templatePath, "Frontend.vue.vm"),
+                Path.Combine(frontendPath.GetParentPath(),input.FrontPath.Substring(1),tableName.ToCamelCase(), tableName.ToCamelCase() + "List.vue")),
+                new SysCodeGenTemplateInfo(Path.Combine(templatePath, "FrontendModel.vue.vm"),
+                Path.Combine(frontendPath.GetParentPath(),input.FrontPath.Substring(1),tableName.ToCamelCase(),"modules", tableName.ToCamelCase() + "Model.vue")),
             };
             return templatePathList;
         }

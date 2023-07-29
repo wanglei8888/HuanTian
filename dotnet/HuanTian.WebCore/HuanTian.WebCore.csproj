@@ -8,8 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HuanTian.EntityFrameworkCore\HuanTian.EntityFrameworkCore.csproj" />
-    <ProjectReference Include="..\HuanTian.SqlSugar\HuanTian.SqlSugar.csproj" />
+    <Compile Remove="DynamicApi\**" />
+    <EmbeddedResource Remove="DynamicApi\**" />
+    <None Remove="DynamicApi\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HuanTian.Service\HuanTian.Service.csproj" />
   </ItemGroup>
 
 </Project>

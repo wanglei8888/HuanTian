@@ -52,6 +52,7 @@ namespace HuanTian.Service
     {
         public string TableName { get; set; }
         public string ApplicationName { get; set; }
+        public string FrontPath { get; set; }
     }
     public class SysCodeGenTableInput : PageInput
     {

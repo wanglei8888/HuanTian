@@ -116,8 +116,83 @@ namespace HuanTian.Service
         public async Task<long> SetGetCountAsync(string key)
         {
             return await _database.SetLengthAsync(key);
-        } 
+        }
         #endregion
+
+        /// <summary>
+        /// 判断哈希中指定字段是否存在
+        /// </summary>
+        public async Task<bool> HashExistsAsync(string key, string field)
+        {
+            return await _database.HashExistsAsync(key, field);
+        }
+
+        /// <summary>
+        /// 获取哈希中指定字段的值
+        /// </summary>
+        public async Task<string> HashGetAsync(string key, string field)
+        {
+            return await _database.HashGetAsync(key, field);
+        }
+        /// <summary>
+        /// 获取哈希中指定字段的值
+        /// </summary>
+        public async Task<TEntity> HashGetAsync<TEntity>(string key, string field)
+        {
+            var value = await _database.HashGetAsync(key, field);
+            if (value.IsNullOrEmpty)
+            {
+                return default;
+            }
+            return JsonSerializer.Deserialize<TEntity>(await _database.HashGetAsync(key, field));
+        }
+        /// <summary>
+        /// 获取哈希中所有字段和值
+        /// </summary>
+        public async Task<HashEntry[]> HashGetAllAsync(string key)
+        {
+            return await _database.HashGetAllAsync(key);
+        }
+
+        /// <summary>
+        /// 对哈希中指定字段的值进行增加
+        /// </summary>
+        public async Task<long> HashIncrementAsync(string key, string field, long value = 1)
+        {
+            return await _database.HashIncrementAsync(key, field, value);
+        }
+
+        /// <summary>
+        /// 设置哈希中指定字段的值
+        /// </summary>
+        public async Task HashSetAsync(string key, string field, string value)
+        {
+            await _database.HashSetAsync(key, field, value);
+        }
+
+        /// <summary>
+        /// 设置哈希中多个字段和值
+        /// </summary>
+        public async Task HashSetAsync(string key, HashEntry[] hashFields)
+        {
+            await _database.HashSetAsync(key, hashFields);
+        }
+
+        /// <summary>
+        /// 删除哈希中指定字段
+        /// </summary>
+        public async Task<bool> HashDeleteAsync(string key, string field)
+        {
+            return await _database.HashDeleteAsync(key, field);
+        }
+
+        /// <summary>
+        /// 删除哈希中多个字段
+        /// </summary>
+        public async Task<long> HashDeleteAsync(string key, RedisValue[] fields)
+        {
+            return await _database.HashDeleteAsync(key, fields);
+        }
 
     }
 }

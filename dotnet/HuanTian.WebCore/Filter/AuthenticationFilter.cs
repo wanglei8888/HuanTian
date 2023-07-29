@@ -24,7 +24,6 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
 
@@ -36,20 +35,22 @@ namespace HuanTian.WebCore
     public class AuthenticationFilter : IAsyncAuthorizationFilter
     {
         private readonly IRedisCache _redisCache;
-        public AuthenticationFilter(IRedisCache redisCache)
+        private readonly ISysPermissionsService _sysPermService;
+        public AuthenticationFilter(IRedisCache redisCache, ISysPermissionsService sysPermService)
         {
             _redisCache = redisCache;
+            _sysPermService = sysPermService;
         }
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
             // 判断方法是否允许匿名访问 AllowAnonymous
             var allowAnonymous = context.ActionDescriptor.EndpointMetadata
                 .Any(metadata => metadata.GetType() == typeof(AllowAnonymousAttribute));
-            //if (allowAnonymous)
-            //{
-            //    // 方法允许匿名访问，直接放行
-            //    return;
-            //}
+            if (allowAnonymous)
+            {
+                // 方法允许匿名访问，直接放行
+                return;
+            }
             //// 判断是否为有效token
             //var isAuthenticated = context.HttpContext.User.Identity.IsAuthenticated;
             //if (isAuthenticated)
@@ -67,13 +68,23 @@ namespace HuanTian.WebCore
             if (!allowAnonymous && App.HttpContext.Request.Headers.TryGetValue(App.Configuration["AppSettings:ApiHeard"] ?? "", out var token))
             {
                 var userId = App.HttpContext.User.Claims.FirstOrDefault(u => u.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sid)?.Value;
-                if ((await _redisCache.SetContainsAsync($"LoginUserInfoWhitelist", token)))
+                if ((await _redisCache.SetContainsAsync($"LoginUserInfoWhitelist", token.ToString())))
                 {
                     context.Result = RequestHelper.RequestInfo("用户未授权,请登录后再操作", HttpStatusCode.Unauthorized);
                     context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                 }
             }
-
+            // 去掉路由前缀获取路由
+            var prefix = App.Configuration["DynamicApiControllerSettings:DefaultRoutePrefix"];
+            var prefixLength = prefix?.Length == 0 ? 0 : prefix?.Length + 2;
+            var path = context.HttpContext.Request.Path.Value.ToLower().Substring(prefixLength.Value);
+            // 检测是否为有效请求 从缓存中获取用户路由与当前路由进行匹配
+            var userRoute = (await _sysPermService.UserPermission(App.GetUserId())).Where(t=>t.Type == PermissionTypeEnum.Router);
+            //if (!userRoute.Any(t => t.Code.ToLower() == path))
+            //{
+            //    context.Result = RequestHelper.RequestInfo("用户未授权页面,请修改后再操作", HttpStatusCode.Unauthorized);
+            //    context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            //}
         }
     }
 }

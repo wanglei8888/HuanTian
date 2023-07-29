@@ -1,5 +1,10 @@
 <template>
-  <a-modal :title="title" :width="1000" :visible="visible" :confirmLoading="confirmLoading" @ok="handleOk"
+  <a-modal
+    :title="title"
+    :width="1000"
+    :visible="visible"
+    :confirmLoading="confirmLoading"
+    @ok="handleOk"
     @cancel="handleCancel">
     <a-spin :spinning="formLoading">
       <a-form-model ref="form" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :rules="rules">
@@ -12,7 +17,10 @@
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item name="routs" label="菜单层级">
               <a-radio-group v-model="menuType">
-                <a-radio v-for="(item, index) in typeData" :key="index" :value="item.value"
+                <a-radio
+                  v-for="(item, index) in typeData"
+                  :key="index"
+                  :value="item.value"
                   @click="meneTypeFunc(item.value)">{{ item.name }} </a-radio>
               </a-radio-group>
             </a-form-model-item>
@@ -22,7 +30,10 @@
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item label="所属应用" prop="menuType">
               <a-select style="width: 100%" v-model="form.menuType" placeholder="请选择应用分类">
-                <a-select-option v-for="(item, index) in appData" :key="index" :value="item.value"
+                <a-select-option
+                  v-for="(item, index) in appData"
+                  :key="index"
+                  :value="item.value"
                   @click="changeApplication(item.value)">{{ item.name }}</a-select-option>
               </a-select>
             </a-form-model-item>
@@ -31,12 +42,18 @@
             <div v-if="pidShow">
               <a-form-model-item label="父级菜单" prop="parentId">
                 <!-- v-decorator="['id', {rules: [{ required: true, message: '请选择父级菜单！' }]}]"  -->
-                <a-tree-select style="width: 100%" v-model="form.parentId"
-                  :dropdownStyle="{ maxHeight: '300px', overflow: 'auto' }" :treeData="menuTreeData" :replaceFields="{
+                <a-tree-select
+                  style="width: 100%"
+                  v-model="form.parentId"
+                  :dropdownStyle="{ maxHeight: '300px', overflow: 'auto' }"
+                  :treeData="menuTreeData"
+                  :replaceFields="{
                     key: 'id',
                     title: 'name',
                     value: 'id'
-                  }" placeholder="请选择父级菜单" treeDefaultExpandAll>
+                  }"
+                  placeholder="请选择父级菜单"
+                  treeDefaultExpandAll>
                   <span slot="title" slot-scope="{ title }">{{ title }}
                   </span>
                 </a-tree-select>
@@ -102,7 +119,7 @@
           <a-col :md="mdSize" :sm="smSize">
             <div v-show="iconShow">
               <a-form-model-item label="图标">
-                <a-input placeholder="请选择图标" v-model="form.icon" :disabled=true v-decorator="['icon']">
+                <a-input placeholder="请选择图标" v-model="form.icon" :disabled="true" v-decorator="['icon']">
                   <a-icon slot="addonAfter" @click="openIconSele()" type="setting" />
                 </a-input>
               </a-form-model-item>
@@ -110,7 +127,7 @@
           </a-col>
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item label="是否缓存">
-              <a-switch  checkedChildren="是" v-model="form.keepAlive" unCheckedChildren="否" />
+              <a-switch checkedChildren="是" v-model="form.keepAlive" unCheckedChildren="否" />
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -135,7 +152,13 @@
           </a-col>
         </a-row> -->
     </a-spin>
-    <a-modal :width="850" :visible="visibleIcon" @cancel="handleCancelIcon" footer="" :mask="false" :closable="false"
+    <a-modal
+      :width="850"
+      :visible="visibleIcon"
+      @cancel="handleCancelIcon"
+      footer=""
+      :mask="false"
+      :closable="false"
       :destroyOnClose="true">
       <icon-selector v-model="form.icon" @change="handleIconChange" />
     </a-modal>
@@ -146,17 +169,17 @@
 
 import IconSelector from '@/components/IconSelector'
 import { sysDict } from '@/api/system'
-function createForm() {
+function createForm () {
   return {
     menuType: 'Business',
     icon: 'none',
-    show: true,
+    show: true
   }
 }
 
 export default {
   components: { IconSelector },
-  data() {
+  data () {
     return {
       labelCol: {
         xs: { span: 24 },
@@ -189,14 +212,14 @@ export default {
         component: [{ required: true, min: 1, message: '请输入前端组件！' }],
         order: [{ required: true, message: '请输入排序值！' }],
         redirect: [{ required: true, message: '请输入重定向！' }],
-        title: [{ required: true, message: '请输入多语言值！' }],
+        title: [{ required: true, message: '请输入多语言值！' }]
       },
       form: {}
     }
   },
   methods: {
     // 打开页面初始化
-    detail(value) {
+    detail (value) {
       // 获取下拉数据
       this.getDropdown()
       if (value) {
@@ -211,8 +234,7 @@ export default {
           this.pidShow = true
         }
         this.title = '编辑菜单'
-      }
-      else {
+      } else {
         this.form = createForm()
         this.title = '新增菜单'
       }
@@ -221,7 +243,7 @@ export default {
       // this.sysDictTypeDropDown()
     },
     // 获取下拉数据
-    getDropdown() {
+    getDropdown () {
       sysDict({ code: 'MenuType' }).then((res) => {
         if (res.code === 200) {
           this.appData = res.result
@@ -238,19 +260,17 @@ export default {
       })
     },
     // 切换父子类菜单
-    meneTypeFunc(value) {
+    meneTypeFunc (value) {
       if (value === 'Child') {
         this.form.component = ''
         this.pidShow = true
-      }
-      else {
+      } else {
         this.form.component = 'RouteView'
         this.pidShow = false
       }
       this.$refs.form.clearValidate()
-
     },
-    changeApplication(value) {
+    changeApplication (value) {
       this.$http.get('/sysMenu/tree', { params: { menuType: value } }).then(res => {
         if (res.code === 200) {
           this.menuTreeData = res.result
@@ -259,21 +279,21 @@ export default {
         }
       })
     },
-    openIconSele() {
+    openIconSele () {
       this.visibleIcon = true
     },
-    handleIconChange(icon) {
+    handleIconChange (icon) {
       this.form.icon = icon
       this.visibleIcon = false
     },
-    handleCancelIcon() {
+    handleCancelIcon () {
       this.visibleIcon = false
     },
-    close() {
+    close () {
       this.$emit('close')
       this.visible = false
     },
-    handleOk() {
+    handleOk () {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.confirmLoading = true
@@ -287,8 +307,7 @@ export default {
                 this.$message.warning(res.message)
               }
             })
-          }
-          else {
+          } else {
             this.$http.post('/sysMenu', this.form).then(res => {
               if (res.code === 200) {
                 this.$emit('ok')
@@ -302,7 +321,7 @@ export default {
         }
       })
     },
-    handleCancel() {
+    handleCancel () {
       this.close()
     }
   }

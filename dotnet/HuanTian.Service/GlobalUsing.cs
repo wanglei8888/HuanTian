@@ -25,8 +25,6 @@
 #endregion << 版 本 注 释 >>
 
 global using HuanTian.Infrastructure;
-global using HuanTian.WebCore;
 global using Mapster;
-global using HuanTian.Infrastructure;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.Extensions.Logging;

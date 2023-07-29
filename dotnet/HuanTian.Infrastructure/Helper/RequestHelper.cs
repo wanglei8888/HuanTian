@@ -4,7 +4,7 @@
  * CLR版本：4.0.30319.42000
  * 机器名称：DESKTOP-6BOHDBE
  * 公司名称：
- * 命名空间：HuanTian.WebCore
+ * 命名空间：HuanTian.Infrastructure
  * 唯一标识：a8801f8a-fe18-4e29-a71a-209fef9e9301
  * 文件名：RequestHelper
  * 当前用户域：DESKTOP-6BOHDBE

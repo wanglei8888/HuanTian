@@ -4,7 +4,7 @@
  * CLR版本：4.0.30319.42000
  * 机器名称：DESKTOP-6BOHDBE
  * 公司名称：
- * 命名空间：HuanTian.WebCore.Filter.ErroFilter
+ * 命名空间：HuanTian.Infrastructure.Filter.ErroFilter
  * 唯一标识：127bb166-2e26-41f8-9de2-12e28bb2f20e
  * 文件名：FriendlyException
  * 当前用户域：DESKTOP-6BOHDBE

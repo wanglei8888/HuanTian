@@ -24,7 +24,7 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-namespace HuanTian.Service
+namespace HuanTian.Infrastructure
 {
     public interface ISysAuthService
     {

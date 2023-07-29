@@ -24,9 +24,15 @@
         /// <returns></returns>
         Task<IEnumerable<SysMenuDO>> RoleMenu(SysRoleMenuTypeInput input);
         /// <summary>
-        /// 获取用户菜单
+        /// 获取用户菜单返回前端格式
         /// </summary>
         /// <returns></returns>
-        public Task<List<SysMenuOutput>> GetUserMenu(SysUserMenyInput input);
+        Task<List<SysMenuOutput>> GetUserMenuOutput(SysUserMenuInput input);
+        /// <summary>
+        /// 获取用户菜单信息
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<IEnumerable<SysMenuDO>> GetUserMenuInfo(long input);
     }
 }

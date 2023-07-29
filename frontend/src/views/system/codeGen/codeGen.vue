@@ -16,7 +16,8 @@
                 </a-form-item>
               </a-col>
               <a-col :md="!advanced && 8 || 24" :sm="24">
-                <span class="table-page-search-submitButtons"
+                <span
+                  class="table-page-search-submitButtons"
                   :style="advanced && { float: 'right', overflow: 'hidden' } || {}">
                   <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
                   <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
@@ -45,8 +46,15 @@
           </a-dropdown>
         </div>
 
-        <s-table ref="table" size="default" rowKey="id" :columns="columns" :data="loadData" :alert="true"
-          :rowSelection="rowSelection" showPagination="auto">
+        <s-table
+          ref="table"
+          size="default"
+          rowKey="id"
+          :columns="columns"
+          :data="loadData"
+          :alert="true"
+          :rowSelection="rowSelection"
+          showPagination="auto">
           <!-- :showPagination="false" -->
           <span slot="enable" slot-scope="text">
             <a-tag :color="text ? 'green' : 'red'">{{ text | enableFilter }}</a-tag>
@@ -55,7 +63,7 @@
             {{ text | languageFilter }}
           </span>
           <span slot="avatar" slot-scope="text" style="margin-left: -13px;">
-            <img style="width:75px;heigth:75px" slot="avatar" :src=text />
+            <img style="width:75px;heigth:75px" slot="avatar" :src="text" />
           </span>
 
           <span slot="action" slot-scope="text, record">
@@ -98,14 +106,13 @@ import { downLoadPost } from '@/api/downLoad'
 import codeGenModal from './modules/codeGenModal'
 import codeGenDetailModal from './modules/codeGenDetailModal'
 
-
 export default {
   components: {
     STable,
     codeGenModal,
     codeGenDetailModal
   },
-  data() {
+  data () {
     this.columns = columns
     return {
       // create model
@@ -129,7 +136,7 @@ export default {
     }
   },
   computed: {
-    rowSelection() {
+    rowSelection () {
       return {
         selectedRowKeys: this.selectedRowKeys,
         onChange: this.onSelectChange
@@ -137,7 +144,7 @@ export default {
     }
   },
   methods: {
-    remove(key, multipleChoice) {
+    remove (key, multipleChoice) {
       this.$http.delete('/sysCodeGen', { data: { Id: key.toString() } }).then(res => {
         if (res.code === 200) {
           this.$message.success('删除成功')
@@ -149,24 +156,24 @@ export default {
         }
       })
     },
-    runLocal(key) {
+    runLocal (key) {
       downLoadPost({ url: '/sysCodeGen/RunLocal', params: { Id: key } })
     },
-    detailOpen(record) {
+    detailOpen (record) {
       this.codeGenDetailShow = false
       this.$refs.codeGenDetailModal.detail(record)
     },
-    handleOk() {
+    handleOk () {
       this.$refs.table.refresh()
     },
-    detailHandleOk() {
+    detailHandleOk () {
       this.codeGenDetailShow = true
     },
-    onSelectChange(selectedRowKeys, selectedRows) {
+    onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
-    toggleAdvanced() {
+    toggleAdvanced () {
       this.advanced = !this.advanced
     }
   }
@@ -189,7 +196,7 @@ const columns = [
         return '无'
       }
       return text
-    },
+    }
   },
   {
     title: '生成方式',
@@ -199,7 +206,7 @@ const columns = [
         return '生成到项目'
       }
       return '打包生成'
-    },
+    }
   },
   {
     title: '操作',
@@ -208,6 +215,5 @@ const columns = [
     scopedSlots: { customRender: 'action' }
   }
 ]
-
 
 </script>

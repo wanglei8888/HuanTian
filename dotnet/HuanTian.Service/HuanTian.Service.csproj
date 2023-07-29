@@ -26,7 +26,10 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<None Remove="HuanTian.Service.xml" />
-		<ProjectReference Include="..\HuanTian.WebCore\HuanTian.WebCore.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\HuanTian.EntityFrameworkCore\HuanTian.EntityFrameworkCore.csproj" />
+	  <ProjectReference Include="..\HuanTian.SqlSugar\HuanTian.SqlSugar.csproj" />
 	</ItemGroup>
 
 </Project>

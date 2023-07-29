@@ -24,6 +24,8 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+using StackExchange.Redis;
+
 namespace HuanTian.Infrastructure
 {
     /// <summary>
@@ -100,5 +102,37 @@ namespace HuanTian.Infrastructure
         /// <param name="key">集合键名</param>
         /// <returns>元素数量</returns>
         Task<long> SetGetCountAsync(string key);
+        /// <summary>
+        /// 判断哈希中指定字段是否存在
+        /// </summary>
+        Task<bool> HashExistsAsync(string key, string field);
+        /// <summary>
+        /// 获取哈希中指定字段的值
+        /// </summary>
+        Task<TEntity> HashGetAsync<TEntity>(string key, string field);
+        /// <summary>
+        /// 获取哈希中所有字段和值
+        /// </summary>
+        Task<HashEntry[]> HashGetAllAsync(string key);
+        /// <summary>
+        /// 对哈希中指定字段的值进行增加
+        /// </summary>
+        Task<long> HashIncrementAsync(string key, string field, long value = 1);
+        /// <summary>
+        /// 设置哈希中指定字段的值
+        /// </summary>
+        Task HashSetAsync(string key, string field, string value);
+        /// <summary>
+        /// 设置哈希中多个字段和值
+        /// </summary>
+        Task HashSetAsync(string key, HashEntry[] hashFields);
+        /// <summary>
+        /// 删除哈希中指定字段
+        /// </summary>
+        Task<bool> HashDeleteAsync(string key, string field);
+        /// <summary>
+        /// 删除哈希中多个字段
+        /// </summary>
+        Task<long> HashDeleteAsync(string key, RedisValue[] fields);
     }
 }

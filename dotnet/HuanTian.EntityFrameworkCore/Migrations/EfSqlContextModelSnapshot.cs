@@ -19,7 +19,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                 .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("HuanTian.Infrastructure.SysAppDO", b =>
+            modelBuilder.Entity("HuanTian.Infrastructure.SysAppsDO", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -83,7 +83,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("sys_app", t =>
+                    b.ToTable("sys_apps", t =>
                         {
                             t.HasComment("系统应用表");
                         });

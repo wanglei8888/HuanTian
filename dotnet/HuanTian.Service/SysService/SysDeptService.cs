@@ -35,7 +35,7 @@ public class SysDeptService : ISysDeptService, IDynamicApiController, IScoped
     {
         var list  = await _sysDept
             .WhereIf(input.ParentId != 0, t => t.ParentId == input.ParentId)
-            .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name == input.Name)
+            .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name.Contains(input.Name))
             .WhereIf(!string.IsNullOrEmpty(input.Describe), t => t.Describe == input.Describe)
             .WhereIf(!string.IsNullOrEmpty(input.Enable), t => t.Enable == Convert.ToBoolean(input.Enable))
             .ToListAsync();

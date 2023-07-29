@@ -107,7 +107,7 @@
 
       <div class="table-operator">
         <a-button type="primary" icon="plus" @@click="$refs.infoModel.detail()">新建</a-button>
-        <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
+        <a-dropdown v-if="selectedRowKeys.length > 0">
           <a-menu slot="overlay">
             <a-menu-item key="1">
               <a-popconfirm title="是否要批量删除？" @@confirm="remove(selectedRowKeys.join(','), true)">
@@ -161,7 +161,7 @@ import moment from 'moment'
 @:import { sysDict } from '@@/api/system'
 }
 import { STable } from '@@/components'
-import infoModel from './@(Model.ClassName)Model'
+import infoModel from './modules/@(Model.ClassNameLow)Model'
 
 export default {
   components: {

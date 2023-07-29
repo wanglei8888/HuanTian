@@ -4,7 +4,10 @@
       <a-col :md="3" :sm="24">
         <a-card :bordered="false" :loading="treeLoading">
           <div>
-            <a-tree :treeData="treeData" @select="treeSelect" :defaultExpandAll="true"
+            <a-tree
+              :treeData="treeData"
+              @select="treeSelect"
+              :defaultExpandAll="true"
               :replaceFields="{
                 key: 'id',
                 title: 'name',
@@ -68,7 +71,8 @@
               </a-col>
             </template> -->
                 <a-col :md="!advanced && 6 || 24" :sm="24">
-                  <span class="table-page-search-submitButtons"
+                  <span
+                    class="table-page-search-submitButtons"
                     :style="advanced && { float: 'right', overflow: 'hidden' } || {}">
                     <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
                     <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
@@ -85,7 +89,7 @@
           <div class="table-operator">
             <a-button type="primary" icon="plus" @click="$refs.userModal.detail()">新建</a-button>
             <a-button type="primary" icon="plus" v-action:Add >新建(测试权限)</a-button>
-            <a-dropdown  v-if="selectedRowKeys.length > 0">
+            <a-dropdown v-if="selectedRowKeys.length > 0">
               <a-menu slot="overlay">
                 <a-menu-item key="1">
                   <a-popconfirm title="是否要批量删除？" @confirm="remove(selectedRowKeys.join(','), true)">
@@ -98,7 +102,13 @@
             </a-dropdown>
           </div>
 
-          <s-table ref="table" size="default" rowKey="id" :columns="columns" :data="loadData" :alert="true"
+          <s-table
+            ref="table"
+            size="default"
+            rowKey="id"
+            :columns="columns"
+            :data="loadData"
+            :alert="true"
             :rowSelection="rowSelection">
             <span slot="enable" slot-scope="text">
               <a-tag :color="text ? 'green' : 'red'">{{ text == 1 ? '启用' : '禁用' }}</a-tag>
@@ -107,7 +117,7 @@
               {{ text | languageFilter }}
             </span>
             <span slot="avatar" slot-scope="text" style="margin-left: -13px;">
-              <img style="width:75px;heigth:75px" slot="avatar" :src=text />
+              <img style="width:75px;heigth:75px" slot="avatar" :src="text" />
             </span>
 
             <span slot="action" slot-scope="text, record">
@@ -144,13 +154,12 @@ import moment from 'moment'
 import { STable } from '@/components'
 import UserModal from './modules/userModal'
 
-
 export default {
   components: {
     STable,
     UserModal
   },
-  data() {
+  data () {
     this.columns = columns
     return {
       treeLoading: false,
@@ -173,7 +182,7 @@ export default {
     }
   },
   methods: {
-    getTreeData(){
+    getTreeData () {
       this.treeLoading = true
       this.$http.get('/sysDept/tree').then((res) => {
         if (res.code === 200) {
@@ -183,11 +192,11 @@ export default {
         this.treeLoading = false
       })
     },
-    treeSelect(e){
+    treeSelect (e) {
       this.queryParam.deptId = e[0]
       this.$refs.table.refresh()
     },
-    remove(key, multipleChoice) {
+    remove (key, multipleChoice) {
       this.$http.delete('/sysUser', { data: { Id: key.toString() } }).then(res => {
         if (res.code === 200) {
           this.$message.success('删除成功')
@@ -199,27 +208,27 @@ export default {
         }
       })
     },
-    handleOk() {
+    handleOk () {
       this.$refs.table.refresh()
     },
-    onSelectChange(selectedRowKeys, selectedRows) {
+    onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
-    toggleAdvanced() {
+    toggleAdvanced () {
       this.advanced = !this.advanced
     }
   },
-  created() {
+  created () {
     this.getTreeData()
   },
   filters: {
-    languageFilter(type) {
+    languageFilter (type) {
       return languageMap[type].text
     }
   },
   computed: {
-    rowSelection() {
+    rowSelection () {
       return {
         selectedRowKeys: this.selectedRowKeys,
         onChange: this.onSelectChange

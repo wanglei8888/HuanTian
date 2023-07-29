@@ -24,7 +24,12 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+using HuanTian.EntityFrameworkCore;
+using HuanTian.Infrastructure;
+using MathNet.Numerics.Statistics.Mcmc;
+using Microsoft.EntityFrameworkCore;
 using SqlSugar.Extensions;
+using System.Linq.Expressions;
 
 namespace HuanTian.Service
 {
@@ -35,22 +40,27 @@ namespace HuanTian.Service
     {
         private readonly ILogger<SysUserService> _logger;
         private readonly IRepository<SysUserDO> _userInfo;
-        private readonly IRepository<SysAppDO> _app;
+        private readonly IRepository<SysAppsDO> _app;
         private readonly ISysRoleService _sysRoleService;
         private readonly ISysMenuService _sysMenuService;
-
+        private readonly IRedisCache _redisCache;
+        private readonly EfSqlContext _db;
         public SysUserService(
             ILogger<SysUserService> logger,
             IRepository<SysUserDO> userInfo,
             ISysRoleService sysRoleService,
-            IRepository<SysAppDO> app,
-            ISysMenuService sysMenuService)
+            IRepository<SysAppsDO> app,
+            ISysMenuService sysMenuService,
+            IRedisCache redisCache,
+            EfSqlContext db)
         {
             _logger = logger;
             _userInfo = userInfo;
             _sysRoleService = sysRoleService;
             _app = app;
             _sysMenuService = sysMenuService;
+            _redisCache = redisCache;
+            _db = db;
         }
         /// <summary>
         /// 获取用户信息跟用户权限信息
@@ -76,10 +86,9 @@ namespace HuanTian.Service
                     .DistinctBy(t => t.Id)
                     .ToList()
                 });
-
             userInfo.Role = distinctPermissionList;
             userInfo.App = await _app.OrderBy(t => t.Order).ToListAsync();
-            userInfo.Menu = await _sysMenuService.GetUserMenu(null);
+            userInfo.Menu = await _sysMenuService.GetUserMenuOutput(null);
             return userInfo;
         }
         public async Task<int> Add(SysUserDO input)
@@ -97,11 +106,13 @@ namespace HuanTian.Service
         public async Task<int> Update(SysUserDO input)
         {
             // 判断是否存在名字
-            if ((await _userInfo.FirstOrDefaultAsync(t => t.UserName == input.UserName)) != null)
+            if ((await _userInfo.Where(t => t.UserName == input.UserName).ToListAsync()).Count() > 1)
             {
                 throw new Exception("登陆名已存在");
             }
+
             var count = await _userInfo.InitTable(input)
+                .IgnoreColumns(t => t.Password)
                 .CallEntityMethod(t => t.UpdateFunc())
                 .UpdateAsync();
             return count;
@@ -125,6 +136,12 @@ namespace HuanTian.Service
                 .WhereIf(!string.IsNullOrEmpty(input.Enable), t => t.Enable == input.Enable.ObjToBool())
                 .ToPageListAsync(input.PageNo, input.PageSize);
             return pageData;
+        }
+        [HttpGet]
+        public async Task<SysUserDO> Get([FromQuery] IdInput input)
+        {
+            var userInfo = await _userInfo.FirstOrDefaultAsync(t => t.Id == input.Id.ToLong());
+            return userInfo;
         }
     }
 }

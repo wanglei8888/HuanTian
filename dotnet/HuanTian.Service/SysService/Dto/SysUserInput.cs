@@ -38,7 +38,7 @@ namespace HuanTian.Service
         /// <summary>
         /// 应用列表
         /// </summary>
-        public IEnumerable<SysAppDO> App { get; set; }
+        public IEnumerable<SysAppsDO> App { get; set; }
         /// <summary>
         /// 菜单列表
         /// </summary>

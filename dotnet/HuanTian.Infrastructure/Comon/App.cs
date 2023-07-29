@@ -191,7 +191,7 @@ namespace HuanTian.Infrastructure
             }
             catch (Exception)
             {
-                throw new Exception("无法获取当前用户信息,请登录后再试！");
+                return default;  //throw new Exception("无法获取当前用户信息,请登录后再试！");
             }
         }
         /// <summary>
@@ -206,7 +206,7 @@ namespace HuanTian.Infrastructure
             }
             catch (Exception)
             {
-                throw new Exception("无法获取当前用户信息,请登录后再试！");
+                return default;  //throw new Exception("无法获取当前用户信息,请登录后再试！");
             }
         }
     }

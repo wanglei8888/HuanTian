@@ -26,5 +26,5 @@
 
 global using HuanTian.Infrastructure;
 global using Microsoft.AspNetCore.Hosting;
-global using HuanTian.Infrastructure;
 global using Microsoft.AspNetCore.Http;
+global using HuanTian.Service;

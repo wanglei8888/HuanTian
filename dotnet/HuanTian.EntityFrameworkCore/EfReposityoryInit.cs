@@ -100,9 +100,13 @@ namespace HuanTian.EntityFrameworkCore
             {
                 throw new ArgumentException("使用CallEntityMethod必须先调用InitTable", nameof(method));
             }
+            var action = method.Compile();
             foreach (var item in _entityList)
             {
-                callExpresion.Method.Invoke(item, null);
+                if (item != null)
+                {
+                    action.Invoke(item);
+                }
             }
 
             return this;

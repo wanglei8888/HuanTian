@@ -58,4 +58,10 @@ public interface ISysPermissionsService
     /// <param name="input"></param>
     /// <returns></returns>
     Task<IEnumerable<SysPermissionsDO>> RolePermission([FromQuery] SysRolePermissionsInput input);
+    /// <summary>
+    /// 获取用户权限
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<IEnumerable<SysPermissionsDO>> UserPermission(long input);
 }

@@ -23,8 +23,6 @@
  * 版本：V1.0.1
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
-using HuanTian.Infrastructure;
-using HuanTian.Infrastructure;
 using Mapster;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -54,6 +52,18 @@ namespace HuanTian.WebCore
             }
             
             return services;
+        }
+        /// <summary>
+        /// Mvc 注入基础配置（带Swagger）
+        /// </summary>
+        /// <param name="mvcBuilder">Mvc构建器</param>
+        /// <param name="configure"></param>
+        /// <returns>IMvcBuilder</returns>
+        public static IMvcBuilder AddInject(this IMvcBuilder mvcBuilder)
+        {
+            mvcBuilder.Services.AddDynamicApiControllers();
+            mvcBuilder.Services.AddSwaggerGen(options => SwaggerExtensions.BuildSwaggerService(options));
+            return mvcBuilder;
         }
     }
 }

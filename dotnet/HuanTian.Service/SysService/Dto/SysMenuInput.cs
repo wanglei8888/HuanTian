@@ -38,6 +38,7 @@ namespace HuanTian.Service
     public class SysMenuTypeInput
     {
         public string MenuType { get; set; }
+        public string Name { get; set; }
         public long Id { get; set; }
     }
     public class SysRoleMenuTypeInput
@@ -45,8 +46,12 @@ namespace HuanTian.Service
         public string MenuType { get; set; }
         public long RoleId { get; set; }
     }
-    public class SysUserMenyInput
-    { 
+    public class SysUserMenuInput
+    {
+        public SysUserMenuInput(long userId)
+        {
+            UserId = userId;
+        }
         public long UserId { get; set; }
     }
 }

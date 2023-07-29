@@ -53,6 +53,7 @@ public class SysRolePermissionsInput
     /// RoleId
     /// </summary>
     public long MenuId { get; set; }
+    public string PermType { get; set; }
 }
 
 /// <summary>

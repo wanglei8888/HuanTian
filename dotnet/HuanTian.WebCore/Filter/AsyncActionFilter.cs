@@ -28,7 +28,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
-namespace HuanTian.WebCore.Filter
+namespace HuanTian.WebCore
 {
     /// <summary>
     /// 操作过滤器

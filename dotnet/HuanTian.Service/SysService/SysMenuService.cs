@@ -25,6 +25,7 @@ namespace HuanTian.Service
         public async Task<IEnumerable<SysMenuDO>> Tree([FromQuery] SysMenuTypeInput input)
         {
             var allMenu = await _menu
+                .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name.Contains(input.Name))
                 .WhereIf(!string.IsNullOrEmpty(input.MenuType), t => t.MenuType == input.MenuType)
                 .WhereIf(input.Id != 0, t => t.Id == input.Id)
                 .ToListAsync();
@@ -75,7 +76,7 @@ namespace HuanTian.Service
                 .UpdateAsync();
             return count;
         }
-        public async Task<List<SysMenuOutput>> GetUserMenu([FromQuery] SysUserMenyInput input)
+        public async Task<List<SysMenuOutput>> GetUserMenuOutput([FromQuery] SysUserMenuInput input)
         {
             // 优先读取入参，否则读取当前登陆账户
             var userId = (input == null || input.UserId == 0) ? App.GetUserId() : input.UserId;
@@ -97,10 +98,11 @@ namespace HuanTian.Service
 
             return menuInfo;
         }
-        public async Task<IEnumerable<SysMenuOutput>> GetUserMenu2([FromQuery] SysUserMenyInput input)
+        [NonAction]
+        public async Task<IEnumerable<SysMenuDO>> GetUserMenuInfo(long input)
         {
             // 优先读取入参，否则读取当前登陆账户
-            var userId = input.UserId != 0 ? input.UserId : App.GetUserId();
+            var userId = input == 0 ? App.GetUserId() : input;
             Expression<Func<SysMenuDO, bool>> menuExpression = t => true;
             // 读取用户角色权限下的所有菜单权限
             var roleId = await _userRole.FirstOrDefaultAsync(t => t.UserId == userId);
@@ -115,8 +117,8 @@ namespace HuanTian.Service
             var allMenu = await _menu.Where(menuExpression)
                 .OrderBy(t => t.Order, false)
                 .ToListAsync();
-            var menuInfo = allMenu.Adapt<List<SysMenuOutput>>();
-            return menuInfo.Where(t => t.Id != long.Parse("417244902117886") && t.Id != long.Parse("417244902117893"));
+
+            return allMenu;
         }
 
     }
