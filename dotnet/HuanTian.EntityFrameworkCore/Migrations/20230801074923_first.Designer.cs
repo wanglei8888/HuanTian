@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HuanTian.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(EfSqlContext))]
-    [Migration("20230703121155_update-codegen4159")]
-    partial class updatecodegen4159
+    [Migration("20230801074923_first")]
+    partial class first
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,6 +21,76 @@ namespace HuanTian.EntityFrameworkCore.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            modelBuilder.Entity("HuanTian.Infrastructure.SysAppsDO", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)")
+                        .HasColumnName("code")
+                        .HasComment("编码");
+
+                    b.Property<long?>("CreateBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("create_by")
+                        .HasComment("创建人");
+
+                    b.Property<DateTime?>("CreateOn")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("create_on")
+                        .HasComment("创建时间");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("deleted")
+                        .HasComment("软删除");
+
+                    b.Property<string>("Describe")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("describe")
+                        .HasComment("描述");
+
+                    b.Property<bool>("Enable")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("enable")
+                        .HasComment("启用");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)")
+                        .HasColumnName("name")
+                        .HasComment("列名字");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int")
+                        .HasColumnName("order")
+                        .HasComment("排序");
+
+                    b.Property<long?>("UpdateBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("update_by")
+                        .HasComment("修改人");
+
+                    b.Property<DateTime?>("UpdateOn")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("update_on")
+                        .HasComment("修改时间");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("sys_apps", t =>
+                        {
+                            t.HasComment("系统应用表");
+                        });
+                });
 
             modelBuilder.Entity("HuanTian.Infrastructure.SysCodeGenDO", b =>
                 {
@@ -137,14 +207,19 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnName("master_id")
                         .HasComment("主表ID");
 
+                    b.Property<int>("Order")
+                        .HasColumnType("int")
+                        .HasColumnName("order")
+                        .HasComment("排序");
+
                     b.Property<bool>("QueryParameters")
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("query_parameters")
                         .HasComment("是否是查询参数");
 
                     b.Property<string>("QueryType")
-                        .IsRequired()
-                        .HasColumnType("longtext")
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)")
                         .HasColumnName("query_type")
                         .HasComment("查询方式");
 
