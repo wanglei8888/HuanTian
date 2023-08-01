@@ -141,7 +141,7 @@ export default {
       this.$refs.table.refresh()
     },
     remove (key) {
-      this.$http.delete('/sysRole', { data: { Id: key } }).then(res => {
+      this.$http.delete('/sysRole', { data: { Id: key.toString() } }).then(res => {
         if (res.code === 200) {
           this.$message.success('删除成功')
           this.handleOk()

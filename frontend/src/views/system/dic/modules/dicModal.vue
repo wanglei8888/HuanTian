@@ -1,5 +1,10 @@
 <template>
-  <a-modal :title="title" :width="900" :visible="visible" :confirmLoading="confirmLoading" @ok="handleOk"
+  <a-modal
+    :title="title"
+    :width="900"
+    :visible="visible"
+    :confirmLoading="confirmLoading"
+    @ok="handleOk"
     @cancel="handleCancel">
     <a-spin :spinning="confirmLoading">
       <a-form-model ref="form" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :rules="rules">
@@ -32,7 +37,7 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       gutter: 24,
       mdSize: 24,
@@ -53,12 +58,12 @@ export default {
       rules: {
         name: [{ required: true, message: '请输入字典名称！' }],
         code: [{ required: true, message: '请输入唯一键值！' }]
-      },
+      }
     }
   },
   methods: {
     // 初始化方法
-    detail(record) {
+    detail (record) {
       if (record) {
         this.form = record
         this.formType = 'edit'
@@ -70,11 +75,11 @@ export default {
       }
       this.visible = true
     },
-    close() {
+    close () {
       this.$emit('close')
       this.visible = false
     },
-    handleOk() {
+    handleOk () {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.confirmLoading = true
@@ -82,35 +87,32 @@ export default {
             this.$http.put('/sysDic', this.form).then(res => {
               if (res.code === 200) {
                 this.$emit('ok')
-              } else {
-                this.$message.warning(res.message)
+                this.$message.success('保存成功')
+                this.visible = false
               }
             }).finally(() => {
               this.confirmLoading = false
-              this.visible = false
             })
-          }
-          else {
+          } else {
             this.$http.post('/sysDic', this.form).then(res => {
               if (res.code === 200) {
                 this.$emit('ok')
-              } else {
-                this.$message.warning(res.message)
+                this.$message.success('保存成功')
+                this.visible = false
               }
             }).finally(() => {
               this.confirmLoading = false
-              this.visible = false
             })
           }
         }
       })
     },
-    handleCancel() {
+    handleCancel () {
       this.close()
     }
   }
 }
-function createModal() {
+function createModal () {
   return {
     enable: true
   }

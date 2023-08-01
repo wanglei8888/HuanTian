@@ -16,6 +16,7 @@
 #endregion << 版 本 注 释 >>
 
 using Newtonsoft.Json;
+using NPOI.SS.Formula.Functions;
 using SqlSugar.Extensions;
 using Yitter.IdGenerator;
 
@@ -59,13 +60,14 @@ public class SysRoleService : ISysRoleService, IDynamicApiController, IScoped
 
         // 角色
         var roleData = pageData.Data.Adapt<List<SysRoleDO>>();
-        var roleList = await RolePermisionButton(roleData,false);
+        var roleList = await RolePermisionButton(roleData, false);
 
         pageData.Data = roleList;
         return pageData;
     }
     public async Task<int> Add(SysRoleFormInput input)
     {
+        throw new FriendlyException("你的名字");
         var entity = input.Adapt<SysRoleDO>();
         var count = await _sysRole.InitTable(entity)
             .CallEntityMethod(t => t.CreateFunc())
@@ -119,13 +121,10 @@ public class SysRoleService : ISysRoleService, IDynamicApiController, IScoped
             perms.RoleId = input.RoleId;
             permsList.Add(perms);
         }
-        // 查询按钮的菜单Id
-        var perm = await _sysPerm.FirstOrDefaultAsync(t => t.Id == input.PermissionsId[0]);
         var permList = await _sysPerm
-            .Where(t => t.MenuId == perm.MenuId && t.Type == PermissionTypeEnum.Button).ToListAsync();
+            .WhereIf(!string.IsNullOrEmpty(input.Type), t => t.Type == input.Type.ToEnum<PermissionTypeEnum>()).ToListAsync();
         // 删除已经存在的数据
-        var num = await _sysRolePerm.DeleteAsync(t => t.RoleId == input.RoleId
-                && permList.Select(q => q.Id).Contains(t.PermissionsId));
+        var num = await _sysRolePerm.DeleteAsync(t => t.RoleId == input.RoleId && permList.Select(q => q.Id).Contains(t.PermissionsId));
         var count = await _sysRolePerm.InitTable(permsList)
             .CallEntityMethod(t => t.CreateFunc())
             .AddAsync();
@@ -164,7 +163,7 @@ public class SysRoleService : ISysRoleService, IDynamicApiController, IScoped
     /// <param name="input"></param>
     /// <returns></returns>
     [NonAction]
-    public async Task<IEnumerable<Role>> RolePermisionButton(IEnumerable<SysRoleDO> input,bool ignoreNull = true)
+    public async Task<IEnumerable<Role>> RolePermisionButton(IEnumerable<SysRoleDO> input, bool ignoreNull = true)
     {
         //根据角色信息获取该角色包含的菜单按钮权限
 

@@ -9,9 +9,9 @@
               @select="treeSelect"
               :defaultExpandAll="true"
               :replaceFields="{
-                key: 'value',
+                key: 'code',
                 title: 'name',
-                value: 'value'
+                value: 'code'
               }" />
           </div>
         </a-card>
@@ -147,15 +147,12 @@ export default {
       this.queryParam.menuType = e[0]
       this.handSerach()
     },
-    getTreeData () {
+    async getTreeData () {
       this.treeLoading = true
-      sysDict({ code: 'MenuType' }).then((res) => {
-        if (res.code === 200) {
+      const res = await this.$http.get('/sysApps').finally(() => { this.treeLoading = false })
+      if (res.code === 200) {
           this.treeData = res.result
         }
-      }).finally(() => {
-        this.treeLoading = false
-      })
     },
     remove (key) {
       this.$http.delete('/sysMenu', { data: { id: `${key}` } }).then(res => {

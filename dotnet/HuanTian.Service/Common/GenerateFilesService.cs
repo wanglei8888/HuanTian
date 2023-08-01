@@ -78,7 +78,7 @@ namespace HuanTian.Service
                         var elements = new List<IElement>();
                         
                         // 使用 Razor 转换引擎生成 HTML 字符串
-                        var htmlString = Engine.Razor.RunCompile(templateString, Guid.NewGuid().ToString(), typeof(TEntity), entity);
+                        var htmlString = Engine.Razor.RunCompile(templateString, templateAddress, typeof(TEntity), entity);
                         elements.AddRange(HtmlConverter.ConvertToElements(htmlString, new ConverterProperties().SetFontProvider(fontProvider)));
                         
                         using var document = new iText.Layout.Document(pdfDocument);
@@ -141,7 +141,7 @@ namespace HuanTian.Service
                         foreach (var element in entityList)
                         {
                             // 使用 Razor 转换引擎生成 HTML 字符串
-                            var htmlString = Engine.Razor.RunCompile(templateString, Guid.NewGuid().ToString(), typeof(TEntity), element);
+                            var htmlString = Engine.Razor.RunCompile(templateString, templateAddress, typeof(TEntity), element);
                             elements.AddRange(HtmlConverter.ConvertToElements(htmlString, new ConverterProperties().SetFontProvider(fontProvider)));
                         }
 

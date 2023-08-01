@@ -15,6 +15,10 @@
 *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+using NPOI.Util;
+using System.Collections.Generic;
+using Yitter.IdGenerator;
+
 namespace HuanTian.Service;
 
 
@@ -26,16 +30,19 @@ public class SysPermissionsService : ISysPermissionsService, IDynamicApiControll
     private readonly IRepository<SysPermissionsDO> _sysPermissions;
     private readonly IRepository<SysUserRoleDO> _userRole;
     private readonly IRepository<SysRolePermissionsDO> _sysRolePermissions;
+    private readonly ISysMenuService _menuService;
     private readonly IRedisCache _redisCache;
     public SysPermissionsService(IRepository<SysPermissionsDO> sysPermissions,
         IRepository<SysRolePermissionsDO> sysRolePermissions,
         IRepository<SysUserRoleDO> userRole,
-        IRedisCache redisCache)
+        IRedisCache redisCache,
+        ISysMenuService menuService)
     {
         _sysPermissions = sysPermissions;
         _sysRolePermissions = sysRolePermissions;
         _userRole = userRole;
         _redisCache = redisCache;
+        _menuService = menuService;
     }
 
     [HttpGet]
@@ -95,14 +102,34 @@ public class SysPermissionsService : ISysPermissionsService, IDynamicApiControll
         return list;
     }
     [HttpGet]
+    public async Task<IEnumerable<SysPermsMenuOutput>> MenuPerms([FromQuery] SysMenuPermsInput input)
+    {
+        var menu = await _menuService.Get(new SysMenuTypeInput());
+        var allPerms = await _sysPermissions
+            .WhereIf(!string.IsNullOrEmpty(input.Type), t => t.Type == input.Type.ToEnum<PermissionTypeEnum>())
+            .ToListAsync();
+        var permsMenu = allPerms.Adapt<List<SysPermsMenuOutput>>();
+        var output = new List<SysPermsMenuOutput>();
+        foreach (var item in permsMenu.GroupBy(t => t.MenuId))
+        {
+            var model = new SysPermsMenuOutput();
+            model.Name = menu.FirstOrDefault(t => t.Id == item.Key).Name;
+            model.MenuId = item.Key;
+            model.Id = YitIdHelper.NextId();
+            model.Children = item.ToList();
+            output.Add(model);
+        }
+        return output;
+    }
+    [HttpGet]
     public async Task<IEnumerable<SysPermissionsDO>> RolePermission([FromQuery] SysRolePermissionsInput input)
     {
         var rolePermsList = await _sysRolePermissions
             .Where(t => t.RoleId == input.RoleId).ToListAsync();
         var permsList = await _sysPermissions
-            .WhereIf(!string.IsNullOrEmpty(input.PermType), t => t.Type == input.PermType.ToEnum<PermissionTypeEnum>())
             .Where(t => rolePermsList.Select(x => x.PermissionsId).Contains(t.Id))
-            .Where(t => t.MenuId == input.MenuId)
+            .WhereIf(!string.IsNullOrEmpty(input.PermType), t => t.Type == input.PermType.ToEnum<PermissionTypeEnum>())
+            .WhereIf(input.MenuId != 0, t => t.MenuId == input.MenuId)
             .ToListAsync();
         return permsList;
     }

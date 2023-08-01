@@ -1,42 +1,47 @@
 ﻿<template>
-  <a-modal :title="title" :width="800" :visible="visible" :confirmLoading="confirmLoading" @ok="handleOk"
+  <a-modal
+    :title="title"
+    :width="800"
+    :visible="visible"
+    :confirmLoading="confirmLoading"
+    @ok="handleOk"
     @cancel="handleCancel">
     <a-spin :spinning="spinningLoading">
       <a-form-model ref="form" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :rules="rules">
         <a-row :gutter="gutter">
-            <a-col :md="mdSize" :sm="smSize">
-              <a-form-model-item label="应用名称" prop="name" hasFeedback>
-                 <a-input v-model="form.name" placeholder="" />
-              </a-form-model-item>
-            </a-col>
+          <a-col :md="mdSize" :sm="smSize">
+            <a-form-model-item label="应用名称" prop="name" hasFeedback>
+              <a-input v-model="form.name" placeholder="" />
+            </a-form-model-item>
+          </a-col>
         </a-row>
         <a-row :gutter="gutter">
-            <a-col :md="mdSize" :sm="smSize">
-              <a-form-model-item label="应用编码" prop="code" hasFeedback>
-                 <a-input v-model="form.code" placeholder="" />
-              </a-form-model-item>
-            </a-col>
+          <a-col :md="mdSize" :sm="smSize">
+            <a-form-model-item label="应用编码" prop="code" hasFeedback>
+              <a-input v-model="form.code" placeholder="" />
+            </a-form-model-item>
+          </a-col>
         </a-row>
         <a-row :gutter="gutter">
-            <a-col :md="mdSize" :sm="smSize">
-              <a-form-model-item label="排序" prop="order" hasFeedback>
-                 <a-input v-model="form.order" placeholder="" />
-              </a-form-model-item>
-            </a-col>
+          <a-col :md="mdSize" :sm="smSize">
+            <a-form-model-item label="排序" prop="order" hasFeedback>
+              <a-input v-model="form.order" placeholder="" />
+            </a-form-model-item>
+          </a-col>
         </a-row>
         <a-row :gutter="gutter">
-            <a-col :md="mdSize" :sm="smSize">
-              <a-form-model-item label="启用" prop="enable">
-                 <a-switch checkedChildren="启用" v-model="form.enable" unCheckedChildren="禁用" />
-               </a-form-model-item>
-            </a-col>
+          <a-col :md="mdSize" :sm="smSize">
+            <a-form-model-item label="描述" prop="describe" hasFeedback>
+              <a-input v-model="form.describe" placeholder="" />
+            </a-form-model-item>
+          </a-col>
         </a-row>
         <a-row :gutter="gutter">
-            <a-col :md="mdSize" :sm="smSize">
-              <a-form-model-item label="描述" prop="describe" hasFeedback>
-                 <a-input v-model="form.describe" placeholder="" />
-              </a-form-model-item>
-            </a-col>
+          <a-col :md="mdSize" :sm="smSize">
+            <a-form-model-item label="启用" prop="enable">
+              <a-switch checkedChildren="启用" v-model="form.enable" unCheckedChildren="禁用" />
+            </a-form-model-item>
+          </a-col>
         </a-row>
       </a-form-model>
     </a-spin>
@@ -45,7 +50,7 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       labelCol: {
         md: { span: 6 },
@@ -70,7 +75,7 @@ export default {
   },
   methods: {
     // 打开页面初始化
-    detail(value) {
+    detail (value) {
       this.visible = true
       this.confirmLoading = false
       if (this.$refs.form) {
@@ -80,17 +85,16 @@ export default {
         this.form = JSON.parse(JSON.stringify(value))
         this.formType = 'edit'
         this.title = '编辑数据'
-      }
-      else {
+      } else {
         this.title = '新建数据'
         this.formType = 'add'
         this.form = createForm()
       }
     },
-    async handleOk() {
+    async handleOk () {
       this.$refs.form.validate(async valid => {
         if (valid) {
-          this.confirmLoading = true    
+          this.confirmLoading = true
           // 修改数据
           if (this.formType === 'edit') {
             await this.$http.put('/sysApps', this.form).then(res => {
@@ -99,7 +103,7 @@ export default {
                 this.$emit('ok')
                 this.visible = false
               }
-            }).finally(err => {
+            }).finally(() => {
               this.confirmLoading = false
             })
           } else {
@@ -111,25 +115,25 @@ export default {
                 this.$emit('ok')
                 this.visible = false
               }
-            }).finally(err => {
+            }).finally(() => {
               this.confirmLoading = false
             })
           }
         }
       })
     },
-    handleCancel() {
+    handleCancel () {
       this.close()
     },
-    close() {
+    close () {
       this.$emit('close')
       this.visible = false
     }
   }
 }
-function createForm() {
+function createForm () {
   return {
-   
+
   }
 }
 </script>

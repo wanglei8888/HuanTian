@@ -40,6 +40,15 @@ namespace HuanTian.Service
                 .Map(dest => dest.Meta.Show, src => src.Show)
                 //.Map(dest => dest.Meta.KeepAlive, src => src.KeepAlive)
                 .Map(dest => dest.Meta.HideChildren, src => src.HideChildren);
+            config.ForType<SysMenuDO, SysPermsMenuOutput>()
+                .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.ParentId, src => src.ParentId)
+                .Map(dest => dest.MenuId, src => src.Id)
+                .IgnoreNonMapped(true);
+            //config.ForType<SysPermissionsDO, SysPermsMenuOutput>()
+            //  .Map(dest => dest.MenuId, src => src.Id)
+            //  .Map(dest => dest.MenuName, src => src.Name)
+            //  .IgnoreNonMapped(true); 
         }
     }
 }

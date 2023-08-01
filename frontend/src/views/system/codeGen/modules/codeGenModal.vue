@@ -1,18 +1,29 @@
 <template>
-  <a-modal :title="title" :width="900" :visible="visible" :confirmLoading="confirmLoading" @ok="handleOk"
+  <a-modal
+    :title="title"
+    :width="900"
+    :visible="visible"
+    :confirmLoading="confirmLoading"
+    @ok="handleOk"
     @cancel="handleCancel">
     <a-spin :spinning="confirmLoading">
       <a-alert message="代码生成数据都是基于表格的列数据和备注信息,所以请在设计表格的时候,一定要规范设计并填写备注信息,否者可能会有问题" banner closable type="info" how-icon/>
-      <a-form-model ref="form" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :rules="rules" style="margin-top: 20px;">
+      <a-form-model
+        ref="form"
+        :model="form"
+        :label-col="labelCol"
+        :wrapper-col="wrapperCol"
+        :rules="rules"
+        style="margin-top: 20px;">
         <a-row>
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item prop="name" hasFeedback>
               <span slot="label">
-                  <a-tooltip title="该名称,仅用于显示,跟代码生成无实际作用">
-                    <a-icon type="question-circle-o" />
-                  </a-tooltip>&nbsp;
-                  名称
-                </span>
+                <a-tooltip title="该名称,仅用于显示,跟代码生成无实际作用">
+                  <a-icon type="question-circle-o" />
+                </a-tooltip>&nbsp;
+                名称
+              </span>
               <a-input placeholder="请输入名称" v-model="form.name" />
             </a-form-model-item>
           </a-col>
@@ -41,12 +52,18 @@
         <a-row>
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item label="所属菜单" prop="menuId" hasFeedback>
-              <a-tree-select style="width: 100%" v-model="form.menuId"
-                :dropdownStyle="{ maxHeight: '300px', overflow: 'auto' }" :treeData="menuTreeData" :replaceFields="{
+              <a-tree-select
+                style="width: 100%"
+                v-model="form.menuId"
+                :dropdownStyle="{ maxHeight: '300px', overflow: 'auto' }"
+                :treeData="menuTreeData"
+                :replaceFields="{
                   key: 'id',
                   title: 'name',
                   value: 'id'
-                }" placeholder="请选择父级菜单" treeDefaultExpandAll>
+                }"
+                placeholder="请选择父级菜单"
+                treeDefaultExpandAll>
                 <span slot="title" slot-scope="{ title }">{{ title }}
                 </span>
               </a-tree-select>
@@ -57,8 +74,8 @@
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item prop="generationWay" label="生成方式" hasFeedback>
               <a-select v-model="form.generationWay">
-                <a-select-option :value=0>项目生成</a-select-option>
-                <a-select-option :value=1>打包生成</a-select-option>
+                <a-select-option :value="0">项目生成</a-select-option>
+                <a-select-option :value="1">打包生成</a-select-option>
               </a-select>
             </a-form-model-item>
           </a-col>
@@ -71,7 +88,7 @@
 <script>
 import { sysDict } from '@/api/system'
 export default {
-  data() {
+  data () {
     return {
       gutter: 24,
       mdSize: 24,
@@ -96,12 +113,12 @@ export default {
         tableName: [{ required: true, message: '请输入表格名称！' }],
         menuId: [{ required: true, message: '请输入所属菜单！' }],
         generationWay: [{ required: true, message: '请输入生成方式！' }]
-      },
+      }
     }
   },
   methods: {
     // 初始化方法
-    detail(record) {
+    detail (record) {
       if (this.$refs.form) {
         this.$refs.form.clearValidate()
       }
@@ -117,15 +134,13 @@ export default {
       this.visible = true
       this.getDropdown()
     },
-    getDropdown() {
+    getDropdown () {
       this.$http.get('/sysCodeGen/getTableList').then(res => {
         if (res.code === 200) {
           this.tableNameData = res.result
-        } else {
-          this.$message.warning(res.message)
         }
       })
-      this.$http.get('/sysMenu').then(res => {
+      this.$http.get('/sysMenu/tree').then(res => {
         if (res.code === 200) {
           const menu = {
             id: 0,
@@ -134,17 +149,15 @@ export default {
           }
           res.result.unshift(menu)
           this.menuTreeData = res.result
-        } else {
-          this.$message.warning(res.message)
         }
       })
     },
 
-    close() {
+    close () {
       this.$emit('close')
       this.visible = false
     },
-    handleOk() {
+    handleOk () {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.confirmLoading = true
@@ -152,21 +165,18 @@ export default {
             this.$http.put('/sysCodeGen', this.form).then(res => {
               if (res.code === 200) {
                 this.$emit('ok')
+                this.$message.success('保存成功')
                 this.visible = false
-              } else {
-                this.$message.warning(res.message)
               }
             }).finally(() => {
               this.confirmLoading = false
             })
-          }
-          else {
+          } else {
             this.$http.post('/sysCodeGen', this.form).then(res => {
               if (res.code === 200) {
                 this.$emit('ok')
+                this.$message.success('保存成功')
                 this.visible = false
-              } else {
-                this.$message.warning(res.message)
               }
             }).finally(() => {
               this.confirmLoading = false
@@ -175,12 +185,12 @@ export default {
         }
       })
     },
-    handleCancel() {
+    handleCancel () {
       this.close()
     }
   }
 }
-function createModal() {
+function createModal () {
   return {
     generationWay: 0,
     menuType: 'Business'

@@ -1,5 +1,10 @@
 <template>
-  <a-modal :title="title" :width="900" :visible="visible" :confirmLoading="confirmLoading" @ok="handleOk"
+  <a-modal
+    :title="title"
+    :width="900"
+    :visible="visible"
+    :confirmLoading="confirmLoading"
+    @ok="handleOk"
     @cancel="handleCancel">
     <a-spin :spinning="confirmLoading">
       <div class="table-page-search-wrapper">
@@ -19,17 +24,31 @@
           </a-row>
         </a-form> -->
         <a-row style="margin-bottom: 8px;">
-          <a-button @click="handleAdd()" icon="plus" type="primary"
+          <a-button
+            @click="handleAdd()"
+            icon="plus"
+            type="primary"
             :disabled="queryParam.name ? true : false">新增数据</a-button>
         </a-row>
         <a-row>
-          <a-table ref="table" :columns="columns" :rowKey="(record) => record.id" :data-source="data"
-            :loading="tableLoading" :pagination="false">
-            <template v-for="(col, index) in ['name', 'value', 'order', 'enable']" :slot="col"
+          <a-table
+            ref="table"
+            :columns="columns"
+            :rowKey="(record) => record.id"
+            :data-source="data"
+            :loading="tableLoading"
+            :pagination="false">
+            <template
+              v-for="(col, index) in ['name', 'value', 'order', 'enable']"
+              :slot="col"
               slot-scope="text, record, index">
               <div :key="col">
-                <a-select v-if="col === 'enable'" style="width: 120px" @change="(e) => enableChange(index, e)"
-                  :value="text" :disabled="record.editable ? false : true">
+                <a-select
+                  v-if="col === 'enable'"
+                  style="width: 120px"
+                  @change="(e) => enableChange(index, e)"
+                  :value="text"
+                  :disabled="record.editable ? false : true">
                   <a-select-option :value="true">
                     启用
                   </a-select-option>
@@ -37,7 +56,10 @@
                     禁用
                   </a-select-option>
                 </a-select>
-                <a-input v-else-if="record.editable" style="margin: -5px 0" :value="text"
+                <a-input
+                  v-else-if="record.editable"
+                  style="margin: -5px 0"
+                  :value="text"
                   @change="e => handleChange(e.target.value, record.id, col)" />
                 <template v-else>
                   <div>{{ text }}</div>
@@ -73,7 +95,7 @@ export default {
   components: {
     STable
   },
-  data() {
+  data () {
     return {
       gutter: 24,
       mdSize: 24,
@@ -99,10 +121,10 @@ export default {
     }
   },
   methods: {
-    enableChange(index, e) {
+    enableChange (index, e) {
       this.$set(this.data[index], 'enable', e)
     },
-    handSearch() {
+    handSearch () {
       this.tableLoading = true
       this.queryParam.code = this.info.code
       this.$http.get('/sysDic', { params: this.queryParam }).then(res => {
@@ -113,14 +135,14 @@ export default {
         this.tableLoading = false
       })
     },
-    remove(key) {
-      const target = this.data.find(item => key === item.id);
+    remove (key) {
+      const target = this.data.find(item => key === item.id)
       if (target) {
-        this.data = this.data.filter(item => item.id !== key);
+        this.data = this.data.filter(item => item.id !== key)
       }
     },
-    handleAdd() {
-      const count = this.data.length + 1;
+    handleAdd () {
+      const count = this.data.length + 1
       const newData = {
         id: count,
         name: '',
@@ -129,62 +151,62 @@ export default {
         masterId: this.info.id,
         enable: true,
         deleted: false
-      };
-      this.data = [...this.data, newData];
+      }
+      this.data = [...this.data, newData]
       this.edit(count)
     },
-    handleChange(value, key, column) {
-      const newData = [...this.data];
-      const target = newData.find(item => key === item.id);
+    handleChange (value, key, column) {
+      const newData = [...this.data]
+      const target = newData.find(item => key === item.id)
       if (target) {
-        target[column] = value;
-        this.data = newData;
+        target[column] = value
+        this.data = newData
       }
     },
-    edit(key) {
-      const newData = [...this.data];
-      const target = newData.find(item => key === item.id);
-      this.editingKey = key;
+    edit (key) {
+      const newData = [...this.data]
+      const target = newData.find(item => key === item.id)
+      this.editingKey = key
       if (target) {
-        target.editable = true;
-        this.data = newData;
+        target.editable = true
+        this.data = newData
       }
     },
-    save(key) {
-      this.cacheData = this.data.map(item => ({ ...item }));
-      const newData = [...this.data];
-      const newCacheData = [...this.cacheData];
-      const target = newData.find(item => key === item.id);
-      const targetCache = newCacheData.find(item => key === item.id);
+    save (key) {
+      this.cacheData = this.data.map(item => ({ ...item }))
+      const newData = [...this.data]
+      const newCacheData = [...this.cacheData]
+      const target = newData.find(item => key === item.id)
+      const targetCache = newCacheData.find(item => key === item.id)
       if (target && targetCache) {
-        delete target.editable;
-        this.data = newData;
-        Object.assign(targetCache, target);
-        this.cacheData = newCacheData;
+        delete target.editable
+        this.data = newData
+        Object.assign(targetCache, target)
+        this.cacheData = newCacheData
       }
-      this.editingKey = '';
+      this.editingKey = ''
     },
-    cancel(key) {
-      const newData = [...this.data];
-      const target = newData.find(item => key === item.id);
-      this.editingKey = '';
+    cancel (key) {
+      const newData = [...this.data]
+      const target = newData.find(item => key === item.id)
+      this.editingKey = ''
       if (target) {
-        Object.assign(target, this.cacheData.find(item => key === item.id));
-        delete target.editable;
-        this.data = newData;
+        Object.assign(target, this.cacheData.find(item => key === item.id))
+        delete target.editable
+        this.data = newData
       }
     },
     // 初始化方法
-    detail(record) {
+    detail (record) {
       this.info = record
       this.handSearch()
       this.visible = true
     },
-    close() {
+    close () {
       this.$emit('close')
       this.visible = false
     },
-    handleOk() {
+    handleOk () {
       this.confirmLoading = true
       const paramas = {
         SysDicDetail: this.data,
@@ -193,16 +215,14 @@ export default {
       this.$http.post('/sysDic/Detail', paramas).then(res => {
         if (res.code === 200) {
           this.$emit('ok')
-        } else {
-          this.$message.warning(res.message)
+          this.visible = false
+          this.$message.success('保存成功')
         }
       }).finally(() => {
         this.confirmLoading = false
-        this.visible = false
       })
-
     },
-    handleCancel() {
+    handleCancel () {
       this.close()
     }
   }
@@ -213,30 +233,30 @@ const columns = [
     title: '字典名称',
     dataIndex: 'name',
     width: '20%',
-    scopedSlots: { customRender: 'name' },
+    scopedSlots: { customRender: 'name' }
   },
   {
     title: '字典值',
     dataIndex: 'value',
     width: '20%',
-    scopedSlots: { customRender: 'value' },
+    scopedSlots: { customRender: 'value' }
   },
   {
     title: '排序',
     dataIndex: 'order',
     width: '20%',
-    scopedSlots: { customRender: 'order' },
+    scopedSlots: { customRender: 'order' }
   },
   {
     title: '状态',
     dataIndex: 'enable',
     width: '20%',
-    scopedSlots: { customRender: 'enable' },
+    scopedSlots: { customRender: 'enable' }
   },
   {
     title: '操作',
     dataIndex: 'operation',
-    scopedSlots: { customRender: 'operation' },
-  },
-];
+    scopedSlots: { customRender: 'operation' }
+  }
+]
 </script>

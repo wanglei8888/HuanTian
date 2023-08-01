@@ -55,7 +55,9 @@ public class SysRolePermissionsInput
     public long MenuId { get; set; }
     public string PermType { get; set; }
 }
-
+public class SysMenuPermsInput { 
+    public string Type { get; set; }
+}
 /// <summary>
 /// SysPermissions表单参数
 /// </summary>

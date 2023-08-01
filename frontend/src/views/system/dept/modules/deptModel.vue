@@ -118,7 +118,7 @@ export default {
                 this.$emit('ok')
                 this.visible = false
               }
-            }).finally(_err => {
+            }).finally(() => {
               this.confirmLoading = false
             })
           } else {
@@ -130,7 +130,7 @@ export default {
                 this.$emit('ok')
                 this.visible = false
               }
-            }).finally(_err => {
+            }).finally(() => {
               this.confirmLoading = false
             })
           }

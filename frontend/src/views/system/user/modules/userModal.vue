@@ -1,5 +1,10 @@
 <template>
-  <a-modal :title="title" :width="1000" :visible="visible" :confirmLoading="confirmLoading" @ok="handleOk"
+  <a-modal
+    :title="title"
+    :width="1000"
+    :visible="visible"
+    :confirmLoading="confirmLoading"
+    @ok="handleOk"
     @cancel="handleCancel">
     <a-spin :spinning="spinningLoading">
       <a-form-model ref="form" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :rules="rules">
@@ -11,7 +16,7 @@
           </a-col>
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item label="密码" prop="password" hasFeedback>
-              <a-input-password v-if="formType === 'edit'" :disabled=true placeholder="请输入密码" v-model="form.password" />
+              <a-input-password v-if="formType === 'edit'" :disabled="true" placeholder="请输入密码" v-model="form.password" />
               <a-input-password v-else placeholder="请输入密码" v-model="form.password" />
             </a-form-model-item>
           </a-col>
@@ -52,8 +57,13 @@
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item label="用户头像" prop="avatar" hasFeedback>
               <div class="clearfix">
-                <a-upload list-type="picture-card" :file-list="fileList" :before-upload="beforeUpload"
-                  @preview="handlePreview" @change="handleChange" accept="image/jpeg,image/jpg,image/png">
+                <a-upload
+                  list-type="picture-card"
+                  :file-list="fileList"
+                  :before-upload="beforeUpload"
+                  @preview="handlePreview"
+                  @change="handleChange"
+                  accept="image/jpeg,image/jpg,image/png">
                   <div v-if="fileList.length < 1">
                     <a-icon type="plus" />
                     <div class="ant-upload-text">
@@ -81,15 +91,15 @@
 <script>
 import { sysDict } from '@/api/system'
 import md5 from 'md5'
-function createForm() {
+function createForm () {
   return {
     language: 0,
-    enable: true,
+    enable: true
   }
 }
 export default {
   name: 'RoleModal',
-  data() {
+  data () {
     return {
       labelCol: {
         md: { span: 6 },
@@ -121,25 +131,23 @@ export default {
         language: [{ required: true, message: '请选择默认语言！' }],
         avatar: [{
           required: true, validator: this.avatarValidator, trigger: ['change']
-        }],
+        }]
       },
       form: {}
     }
   },
   methods: {
-    avatarValidator(rule, value, callback) {
+    avatarValidator (rule, value, callback) {
       // if (this.fileList.length === 0) {
       //   return callback('请上传用户头像！')
       // } else {
       return true
-      //}
+      // }
     },
-    dromdownList() {
+    dromdownList () {
       sysDict({ code: 'languageType' }).then((res) => {
         if (res.code === 200) {
           this.languageData = res.result
-        } else {
-          this.$message.warning(res.message)
         }
       })
       this.$http.get('/sysDept').then((res) => {
@@ -148,41 +156,40 @@ export default {
         }
       })
     },
-    beforeUpload(file) {
-      this.form.avatar = 'tes1'
-      this.$refs.form.clearValidate('avatar');
-      this.$refs.form.clearValidate('name');
+    beforeUpload (file) {
+      this.$refs.form.clearValidate('avatar')
+      this.$refs.form.clearValidate('name')
       return false
     },
-    ImghandleCancel() {
-      this.previewVisible = false;
+    ImghandleCancel () {
+      this.previewVisible = false
     },
-    async handlePreview(file) {
+    async handlePreview (file) {
       if (!file.url && !file.preview) {
-        file.preview = await getBase64(file.originFileObj);
+        file.preview = await getBase64(file.originFileObj)
       }
-      this.previewImage = file.url || file.preview;
-      this.previewVisible = true;
+      this.previewImage = file.url || file.preview
+      this.previewVisible = true
     },
-    handleChange({ fileList }) {
+    handleChange ({ fileList }) {
       fileList.forEach((file) => {
-        const isLt50M = file.size / 1024 / 1024 < 5;
+        const isLt50M = file.size / 1024 / 1024 < 5
         const isJpgOrPng =
-          file.type === "image/jpeg" || file.type === "image/png";
+          file.type === 'image/jpeg' || file.type === 'image/png'
         if (!isLt50M) {
           fileList.splice(file, 1)
-          this.$message.error("上传头像图片大小不能超过 5MB!");
+          this.$message.error('上传头像图片大小不能超过 5MB!')
           return false
         } else if (!isJpgOrPng) {
           fileList.splice(file, 1)
-          this.$message.error("上传头像图片只能是 JPG/PNG 格式!");
+          this.$message.error('上传头像图片只能是 JPG/PNG 格式!')
           return false
         }
-      });
-      this.fileList = fileList;
+      })
+      this.fileList = fileList
     },
     // 打开页面初始化
-    detail(value) {
+    detail (value) {
       this.visible = true
       this.confirmLoading = false
       if (this.$refs.form) {
@@ -191,7 +198,7 @@ export default {
       this.dromdownList()
       if (value) {
         this.form = JSON.parse(JSON.stringify(value))
-        //JSON.parse(JSON.stringify())
+        // JSON.parse(JSON.stringify())
         this.formType = 'edit'
         this.title = '编辑用户'
         this.fileList = [{
@@ -199,33 +206,32 @@ export default {
           name: this.form.avatar.substring(this.form.avatar.lastIndexOf('\\') + 1),
           status: 'done',
           url: this.form.avatar,
-          thumbUrl: this.form.avatar,
+          thumbUrl: this.form.avatar
         }]
-      }
-      else {
+      } else {
         this.fileList = []
         this.title = '新建用户'
         this.formType = 'add'
         this.form = createForm()
       }
     },
-    close() {
+    close () {
       this.$emit('close')
       this.visible = false
     },
-    async handleOk() {
+    async handleOk () {
       this.$refs.form.validate(async valid => {
         if (valid) {
           this.confirmLoading = true
           this.form.password = md5(this.form.password)
           // 如果存在修改文件
           if (this.fileList.length > 0 && this.fileList[0].originFileObj) {
-            const formData = new FormData();
-            formData.append("filePath", "userAvatar");
+            const formData = new FormData()
+            formData.append('filePath', 'userAvatar')
             if (this.formType === 'edit') {
-              formData.append("add", false);
+              formData.append('add', false)
             }
-            formData.append("file", this.fileList[0].originFileObj);
+            formData.append('file', this.fileList[0].originFileObj)
             await this.$http.post('/sysFile/upload', formData).then(res => {
               // 上传保存信息
               this.form.avatar = res.result.filePath
@@ -239,7 +245,7 @@ export default {
                 this.$emit('ok')
                 this.visible = false
               }
-            }).finally(err => {
+            }).finally(() => {
               this.confirmLoading = false
             })
           } else {
@@ -251,26 +257,25 @@ export default {
                 this.$emit('ok')
                 this.visible = false
               }
-            }).finally(err => {
+            }).finally(() => {
               this.confirmLoading = false
             })
           }
         }
       })
-
     },
-    handleCancel() {
+    handleCancel () {
       this.close()
-    },
+    }
   }
 }
-function getBase64(file) {
+function getBase64 (file) {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-  });
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = error => reject(error)
+  })
 }
 </script>
 

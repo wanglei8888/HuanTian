@@ -61,7 +61,6 @@ namespace HuanTian.Service
 
         public async Task<bool> StringContainsAsync<T>(string key, T value)
         {
-            var serializedValue = await _database.ListGetByIndexAsync("", 0);
             var redisValue = await _database.StringGetAsync(key);
             if (redisValue.HasValue)
             {

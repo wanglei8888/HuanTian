@@ -22,7 +22,7 @@ namespace HuanTian.Service
             _user = user;
         }
         [HttpGet]
-        public async Task<IEnumerable<SysMenuDO>> Tree([FromQuery] SysMenuTypeInput input)
+        public async Task<IEnumerable<SysMenuTreeOutput>> Tree([FromQuery] SysMenuTypeInput input)
         {
             var allMenu = await _menu
                 .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name.Contains(input.Name))
@@ -49,8 +49,7 @@ namespace HuanTian.Service
                 .WhereIf(!string.IsNullOrEmpty(input.MenuType), t => t.MenuType == input.MenuType)
                 .Where(t => menuRoleList.Select(q => q.MenuId).Contains(t.Id))
                 .ToListAsync();
-            var tree = TreeHelper<SysMenuTreeOutput>.DoTreeBuild(allMenu.Adapt<List<SysMenuTreeOutput>>());
-            return tree;
+            return allMenu;
         }
         public async Task<int> Add(SysMenuDO input)
         {

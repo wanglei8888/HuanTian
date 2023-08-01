@@ -63,6 +63,7 @@ public class RolePermsInput
     public long RoleId { get; set; }
     [Required(ErrorMessage = "PermissionsId不能为空")]
     public long[] PermissionsId { get; set; }
+    public string Type { get; set; }
 }
 
 

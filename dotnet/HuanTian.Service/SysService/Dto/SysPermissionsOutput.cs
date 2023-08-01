@@ -20,8 +20,10 @@ namespace HuanTian.Service;
 /// <summary>
 /// SysPermissions输出参数
 /// </summary>
-public class SysPermissionsOutput : SysPermissionsDO
+public class SysPermsMenuOutput : SysPermissionsDO
 {
-        
+    public long ParentId { get; set; }
+    public string MenuName { get; set; }
+    public List<SysPermsMenuOutput> Children { get; set; }
 }
 

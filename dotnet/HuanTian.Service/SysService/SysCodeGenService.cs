@@ -52,14 +52,16 @@ namespace HuanTian.Service
 
         private readonly IRepository<SysCodeGenDO> _codeGen;
         private readonly IRepository<SysCodeGenDetailDO> _codeGenDetail;
+        private readonly IRepository<SysMenuDO> _menu;
         private readonly ISysMenuService _menuService;
 
-        public SysCodeGenService(ISqlSugarClient db, IRepository<SysCodeGenDO> codeGen, IRepository<SysCodeGenDetailDO> codeGenDetail, ISysMenuService menuService)
+        public SysCodeGenService(ISqlSugarClient db, IRepository<SysCodeGenDO> codeGen, IRepository<SysCodeGenDetailDO> codeGenDetail, ISysMenuService menuService, IRepository<SysMenuDO> menu)
         {
             _db = db;
             _codeGen = codeGen;
             _codeGenDetail = codeGenDetail;
             _menuService = menuService;
+            _menu = menu;
         }
         public async Task<IEnumerable<SysCodeGenDetailDO>> Get([FromQuery] SysCodeGenGetInput input)
         {
@@ -76,6 +78,14 @@ namespace HuanTian.Service
                 .WhereIf(!string.IsNullOrEmpty(input.TableName), x => x.TableName == input.TableName)
                 .WhereIf(!string.IsNullOrEmpty(input.Name), x => x.Name == input.Name)
                 .ToPageListAsync(input.PageNo, input.PageSize);
+            // 获取菜单名字
+            var codeGenList = list.Data.Adapt<List<SysCodeGenOutput>>();
+            var menuList = await _menu.Where(t => codeGenList.Select(q => q.MenuId).Contains(t.Id)).ToListAsync();
+            foreach (var item in codeGenList)
+            {
+                item.MenuName = menuList.FirstOrDefault(t => t.Id == item.MenuId)?.Name;
+            }
+            list.Data = codeGenList;
             return list;
         }
         public async Task<int> Add(SysCodeGenFormInput input)

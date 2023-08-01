@@ -129,7 +129,6 @@ export default {
     onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
-      console.log('this.selectedRowKeys', this.selectedRowKeys)
     },
     toggleAdvanced () {
       this.advanced = !this.advanced
@@ -154,6 +153,10 @@ const columns = [
     dataIndex: 'code'
   },
   {
+    title: '描述',
+    dataIndex: 'describe'
+  },
+  {
     title: '排序',
     dataIndex: 'order'
   },
@@ -161,10 +164,6 @@ const columns = [
     title: '启用',
     dataIndex: 'enable',
     scopedSlots: { customRender: 'enableRadio' }
-  },
-  {
-    title: '描述',
-    dataIndex: 'describe'
   },
   {
     title: '操作',

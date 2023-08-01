@@ -33,8 +33,8 @@
                 <a-select-option
                   v-for="(item, index) in appData"
                   :key="index"
-                  :value="item.value"
-                  @click="changeApplication(item.value)">{{ item.name }}</a-select-option>
+                  :value="item.code"
+                  @click="changeApplication(item.code)">{{ item.name }}</a-select-option>
               </a-select>
             </a-form-model-item>
           </a-col>
@@ -226,7 +226,7 @@ export default {
         this.form = JSON.parse(JSON.stringify(value))
         this.formType = 'edit'
         // 如果是父级菜单
-        if (value.parentId == 0) {
+        if (value.parentId === 0) {
           this.menuType = 'Parent'
           this.pidShow = false
         } else {
@@ -240,17 +240,13 @@ export default {
       }
       this.visible = true
       this.changeApplication(this.form.menuType)
-      // this.sysDictTypeDropDown()
     },
     // 获取下拉数据
-    getDropdown () {
-      sysDict({ code: 'MenuType' }).then((res) => {
-        if (res.code === 200) {
-          this.appData = res.result
-        } else {
-          this.$message.warning(res.message)
-        }
-      })
+    async getDropdown () {
+      const res = await this.$http.get('/sysApps')
+      if (res.code === 200) {
+        this.appData = res.result
+      }
       sysDict({ code: 'MenuLevel' }).then((res) => {
         if (res.code === 200) {
           this.typeData = res.result
@@ -301,21 +297,21 @@ export default {
             this.$http.put('/sysMenu', this.form).then(res => {
               if (res.code === 200) {
                 this.$emit('ok')
-                this.confirmLoading = false
                 this.visible = false
-              } else {
-                this.$message.warning(res.message)
+                this.$message.success('保存成功')
               }
+            }).finally(() => {
+              this.confirmLoading = false
             })
           } else {
             this.$http.post('/sysMenu', this.form).then(res => {
               if (res.code === 200) {
                 this.$emit('ok')
-                this.confirmLoading = false
                 this.visible = false
-              } else {
-                this.$message.warning(res.message)
+                this.$message.success('保存成功')
               }
+            }).finally(() => {
+              this.confirmLoading = false
             })
           }
         }

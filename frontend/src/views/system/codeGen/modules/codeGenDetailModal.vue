@@ -5,15 +5,22 @@
       <a-button type="primary" icon="plus" @click="handleSubmit">保存</a-button>
     </div>
     <a-alert message="该功能只适配了MySql数据库,需要其他数据库可提Issues" banner closable type="info" how-icon />
-    <a-table ref="table" size="middle" :columns="columns" :dataSource="loadData" :pagination="false" :alert="true"
-      :loading="tableLoading" :rowKey="(record) => record.id">
+    <a-table
+      ref="table"
+      size="middle"
+      :columns="columns"
+      :dataSource="loadData"
+      :pagination="false"
+      :alert="true"
+      :loading="tableLoading"
+      :rowKey="(record) => record.id">
       <span slot="columnDescriptionTitle">
         <a-tooltip title="代码生成的名字都为此值">
           <a-icon type="smile-o" />
         </a-tooltip>&nbsp;
         描述
       </span>
-      <span slot='queryParametersTitle'>
+      <span slot="queryParametersTitle">
         <a-tooltip title="值为true的时候,页面列表查询会显示此列">
           <a-icon type="question-circle-o" />
         </a-tooltip>&nbsp;
@@ -26,14 +33,18 @@
         <a-input-number v-model="record.order" />
       </template>
       <template slot="frontendType" slot-scope="text, record, indexs">
-        <a-select style="width: 180px" v-model="record.frontendType" :disabled="false" @change="(e) => frontendTypeChange(record, e)">
+        <a-select style="width: 180px" v-model="record.frontendType" :disabled="false" @change="(e) => frontendTypeChange(record)">
           <a-select-option v-for="(item, index) in frontendTypeData" :key="index" :value="item.value">{{
             item.name
           }}</a-select-option>
         </a-select>
       </template>
       <template slot="dropDownCode" slot-scope="text, record">
-        <a-select show-search :filter-option="filterOption" style="width: 180px" v-model="record.dropDownCode"
+        <a-select
+          show-search
+          :filter-option="filterOption"
+          style="width: 180px"
+          v-model="record.dropDownCode"
           :disabled="record.frontendType != 'dropDown'" >
           <a-select-option v-for="(item, index) in dropDownCodeData" :key="index" :value="item.code">{{
             item.name
@@ -65,7 +76,7 @@ export default {
   components: {
 
   },
-  data() {
+  data () {
     return {
       // 表头
       columns: columns,
@@ -84,7 +95,7 @@ export default {
     /**
      * 打开界面
      */
-    detail(data) {
+    detail (data) {
       this.codeGenDetailShow = true
       this.dropDownData()
       const params = {
@@ -98,7 +109,7 @@ export default {
         this.tableLoading = false
       })
     },
-    dropDownData() {
+    dropDownData () {
       this.$http.get('/sysDic/GetMasterList').then(res => {
         if (res.code === 200) {
           this.dropDownCodeData = res.result
@@ -114,15 +125,14 @@ export default {
           this.codeGenQueryTypeData = res.result
         }
       })
-
     },
-    frontendTypeChange(record, value) {
+    frontendTypeChange (record) {
       record.dropDownCode = ''
     },
     /**
      * 提交表单
      */
-    handleSubmit() {
+    handleSubmit () {
       this.tableLoading = true
       const paramas = { detail: this.loadData }
       this.$http.put('/sysCodeGen/detail', paramas).then(res => {
@@ -130,22 +140,20 @@ export default {
         if (res.code === 200) {
           this.$message.success('编辑成功')
           this.handleCancel()
-        } else {
-          this.$message.error('编辑失败：' + res.message)
         }
       }).finally(() => {
         this.tableLoading = false
       })
     },
-    filterOption(input, option) {
+    filterOption (input, option) {
       return (
         option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0 || option.componentOptions.children[0].value.toLowerCase().indexOf(input.toLowerCase()) >= 0
-      );
+      )
     },
     /**
      * 判断是否（用于是否能选择或输入等）
      */
-    judgeColumns(data) {
+    judgeColumns (data) {
       if (
         data.columnName.indexOf('createdUserName') > -1 ||
         data.columnName.indexOf('createdTime') > -1 ||
@@ -157,7 +165,7 @@ export default {
       }
       return false
     },
-    handleCancel() {
+    handleCancel () {
       this.$emit('ok')
       this.loadData = []
       this.codeGenDetailShow = false

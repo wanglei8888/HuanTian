@@ -1,203 +1,131 @@
 <template>
   <a-modal
     :title="title"
-    :width="1000"
+    :width="600"
     :visible="visible"
     :confirmLoading="confirmLoading"
     @ok="handleOk"
     @cancel="handleCancel">
-    <a-spin :spinning="formLoading">
-      <a-form-model ref="form" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :rules="rules">
-        <a-row :gutter="gutter">
-          <a-col :md="mdSize" :sm="smSize">
-            <a-form-model-item label="所属应用" prop="menuType">
-              <a-select style="width: 100%" v-model="form.menuType" placeholder="请选择应用分类">
-                <a-select-option
-                  v-for="(item, index) in appData"
-                  :key="index"
-                  :value="item.value"
-                  @click="changeApplication(item.value)">{{ item.name }}</a-select-option>
-              </a-select>
-            </a-form-model-item>
-          </a-col>
-          <a-col :md="mdSize" :sm="smSize">
-            <div>
-              <a-form-model-item label="所属菜单" prop="menuId">
-                <a-tree-select
-                  style="width: 100%"
-                  v-model="form.menuId"
-                  :dropdownStyle="{ maxHeight: '300px', overflow: 'auto' }"
-                  :treeData="menuTreeData"
-                  :replaceFields="{
-                    key: 'id',
-                    title: 'name',
-                    value: 'id'
-                  }"
-                  @change="menuChange"
-                  treeDefaultExpandAll>
-                  <span slot="title" slot-scope="{ title }">{{ title }}
-                  </span>
-                </a-tree-select>
-              </a-form-model-item>
-            </div>
-          </a-col>
-        </a-row>
-        <a-row :gutter="gutter">
-          <a-col :md="mdSize" :sm="smSize">
-            <a-form-model-item label="菜单按钮" prop="permissionsId" hasFeedback>
-              <a-select
-                mode="multiple"
-                v-model="form.permissionsId"
-                placeholder="请选择菜单按钮"
-                :allowClear="true"
-                :filterOption="filterOption">
-                <a-select-option v-for="(value, key) in menuPerms" :key="key" :value="value.id">
-                  {{ value.name }}
-                </a-select-option>
-              </a-select>
-            </a-form-model-item>
-          </a-col>
-        </a-row>
-      </a-form-model>
+    <a-row style="text-align: center;">
+      <a-radio-group @change="onChange" v-model="permsType" button-style="solid" >
+        <a-radio-button value="1">
+          按钮权限
+        </a-radio-button>
+        <a-radio-button value="2">
+          路由权限
+        </a-radio-button>
+      </a-radio-group>
+    </a-row>
+    <a-row><div style="border-radius: 5px;border: 2px solid #d9d9d9;border-width: 1px;margin-top: 8px;margin-bottom: 8px" /></a-row>
+    <a-row>
+      <a-col>
+        <a-button type="primary" @click="closeAll">收起全部</a-button>
+      </a-col>
+    </a-row>
+
+    <a-spin :spinning="loading">
+      <a-tree
+        style="margin-left: 60px;margin-top: 16px;"
+        v-model="checkedKeys"
+        checkable
+        ref="tree"
+        :expanded-keys="expandedKeys"
+        :tree-data="treeData"
+        :replaceFields="{
+          key: 'id',
+          title: 'name',
+          value: 'id'
+        }"
+        @expand="onExpand"
+      />
     </a-spin>
   </a-modal>
 </template>
-
 <script>
-
-import IconSelector from '@/components/IconSelector'
-import { sysDict } from '@/api/system'
-
 export default {
-  components: { IconSelector },
   data () {
     return {
+      value: 'a',
       labelCol: {
-        xs: { span: 24 },
-        sm: { span: 5 }
+        md: { span: 6 },
+        sm: { span: 4 }
       },
       wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 17 }
+        md: { span: 14 },
+        sm: { span: 20 }
       },
       gutter: 24,
-      mdSize: 12,
+      mdSize: 24,
       smSize: 24,
-      formLoading: false,
-      title: '菜单按钮',
+      permsType: '',
+      checkedKeys: [],
+      expandedKeys: [],
+      title: '菜单权限授权',
       visible: false,
       confirmLoading: false,
-      appData: [],
-      menuPerms: [],
-      menuTreeData: [],
-      rules: {
-        menuType: [{ required: true, message: '请选择应用分类' }],
-        menuId: [{ required: true, message: '请选择所属菜单！' }],
-        permissionsId: [{ required: true, message: '请选择所属菜单！' }]
-      },
-      form: {}
+      loading: false,
+      id: 0,
+      treeData: []
     }
   },
   methods: {
     // 打开页面初始化
-    create (roleInfo) {
-      if (this.$refs.form) {
-        this.$refs.form.clearValidate()
-      }
-      // 获取下拉数据
-      this.getDropdown()
-      this.form = createForm()
-      this.form.roleId = roleInfo
+    create (value) {
+      this.permsType = ''
+      this.id = value
       this.visible = true
-      // this.formLoading = true
-      this.changeApplication(this.form.menuType)
-      // this.handSerachMenuPerms()
+      this.confirmLoading = false
+      this.treeData = []
+      this.handSerach()
+      this.getOwnMenu()
     },
-    filterOption (input, option) {
-      return (
-        option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
-      )
+    // 获取已有菜单
+    async getOwnMenu () {
+      const res = await this.$http.get('/sysPermissions/rolePermission', { params: { roleId: this.id } })
+      this.checkedKeys = res.result.map(t => t.id)
     },
-    menuChange (e) {
-      this.handSerachMenuPerms()
+    onChange () {
+      this.expandedKeys = []
+      this.handSerach()
     },
-    // 获取下拉数据
-    getDropdown () {
-      sysDict({ code: 'MenuType' }).then((res) => {
-        if (res.code === 200) {
-          this.appData = res.result
-        }
+    // 查询数据
+    async handSerach () {
+      this.loading = true
+      const res = await this.$http.get('/sysPermissions/menuPerms', { params: { type: this.permsType } }).finally(() => {
+        this.loading = false
       })
-    },
-    // 查询已经选中的菜单按钮信息
-    handSerachRolePerms () {
-      this.$http.get('/sysPermissions/rolePermission', { params: { roleId: this.form.roleId, menuId: this.form.menuId } }).then(res => {
-        if (res.code === 200) {
-          this.form.permissionsId = res.result.map(t => t.id)
-        } else {
-          this.$message.warning(res.message)
-        }
-      }).finally(() => {
-        this.formLoading = false
-      })
-    },
-    // 获取菜单按钮
-    handSerachMenuPerms () {
-      this.form.permissionsId = []
-      this.$http.get('/sysPermissions', { params: { menuId: this.form.menuId } }).then(res => {
-        if (res.code === 200) {
-          this.menuPerms = res.result
-          this.handSerachRolePerms()
-        } else {
-          this.$message.warning(res.message)
-        }
-      })
-    },
-    changeApplication (value) {
-      this.$http.get('/sysMenu/tree', { params: { menuType: value } }).then(res => {
-        if (res.code === 200) {
-          this.menuTreeData = res.result
-        } else {
-          this.$message.warning(res.message)
-        }
-      })
+      this.treeData = res.result
     },
     close () {
       this.$emit('close')
       this.visible = false
     },
-    handleOk () {
-      this.$refs.form.validate(valid => {
-        if (valid) {
-          this.confirmLoading = true
-          const submitData = { roleId: this.form.roleId, permissionsId: this.form.permissionsId }
-          this.$http.post('/sysRole/AddRolePerms', submitData).then(res => {
-            if (res.code === 200) {
-              this.$emit('ok')
-              this.confirmLoading = false
-              this.visible = false
-            } else {
-              this.$message.warning(res.message)
-            }
-          }).finally(() => {
-            this.confirmLoading = false
-          })
-        }
-      })
+    onExpand (expandedKeys) {
+      this.expandedKeys = expandedKeys
+    },
+    async handleOk () {
+      if (this.checkedKeys.length === 0) {
+        this.$message.warning('请选择菜单')
+        return
+      }
+      const keys = this.checkedKeys.filter(t => !this.treeData.map(t => t.id).includes(t))
+      this.confirmLoading = true
+      const submitData = { roleId: this.id, permissionsId: keys, type: this.permsType }
+      const res = await this.$http.post('/sysRole/AddRolePerms', submitData).finally(() => { this.confirmLoading = false })
+      if (res.code === 200) {
+        this.$emit('ok')
+        this.visible = false
+      }
     },
     handleCancel () {
       this.close()
+    },
+    closeAll () {
+      this.expandedKeys = [] // 清空展开的节点
     }
-  }
-
-}
-function createForm () {
-  return {
-    menuType: 'Business',
-    icon: 'none',
-    show: true,
-    // menuId: '417244902117909',
-    permissionsId: []
   }
 }
 </script>
+
+<style scoped lang="less">
+</style>

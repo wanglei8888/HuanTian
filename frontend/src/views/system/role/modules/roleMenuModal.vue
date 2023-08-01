@@ -1,72 +1,37 @@
 <template>
   <a-modal
     :title="title"
-    :width="1000"
+    :width="600"
     :visible="visible"
     :confirmLoading="confirmLoading"
     @ok="handleOk"
     @cancel="handleCancel">
-    <div class="table-page-search-wrapper">
-      <a-form layout="inline">
-        <a-row :gutter="48">
-          <a-col :md="10" :sm="24">
-            <a-form-item label="菜单名">
-              <a-input v-model="queryParam.name" placeholder="" />
-            </a-form-item>
-          </a-col>
-          <a-col :md="14" :sm="24">
-            <span class="table-page-search-submitButtons">
-              <a-button type="primary" :loading="selectLoading" @click="handSerach()">查询</a-button>
-            </span>
-          </a-col>
-        </a-row>
-      </a-form>
-    </div>
-    <a-table
-      rowKey="id"
-      :columns="modelColumns"
-      :dataSource="modelLoadData"
-      :row-selection="{
-        onChange,
-        onSelect,
-        onSelectAll,
-        selectedRowKeys,
-      }"
-      :pagination="false"
-      :expandIconAsCell="false"
-      :loading="tableLoading"
-      :scroll="{ y: 320 }">
-      <span slot="serial" slot-scope="text">
-        <a-icon slot="serial" :type="text" />
-      </span>
-    </a-table>
+    <a-row>
+      <a-col>
+        <a-button type="primary" @click="closeAll">收起全部</a-button>
+      </a-col>
+    </a-row>
+    <a-spin :spinning="loading">
+      <a-tree
+        style="margin-left: 60px;margin-top: 16px;"
+        v-model="checkedKeys"
+        checkable
+        ref="tree"
+        :expanded-keys="expandedKeys"
+        :tree-data="treeData"
+        :replaceFields="{
+          key: 'id',
+          title: 'name',
+          value: 'id'
+        }"
+        @expand="onExpand"
+      />
+    </a-spin>
   </a-modal>
 </template>
-
 <script>
-
-const columns = [
-  {
-    title: '菜单名称',
-    dataIndex: 'name',
-    width: '30%'
-  },
-  {
-    title: '图标',
-    dataIndex: 'icon',
-    width: '30%',
-    scopedSlots: { customRender: 'serial' }
-  },
-  {
-    title: '跳转地址',
-    dataIndex: 'redirect',
-    width: '30%'
-  }
-]
 export default {
-  name: 'RoleModal',
   data () {
-    this.modelColumns = columns
     return {
       labelCol: {
         md: { span: 6 },
@@ -76,73 +41,67 @@ export default {
         md: { span: 14 },
         sm: { span: 20 }
       },
-      queryParam: {},
       gutter: 24,
       mdSize: 24,
       smSize: 24,
+      checkedKeys: [],
+      expandedKeys: [],
       title: '角色菜单',
-      tableLoading: false,
       visible: false,
       confirmLoading: false,
+      loading: false,
       id: 0,
-      modelLoadData: [],
-      selectedRowKeys: [],
-      selectedRows: [],
-      selectLoading: false
+      treeData: []
     }
   },
   methods: {
-    onChange (selectedRowKeys, selectedRows) {
-      this.selectedRowKeys = selectedRowKeys
-    },
-    onSelect (record, selected, selectedRows) {
-    },
-    onSelectAll (selected, selectedRows, changeRows) {
-    },
     // 打开页面初始化
     create (value) {
-      if (this.$refs.form) {
-        this.$refs.form.clearValidate()
-      }
       this.id = value
-      this.selectLoading = false
       this.visible = true
       this.confirmLoading = false
-      this.modelLoadData = []
+      this.treeData = []
       this.handSerach()
+      this.getOwnMenu()
     },
-    handSerach () {
-      this.selectLoading = true
-      this.$http.get('/sysMenu/tree', { params: this.queryParam }).then(res => {
-        this.modelLoadData = res.result
-      }).finally(() => {
-        this.selectLoading = false
+    // 获取已有菜单
+    async getOwnMenu () {
+      const res = await this.$http.get('/sysMenu/roleMenu', { params: { roleId: this.id } })
+      this.checkedKeys = res.result.map(t => t.id)
+    },
+    // 查询数据
+    async handSerach () {
+      this.loading = true
+      const res = await this.$http.get('/sysMenu/tree').finally(() => {
+        this.loading = false
       })
+      this.treeData = res.result
     },
     close () {
       this.$emit('close')
       this.visible = false
     },
-    handleOk () {
-      if (this.selectedRowKeys.length === 0) {
+    onExpand (expandedKeys) {
+      this.expandedKeys = expandedKeys
+    },
+    async handleOk () {
+      if (this.checkedKeys.length === 0) {
         this.$message.warning('请选择菜单')
         return
       }
       this.confirmLoading = true
-      this.$http.post('/sysRole/addRoleMenu', { roleId: this.id, menuId: this.selectedRowKeys }).then(res => {
-        if (res.code === 200) {
-          this.$emit('ok')
-          this.visible = false
-        } else {
-          this.$message.warning(res.message)
-        }
-      })
-      .finally(() => {
-        this.confirmLoading = false
-      })
+      const res = await this.$http.post('/sysRole/addRoleMenu', { roleId: this.id, menuId: this.checkedKeys }).finally(() => { this.confirmLoading = false })
+      if (res.code === 200) {
+        this.$emit('ok')
+        this.$message.success('授权成功')
+        this.visible = false
+      }
     },
     handleCancel () {
       this.close()
+    },
+    closeAll () {
+      this.expandedKeys = [] // 清空展开的节点
     }
   }
 }

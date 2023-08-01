@@ -64,4 +64,10 @@ public interface ISysPermissionsService
     /// <param name="input"></param>
     /// <returns></returns>
     Task<IEnumerable<SysPermissionsDO>> UserPermission(long input);
+    /// <summary>
+    /// 获取所有菜单权限
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<IEnumerable<SysPermsMenuOutput>> MenuPerms([FromQuery] SysMenuPermsInput input);
 }

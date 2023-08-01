@@ -1,5 +1,10 @@
 <template>
-  <a-modal :title="title" :width="800" :visible="visible" :confirmLoading="confirmLoading" @ok="handleOk"
+  <a-modal
+    :title="title"
+    :width="800"
+    :visible="visible"
+    :confirmLoading="confirmLoading"
+    @ok="handleOk"
     @cancel="handleCancel">
     <a-spin :spinning="spinningLoading">
       <a-form-model ref="form" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :rules="rules">
@@ -18,7 +23,7 @@
         <a-row :gutter="24">
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item label="是否启用">
-              <a-switch  checkedChildren="是" v-model="form.enable" unCheckedChildren="否" />
+              <a-switch checkedChildren="是" v-model="form.enable" unCheckedChildren="否" />
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -30,16 +35,16 @@
 <script>
 // import { getPermissions } from '@/api/manage'
 import pick from 'lodash.pick'
-function createForm() {
+function createForm () {
   return {
     roleName: '',
     describe: '',
-    enable: true,
+    enable: true
   }
 }
 export default {
   name: 'RoleModal',
-  data() {
+  data () {
     return {
       labelCol: {
         md: { span: 6 },
@@ -53,7 +58,7 @@ export default {
       mdSize: 24,
       smSize: 24,
       formType: 'add',
-      title: '添加角色',
+      title: '',
       spinningLoading: false,
       visible: false,
       confirmLoading: false,
@@ -66,25 +71,24 @@ export default {
   },
   methods: {
     // 打开页面初始化
-    detail(value) {
+    detail (value) {
       this.visible = true
       if (value) {
         this.form = JSON.parse(JSON.stringify(value))
         // 删除多余属性
-        delete this.form.permissions;
+        delete this.form.permissions
         this.formType = 'edit'
         this.title = '编辑角色'
-      }
-      else {
+      } else {
         this.title = '新建角色'
         this.formType = 'add'
         this.form = createForm()
       }
     },
-    add() {
+    add () {
       this.edit({ id: 0 })
     },
-    edit(record) {
+    edit (record) {
       this.mdl = Object.assign({}, record)
       this.visible = true
 
@@ -106,11 +110,11 @@ export default {
       })
       console.log('this.mdl', this.mdl)
     },
-    close() {
+    close () {
       this.$emit('close')
       this.visible = false
     },
-    handleOk() {
+    handleOk () {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.confirmLoading = true
@@ -118,30 +122,29 @@ export default {
             this.$http.put('/sysRole', this.form).then(res => {
               if (res.code === 200) {
                 this.$emit('ok')
-                this.confirmLoading = false
                 this.visible = false
-              } else {
-                this.$message.warning(res.message)
+                this.$message.success('编辑成功')
               }
+            }).finally(() => {
+              this.confirmLoading = false
             })
-          }
-          else {
+          } else {
             this.$http.post('/sysRole', this.form).then(res => {
               if (res.code === 200) {
                 this.$emit('ok')
-                this.confirmLoading = false
                 this.visible = false
-              } else {
-                this.$message.warning(res.message)
+                this.$message.success('新增成功')
               }
+            }).finally(() => {
+              this.confirmLoading = false
             })
           }
         }
       })
     },
-    handleCancel() {
+    handleCancel () {
       this.close()
-    },
+    }
   }
 }
 </script>

@@ -33,7 +33,7 @@
 
         <div class="table-operator">
           <a-button type="primary" icon="plus" @click="$refs.codeGenModal.detail()">新建</a-button>
-          <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
+          <a-dropdown v-if="selectedRowKeys.length > 0">
             <a-menu slot="overlay">
               <a-menu-item key="1">
                 <a-popconfirm title="是否要批量删除？" @confirm="remove(selectedRowKeys.join(','), true)">
@@ -190,19 +190,13 @@ const columns = [
   },
   {
     title: '所属菜单',
-    dataIndex: 'menuId',
-    customRender: (text, row, index) => {
-      if (text == 0) {
-        return '无'
-      }
-      return text
-    }
+    dataIndex: 'menuName'
   },
   {
     title: '生成方式',
     dataIndex: 'generationWay',
     customRender: (text, row, index) => {
-      if (text == 0) {
+      if (text === 0) {
         return '生成到项目'
       }
       return '打包生成'

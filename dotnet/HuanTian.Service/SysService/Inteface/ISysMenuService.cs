@@ -6,6 +6,12 @@
     public interface ISysMenuService
     {
         /// <summary>
+        /// 获取菜单-树结构数据
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<IEnumerable<SysMenuTreeOutput>> Tree([FromQuery] SysMenuTypeInput input);
+        /// <summary>
         /// 获取菜单列表
         /// </summary>
         /// <param name="input"></param>
