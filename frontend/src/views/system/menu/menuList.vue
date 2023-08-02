@@ -151,8 +151,8 @@ export default {
       this.treeLoading = true
       const res = await this.$http.get('/sysApps').finally(() => { this.treeLoading = false })
       if (res.code === 200) {
-          this.treeData = res.result
-        }
+        this.treeData = res.result
+      }
     },
     remove (key) {
       this.$http.delete('/sysMenu', { data: { id: `${key}` } }).then(res => {

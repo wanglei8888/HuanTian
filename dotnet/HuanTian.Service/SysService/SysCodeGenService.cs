@@ -209,7 +209,8 @@ namespace HuanTian.Service
                 throw new Exception("表格在数据库中不存在,请修改后再试");
             }
             // 获取模板信息
-            var templatePathList = GetTemplatePathList(new SysCodeGenFileInput { ApplicationName = applicationName, TableName = masterInfo.TableName, FrontPath = parentMenu.Path });
+            var templatePathList = GetTemplatePathList(new SysCodeGenFileInput 
+                { ApplicationName = applicationName, TableName = masterInfo.TableName, FrontPath = parentMenu.Path ?? "a" }); // FrontPath为Null 赋默认值，防止报错
             // 生成方式为生成到项目 && 不强制执行
             if (masterInfo.GenerationWay == GenerationWayEnum.GenToProj
                 && input.Enforcement == false)
