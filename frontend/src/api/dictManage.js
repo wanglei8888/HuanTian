@@ -1,0 +1,140 @@
+import { axios } from '@/utils/request'
+
+/**
+ * 分页查询系统字典类型
+ *
+ * @author yubaoshan
+ * @date 2020/5/17 01:46
+ */
+export function sysDictTypePage (parameter) {
+  return axios({
+    url: '/sysDictType/page',
+    method: 'get',
+    params: parameter
+  })
+}
+
+/**
+ * 添加系统字典类型
+ *
+ * @author yubaoshan
+ * @date 2020/5/17 01:46
+ */
+export function sysDictTypeAdd (parameter) {
+  return axios({
+    url: '/sysDictType/add',
+    method: 'post',
+    data: parameter
+  })
+}
+
+/**
+ * 编辑系统字典类型
+ *
+ * @author yubaoshan
+ * @date 2020/5/17 01:50
+ */
+export function sysDictTypeEdit (parameter) {
+  return axios({
+    url: '/sysDictType/edit',
+    method: 'post',
+    data: parameter
+  })
+}
+
+/**
+ * 删除系统字典类型
+ *
+ * @author yubaoshan
+ * @date 2020/5/17 01:50
+ */
+export function sysDictTypeDelete (parameter) {
+  return axios({
+    url: '/sysDictType/delete',
+    method: 'post',
+    data: parameter
+  })
+}
+
+/**
+ * 获取字典类型下所有字典，举例，返回格式为：[{code:"M",value:"男"},{code:"F",value:"女"}]
+ *
+ * @author yubaoshan
+ * @date 2020/6/10 00:10
+ */
+export function sysDictTypeDropDown (parameter) {
+  return axios({
+    url: '/sysDictType/dropDown',
+    method: 'get',
+    params: parameter
+  })
+}
+
+/**
+ * 获取所有字典，启动时加入缓存使用
+ *
+ * @author yubaoshan
+ * @date 2020/6/10 00:10
+ */
+export function sysDictTypeTree (parameter) {
+  return axios({
+    url: '/sysDictType/tree',
+    method: 'get',
+    params: parameter
+  })
+}
+/**
+ * 查询系统字典值
+ *
+ * @author yubaoshan
+ * @date 2020/5/17 02:24
+ */
+export function sysDictDataPage (parameter) {
+  return axios({
+    url: '/sysDictData/page',
+    method: 'get',
+    params: parameter
+  })
+}
+
+/**
+ * 添加系统字典值
+ *
+ * @author yubaoshan
+ * @date 2020/5/17 02:24
+ */
+export function sysDictDataAdd (parameter) {
+  return axios({
+    url: '/sysDictData/add',
+    method: 'post',
+    data: parameter
+  })
+}
+
+/**
+ * 编辑系统字典值
+ *
+ * @author yubaoshan
+ * @date 2020/5/17 02:25
+ */
+export function sysDictDataEdit (parameter) {
+  return axios({
+    url: '/sysDictData/edit',
+    method: 'post',
+    data: parameter
+  })
+}
+
+/**
+ * 删除系统字典值
+ *
+ * @author yubaoshan
+ * @date 2020/5/17 02:25
+ */
+export function sysDictDataDelete (parameter) {
+  return axios({
+    url: '/sysDictData/delete',
+    method: 'post',
+    data: parameter
+  })
+}

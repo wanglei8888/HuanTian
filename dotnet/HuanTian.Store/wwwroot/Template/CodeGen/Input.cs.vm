@@ -1,0 +1,70 @@
+#region << 版 本 注 释 >>
+/*----------------------------------------------------------------
+ * 文件名：@(@Model.ClassName)Input
+ * 代码生成文件
+ * 创建时间：@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+ * 版本：V1.0.0
+ * 描述：
+ *
+ * ----------------------------------------------------------------
+ * 修改人：
+ * 时间：
+ * 修改说明：
+ *
+ * 版本：V1.0.1
+ *----------------------------------------------------------------*/
+#endregion << 版 本 注 释 >>
+
+namespace @Model.NameSpace;
+
+/// <summary>
+/// @(@Model.EntityDescribe)输入参数
+/// </summary>
+public class @(@Model.ClassName)Input : PageInput
+{
+    @foreach (var column in Model.TableField){
+        @if (@column.QueryParameters == true)
+        {
+            switch (column.DataType)
+            {
+                    case "bigint":
+    @:/// <summary>
+    @:/// @column.ColumnDescription
+    @:/// </summary>
+    @:public long @column.DbColumnName { get; set; }
+                        break;
+                    case "int":
+    @:/// <summary>
+    @:/// @column.ColumnDescription
+    @:/// </summary>
+    @:public int @column.DbColumnName { get; set; } 
+                        break;
+                    case "tinyint":
+    @:/// <summary>
+    @:/// @column.ColumnDescription
+    @:/// </summary>
+    @:public string @column.DbColumnName { get; set; } 
+                        break;
+                    default:
+    @:/// <summary>
+    @:/// @column.ColumnDescription
+    @:/// </summary>
+    @:public string @column.DbColumnName { get; set; } 
+                        break;
+                }                
+        }   
+    }
+    public long Id { get; set; }
+    public int PageSize { get; set ; }
+    public int PageNo { get; set; }
+}
+
+/// <summary>
+/// @(@Model.EntityDescribe)表单参数
+/// </summary>
+public class @(@Model.ClassName)FormInput : @Model.EntityName
+{
+       
+}
+ 
+

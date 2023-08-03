@@ -1,0 +1,113 @@
+#region << 版 本 注 释 >>
+/*----------------------------------------------------------------
+ * 文件名：@(@Model.ClassName)Input
+ * 代码生成文件
+ * 创建时间：@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+ * 版本：V1.0.0
+ * 描述：
+ *
+ * ----------------------------------------------------------------
+ * 修改人：
+ * 时间：
+ * 修改说明：
+ *
+ * 版本：V1.0.1
+ *----------------------------------------------------------------*/
+#endregion << 版 本 注 释 >>
+
+namespace @Model.NameSpace;
+
+/// <summary>
+/// @(@Model.EntityDescribe)服务
+/// </summary>
+public class @(@Model.ClassName)Service : I@(@Model.ClassName)Service, IDynamicApiController, IScoped
+{
+    private readonly IRepository<@(@Model.EntityName)> _@(Model.ClassNameLow);
+    public @(@Model.ClassName)Service(IRepository<@(@Model.EntityName)> @(Model.ClassNameLow))
+    {
+        _@(Model.ClassNameLow) = @(Model.ClassNameLow);
+    }
+
+    [HttpGet]
+    public async Task<PageData> Page([FromQuery] @(@Model.ClassName)Input input)
+    {
+        var list  = await _@(Model.ClassNameLow)
+        @foreach (var column in Model.TableField)
+		{
+			@if (@column.QueryParameters == true)
+			{
+                @switch (@column.DataType)
+                {
+                    case "bigint":
+            @:.WhereIf(input.@column.DbColumnName != 0, t => t.@column.DbColumnName == input.@column.DbColumnName)
+                        break;
+                    case "tinyint":
+            @:.WhereIf(!string.IsNullOrEmpty(input.@column.DbColumnName), t => t.@column.DbColumnName == Convert.ToBoolean(input.@(column.DbColumnName)))
+                        break;
+                    default:
+            @if (@column.QueryType == "like")
+            {
+            @:.WhereIf(!string.IsNullOrEmpty(input.@column.DbColumnName), t => t.@(column.DbColumnName).Contains(input.@column.DbColumnName))
+            }
+            else
+            {
+            @:.WhereIf(!string.IsNullOrEmpty(input.@column.DbColumnName), t => t.@column.DbColumnName == input.@column.DbColumnName)                   
+            }
+                   break;
+                }
+			}
+		}
+            .ToPageListAsync(input.PageNo,input.PageSize);
+        return list;
+    }
+    public async Task<int> Add(@(@Model.ClassName)FormInput input)
+    {
+        var entity = input.Adapt<@(@Model.EntityName)>();
+        var count = await _@(Model.ClassNameLow).InitTable(entity)
+            .CallEntityMethod(t => t.CreateFunc())
+            .AddAsync();
+        return count;
+    }
+    public async Task<int> Update(@(@Model.ClassName)FormInput input)
+    {
+        var entity = input.Adapt<@(@Model.EntityName)>();
+        var count = await _@(Model.ClassNameLow).InitTable(entity)
+                @if (Model.IsContailUpdate == true)
+                {
+            @:.CallEntityMethod(t => t.UpdateFunc())
+                }
+            .UpdateAsync();
+        return count;
+    }
+    public async Task<int> Delete(IdInput input)
+    {
+        var count = await _@(Model.ClassNameLow).DeleteAsync(input.Id.Split(',').Adapt<long[]>());
+        return count;
+    }
+    public async Task<IEnumerable<@(@Model.EntityName)>> Get([FromQuery] @(@Model.ClassName)Input input)
+    {
+        var list  = await _@(Model.ClassNameLow)
+            .WhereIf(input.Id != 0, t => t.Id == input.Id)
+        @foreach (var column in Model.TableField)
+		{
+			@if (@column.QueryParameters == true)
+			{
+                @switch (@column.DataType)
+                {
+                    case "bigint":
+            @:.WhereIf(input.@column.DbColumnName != 0, t => t.@column.DbColumnName == input.@column.DbColumnName)
+                        break;
+                    case "tinyint":
+            @:.WhereIf(!string.IsNullOrEmpty(input.@column.DbColumnName), t => t.@column.DbColumnName == Convert.ToBoolean(input.@(column.DbColumnName)))
+                        break;
+                    default:
+            @:.WhereIf(!string.IsNullOrEmpty(input.@column.DbColumnName), t => t.@column.DbColumnName == input.@column.DbColumnName)
+                        break;
+                }
+			}
+		}
+            .ToListAsync();
+        return list;
+    }
+}
+
