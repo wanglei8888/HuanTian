@@ -22,7 +22,8 @@
               </a-form-item>
             </a-col>
             <a-col :md="!advanced && mdSize || 24" :sm="24">
-              <span class="table-page-search-submitButtons"
+              <span
+                class="table-page-search-submitButtons"
                 :style="advanced && { float: 'right', overflow: 'hidden' } || {}">
                 <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
                 <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
@@ -37,7 +38,7 @@
       </div>
 
       <div class="table-operator">
-        <a-button type="primary" icon="plus" @click="$refs.infoModel.detail()">新建</a-button>        
+        <a-button type="primary" icon="plus" @click="$refs.infoModel.detail()">新建</a-button>
         <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
           <a-menu slot="overlay">
             <a-menu-item key="1">
@@ -50,8 +51,16 @@
           </a-button>
         </a-dropdown>
       </div>
-
-      <s-table ref="table" size="default" rowKey="id" :columns="columns" :data="loadData" :alert="false"
+      <div>
+        <test-model ref="testModel" />
+      </div>
+      <s-table
+        ref="table"
+        size="default"
+        rowKey="id"
+        :columns="columns"
+        :data="loadData"
+        :alert="false"
         :showPagination="false">
         <span slot="enableRadio" slot-scope="text">
           <a-tag :color="text ? 'green' : 'red'">{{ text == 1 ? '启用' : '禁用' }}</a-tag>
@@ -86,14 +95,16 @@
 import moment from 'moment'
 import { STable } from '@/components'
 import infoModel from './modules/deptModel'
+import testModel from './modules/testModel'
 import { removeEmptyChildren } from '@/utils/common'
 
 export default {
   components: {
     STable,
-    infoModel
+    infoModel,
+    testModel
   },
-  data() {
+  data () {
     this.columns = columns
     return {
       // 高级搜索 展开/关闭
@@ -115,7 +126,7 @@ export default {
     }
   },
   methods: {
-    remove(key, multipleChoice) {
+    remove (key, multipleChoice) {
       this.$http.delete('/sysDept', { data: { Id: key.toString() } }).then(res => {
         if (res.code === 200) {
           this.$message.success('删除成功')
@@ -127,19 +138,19 @@ export default {
         }
       })
     },
-    handleOk() {
+    handleOk () {
       this.$refs.table.refresh()
     },
-    onSelectChange(selectedRowKeys, selectedRows) {
+    onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
-    toggleAdvanced() {
+    toggleAdvanced () {
       this.advanced = !this.advanced
     }
   },
   computed: {
-    rowSelection() {
+    rowSelection () {
       return {
         selectedRowKeys: this.selectedRowKeys,
         onChange: this.onSelectChange

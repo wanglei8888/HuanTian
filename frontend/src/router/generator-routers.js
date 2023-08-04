@@ -51,7 +51,7 @@ const constantRouterComponents = {
 
   // Other
   IconSelectorView: () => import('@/views/other/IconSelectorView'),
-  TableInnerEditList: () => import('@/views/other/TableInnerEditList'),
+  TableInnerEditList: () => import('@/views/other/TableInnerEditList')
 }
 
 // 前端未找到页面路由（固定不用改）
@@ -165,7 +165,7 @@ const listToTree = (list, tree, parentId) => {
     if (item.parentId === parentId) {
       const child = {
         ...item,
-        key: item.key || item.name,
+        key: item.id || item.name,
         children: []
       }
       // 迭代 list， 找到当前菜单相符合的所有子菜单

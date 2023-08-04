@@ -16,7 +16,7 @@
         </a-radio-button>
       </a-radio-group>
     </a-row>
-    <a-row><div style="border-radius: 5px;border: 2px solid #d9d9d9;border-width: 1px;margin-top: 8px;margin-bottom: 8px" /></a-row>
+    <a-divider />
     <a-row>
       <a-col>
         <a-button type="primary" @click="closeAll">收起全部</a-button>

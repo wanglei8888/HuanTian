@@ -19,6 +19,7 @@ router.beforeEach((to, from, next) => {
   to.meta && typeof to.meta.title !== 'undefined' && setDocumentTitle(`${i18nRender(to.meta.title)} - ${domTitle}`)
   /* has token */
   const token = storage.get(ACCESS_TOKEN)
+
   if (token) {
     if (to.path === loginRoutePath) {
       next({ path: defaultRoutePath })
@@ -40,8 +41,7 @@ router.beforeEach((to, from, next) => {
               const toMenu = menu.filter(item => item.path === to.path)[0]
               if (toMenu && toMenu.appCode !== app[0].code) {
                 store.commit('SET_APPCODE', toMenu.menuType)
-              }
-              else {
+              } else {
                 store.commit('SET_APPCODE', app[0].code)
               }
 
