@@ -31,6 +31,7 @@ export default {
     'menu.system.dept': 'Dept',
     'menu.system.sysApps': 'AppList',
     'menu.other.IconSelector': 'IconSelector',
+    'menu.system.sysEmailTemplate': 'EmailTemplate',
     // 新加
     'menu.profile': 'Profile',
     'menu.profile.basic': 'Basic Profile',

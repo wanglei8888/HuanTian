@@ -130,7 +130,7 @@ export default {
         deptId: [{ required: true, message: '请选择所属部门！' }],
         language: [{ required: true, message: '请选择默认语言！' }],
         avatar: [{
-          required: true, validator: this.avatarValidator, trigger: ['change']
+          required: true, validator: this.avatarValidator, trigger: ['blur']
         }]
       },
       form: {}

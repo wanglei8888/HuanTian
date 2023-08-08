@@ -114,7 +114,7 @@ export const generator = (routerMap, parent) => {
       // 如果路由设置了 path，则作为默认 path，否则 路由地址 动态拼接生成如 /dashboard/workplace
       path: item.path || `${(parent && parent.path) || ''}/${item.key}`,
       // 路由名称，建议唯一
-      name: item.name || item.key || '',
+      name: item.key || item.name || '',
       appCode: item.menuType,
       // 该路由对应页面的 组件 :方案1
       // component: constantRouterComponents[item.component || item.key],
@@ -144,6 +144,12 @@ export const generator = (routerMap, parent) => {
     }
     // 重定向
     item.redirect && (currentRouter.redirect = item.redirect)
+    if (item.name === '系统管理') {
+      console.log('系统管理', item)
+    }
+    if (item.name === 'result') {
+      console.log('result', item)
+    }
     // 是否有子菜单，并递归处理
     if (item.children && item.children.length > 0) {
       // Recursion
@@ -165,7 +171,7 @@ const listToTree = (list, tree, parentId) => {
     if (item.parentId === parentId) {
       const child = {
         ...item,
-        key: item.id || item.name,
+        key: item.key || item.name,
         children: []
       }
       // 迭代 list， 找到当前菜单相符合的所有子菜单

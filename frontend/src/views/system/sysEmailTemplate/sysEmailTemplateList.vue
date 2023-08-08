@@ -4,26 +4,12 @@
       <a-form layout="inline">
         <a-row :gutter="gutter">
           <a-col :md="mdSize" :sm="24">
-            <a-form-item label="部门名字">
+            <a-form-item label="名称">
               <a-input v-model="queryParam.name" placeholder="" />
             </a-form-item>
           </a-col>
-          <a-col :md="mdSize" :sm="24">
-            <a-form-item label="部门启用">
-              <a-select v-model="queryParam.enable">
-                <a-select-option :value="true">
-                  启用
-                </a-select-option>
-                <a-select-option :value="false">
-                  禁用
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
           <a-col :md="!advanced && mdSize || 24" :sm="24">
-            <span
-              class="table-page-search-submitButtons"
-              :style="advanced && { float: 'right', overflow: 'hidden' } || {}">
+            <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {}">
               <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
               <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
               <a @click="toggleAdvanced" style="margin-left: 8px">
@@ -38,7 +24,7 @@
 
     <div class="table-operator">
       <a-button type="primary" icon="plus" @click="$refs.infoModel.detail()">新建</a-button>
-      <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
+      <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1">
             <a-popconfirm title="是否要批量删除？" @confirm="remove(selectedRowKeys.join(','), true)">
@@ -50,16 +36,17 @@
         </a-button>
       </a-dropdown>
     </div>
+
     <s-table
       ref="table"
       size="default"
       rowKey="id"
       :columns="columns"
       :data="loadData"
-      :alert="false"
-      :showPagination="false">
+      :alert="true"
+      :rowSelection="rowSelection">
       <span slot="enableRadio" slot-scope="text">
-        <a-tag :color="text ? 'green' : 'red'">{{ text == 1 ? '启用' : '禁用' }}</a-tag>
+        <a-tag :color="text ? 'green' : 'red'">{{ text == 1 ? '启用': '禁用' }}</a-tag>
       </span>
       <span slot="action" slot-scope="text, record">
         <template>
@@ -84,14 +71,12 @@
     </s-table>
     <info-model ref="infoModel" @ok="handleOk" />
   </a-card>
-  </page-header-wrapper>
 </template>
 
 <script>
 import moment from 'moment'
 import { STable } from '@/components'
-import infoModel from './modules/deptModel'
-import { removeEmptyChildren } from '@/utils/common'
+import infoModel from './modules/sysEmailTemplateModel'
 
 export default {
   components: {
@@ -110,8 +95,7 @@ export default {
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
-        return this.$http.get('/sysDept/tree', { params: requestParameters }).then(res => {
-          removeEmptyChildren(res.result)
+        return this.$http.get('/sysEmailTemplate/page', { params: requestParameters }).then(res => {
           return res.result
         })
       },
@@ -121,7 +105,7 @@ export default {
   },
   methods: {
     remove (key, multipleChoice) {
-      this.$http.delete('/sysDept', { data: { Id: key.toString() } }).then(res => {
+      this.$http.delete('/sysEmailTemplate', { data: { Id: key.toString() } }).then(res => {
         if (res.code === 200) {
           this.$message.success('删除成功')
           this.$refs.table.refresh()
@@ -154,15 +138,11 @@ export default {
 }
 const columns = [
   {
-    title: '部门名字',
+    title: '名称',
     dataIndex: 'name'
   },
   {
-    title: '部门描述',
-    dataIndex: 'describe'
-  },
-  {
-    title: '部门启用',
+    title: '是否启用',
     dataIndex: 'enable',
     scopedSlots: { customRender: 'enableRadio' }
   },

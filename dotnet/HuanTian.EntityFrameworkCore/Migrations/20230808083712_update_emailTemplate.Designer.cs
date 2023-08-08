@@ -3,6 +3,7 @@ using System;
 using HuanTian.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HuanTian.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(EfSqlContext))]
-    partial class EfSqlContextModelSnapshot : ModelSnapshot
+    [Migration("20230808083712_update_emailTemplate")]
+    partial class update_emailTemplate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

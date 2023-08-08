@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HuanTian.EntityFrameworkCore.Migrations
 {
     /// <inheritdoc />
-    public partial class first : Migration
+    public partial class init_talbe : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -163,6 +163,32 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                     table.PrimaryKey("PK_sys_dic_detail", x => x.id);
                 },
                 comment: "系统字典详情表")
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "sys_email_template",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false, comment: "字典名字")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    file_path = table.Column<string>(type: "varchar(80)", maxLength: 80, nullable: false, comment: "文件地址")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    online_path = table.Column<string>(type: "varchar(80)", maxLength: 80, nullable: false, comment: "文件线上地址")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    deleted = table.Column<bool>(type: "tinyint(1)", nullable: false, comment: "软删除"),
+                    create_by = table.Column<long>(type: "bigint", nullable: true, comment: "创建人"),
+                    create_on = table.Column<DateTime>(type: "datetime(6)", nullable: true, comment: "创建时间"),
+                    update_by = table.Column<long>(type: "bigint", nullable: true, comment: "修改人"),
+                    update_on = table.Column<DateTime>(type: "datetime(6)", nullable: true, comment: "修改时间"),
+                    tenant_id = table.Column<long>(type: "bigint", nullable: false, comment: "租户ID")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_sys_email_template", x => x.id);
+                },
+                comment: "系统邮箱模板表")
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
@@ -359,6 +385,9 @@ namespace HuanTian.EntityFrameworkCore.Migrations
 
             migrationBuilder.DropTable(
                 name: "sys_dic_detail");
+
+            migrationBuilder.DropTable(
+                name: "sys_email_template");
 
             migrationBuilder.DropTable(
                 name: "sys_menu");

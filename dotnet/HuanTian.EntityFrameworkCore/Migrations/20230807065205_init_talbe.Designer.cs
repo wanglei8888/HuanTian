@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HuanTian.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(EfSqlContext))]
-    [Migration("20230801074923_first")]
-    partial class first
+    [Migration("20230807065205_init_talbe")]
+    partial class init_talbe
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -385,6 +385,72 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                     b.ToTable("sys_dic_detail", t =>
                         {
                             t.HasComment("系统字典详情表");
+                        });
+                });
+
+            modelBuilder.Entity("HuanTian.Infrastructure.SysEmailTemplateDO", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<long?>("CreateBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("create_by")
+                        .HasComment("创建人");
+
+                    b.Property<DateTime?>("CreateOn")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("create_on")
+                        .HasComment("创建时间");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("deleted")
+                        .HasComment("软删除");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("varchar(80)")
+                        .HasColumnName("file_path")
+                        .HasComment("文件地址");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("name")
+                        .HasComment("字典名字");
+
+                    b.Property<string>("OnlinePath")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("varchar(80)")
+                        .HasColumnName("online_path")
+                        .HasComment("文件线上地址");
+
+                    b.Property<long>("TenantId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("tenant_id")
+                        .HasComment("租户ID");
+
+                    b.Property<long?>("UpdateBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("update_by")
+                        .HasComment("修改人");
+
+                    b.Property<DateTime?>("UpdateOn")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("update_on")
+                        .HasComment("修改时间");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("sys_email_template", t =>
+                        {
+                            t.HasComment("系统邮箱模板表");
                         });
                 });
 

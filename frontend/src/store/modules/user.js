@@ -38,7 +38,7 @@ const user = {
 
   actions: {
     // 登录
-    Login({ commit }, userInfo) {
+    Login ({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
           const result = response.result
@@ -52,7 +52,7 @@ const user = {
     },
 
     // 获取用户信息
-    GetInfo({ commit }) {
+    GetInfo ({ commit }) {
       return new Promise((resolve, reject) => {
         // 请求后端获取用户信息 /api/user/info
         getInfo().then(response => {
@@ -85,7 +85,7 @@ const user = {
     },
 
     // 登出
-    Logout({ commit, state }) {
+    Logout ({ commit, state }) {
       return new Promise((resolve) => {
         logout(state.token).then(() => {
           commit('SET_TOKEN', '')
@@ -100,13 +100,13 @@ const user = {
       })
     },
     // 切换应用菜单
-    MenuChange({ commit }, application) {
+    MenuChange ({ commit }, application) {
       return new Promise((resolve, reject) => {
         const appCode = application.code
         // 缓存获取所有应用
         const allAppMenu = storage.get(ALL_APP_MENU)
         // 切换应用
-        let appMenu = allAppMenu.filter(item => item.menuType == appCode)
+        const appMenu = allAppMenu.filter(item => item.menuType == appCode)
         // 如果找不到
         if (!appMenu) {
           reject(new Error(`找不到应用: ${appCode}`))

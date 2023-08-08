@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <Platforms>AnyCPU;x64</Platforms>
+    <SatelliteResourceLanguages>zh-Hans</SatelliteResourceLanguages>
   </PropertyGroup>
 
   <ItemGroup>
@@ -39,6 +40,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HuanTian.WebCore\HuanTian.WebCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Template\Email\" />
   </ItemGroup>
 
 </Project>

@@ -18,6 +18,7 @@ namespace HuanTian.EntityFrameworkCore
         public DbSet<SysPermissionsDO> SysPermissionsDO { get; set; }
         public DbSet<SysRolePermissionsDO> SysRolePermissionsDO { get; set; }
         public DbSet<SysAppsDO> SysAppDO { get; set; }
+        public DbSet<SysEmailTemplateDO> SysEmailTemplateDO { get; set; }
         
         #region 配置文件
         public EfSqlContext()

@@ -1,102 +1,100 @@
 <template>
-  <page-header-wrapper>
-    <a-card :bordered="false">
-      <div v-show="codeGenDetailShow">
-        <div class="table-page-search-wrapper">
-          <a-form layout="inline">
-            <a-row :gutter="48">
-              <a-col :md="8" :sm="24">
-                <a-form-item label="名称">
-                  <a-input v-model="queryParam.name" placeholder="" />
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="表名">
-                  <a-input v-model="queryParam.tableName" placeholder="" />
-                </a-form-item>
-              </a-col>
-              <a-col :md="!advanced && 8 || 24" :sm="24">
-                <span
-                  class="table-page-search-submitButtons"
-                  :style="advanced && { float: 'right', overflow: 'hidden' } || {}">
-                  <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
-                  <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
-                  <a @click="toggleAdvanced" style="margin-left: 8px">
-                    {{ advanced ? '收起' : '展开' }}
-                    <a-icon :type="advanced ? 'up' : 'down'" />
-                  </a>
-                </span>
-              </a-col>
-            </a-row>
-          </a-form>
-        </div>
-
-        <div class="table-operator">
-          <a-button type="primary" icon="plus" @click="$refs.codeGenModal.detail()">新建</a-button>
-          <a-dropdown v-if="selectedRowKeys.length > 0">
-            <a-menu slot="overlay">
-              <a-menu-item key="1">
-                <a-popconfirm title="是否要批量删除？" @confirm="remove(selectedRowKeys.join(','), true)">
-                  <a-icon type="delete" />删除
-                </a-popconfirm></a-menu-item>
-            </a-menu>
-            <a-button style="margin-left: 8px">
-              批量操作 <a-icon type="down" />
-            </a-button>
-          </a-dropdown>
-        </div>
-
-        <s-table
-          ref="table"
-          size="default"
-          rowKey="id"
-          :columns="columns"
-          :data="loadData"
-          :alert="true"
-          :rowSelection="rowSelection"
-          showPagination="auto">
-          <!-- :showPagination="false" -->
-          <span slot="enable" slot-scope="text">
-            <a-tag :color="text ? 'green' : 'red'">{{ text | enableFilter }}</a-tag>
-          </span>
-          <span slot="language" slot-scope="text">
-            {{ text | languageFilter }}
-          </span>
-          <span slot="avatar" slot-scope="text" style="margin-left: -13px;">
-            <img style="width:75px;heigth:75px" slot="avatar" :src="text" />
-          </span>
-
-          <span slot="action" slot-scope="text, record">
-            <template>
-              <a @click="$refs.codeGenModal.detail(record)">编辑</a>
-              <a-divider type="vertical" />
-              <a-popconfirm title="是否要删除此行？" @confirm="remove(record.id)">
-                <a>删除</a>
-              </a-popconfirm>
-              <a-divider type="vertical" />
-              <a-dropdown>
-                <a class="ant-dropdown-link">
-                  更多 <a-icon type="down" />
+  <a-card :bordered="false">
+    <div v-show="codeGenDetailShow">
+      <div class="table-page-search-wrapper">
+        <a-form layout="inline">
+          <a-row :gutter="48">
+            <a-col :md="8" :sm="24">
+              <a-form-item label="名称">
+                <a-input v-model="queryParam.name" placeholder="" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="表名">
+                <a-input v-model="queryParam.tableName" placeholder="" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="!advanced && 8 || 24" :sm="24">
+              <span
+                class="table-page-search-submitButtons"
+                :style="advanced && { float: 'right', overflow: 'hidden' } || {}">
+                <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+                <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
+                <a @click="toggleAdvanced" style="margin-left: 8px">
+                  {{ advanced ? '收起' : '展开' }}
+                  <a-icon :type="advanced ? 'up' : 'down'" />
                 </a>
-                <a-menu slot="overlay">
-                  <a-menu-item>
-                    <a href="javascript:;" @click="detailOpen(record)">配置信息</a>
-                  </a-menu-item>
-                  <a-menu-item>
-                    <a-popconfirm title="是否要开始生成？" @confirm="runLocal(record.id)">
-                      <a>开始生成</a>
-                    </a-popconfirm>
-                  </a-menu-item>
-                </a-menu>
-              </a-dropdown>
-            </template>
-          </span>
-        </s-table>
-        <code-gen-modal ref="codeGenModal" @ok="handleOk" />
+              </span>
+            </a-col>
+          </a-row>
+        </a-form>
       </div>
-      <code-gen-detail-modal ref="codeGenDetailModal" @ok="detailHandleOk" />
-    </a-card>
-  </page-header-wrapper>
+
+      <div class="table-operator">
+        <a-button type="primary" icon="plus" @click="$refs.codeGenModal.detail()">新建</a-button>
+        <a-dropdown v-if="selectedRowKeys.length > 0">
+          <a-menu slot="overlay">
+            <a-menu-item key="1">
+              <a-popconfirm title="是否要批量删除？" @confirm="remove(selectedRowKeys.join(','), true)">
+                <a-icon type="delete" />删除
+              </a-popconfirm></a-menu-item>
+          </a-menu>
+          <a-button style="margin-left: 8px">
+            批量操作 <a-icon type="down" />
+          </a-button>
+        </a-dropdown>
+      </div>
+
+      <s-table
+        ref="table"
+        size="default"
+        rowKey="id"
+        :columns="columns"
+        :data="loadData"
+        :alert="true"
+        :rowSelection="rowSelection"
+        showPagination="auto">
+        <!-- :showPagination="false" -->
+        <span slot="enable" slot-scope="text">
+          <a-tag :color="text ? 'green' : 'red'">{{ text | enableFilter }}</a-tag>
+        </span>
+        <span slot="language" slot-scope="text">
+          {{ text | languageFilter }}
+        </span>
+        <span slot="avatar" slot-scope="text" style="margin-left: -13px;">
+          <img style="width:75px;heigth:75px" slot="avatar" :src="text" />
+        </span>
+
+        <span slot="action" slot-scope="text, record">
+          <template>
+            <a @click="$refs.codeGenModal.detail(record)">编辑</a>
+            <a-divider type="vertical" />
+            <a-popconfirm title="是否要删除此行？" @confirm="remove(record.id)">
+              <a>删除</a>
+            </a-popconfirm>
+            <a-divider type="vertical" />
+            <a-dropdown>
+              <a class="ant-dropdown-link">
+                更多 <a-icon type="down" />
+              </a>
+              <a-menu slot="overlay">
+                <a-menu-item>
+                  <a href="javascript:;" @click="detailOpen(record)">配置信息</a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a-popconfirm title="是否要开始生成？" @confirm="runLocal(record.id)">
+                    <a>开始生成</a>
+                  </a-popconfirm>
+                </a-menu-item>
+              </a-menu>
+            </a-dropdown>
+          </template>
+        </span>
+      </s-table>
+      <code-gen-modal ref="codeGenModal" @ok="handleOk" />
+    </div>
+    <code-gen-detail-modal ref="codeGenDetailModal" @ok="detailHandleOk" />
+  </a-card>
 </template>
 
 <script>

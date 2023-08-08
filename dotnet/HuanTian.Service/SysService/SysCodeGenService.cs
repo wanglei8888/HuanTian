@@ -99,7 +99,7 @@ namespace HuanTian.Service
             }
             var id = YitIdHelper.NextId();
             // 详细表数据
-            var ignoreColumn = new string[] { "id", "create_by", "create_on", "update_by", "update_on", "deleted" }; //忽略基础数据
+            var ignoreColumn = new string[] { "id", "create_by", "create_on", "update_by", "update_on", "deleted","tenant_id" }; //忽略基础数据
             var columnList = _db.DbMaintenance.GetColumnInfosByTableName($"{input.TableName}").Where(t => !ignoreColumn.Contains(t.DbColumnName));
             var detailList = new List<SysCodeGenDetailDO>();
             foreach (var (item, index) in columnList.Select((value, index) => (value, index)))
