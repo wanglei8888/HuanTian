@@ -169,17 +169,21 @@ public class SysRoleService : ISysRoleService, IDynamicApiController, IScoped
 
         // 角色权限表
         var rolePermList = await _sysRolePerm
-            .ToListAsync(t => input.Select(x => x.Id).Contains(t.RoleId));
+            .Where(t => input.Select(x => x.Id).Contains(t.RoleId))
+            .ToListAsync();
         // 权限表
         var permList = await _sysPerm
-            .ToListAsync(t => rolePermList.Select(x => x.PermissionsId).Contains(t.Id)
-                && t.Type == PermissionTypeEnum.Button);
+            .Where(t => rolePermList.Select(x => x.PermissionsId).Contains(t.Id)
+                && t.Type == PermissionTypeEnum.Button)
+            .ToListAsync();
         // 角色菜单表
         var roleMenuList = await _sysMenuRole
-            .ToListAsync(t => input.Select(x => x.Id).Contains(t.RoleId));
+            .Where(t => input.Select(x => x.Id).Contains(t.RoleId))
+            .ToListAsync();
         // 菜单表
         var menuList = await _sysMenu
-            .ToListAsync(t => roleMenuList.Select(x => x.MenuId).Contains(t.Id));
+            .Where(t => roleMenuList.Select(x => x.MenuId).Contains(t.Id))
+            .ToListAsync();
 
         var roleList = new List<Role>();
         // 循环所有角色

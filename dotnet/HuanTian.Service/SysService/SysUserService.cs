@@ -24,12 +24,11 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-using HuanTian.EntityFrameworkCore;
-using HuanTian.Infrastructure;
-using MathNet.Numerics.Statistics.Mcmc;
-using Microsoft.EntityFrameworkCore;
+using RabbitMQ.Client;
 using SqlSugar.Extensions;
-using System.Linq.Expressions;
+using System.Net.Mail;
+using System.Net;
+using System.Net.Mime;
 
 namespace HuanTian.Service
 {
@@ -43,24 +42,21 @@ namespace HuanTian.Service
         private readonly IRepository<SysAppsDO> _app;
         private readonly ISysRoleService _sysRoleService;
         private readonly ISysMenuService _sysMenuService;
-        private readonly IRedisCache _redisCache;
-        private readonly EfSqlContext _db;
+        private IMessageQueue _messageQueue;
         public SysUserService(
             ILogger<SysUserService> logger,
             IRepository<SysUserDO> userInfo,
             ISysRoleService sysRoleService,
             IRepository<SysAppsDO> app,
             ISysMenuService sysMenuService,
-            IRedisCache redisCache,
-            EfSqlContext db)
+            IMessageQueue messageQueue)
         {
             _logger = logger;
             _userInfo = userInfo;
             _sysRoleService = sysRoleService;
             _app = app;
             _sysMenuService = sysMenuService;
-            _redisCache = redisCache;
-            _db = db;
+            _messageQueue = messageQueue;
         }
         /// <summary>
         /// 获取用户信息跟用户权限信息
@@ -127,8 +123,49 @@ namespace HuanTian.Service
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<PageData> Page([FromQuery] UserInput input)
+        public async Task<PageData> Page([FromQuery] SysUserInput input)
         {
+
+            ////vendorportal@163.com
+            ////FIATXKLUDHLDNWWL
+            ////"smtp.163.com", 465
+
+            //Console.WriteLine("正在发送中");
+            //// 设置发件人邮箱和密码
+            //string senderEmail = "271976304@qq.com";
+            //string senderPassword = "tigxqcwmuqblbhgg";
+
+            //// 设置收件人邮箱
+            //string recipientEmail = "wangxiaopang8888@163.com";
+
+            //// 创建MailMessage对象
+            //MailMessage mail = new MailMessage(senderEmail, recipientEmail);
+
+            //// 设置邮件主题和正文
+            //mail.Subject = "测试邮件";
+            //mail.Body = "这是一封测试邮件。";
+
+            //// 创建SmtpClient对象
+            //SmtpClient smtpClient = new SmtpClient("smtp.qq.com", 587);
+
+            //// 设置发件人的邮箱账号和密码
+            //smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+
+            //// 启用SSL加密
+            //smtpClient.EnableSsl = false;
+
+            //try
+            //{
+            //    // 发送邮件
+            //    smtpClient.Send(mail);
+            //    Console.WriteLine("邮件发送成功！");
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine("邮件发送失败：" + ex.Message);
+            //}
+
+
             var pageData = await _userInfo
                 .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name.Contains(input.Name))
                 .WhereIf(!string.IsNullOrEmpty(input.UserName), t => t.UserName.Contains(input.UserName))
@@ -138,10 +175,57 @@ namespace HuanTian.Service
             return pageData;
         }
         [HttpGet]
-        public async Task<SysUserDO> Get([FromQuery] IdInput input)
+        public async Task<IEnumerable<SysUserDO>> Get([FromQuery] SysUserInput input)
         {
-            var userInfo = await _userInfo.FirstOrDefaultAsync(t => t.Id == input.Id.ToLong());
+            var userInfo = await _userInfo
+                .WhereIf(input.Id != 0, t => t.Id == input.Id)
+                .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name.Contains(input.Name))
+                .WhereIf(!string.IsNullOrEmpty(input.UserName), t => t.UserName.Contains(input.UserName))
+                .WhereIf(input.DeptId != 0, t => t.DeptId == input.DeptId)
+                .WhereIf(!string.IsNullOrEmpty(input.Enable), t => t.Enable == input.Enable.ObjToBool())
+                .ToListAsync();
             return userInfo;
         }
+        public static void SendEmail(string to, string subject, string body, bool isBodyHTML = false)
+        {
+            using (MailMessage mail = new MailMessage())
+            {
+                mail.From = new MailAddress("wangxiaopang8888@163.com");
+                mail.To.Add(to);
+                mail.Subject = subject;
+                mail.Body = body;
+                mail.IsBodyHtml = isBodyHTML;
+
+                using (SmtpClient client = new SmtpClient("smtp.163.com", 25))
+                {
+                    client.Credentials = new NetworkCredential("wangxiaopang8888", "SXFDBHBLUKDQVWDR");
+                    client.Send(mail);
+                }
+            }
+        }
+        //[HttpPost]
+        //public void Start()
+        //{
+        //    var message = _messageQueue.SelectQueue("email");
+        //    message.StartConsuming((message) =>
+        //    {
+        //        // 处理接收到的消息
+        //        Console.WriteLine("接收到消息：{0}", message);
+        //        Random random = new Random();
+        //        int randomNumber = random.Next(2); // 生成0或1的随机数
+        //        if (randomNumber == 0)
+        //        {
+        //            return Task.FromResult(true);
+        //        }
+        //        return Task.FromResult(false);
+        //    }, false);
+        //}
+        //[HttpPost]
+        //public void Stop()
+        //{
+        //    var message = _messageQueue.SelectQueue("userInfo");
+        //    message.Dispose();
+        //}
+
     }
 }

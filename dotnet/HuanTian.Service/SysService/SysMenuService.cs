@@ -44,7 +44,7 @@ namespace HuanTian.Service
         [HttpGet]
         public async Task<IEnumerable<SysMenuDO>> RoleMenu([FromQuery] SysRoleMenuTypeInput input)
         {
-            var menuRoleList = await _menuRole.ToListAsync(t => t.RoleId == input.RoleId);
+            var menuRoleList = await _menuRole.Where(t => t.RoleId == input.RoleId).ToListAsync();
             var allMenu = await _menu
                 .WhereIf(!string.IsNullOrEmpty(input.MenuType), t => t.MenuType == input.MenuType)
                 .Where(t => menuRoleList.Select(q => q.MenuId).Contains(t.Id))
@@ -86,7 +86,7 @@ namespace HuanTian.Service
             // 判断是否是超级管理员  是，就返回所有菜单信息
             if ((await _user.FirstOrDefaultAsync(t => t.Id == userId)).Type != SysUserTypeEnum.SuperAdmin)
             {
-                var menuRoleList = await _menuRole.ToListAsync(t => t.RoleId == roleId.RoleId);
+                var menuRoleList = await _menuRole.Where(t => t.RoleId == roleId.RoleId).ToListAsync();
                 menuExpression = t => menuRoleList.Select(q => q.MenuId).Contains(t.Id);
             }
 
@@ -109,7 +109,7 @@ namespace HuanTian.Service
             // 判断是否是超级管理员  是，就返回所有菜单信息
             if ((await _user.FirstOrDefaultAsync(t => t.Id == userId)).Type != SysUserTypeEnum.SuperAdmin)
             {
-                var menuRoleList = await _menuRole.ToListAsync(t => t.RoleId == roleId.RoleId);
+                var menuRoleList = await _menuRole.Where(t => t.RoleId == roleId.RoleId).ToListAsync();
                 menuExpression = t => menuRoleList.Select(q => q.MenuId).Contains(t.Id);
             }
 

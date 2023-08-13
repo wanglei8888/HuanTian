@@ -1,6 +1,7 @@
 ﻿using HuanTian.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using SqlSugar;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace HuanTian.EntityFrameworkCore
@@ -33,14 +34,9 @@ namespace HuanTian.EntityFrameworkCore
         #region 增删改查
         public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate) => await _db.Set<TEntity>().FirstOrDefaultAsync(predicate);
 
-        public async Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> predicate = default)
+        public async Task<IEnumerable<TEntity>> ToListAsync()
         {
             IQueryable<TEntity> value = _db.Set<TEntity>();
-
-            if (predicate != null)
-            {
-                value = value.Where(predicate);
-            }
 
             if (_sqlWhereExpression != null)
             {

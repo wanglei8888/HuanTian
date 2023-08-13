@@ -1,17 +1,16 @@
 ﻿#region << 版 本 注 释 >>
 /*----------------------------------------------------------------
- * 版权所有 (c) 2023  NJRN 保留所有权利。
+ * 版权所有 (c) 2023 HP NJRN 保留所有权利。
  * CLR版本：4.0.30319.42000
- * 机器名称：WANGXIAOPANG
- * 公司名称：
+ * 机器名称：WEIHAN
+ * 公司名称：HP
  * 命名空间：HuanTian.Service.SysService.Dto
- * 唯一标识：c26b9da3-888f-4a46-bb66-cbbb56ea7ed1
- * 文件名：SysUserInput
- * 当前用户域：WANGXIAOPANG
+ * 唯一标识：c4465ca7-cded-4134-b663-eb824d5be6b4
+ * 文件名：UserInput
+ * 当前用户域：weihan
  * 
  * 创建者：wanglei
- * 电子邮箱：271976304@qq.com
- * 创建时间：2023/7/15 23:49:18
+ * 创建时间：2023/4/28 17:31:20
  * 版本：V1.0.0
  * 描述：
  *
@@ -24,24 +23,17 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+
 namespace HuanTian.Service
 {
-    /// <summary>
-    /// SysUserOutput
-    /// </summary>
-    public class SysUserOutput : SysUserDO
+    public class SysUserInput : PageInput
     {
-        /// <summary>
-        /// 权限列表
-        /// </summary>
-        public IEnumerable<Permission> Role { get; set; }
-        /// <summary>
-        /// 应用列表
-        /// </summary>
-        public IEnumerable<SysAppsDO> App { get; set; }
-        /// <summary>
-        /// 菜单列表
-        /// </summary>
-        public IEnumerable<SysMenuOutput> Menu { get; set; }
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public string UserName { get; set; }
+        public string Enable { get; set; }
+        public long DeptId { get; set; }
+        public int PageSize { get; set; }
+        public int PageNo { get; set; }
     }
 }

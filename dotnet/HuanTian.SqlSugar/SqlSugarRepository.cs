@@ -35,14 +35,9 @@ namespace HuanTian.SqlSugar
             return await _db.Queryable<TEntity>().FirstAsync(predicate);
         }
 
-        public async Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> predicate = default)
+        public async Task<IEnumerable<TEntity>> ToListAsync()
         {
             var value = _db.Queryable<TEntity>();
-
-            if (predicate != null)
-            {
-                value = value.Where(predicate);
-            }
 
             if (_sqlWhereExpression != null)
             {
