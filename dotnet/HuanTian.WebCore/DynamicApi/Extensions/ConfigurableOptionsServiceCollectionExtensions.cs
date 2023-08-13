@@ -1,4 +1,4 @@
-﻿using HuanTian.Infrastructure;
+﻿using HuanTian.WebCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

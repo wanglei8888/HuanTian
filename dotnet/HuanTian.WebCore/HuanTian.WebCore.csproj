@@ -14,6 +14,24 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="DynamicApi\Attribute\ApiDescriptionSettingsAttribute.cs" />
+    <Compile Include="DynamicApi\Attribute\ApiSeatAttribute.cs" />
+    <Compile Include="DynamicApi\Attribute\DynamicApiControllerAttribute.cs" />
+    <Compile Include="DynamicApi\Attribute\MapSettingsAttribute.cs" />
+    <Compile Include="DynamicApi\Attribute\OptionsSettingsAttribute.cs" />
+    <Compile Include="DynamicApi\Attribute\QueryParametersAttribute.cs" />
+    <Compile Include="DynamicApi\Attribute\RouteConstraintAttribute.cs" />
+    <Compile Include="DynamicApi\DynamicApiControllerApplicationModelConvention.cs" />
+    <Compile Include="DynamicApi\DynamicApiControllerServiceCollectionExtensions.cs" />
+    <Compile Include="DynamicApi\Extensions\ConfigurableOptionsServiceCollectionExtensions.cs" />
+    <Compile Include="DynamicApi\Hepler\DynamicApiControllerFeatureProvider.cs" />
+    <Compile Include="DynamicApi\Hepler\ParameterRouteTemplate.cs" />
+    <Compile Include="DynamicApi\Hepler\Penetrates.cs" />
+    <Compile Include="DynamicApi\Hepler\UnifyContext.cs" />
+    <Compile Include="DynamicApi\Options\DynamicApiControllerSettingsOptions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\HuanTian.Service\HuanTian.Service.csproj" />
   </ItemGroup>
 

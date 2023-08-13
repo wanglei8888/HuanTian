@@ -4,22 +4,22 @@ using System.Reflection;
 
 namespace HuanTian.WebCore
 {
-    internal static class Penetrates
+    public static class Penetrates
     {
         /// <summary>
         /// 分组分隔符
         /// </summary>
-        internal const string GroupSeparator = "@";
+        public const string GroupSeparator = "@";
 
         /// <summary>
         /// 请求动词映射字典
         /// </summary>
-        internal static ConcurrentDictionary<string, string> VerbToHttpMethods { get; private set; }
+        public static ConcurrentDictionary<string, string> VerbToHttpMethods { get; private set; }
 
         /// <summary>
         /// 控制器排序集合
         /// </summary>
-        internal static ConcurrentDictionary<string, (string, int)> ControllerOrderCollection { get; set; }
+        public static ConcurrentDictionary<string, (string, int)> ControllerOrderCollection { get; set; }
 
         /// <summary>
         /// 构造函数

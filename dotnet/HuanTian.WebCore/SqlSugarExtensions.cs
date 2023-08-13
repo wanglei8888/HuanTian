@@ -43,7 +43,7 @@ namespace HuanTian.WebCore
             var config = new ConnectionConfig()
             {
                 DbType = dbType, //数据库切换，需要改
-                ConnectionString = App.Configuration[$"ConnectionStrings:{dbType}Connection"],
+                ConnectionString = App.Configuration[$"ConnectionStrings:{dbType}"],
                 IsAutoCloseConnection = true,
                 ConfigureExternalServices = new ConfigureExternalServices()
                 {
@@ -91,7 +91,7 @@ namespace HuanTian.WebCore
                        {
                            Console.ForegroundColor = ConsoleColor.Blue;
                        }
-                       Console.WriteLine(SqlProfiler.ParameterFormat(sql, pars));
+                       // Console.WriteLine(SqlProfiler.ParameterFormat(sql, pars));
                    };
                });
                 return sqlSugar;
