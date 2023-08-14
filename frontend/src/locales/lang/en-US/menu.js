@@ -29,9 +29,11 @@ export default {
     'menu.system.userList': 'UserList',
     'menu.system.codeGen': 'CodeGen',
     'menu.system.dept': 'Dept',
-    'menu.system.sysApps': 'AppList',
+    'menu.system.tenant': 'Teanant',
+    'menu.system.apps': 'AppList',
+    'menu.setting': 'ProjectSetting',
     'menu.other.IconSelector': 'IconSelector',
-    'menu.system.sysEmailTemplate': 'EmailTemplate',
+    'menu.system.emailTemplate': 'EmailTemplate',
     // 新加
     'menu.profile': 'Profile',
     'menu.profile.basic': 'Basic Profile',

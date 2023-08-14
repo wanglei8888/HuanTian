@@ -1,8 +1,8 @@
 ﻿#region << 版 本 注 释 >>
 /*----------------------------------------------------------------
- * 文件名：SysEmailTemplateOutput
+ * 文件名：SysTenantOutput
  * 代码生成文件
- * 创建时间：2023-08-07 17:04:34
+ * 创建时间：2023-08-11 17:12:27
  * 版本：V1.0.0
  * 描述：
  *
@@ -15,13 +15,14 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-namespace HuanTian.Service;
+
+namespace HuanTian.Service.SysService.Dto;
 
 /// <summary>
-/// 系统邮箱模板表输出参数
+/// 系统租户表输出参数
 /// </summary>
-public class SysEmailTemplateOutput : SysEmailTemplateDO
+public class SysTenantOutput : SysTenantDO
 {
-        
+    public string TenantAdminName { get; set; }
 }
 

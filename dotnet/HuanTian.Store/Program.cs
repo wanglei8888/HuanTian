@@ -2,6 +2,8 @@
 using HuanTian.Infrastructure;
 using HuanTian.Service;
 using HuanTian.WebCore;
+using Mapster;
+using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Huangtian.Store
@@ -15,7 +17,8 @@ namespace Huangtian.Store
             // 静态类存储
             builder.Services.AddInject(builder.Configuration);
             // 动态Congtrole注入
-            builder.Services.AddControllers(options => {
+            builder.Services.AddControllers(options =>
+            {
             }).AddInject();
 
             builder.Services.AddEndpointsApiExplorer();
@@ -76,7 +79,10 @@ namespace Huangtian.Store
 
             // 注册Redis缓存服务
             builder.Services.AddSingleton<IRedisCache>(provider =>
-                new RedisCache(builder.Configuration["ConnectionStrings:RedisConnection"]));
+                new RedisCache(builder.Configuration["ConnectionStrings:Redis"]));
+            // 注册RabbitMQ服务
+            builder.Services.AddScoped<IMessageQueue>(provider =>
+               new RabbitMQMessageQueue(builder.Configuration["ConnectionStrings:RabbitMQ"]));
 
             // 注册JWT服务
             builder.Services.AddJwt(true);
@@ -86,14 +92,14 @@ namespace Huangtian.Store
             var app = builder.Build();
             // 自定义中间件
             app.UseMiddleware<CustomMiddleware>();
-            
+
             App.WebHostEnvironment = app.Environment; // 静态类存储
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI(t => { SwaggerExtensions.BuildSwaggerUI(t,""); });
+                app.UseSwaggerUI(t => { SwaggerExtensions.BuildSwaggerUI(t, ""); });
             }
 
             app.UseCors("cors");

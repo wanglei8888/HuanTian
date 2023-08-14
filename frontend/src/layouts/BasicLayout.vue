@@ -29,11 +29,11 @@
           增加 Header 左侧内容区自定义
     -->
     <a-layout-content :style="{ height: '100%', margin: '16px 16px 0', paddingTop: fixedHeader ? '60px' : '0', paddingBottom:'16px' }">
-        <multi-tab v-if="multiTab"></multi-tab>
-        <transition name="page-transition">
-          <!-- <route-view /> -->
-        </transition>
-      </a-layout-content>
+      <multi-tab v-if="multiTab"></multi-tab>
+      <transition name="page-transition">
+
+      </transition>
+    </a-layout-content>
     <template v-slot:headerContentRender>
       <hearder-switch-menu></hearder-switch-menu>
     </template>
@@ -50,7 +50,7 @@
     <template v-slot:footerRender>
       <global-footer />
     </template>
-    <router-view />
+    <route-view />
   </pro-layout>
 </template>
 
@@ -60,6 +60,7 @@ import { i18nRender } from '@/locales'
 import { mapState } from 'vuex'
 import { CONTENT_WIDTH_TYPE, SIDEBAR_TYPE, TOGGLE_MOBILE_TYPE } from '@/store/mutation-types'
 
+import RouteView from './RouteView'
 import MultiTab from '@/components/MultiTab'
 import defaultSettings from '@/config/defaultSettings'
 import RightContent from '@/components/GlobalHeader/RightContent'
@@ -75,7 +76,8 @@ export default {
     GlobalFooter,
     Ads,
     MultiTab,
-    HearderSwitchMenu
+    HearderSwitchMenu,
+    RouteView
   },
   data () {
     return {
@@ -169,12 +171,12 @@ export default {
     },
     setMenus () {
       const appCode = this.$store.getters.appCode
-      let routes = this.mainMenu.find(item => item.path === '/')
+      const routes = this.mainMenu.find(item => item.path === '/')
       const children = routes.children.filter(element => {
-          if(element.appCode === appCode){
+          if (element.appCode === appCode) {
             return element
           }
-      });
+      })
       routes.children = children
       this.menus = (routes && routes.children) || []
     },

@@ -28,9 +28,11 @@ export default {
     'menu.system.userList': '用户列表',
     'menu.system.dicList': '字典列表',
     'menu.system.codeGen': '代码生成',
-    'menu.system.sysApps': '应用列表',
+    'menu.system.tenant': '租户列表',
+    'menu.setting': '项目配置',
+    'menu.system.apps': '应用列表',
     'menu.system.dept': '部门列表',
-    'menu.system.sysEmailTemplate': '邮件模板',
+    'menu.system.emailTemplate': '邮件模板',
     'menu.other.IconSelector': '图标列表',
     // 新加
     'menu.profile': '详情页',

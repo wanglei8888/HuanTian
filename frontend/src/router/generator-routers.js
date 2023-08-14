@@ -127,7 +127,7 @@ export const generator = (routerMap, parent) => {
         hiddenHeaderContent: hiddenHeaderContent,
         target: target,
         permission: item.id,
-        keepAlive: false
+        keepAlive: item.meta.keepAlive
       }
     }
     // 是否设置了隐藏菜单

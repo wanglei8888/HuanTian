@@ -196,6 +196,26 @@ namespace HuanTian.Infrastructure
             return result.ToString();
         }
         /// <summary>
+        /// 表格实体类去除前后缀
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string EntityRemovePrefixAndSuffix(this string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+
+            var words = Regex.Split(input.Substring(0, input.Length - 2), @"(?<!^)(?=[A-Z])|_"); // 使用正则表达式拆分单词
+            var newWords = words.ToList();
+            newWords.RemoveAt(0);
+
+            var result = string.Join("", words.ToList());
+
+            return result;
+        }
+        /// <summary>
         /// 字符串转换为驼峰命名方式
         /// </summary>
         /// <param name="input"></param>

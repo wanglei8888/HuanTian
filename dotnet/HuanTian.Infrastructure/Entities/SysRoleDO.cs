@@ -19,7 +19,7 @@ namespace HuanTian.Infrastructure
         /// <summary>
         /// 角色描述
         /// </summary>
-        [MaxLength(200)]
+        [MaxLength(100)]
         [Comment("角色描述")]
         public string Describe { get; set; }
         /// <summary>

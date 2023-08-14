@@ -130,7 +130,10 @@ export default {
       this.viewMode = !this.viewMode
     },
     async quearyEmailHtml () {
-      const res = await this.$http.get('/sysEmailTemplate/getTemplate', { params: { id: this.form.id } })
+      this.spinningLoading = true
+      const res = await this.$http.get('/sysEmailTemplate/getTemplate', { params: { id: this.form.id } }).finally(() => {
+        this.spinningLoading = false
+      })
       if (res.code === 200) {
         this.form.emailHtml = res.result
         // this.$set(this.form, 'emailHtml', res.result)
@@ -147,7 +150,8 @@ export default {
 }
 function createForm () {
   return {
-    emailHtml: ''
+    emailHtml: '',
+    enable: true
   }
 }
 </script>

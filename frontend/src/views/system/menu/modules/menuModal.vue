@@ -47,33 +47,31 @@
               </a-tree-select>
             </a-form-model-item>
           </a-col>
-          <div v-if="pidShow">
-            <a-col :md="mdSize" :sm="smSize" >
-              <a-form-model-item prop="component" hasFeedback>
-                <span slot="label">
-                  <a-tooltip
-                    title="顶级(目录)菜单填写：RouteView(不带面包屑)，PageView(带面包屑),子级(菜单级)内链打开http链接填写：menu/menuList">
-                    <a-icon type="question-circle-o" />
-                  </a-tooltip>&nbsp;
-                  前端组件
-                </span>
-                <a-input placeholder="请输入前端组件" v-model="form.component" :disabled="!pidShow" />
-              </a-form-model-item>
-            </a-col>
-          </div>
-          <div v-else>
-            <a-col :md="mdSize" :sm="smSize">
-              <a-form-model-item prop="redirect" hasFeedback>
-                <span slot="label">
-                  <a-tooltip title="如需打开首页加载此目录下菜单，请填写加载菜单路由，设为首页后其他设置的主页将被替代">
-                    <a-icon type="question-circle-o" />
-                  </a-tooltip>&nbsp;
-                  重定向
-                </span>
-                <a-input prop="redirect" placeholder="请输入重定向地址" :disabled="pidShow" v-model="form.redirect" />
-              </a-form-model-item>
-            </a-col>
-          </div>
+          <a-col :md="mdSize" :sm="smSize" >
+            <a-form-model-item prop="component" hasFeedback>
+              <span slot="label">
+                <a-tooltip
+                  title="顶级(目录)菜单填写：RouteView(不带面包屑)，PageView(带面包屑),子级(菜单级)内链打开http链接填写：menu/menuList">
+                  <a-icon type="question-circle-o" />
+                </a-tooltip>&nbsp;
+                前端组件
+              </span>
+              <a-input placeholder="请输入前端组件" v-model="form.component" :disabled="componentDisabled" />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+        <a-row :gutter="gutter">
+          <a-col :md="mdSize" :sm="smSize">
+            <a-form-model-item prop="redirect" hasFeedback>
+              <span slot="label">
+                <a-tooltip title="如需打开首页加载此目录下菜单，请填写加载菜单路由，设为首页后其他设置的主页将被替代">
+                  <a-icon type="question-circle-o" />
+                </a-tooltip>&nbsp;
+                重定向
+              </span>
+              <a-input prop="redirect" placeholder="请输入重定向地址" :disabled="redirectDisabled" v-model="form.redirect" />
+            </a-form-model-item>
+          </a-col>
         </a-row>
         <a-row :gutter="gutter">
           <a-col :md="mdSize" :sm="smSize">
@@ -134,7 +132,7 @@
                 </a-tooltip>&nbsp;
                 隐藏子类
               </span>
-              <a-switch checkedChildren="是" v-model="form.hideChildren" unCheckedChildren="否" @change="menuTreeChange" />
+              <a-switch checkedChildren="是" v-model="form.hideChildren" unCheckedChildren="否" @change="hidChildrenChange" />
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -173,6 +171,8 @@ function createForm () {
   return {
     menuType: 'Business',
     icon: 'none',
+    hideChildren: false,
+    component: '',
     show: true
   }
 }
@@ -193,13 +193,13 @@ export default {
       mdSize: 12,
       smSize: 24,
       formLoading: false,
-      pidShow: true,
       title: '添加菜单',
       visible: false,
+      componentDisabled: false,
+      redirectDisabled: true,
       formType: 'add',
       visibleIcon: false,
       confirmLoading: false,
-      menuType: 'Child',
       typeData: [],
       appData: [],
       menuTreeData: [],
@@ -208,9 +208,9 @@ export default {
         name: [{ required: true, min: 1, message: '请输入菜单名称！' }],
         menuType: [{ required: true, message: '请选择应用分类' }],
         parentId: [{ required: true, message: '请选择父级菜单！' }],
-        component: [{ required: true, message: '请输入前端组件！' }],
+        component: [{ required: true, validator: this.componentValidator }],
         order: [{ required: true, message: '请输入排序值！' }],
-        redirect: [{ required: true, message: '请输入重定向！' }],
+        redirect: [{ required: true, validator: this.redirectValidator }],
         title: [{ required: true, message: '请输入多语言值！' }]
       },
       form: {}
@@ -222,23 +222,24 @@ export default {
       // 获取下拉数据
       this.getDropdown()
       if (value) {
-        this.form = JSON.parse(JSON.stringify(value))
+        this.form = { ...createForm(), ...JSON.parse(JSON.stringify(value)) }
         this.formType = 'edit'
         // 如果是父级菜单
         if (value.parentId === 0) {
-          this.menuType = 'Parent'
-          this.pidShow = false
+          this.redirectDisabled = false
+          this.componentDisabled = true
         } else {
-          this.menuType = 'Child'
-          this.pidShow = true
+          this.redirectDisabled = true
+          this.componentDisabled = false
         }
+        this.hidChildrenChange(this.form.hideChildren)
         this.title = '编辑菜单'
       } else {
         this.form = createForm()
         this.title = '新增菜单'
       }
-      this.visible = true
       this.changeApplication(this.form.menuType)
+      this.visible = true
     },
     // 获取下拉数据
     async getDropdown () {
@@ -256,24 +257,23 @@ export default {
     },
     // 切换父子类菜单
     menuTreeChange (value) {
-      if (value === 0 || value === true) {
+      if (value === 0 && this.form.hideChildren === false) {
         this.form.component = 'RouteView'
-        this.pidShow = false
+        this.redirectDisabled = false
+        this.componentDisabled = true
       } else {
-        this.form.component = ''
-        this.pidShow = true
+        this.redirectDisabled = true
+        this.componentDisabled = false
       }
-      this.$refs.form.clearValidate()
+      if (this.$refs.form) {
+        this.$refs.form.clearValidate()
+      }
     },
-    hideChildrenChange (value) {
-      if (value === true) {
-        this.form.component = ''
-        this.pidShow = true
-      } else {
-        this.form.component = ''
-        this.pidShow = true
+    hidChildrenChange (value) {
+      if (value) {
+        this.redirectDisabled = true
+        this.componentDisabled = false
       }
-      this.$refs.form.clearValidate()
     },
     changeApplication (value) {
       this.$http.get('/sysMenu/tree', { params: { menuType: value } }).then(res => {
@@ -285,10 +285,30 @@ export default {
           }
           res.result.unshift(parentMenu)
           this.menuTreeData = res.result
-        } else {
-          this.$message.warning(res.message)
         }
       })
+    },
+    componentValidator (rule, value, callback) {
+      if (!this.componentDisabled) {
+        if (!value) {
+          return callback(new Error('请输入前端组件！'))
+        } else {
+          return callback()
+        }
+      } else {
+        return callback()
+      }
+    },
+    redirectValidator (rule, value, callback) {
+      if (!this.redirectDisabled) {
+        if (!value) {
+          return callback(new Error('请输入重定向！'))
+        } else {
+          return callback()
+        }
+      } else {
+        return callback()
+      }
     },
     openIconSele () {
       this.visibleIcon = true

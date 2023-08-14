@@ -67,7 +67,6 @@ public class SysRoleService : ISysRoleService, IDynamicApiController, IScoped
     }
     public async Task<int> Add(SysRoleFormInput input)
     {
-        throw new FriendlyException("你的名字");
         var entity = input.Adapt<SysRoleDO>();
         var count = await _sysRole.InitTable(entity)
             .CallEntityMethod(t => t.CreateFunc())

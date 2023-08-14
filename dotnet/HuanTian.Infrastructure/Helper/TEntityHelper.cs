@@ -35,6 +35,7 @@ namespace HuanTian.Infrastructure
     public class TEntityHelper<TEntity>
     {
         private static readonly Dictionary<string, Func<TEntity, object>> _propertyAccessorsCache = new Dictionary<string, Func<TEntity, object>>();
+        private static Dictionary<string, object> anonymousObject = new Dictionary<string, object>();
         /// <summary>
         /// 获取泛型的列值
         /// </summary>
@@ -60,7 +61,38 @@ namespace HuanTian.Infrastructure
             {
                 throw new FriendlyException($"{nameof(GetEnutityColumn)}方法,实体{typeof(TEntity).Name}中该列不存在{columnName}");
             }
-           
+
+        }
+        /// <summary>
+        /// 以左边为主表展示两个实体所有的属性
+        /// </summary>
+        /// <typeparam name="TEntityB"></typeparam>
+        /// <param name="entityA"></param>
+        /// <param name="entityB"></param>
+        /// <returns></returns>
+        public static object ConvertToAnonymousObject<TEntityB>(TEntity entityA, TEntityB entityB)
+        {
+            var aProperties = typeof(TEntity).GetProperties();
+            var bProperties = typeof(TEntityB).GetProperties();
+            Dictionary<string, object> anonymousObject = new Dictionary<string, object>();
+            foreach (var property in aProperties)
+            {
+                var propertyName = property.Name;
+                anonymousObject[propertyName] = property.GetValue(entityA);
+            }
+
+            foreach (var property in bProperties)
+            {
+                var propertyName = property.Name;
+                if (anonymousObject.ContainsKey(propertyName))
+                {
+                    var entityName = typeof(TEntityB).Name.EntityRemovePrefixAndSuffix();
+                    propertyName = entityName + propertyName;
+                }
+                anonymousObject[propertyName] = property.GetValue(entityB);
+            }
+
+            return anonymousObject;
         }
     }
 }

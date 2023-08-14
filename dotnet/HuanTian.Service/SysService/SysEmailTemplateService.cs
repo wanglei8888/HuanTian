@@ -15,8 +15,9 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-using Microsoft.AspNetCore.Routing.Template;
-using SqlSugar;
+
+using HuanTian.Service.SysService.Dto;
+using Microsoft.IdentityModel.Tokens;
 
 namespace HuanTian.Service;
 
@@ -42,13 +43,12 @@ public class SysEmailTemplateService : ISysEmailTemplateService, IDynamicApiCont
     public async Task<int> Add(SysEmailTemplateFormInput input)
     {
         // 过滤
-        if ((await _sysEmailTemplate.FirstOrDefaultAsync(t=>t.Name == input.Name)) != null)
+        if ((await _sysEmailTemplate.FirstOrDefaultAsync(t => t.Name == input.Name)) != null)
         {
             throw new Exception("模板名称已存在，请修改后再试");
         }
         var entity = input.Adapt<SysEmailTemplateDO>();
-        var templatePath = Path.Combine(App.WebHostEnvironment.WebRootPath, "Template", "Email", input.Name + ".html");
-        SaveHtmlToFile(input.EmailHtml, templatePath);
+        SaveHtmlToFile(input);
         var count = await _sysEmailTemplate.InitTable(entity)
             .CallEntityMethod(t => t.CreateFunc())
             .AddAsync();
@@ -57,13 +57,12 @@ public class SysEmailTemplateService : ISysEmailTemplateService, IDynamicApiCont
     public async Task<int> Update(SysEmailTemplateFormInput input)
     {
         // 过滤
-        if ((await _sysEmailTemplate.ToListAsync(t => t.Name == input.Name)).Count() > 1)
+        if ((await _sysEmailTemplate.Where(t => t.Name == input.Name).ToListAsync()).Count() > 1)
         {
             throw new Exception("模板名称已存在，请修改后再试");
         }
         var entity = input.Adapt<SysEmailTemplateDO>();
-        var templatePath = Path.Combine(App.WebHostEnvironment.WebRootPath, "Template", "Email", input.Name + ".html");
-        SaveHtmlToFile(input.EmailHtml, templatePath);
+        SaveHtmlToFile(input);
         var count = await _sysEmailTemplate.InitTable(entity)
             .CallEntityMethod(t => t.UpdateFunc())
             .UpdateAsync();
@@ -71,6 +70,18 @@ public class SysEmailTemplateService : ISysEmailTemplateService, IDynamicApiCont
     }
     public async Task<int> Delete(IdInput input)
     {
+        // 删除模板文件
+        var idCount = input.Id.Split(',');
+        var collection = await _sysEmailTemplate.Where(t => idCount.Contains(t.Id.ToString())).ToListAsync();
+        foreach (var item in collection)
+        {
+            var filePath = Path.Combine(App.WebHostEnvironment.WebRootPath, "Template", "Email", item.Name + ".html");
+            // 删除模板文件
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+        }
         var count = await _sysEmailTemplate.DeleteAsync(input.Id.Split(',').Adapt<long[]>());
         return count;
     }
@@ -102,16 +113,21 @@ public class SysEmailTemplateService : ISysEmailTemplateService, IDynamicApiCont
             throw new Exception("Error reading the file.");
         }
     }
-    private void SaveHtmlToFile(string htmlCode, string filePath)
+    /// <summary>
+    /// 保存HTML代码到文件
+    /// </summary>
+    /// <param name="input"></param>
+    /// <exception cref="ArgumentException"></exception>
+    private void SaveHtmlToFile(SysEmailTemplateFormInput input)
     {
         try
         {
             // 检查HTML代码和文件路径是否为空
-            if (string.IsNullOrEmpty(htmlCode))
+            if (string.IsNullOrEmpty(input.EmailHtml))
             {
                 throw new ArgumentException("HTML代码不能为空");
             }
-
+            var filePath = Path.Combine(App.WebHostEnvironment.WebRootPath, "Template", "Email", input.Name + ".html");
             if (string.IsNullOrEmpty(filePath))
             {
                 throw new ArgumentException("文件路径不能为空");
@@ -125,7 +141,7 @@ public class SysEmailTemplateService : ISysEmailTemplateService, IDynamicApiCont
             }
 
             // 写入HTML代码到文件
-            File.WriteAllText(filePath, htmlCode);
+            File.WriteAllText(filePath, input.EmailHtml);
 
             Console.WriteLine("HTML代码已成功保存为文件：" + filePath);
         }

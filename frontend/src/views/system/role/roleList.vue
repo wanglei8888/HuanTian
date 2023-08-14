@@ -1,78 +1,80 @@
 <template>
-  <a-card :bordered="false">
-    <div class="table-page-search-wrapper">
-      <a-form layout="inline">
-        <a-row :gutter="48">
-          <a-col :md="8" :sm="24">
-            <a-form-item label="角色名称">
-              <a-input placeholder="请输入" v-model="queryParam.roleName" />
-            </a-form-item>
-          </a-col>
-          <a-col :md="8" :sm="24">
-            <a-form-item label="状态">
-              <a-select placeholder="请选择" default-value="" v-model="queryParam.enable">
-                <a-select-option value="">全部</a-select-option>
-                <a-select-option value="true">正常</a-select-option>
-                <a-select-option value="false">禁用</a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :md="8" :sm="24">
-            <span class="table-page-search-submitButtons">
-              <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
-              <a-button style="margin-left: 8px">重置</a-button>
-            </span>
-          </a-col>
-        </a-row>
-      </a-form>
-    </div>
-    <div class="table-operator">
-      <a-button type="primary" icon="plus" @click="$refs.detailModal.detail()">新建角色</a-button>
-    </div>
-    <s-table ref="table" size="default" :columns="columns" :data="loadData" rowKey="id">
-      <div slot="expandedRowRender" slot-scope="record" style="margin: 0">
-        <a-row :gutter="24">
-          <a-col :span="12" v-for="(role, index) in record.permissions" :key="index" :style="{ marginBottom: '12px' }">
-            <a-col :span="4">
-              <span>{{ role.permissionName }}：</span>
+  <page-header-wrapper>
+    <a-card :bordered="false">
+      <div class="table-page-search-wrapper">
+        <a-form layout="inline">
+          <a-row :gutter="48">
+            <a-col :md="8" :sm="24">
+              <a-form-item label="角色名称">
+                <a-input placeholder="请输入" v-model="queryParam.roleName" />
+              </a-form-item>
             </a-col>
-            <a-col :span="20" v-if="role.actionEntitySet.length > 0">
-              <a-tag color="cyan" v-for="(action, k) in role.actionEntitySet" :key="k">{{ action.describe }}</a-tag>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="状态">
+                <a-select placeholder="请选择" default-value="" v-model="queryParam.enable">
+                  <a-select-option value="">全部</a-select-option>
+                  <a-select-option value="true">正常</a-select-option>
+                  <a-select-option value="false">禁用</a-select-option>
+                </a-select>
+              </a-form-item>
             </a-col>
-            <a-col :span="20" v-else>-</a-col>
-          </a-col>
-        </a-row>
+            <a-col :md="8" :sm="24">
+              <span class="table-page-search-submitButtons">
+                <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+                <a-button style="margin-left: 8px">重置</a-button>
+              </span>
+            </a-col>
+          </a-row>
+        </a-form>
       </div>
-      <span slot="action" slot-scope="text, record">
-        <a @click="$refs.detailModal.detail(record)">编辑</a>
-        <a-divider type="vertical" />
-        <a-popconfirm title="是否要删除此行？" @confirm="remove(record.id)">
-          <a>删除</a>
-        </a-popconfirm>
-        <a-divider type="vertical" />
-        <a-dropdown>
-          <a class="ant-dropdown-link">
-            更多 <a-icon type="down" />
-          </a>
-          <a-menu slot="overlay">
-            <a-menu-item>
-              <a href="javascript:;" @click="$refs.roleMenuModal.create(record.id)">授权菜单</a>
-            </a-menu-item>
-            <a-menu-item>
-              <a href="javascript:;" @click="$refs.roleMenuPermsModal.create(record.id)">授权菜单按钮</a>
-            </a-menu-item>
-          </a-menu>
-        </a-dropdown>
-      </span>
-      <span slot="enable" slot-scope="text" style="margin-left: -13px;">
-        <a-tag :color="text ? 'green' : 'red'">{{ text ? '启用' : '禁用' }}</a-tag>
-      </span>
-    </s-table>
+      <div class="table-operator">
+        <a-button type="primary" icon="plus" @click="$refs.detailModal.detail()">新建角色</a-button>
+      </div>
+      <s-table ref="table" size="default" :columns="columns" :data="loadData" rowKey="id">
+        <div slot="expandedRowRender" slot-scope="record" style="margin: 0">
+          <a-row :gutter="24">
+            <a-col :span="12" v-for="(role, index) in record.permissions" :key="index" :style="{ marginBottom: '12px' }">
+              <a-col :span="4">
+                <span>{{ role.permissionName }}：</span>
+              </a-col>
+              <a-col :span="20" v-if="role.actionEntitySet.length > 0">
+                <a-tag color="cyan" v-for="(action, k) in role.actionEntitySet" :key="k">{{ action.describe }}</a-tag>
+              </a-col>
+              <a-col :span="20" v-else>-</a-col>
+            </a-col>
+          </a-row>
+        </div>
+        <span slot="action" slot-scope="text, record">
+          <a @click="$refs.detailModal.detail(record)">编辑</a>
+          <a-divider type="vertical" />
+          <a-popconfirm title="是否要删除此行？" @confirm="remove(record.id)">
+            <a>删除</a>
+          </a-popconfirm>
+          <a-divider type="vertical" />
+          <a-dropdown>
+            <a class="ant-dropdown-link">
+              更多 <a-icon type="down" />
+            </a>
+            <a-menu slot="overlay">
+              <a-menu-item>
+                <a href="javascript:;" @click="$refs.roleMenuModal.create(record.id)">授权菜单</a>
+              </a-menu-item>
+              <a-menu-item>
+                <a href="javascript:;" @click="$refs.roleMenuPermsModal.create(record.id)">授权菜单按钮</a>
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
+        </span>
+        <span slot="enable" slot-scope="text" style="margin-left: -13px;">
+          <a-tag :color="text ? 'green' : 'red'">{{ text ? '启用' : '禁用' }}</a-tag>
+        </span>
+      </s-table>
 
-    <role-modal ref="detailModal" @ok="handleOk" />
-    <role-menu-modal ref="roleMenuModal" @ok="handleOk" />
-    <role-menu-perms-modal ref="roleMenuPermsModal" @ok="handleOk" />
-  </a-card>
+      <role-modal ref="detailModal" @ok="handleOk" />
+      <role-menu-modal ref="roleMenuModal" @ok="handleOk" />
+      <role-menu-perms-modal ref="roleMenuPermsModal" @ok="handleOk" />
+    </a-card>
+  </page-header-wrapper>
 </template>
 
 <script>

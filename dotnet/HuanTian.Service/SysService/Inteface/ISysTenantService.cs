@@ -1,8 +1,8 @@
 ﻿#region << 版 本 注 释 >>
 /*----------------------------------------------------------------
- * 文件名：SysEmailTemplateService
+ * 文件名：SysTenantService
  * 代码生成文件
- * 创建时间：2023-08-07 17:04:34
+ * 创建时间：2023-08-11 17:12:27
  * 版本：V1.0.0
  * 描述：
  *
@@ -15,31 +15,34 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-namespace HuanTian.Service;
+
+using HuanTian.Service.SysService.Dto;
+
+namespace HuanTian.Service.SysService.Inteface;
 
 /// <summary>
-/// 系统邮箱模板表服务
+/// 系统租户表服务
 /// </summary>
-public interface ISysEmailTemplateService
+public interface ISysTenantService
 {
     /// <summary>
     /// 分页查询
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    Task<PageData> Page(SysEmailTemplateInput input);
+    Task<PageData> Page(SysTenantInput input);
     /// <summary>
     /// 新增数据
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    Task<int> Add(SysEmailTemplateFormInput input);
+    Task<int> Add(SysTenantFormInput input);
     /// <summary>
     /// 修改数据
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    Task<int> Update(SysEmailTemplateFormInput input);
+    Task<int> Update(SysTenantFormInput input);
     /// <summary>
     /// 删除数据
     /// </summary>
@@ -51,5 +54,5 @@ public interface ISysEmailTemplateService
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    Task<IEnumerable<SysEmailTemplateDO>> Get(SysEmailTemplateInput input);
+    Task<IEnumerable<SysTenantDO>> Get(SysTenantInput input);
 }
