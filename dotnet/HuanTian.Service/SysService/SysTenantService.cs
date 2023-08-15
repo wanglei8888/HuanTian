@@ -15,19 +15,7 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-using HuanTian.EntityFrameworkCore;
-using HuanTian.Infrastructure;
-using Humanizer;
-using MapsterMapper;
-using MathNet.Numerics.Statistics.Mcmc;
 using Microsoft.EntityFrameworkCore;
-using SqlSugar;
-using System;
-using System.Diagnostics;
-using System.Dynamic;
-using System.Threading;
-using Yitter.IdGenerator;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace HuanTian.Service;
 

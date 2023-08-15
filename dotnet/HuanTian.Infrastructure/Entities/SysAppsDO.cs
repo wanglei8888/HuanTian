@@ -7,7 +7,7 @@ namespace HuanTian.Infrastructure
     /// 系统应用表
     /// </summary>
     [Comment("系统应用表")]
-    public class SysAppsDO : BaseEntityUpdate
+    public class SysAppsDO : BaseEntityBusiness
     {
         [MaxLength(30)]
         [Comment("列名字")]

@@ -202,7 +202,7 @@ namespace HuanTian.Infrastructure
         {
             try
             {
-                return long.Parse(HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtClaimConst.TenantId)?.Value);
+                return EncryptionHelper.Decrypt(HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtClaimConst.TenantId)?.Value,CommonConst.TenantToken).ToLong();
             }
             catch (Exception)
             {

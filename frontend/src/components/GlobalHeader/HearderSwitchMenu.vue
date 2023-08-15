@@ -6,7 +6,7 @@
         v-for="(item) in appList"
         :key="item.code"
         @click="switchApp(item.code)">
-        {{ item.name }}
+        {{ $t(item.name) }}
       </a-menu-item>
     </a-menu>
   </div>

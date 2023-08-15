@@ -60,13 +60,26 @@
     1、案例参考 HuanTian.Service、SysCodeGenService、RunLocal  实现流程为在 Razor 模板中写好代码的模板,再通过实体类数据进行替换,最后生成代码文件 
     2、模板地址是 HuanTian.Store、wwwroot、Template 中的文件
 
-八：项目中已经实现的功能
+八: EntityFranmwork Code 过滤器
+
+    1、为了实现多租户模式,翻阅了EntityFranmwork Code 官方文档和大量文档 发现Ef还是存在很多不足
+    2、由于官方不支持过滤器重复添加,所以新增了累计添加过滤器方法,跟全局表格添加,可以参考 HuanTian.EntityFrameworkCore、EfSqlContext.cs 中的方法
+    3、EntityFranmwork Code 动态监测值,只能通过依赖注入的方法获取,如果使用静态方法或方法将只会加载的时候拿一遍值。 详情可以参考TenantId赋值
+
+九: 消息队列、Redis 仓储
+    
+    1、新增消息队列仓储，暂时实现为RabbitMQ 用字符串去判断使用哪个队列 通过 SelectQueue 方法
+    2、Redis仓储如果只是想看项目效果的话,没有安装Redis环境的话,推荐把 Redis相关代码都注释 
+
+十：项目中已经实现的功能
 
     1、防止Token已经失效依然被请求，使用Redis加JWT，缓存已经注销的用户Token，生成黑名单在鉴权过滤器中查询存在就显示未认证
     2、增加了友好的异常处理，使用友好异常处理，返回200状态码。
        示例:throw new FriendlyException("测试异常");  
        建议只在需要的情况下使用，不然出问题排查不到问题错在哪里
-    3、更多功能正在实现中,敬请期待 ····   
+    3、实现了多租户模式，可以参考 HuanTian.EntityFrameworkCore、EfSqlContext.cs 中的方法 和 SqlSugar 
+    4、前端已经全局拦截后端异常信息包括文件信息 详情可以参考前端文件 Src、utils、request.js 中
+    5、更多功能正在实现中,敬请期待 ····   
        个人开发精力有限,还请谅解   ···· 
        本人也是一个小菜鸡,遇到的问题解决的方式都是自己找文档、论坛一步步解决的。 ····
        在学习中慢慢完善本项目,如果你也是志同道合之人欢迎你的加入。               ····

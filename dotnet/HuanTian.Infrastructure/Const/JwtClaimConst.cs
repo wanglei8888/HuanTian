@@ -45,6 +45,6 @@ namespace HuanTian.Infrastructure
         /// <summary>
         /// 租户Id
         /// </summary>
-        public const string TenantId = "UserId";
+        public const string TenantId = "TenantId";
     }
 }

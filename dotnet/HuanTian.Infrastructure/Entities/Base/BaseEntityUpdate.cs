@@ -25,7 +25,7 @@
 #endregion << 版 本 注 释 >>
 
 using Microsoft.EntityFrameworkCore;
-
+using Yitter.IdGenerator;
 
 namespace HuanTian.Infrastructure
 {
@@ -49,8 +49,9 @@ namespace HuanTian.Infrastructure
         /// </summary>
         public override void CreateFunc()
         {
-            UpdateBy = App.GetUserId();
-            UpdateOn = DateTime.Now;
+            Id = YitIdHelper.NextId();
+            CreateBy = App.GetUserId();
+            CreateOn = DateTime.Now;
         }
         /// <summary>
         /// 实体修改自动赋值

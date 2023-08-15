@@ -16,7 +16,7 @@
 #endregion << 版 本 注 释 >>
 
 
-namespace HuanTian.Service.SysService.Dto;
+namespace HuanTian.Service;
 
 /// <summary>
 /// 系统租户表输出参数

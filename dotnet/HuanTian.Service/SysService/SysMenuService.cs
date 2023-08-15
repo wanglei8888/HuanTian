@@ -83,6 +83,10 @@ namespace HuanTian.Service
             // 读取用户角色权限下的所有菜单权限
             var roleId = await _userRole.FirstOrDefaultAsync(t => t.UserId == userId);
 
+            if (roleId == null)
+            {
+                throw new Exception("当前用户没有分配菜单权限，请联系管理员");
+            }
             // 判断是否是超级管理员  是，就返回所有菜单信息
             if ((await _user.FirstOrDefaultAsync(t => t.Id == userId)).Type != SysUserTypeEnum.SuperAdmin)
             {

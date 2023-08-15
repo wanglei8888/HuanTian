@@ -58,7 +58,7 @@ namespace HuanTian.Service
             var claims = new[]
             {
                 new Claim(JwtClaimConst.UserId,EncryptionHelper.Encrypt(userInfo.Id.ToString(),CommonConst.UserToken)),
-                new Claim(JwtClaimConst.TenantId,userInfo.TenantId.ToString()),
+                new Claim(JwtClaimConst.TenantId,EncryptionHelper.Encrypt(userInfo.TenantId.ToString(),CommonConst.TenantToken)),
             };
 
             var output = new LoginOutput() {

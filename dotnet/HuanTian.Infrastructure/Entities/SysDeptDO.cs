@@ -33,7 +33,7 @@ namespace HuanTian.Infrastructure
     /// 系统部门表
     /// </summary>
     [Comment("系统部门表")]
-    public class SysDeptDO : BaseEntityCreate
+    public class SysDeptDO : BaseEntityBusiness
     {
         /// <summary>
         /// 父级部门id

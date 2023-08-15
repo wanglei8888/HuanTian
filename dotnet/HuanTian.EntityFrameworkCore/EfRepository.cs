@@ -37,7 +37,6 @@ namespace HuanTian.EntityFrameworkCore
         public async Task<IEnumerable<TEntity>> ToListAsync()
         {
             IQueryable<TEntity> value = _db.Set<TEntity>();
-
             if (_sqlWhereExpression != null)
             {
                 value = value.Where(_sqlWhereExpression);
@@ -87,15 +86,16 @@ namespace HuanTian.EntityFrameworkCore
         }
         public async Task<int> DeleteAsync(params long[] id)
         {
+            var num = 0;
             // 单个执行
-            if (id.Length == 1)
+            foreach (var item in id)
             {
-                var entity = await _db.Set<TEntity>().FindAsync(id);
-                _db.Set<TEntity>().Remove(entity);
-                return await _db.SaveChangesAsync();
+                var entity = await _db.Set<TEntity>().FindAsync(item);
+                _db.Set<TEntity>().RemoveRange(entity);
+                await _db.SaveChangesAsync();
+                num++;
             }
-            // efcore 暂未找到实现ID批量删除方法
-            return 0;
+            return num;
         }
         public async Task<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
         {

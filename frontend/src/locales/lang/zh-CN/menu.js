@@ -21,6 +21,8 @@ export default {
     'menu.list.search-list.projects': '搜索列表（项目）',
     'menu.list.search-list.applications': '搜索列表（应用）',
     // 新加
+    '业务应用': '业务应用',
+    '系统应用': '系统应用',
     'menu.system': '系统管理',
     'menu.system.menuList': '菜单列表',
     'menu.system.permissionList': '权限列表',

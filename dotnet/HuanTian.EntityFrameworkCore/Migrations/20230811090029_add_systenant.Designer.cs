@@ -3,6 +3,7 @@ using System;
 using HuanTian.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HuanTian.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(EfSqlContext))]
-    partial class EfSqlContextModelSnapshot : ModelSnapshot
+    [Migration("20230811090029_add_systenant")]
+    partial class add_systenant
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,11 +73,6 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnType("int")
                         .HasColumnName("order")
                         .HasComment("排序");
-
-                    b.Property<long>("TenantId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("tenant_id")
-                        .HasComment("租户ID");
 
                     b.Property<long?>("UpdateBy")
                         .HasColumnType("bigint")
@@ -283,21 +281,6 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("parent_id")
                         .HasComment("父级部门id");
-
-                    b.Property<long>("TenantId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("tenant_id")
-                        .HasComment("租户ID");
-
-                    b.Property<long?>("UpdateBy")
-                        .HasColumnType("bigint")
-                        .HasColumnName("update_by")
-                        .HasComment("修改人");
-
-                    b.Property<DateTime?>("UpdateOn")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("update_on")
-                        .HasComment("修改时间");
 
                     b.HasKey("Id");
 
@@ -545,26 +528,11 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnName("show")
                         .HasComment("是否显示菜单");
 
-                    b.Property<long>("TenantId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("tenant_id")
-                        .HasComment("租户ID");
-
                     b.Property<string>("Title")
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)")
                         .HasColumnName("title")
                         .HasComment("菜单标题");
-
-                    b.Property<long?>("UpdateBy")
-                        .HasColumnType("bigint")
-                        .HasColumnName("update_by")
-                        .HasComment("修改人");
-
-                    b.Property<DateTime?>("UpdateOn")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("update_on")
-                        .HasComment("修改时间");
 
                     b.HasKey("Id");
 

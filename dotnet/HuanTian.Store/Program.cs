@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using HuanTian.Infrastructure;
 using HuanTian.Service;
+using HuanTian.SqlSugar;
 using HuanTian.WebCore;
 using Mapster;
 using MapsterMapper;
@@ -83,7 +84,7 @@ namespace Huangtian.Store
             // 注册RabbitMQ服务
             builder.Services.AddScoped<IMessageQueue>(provider =>
                new RabbitMQMessageQueue(builder.Configuration["ConnectionStrings:RabbitMQ"]));
-
+            //builder.Services.AddScoped<IQueryFilter, QueryFilter>();
             // 注册JWT服务
             builder.Services.AddJwt(true);
             // 注册Http服务

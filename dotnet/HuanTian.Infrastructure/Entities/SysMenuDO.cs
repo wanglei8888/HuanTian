@@ -7,7 +7,7 @@ namespace HuanTian.Infrastructure
     /// 系统菜单表
     /// </summary>
     [Comment("系统菜单表")]
-    public class SysMenuDO : BaseEntityCreate
+    public class SysMenuDO : BaseEntityBusiness
     {
         /// <summary>
         /// 菜单父级ID

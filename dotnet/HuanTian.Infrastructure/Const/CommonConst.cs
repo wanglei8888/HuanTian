@@ -35,6 +35,10 @@ namespace HuanTian.Infrastructure
         /// 用户Token加密Key
         /// </summary>
         public const string UserToken = "6853E16C52D448E48A37C20A6E7D13E7";
+        /// <summary>
+        /// 租户Token加密Key
+        /// </summary>
+        public const string TenantToken = "BH64816C52D44USQ6737C20A6E7D13E7";
 
     }
 }

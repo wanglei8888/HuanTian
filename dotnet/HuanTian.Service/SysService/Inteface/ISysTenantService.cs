@@ -16,9 +16,7 @@
 #endregion << 版 本 注 释 >>
 
 
-using HuanTian.Service.SysService.Dto;
-
-namespace HuanTian.Service.SysService.Inteface;
+namespace HuanTian.Service;
 
 /// <summary>
 /// 系统租户表服务

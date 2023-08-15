@@ -24,7 +24,7 @@ namespace HuanTian.Service;
 /// </summary>
 public class SysDeptService : ISysDeptService, IDynamicApiController, IScoped
 {
-    private readonly IRepository<SysDeptDO> _sysDept;
+    private readonly IRepository<SysDeptDO> _sysDept;    
     public SysDeptService(IRepository<SysDeptDO> sysDept)
     {
         _sysDept = sysDept;
