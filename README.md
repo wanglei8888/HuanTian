@@ -3,8 +3,7 @@
 #### 🎁项目介绍
 * 前端基于ant design vue 的模板而搭建的服务器 （前端模板微小改动主要涉及后端）
 
-* 后端涉及技术 .Net6框架、Mapster对象映射、Autofac自动依赖注入、Jwt权限认证、Logging缓存写入文件夹、继承接口动态生成API Controle、Swagger动态配置、Excel PDF 按模板导出、自动生成代码、等等技术
-  </br>仓储层支持 EF Core 、SqlSugar,数据库（暂时）支持 SqlServer、MySql
+* 后端涉及技术 .Net6框架、Mapster对象映射、Autofac自动依赖注入、Jwt权限认证、Logging缓存写入文件夹、继承接口动态生成API Controle、Swagger动态配置等等技术、Excel PDF 按模板导出、自动生成代码、Redis缓存、RabbitMQ消息队列、仓储层支持 EF Core 、SqlSugar 支持多租户模式、数据库（暂时)SqlServer、MySql
 
 #### 👀前端页面展示
 
@@ -35,9 +34,8 @@
 Repository                        --仓储层
     HuanTian.EntityFrameworkCore  --存放EF Core相关的配置信息
     HuanTian.SqlSugar             --存放SqlSugar相关的配置信息
-HuanTian.Infrastructure           --基础设施层 最上级项目主要存放公共类、dll包等  方便各层级调用
-HuanTian.Service                  --主要存放业务所需接口、接口实现类  Autofac自动注册依赖注入   命名示例 MenuService、IMenuService
-HuanTian.Entities                 --主要用于存放项目ORM的实体类、公共枚举、开发所需的Input和Output、Mapper等等
+HuanTian.Infrastructure           --基础设施层 最上级项目主要存放实体、公共类、dll包等  方便各层级调用
+HuanTian.Service                  --主要存放业务所需接口、接口实现类、Dto  命名示例 MenuService、IMenuService
 HuanTian.Store                    --程序的启动项、存放一些静态文件等等   
 HuanTian.WebCore                  --程序中间件的实现、服务拓展配置
 ```
