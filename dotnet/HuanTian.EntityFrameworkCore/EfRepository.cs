@@ -14,6 +14,7 @@ namespace HuanTian.EntityFrameworkCore
     {
         private readonly EfSqlContext _db;
         private readonly bool _isAsc;
+        private readonly bool _isIgnoreFilter;
         private readonly Expression<Func<TEntity, object>>? _orderByExpression;
         private readonly Expression<Func<TEntity, bool>>? _sqlWhereExpression;
 
@@ -22,17 +23,27 @@ namespace HuanTian.EntityFrameworkCore
         {
             _db = dbContext;
         }
-        public EfRepository(EfSqlContext dbContext, Expression<Func<TEntity, object>> orderByExpression, bool isAsc, Expression<Func<TEntity, bool>> sqlWhereExpression)
+        public EfRepository(EfSqlContext dbContext, Expression<Func<TEntity, object>> orderByExpression, bool isAsc, Expression<Func<TEntity, bool>> sqlWhereExpression, bool isIgnoreFilter)
              : this(dbContext)
         {
             _isAsc = isAsc;
             _orderByExpression = orderByExpression;
             _sqlWhereExpression = sqlWhereExpression;
+            _isIgnoreFilter = isIgnoreFilter;
         }
         #endregion
 
         #region 增删改查
-        public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate) => await _db.Set<TEntity>().FirstOrDefaultAsync(predicate);
+        public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            IQueryable<TEntity> value = _db.Set<TEntity>();
+            if (_isIgnoreFilter)
+            {
+                value = value.IgnoreQueryFilters();
+            }
+
+            return await value.FirstOrDefaultAsync(predicate);
+        }
 
         public async Task<IEnumerable<TEntity>> ToListAsync()
         {
@@ -45,6 +56,11 @@ namespace HuanTian.EntityFrameworkCore
             if (_orderByExpression != null)
             {
                 value = _isAsc ? value.OrderBy(_orderByExpression) : value.OrderByDescending(_orderByExpression);
+            }
+
+            if (_isIgnoreFilter)
+            {
+                value = value.IgnoreQueryFilters();
             }
 
             return await value.ToListAsync();
@@ -66,6 +82,10 @@ namespace HuanTian.EntityFrameworkCore
                 value = _isAsc ? value.OrderBy(_orderByExpression) : value.OrderByDescending(_orderByExpression);
             }
 
+            if (_isIgnoreFilter)
+            {
+                value = value.IgnoreQueryFilters();
+            }
             pageData.Data = await value.Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
             pageData.PageNo = pageNo;
             pageData.PageSize = pageSize;
@@ -130,7 +150,7 @@ namespace HuanTian.EntityFrameworkCore
 
         public IRepository<TEntity> OrderBy(Expression<Func<TEntity, object>> orderByExpression, bool isAsc)
         {
-            return new EfRepository<TEntity>(_db, orderByExpression, isAsc, _sqlWhereExpression); ;
+            return new EfRepository<TEntity>(_db, orderByExpression, isAsc, _sqlWhereExpression, _isIgnoreFilter); ;
         }
         public IRepository<TEntity> Where(Expression<Func<TEntity, bool>> sqlWhereExpression)
         {
@@ -144,7 +164,7 @@ namespace HuanTian.EntityFrameworkCore
             {
                 whereExpression = sqlWhereExpression;
             }
-            return new EfRepository<TEntity>(_db, _orderByExpression, _isAsc, whereExpression);
+            return new EfRepository<TEntity>(_db, _orderByExpression, _isAsc, whereExpression, _isIgnoreFilter);
         }
         public IRepository<TEntity> WhereIf(bool condition, Expression<Func<TEntity, bool>> sqlWhereExpression)
         {
@@ -161,13 +181,17 @@ namespace HuanTian.EntityFrameworkCore
                 {
                     whereExpression = sqlWhereExpression;
                 }
-                return new EfRepository<TEntity>(_db, _orderByExpression, _isAsc, whereExpression);
+                return new EfRepository<TEntity>(_db, _orderByExpression, _isAsc, whereExpression, _isIgnoreFilter);
             }
 
             return this;
 
         }
 
+        public IRepository<TEntity> IgnoreFilters()
+        {
+            return new EfRepository<TEntity>(_db, _orderByExpression, _isAsc, _sqlWhereExpression, true);
+        }
         public IReposityoryInit<TEntity> InitTable(TEntity entity)
         {
             return new EfReposityoryInit<TEntity>(_db, new List<TEntity> { entity });

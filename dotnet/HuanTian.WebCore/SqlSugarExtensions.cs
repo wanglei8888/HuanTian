@@ -26,6 +26,9 @@
 using HuanTian.SqlSugar;
 using Microsoft.Extensions.DependencyInjection;
 using SqlSugar;
+using System.Data;
+using System.Linq.Dynamic.Core;
+using DbType = SqlSugar.DbType;
 
 namespace HuanTian.WebCore
 {
@@ -59,7 +62,7 @@ namespace HuanTian.WebCore
                             }
                         }
                     },
-                    EntityService = (property, column) => 
+                    EntityService = (property, column) =>
                     {
                         //全局设置列名
                         if (App.Configuration["SqlSettings:GlobalSettingsColumnName"] == "True")
@@ -72,13 +75,13 @@ namespace HuanTian.WebCore
             };
             services.AddScoped<ISqlSugarClient>(s =>
             {
-               // Scoped用SqlSugarClient 
-               SqlSugarClient sqlSugar = new SqlSugarClient(config,
-               db =>
-               {
-                   // 打印输出Sql
-                   db.Aop.OnLogExecuting = (sql, pars) =>
-                   {
+                // Scoped用SqlSugarClient 
+                SqlSugarClient sqlSugar = new SqlSugarClient(config,
+                db =>
+                {
+                    // 打印输出Sql
+                    db.Aop.OnLogExecuting = (sql, pars) =>
+                    {
                        if (sql.StartsWith("SELECT"))
                        {
                            Console.ForegroundColor = ConsoleColor.Green;
@@ -91,12 +94,31 @@ namespace HuanTian.WebCore
                        {
                            Console.ForegroundColor = ConsoleColor.Blue;
                        }
-                       // Console.WriteLine(SqlProfiler.ParameterFormat(sql, pars));
-                   };
-               });
+                       Console.WriteLine(SqlProfiler.ParameterFormat(sql, pars));
+                    };
+
+                    var types = AssemblyHelper.GetAssemblyAllTypeList().Where(t => t.FullName.EndsWith("DO"));
+                    foreach (var entityType in types)
+                    {
+                        //判断实体类中包含Deleted属性
+                        if (entityType.GetProperty("Deleted") != null)
+                        {
+                            //构建动态Lambda
+                            var lambda = DynamicExpressionParser.ParseLambda(entityType, typeof(bool), "Deleted == @0", false);
+                            db.QueryFilter.Add(new TableFilterItem<object>(entityType, lambda)); //将Lambda传入过滤器
+                        }
+                        if (entityType.GetProperty("TenantId") != null)
+                        {
+                            //构建动态Lambda
+                            var lambda = DynamicExpressionParser.ParseLambda(entityType, typeof(bool), "TenantId == @0", App.GetTenantId());
+                            db.QueryFilter.Add(new TableFilterItem<object>(entityType, lambda)); //将Lambda传入过滤器
+                        }
+                    }
+                });
                 return sqlSugar;
             });
             return services;
         }
     }
+
 }

@@ -102,6 +102,11 @@ namespace HuanTian.Infrastructure
         /// <param name="entityList"></param>
         /// <returns></returns>
         IReposityoryInit<TEntity> InitTable(IEnumerable<TEntity> entityList);
+        /// <summary>
+        /// 忽略全局过滤器
+        /// </summary>
+        /// <returns></returns>
+        IRepository<TEntity> IgnoreFilters();
 
 
     }

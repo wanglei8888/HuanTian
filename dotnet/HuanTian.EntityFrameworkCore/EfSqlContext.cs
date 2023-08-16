@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query;
+using NPOI.SS.Formula.Functions;
 using System.Linq.Expressions;
 using Expression = System.Linq.Expressions.Expression;
 
@@ -115,9 +116,9 @@ namespace HuanTian.EntityFrameworkCore
                 var hasTenantIdProperty = entityType.GetProperties().Any(property => property.Name == columnName);
                 if (!hasTenantIdProperty)
                     continue;
-                var ignoreEntity = new string[] { "SysUserDO"};
-                if (ignoreEntity.Contains(entityType.ClrType.Name))
-                    continue;
+                //var ignoreEntity = new string[] { "SysUserDO"};
+                //if (ignoreEntity.Contains(entityType.ClrType.Name))
+                //    continue;
                 var parameterType = Expression.Parameter(entityType.ClrType);
                 var expressionFilter = ReplacingExpressionVisitor.Replace(
                     expression.Parameters.Single(), parameterType, expression.Body);

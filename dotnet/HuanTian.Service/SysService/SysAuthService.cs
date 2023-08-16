@@ -51,9 +51,11 @@ namespace HuanTian.Service
         [HttpPost]
         public async Task<dynamic> Login(LoginInput input)
         {
-            var userInfo = await _sysUserInfo.FirstOrDefaultAsync(t => t.UserName == input.UserName && t.Password == EncryptionHelper.SHA1(input.Password));
-            if (userInfo == null) throw new Exception("用户账号密码错误");
-
+            var userInfo = await _sysUserInfo.IgnoreFilters().FirstOrDefaultAsync(t => t.UserName == input.UserName && t.Password == EncryptionHelper.SHA1(input.Password));
+            if (userInfo == null)
+                throw new Exception("账号密码错误,请修改后再试");
+            if (userInfo.Deleted)
+                throw new Exception("用户已被删除,无法登陆,请联系系统管理员");
             // 储存Jwt数据
             var claims = new[]
             {
@@ -61,7 +63,8 @@ namespace HuanTian.Service
                 new Claim(JwtClaimConst.TenantId,EncryptionHelper.Encrypt(userInfo.TenantId.ToString(),CommonConst.TenantToken)),
             };
 
-            var output = new LoginOutput() {
+            var output = new LoginOutput()
+            {
                 Token = JWTHelper.GetToken(claims)
             };
             return output;

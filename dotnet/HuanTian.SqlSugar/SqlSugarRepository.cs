@@ -12,6 +12,7 @@ namespace HuanTian.SqlSugar
     {
         private readonly ISqlSugarClient _db;
         private readonly bool _isAsc;
+        private readonly bool _isIgnoreFilter;
         private readonly Expression<Func<TEntity, object>>? _orderByExpression;
         private readonly Expression<Func<TEntity, bool>>? _sqlWhereExpression;
 
@@ -20,19 +21,25 @@ namespace HuanTian.SqlSugar
         {
             _db = db;
         }
-        public SqlSugarRepository(ISqlSugarClient db, Expression<Func<TEntity, object>> orderByExpression, bool isAsc, Expression<Func<TEntity, bool>> sqlWhereExpression)
+        public SqlSugarRepository(ISqlSugarClient db, Expression<Func<TEntity, object>> orderByExpression, bool isAsc, Expression<Func<TEntity, bool>> sqlWhereExpression, bool isIgnoreFilter)
              : this(db)
         {
             _orderByExpression = orderByExpression;
             _isAsc = isAsc;
             _sqlWhereExpression = sqlWhereExpression;
+            _isIgnoreFilter = isIgnoreFilter;
         }
         #endregion
 
         #region 增删改查
         public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await _db.Queryable<TEntity>().FirstAsync(predicate);
+            var value = _db.Queryable<TEntity>();
+            if (_isIgnoreFilter)
+            {
+                value = value.ClearFilter();
+            }
+            return await value.FirstAsync(predicate);
         }
 
         public async Task<IEnumerable<TEntity>> ToListAsync()
@@ -47,6 +54,11 @@ namespace HuanTian.SqlSugar
             if (_orderByExpression != null)
             {
                 value = _isAsc ? value.OrderBy(_orderByExpression) : value.OrderByDescending(_orderByExpression);
+            }
+
+            if (_isIgnoreFilter)
+            {
+                value = value.ClearFilter();
             }
 
             return await value.ToListAsync();
@@ -65,6 +77,11 @@ namespace HuanTian.SqlSugar
             if (_orderByExpression != null)
             {
                 value = _isAsc ? value.OrderBy(_orderByExpression) : value.OrderByDescending(_orderByExpression);
+            }
+
+            if (_isIgnoreFilter)
+            {
+                value = value.ClearFilter();
             }
 
             RefAsync<int> total = 0;
@@ -115,7 +132,7 @@ namespace HuanTian.SqlSugar
         #region 帮助方法
         public IRepository<TEntity> OrderBy(Expression<Func<TEntity, object>> orderByExpression, bool isAsc)
         {
-            return new SqlSugarRepository<TEntity>(_db, orderByExpression, isAsc,_sqlWhereExpression); ;
+            return new SqlSugarRepository<TEntity>(_db, orderByExpression, isAsc, _sqlWhereExpression, _isIgnoreFilter); ;
         }
         public IRepository<TEntity> Where(Expression<Func<TEntity, bool>> sqlWhereExpression)
         {
@@ -129,7 +146,7 @@ namespace HuanTian.SqlSugar
             {
                 whereExpression = sqlWhereExpression;
             }
-            return new SqlSugarRepository<TEntity>(_db, _orderByExpression, _isAsc, whereExpression);
+            return new SqlSugarRepository<TEntity>(_db, _orderByExpression, _isAsc, whereExpression, _isIgnoreFilter);
         }
         public IRepository<TEntity> WhereIf(bool condition, Expression<Func<TEntity, bool>> sqlWhereExpression)
         {
@@ -146,7 +163,7 @@ namespace HuanTian.SqlSugar
                 {
                     whereExpression = sqlWhereExpression;
                 }
-                return new SqlSugarRepository<TEntity>(_db, _orderByExpression, _isAsc, whereExpression);
+                return new SqlSugarRepository<TEntity>(_db, _orderByExpression, _isAsc, whereExpression, _isIgnoreFilter);
             }
 
             return this;
@@ -159,6 +176,11 @@ namespace HuanTian.SqlSugar
         public IReposityoryInit<TEntity> InitTable(IEnumerable<TEntity> entityList)
         {
             return new SqlSugarReposityoryInit<TEntity>(_db, entityList);
+        }
+
+        public IRepository<TEntity> IgnoreFilters()
+        {
+            return new SqlSugarRepository<TEntity>(_db, _orderByExpression, _isAsc, _sqlWhereExpression, true);
         }
 
         #endregion

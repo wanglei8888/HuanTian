@@ -64,5 +64,19 @@ namespace HuanTian.Infrastructure
                 .Select(library => Assembly.Load(library.Name));
             return assembliesList;
         }
+        /// <summary>
+        /// 获取项目启动目录下所有的Type类型
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<Type> GetAssemblyAllTypeList()
+        {
+            var assemblyList = GetAssemblyList();
+            var typeList = new List<Type>();
+            foreach (var item in assemblyList)
+            {
+                typeList.AddRange(item.GetTypes());
+            }
+            return typeList;
+        }
     }
 }

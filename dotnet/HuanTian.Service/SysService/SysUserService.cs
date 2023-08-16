@@ -42,7 +42,7 @@ namespace HuanTian.Service
         private readonly IRepository<SysAppsDO> _app;
         private readonly ISysRoleService _sysRoleService;
         private readonly ISysMenuService _sysMenuService;
-        private IMessageQueue _messageQueue;
+        private readonly IMessageQueue _messageQueue;
         public SysUserService(
             ILogger<SysUserService> logger,
             IRepository<SysUserDO> userInfo,
