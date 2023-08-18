@@ -15,12 +15,13 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+
 namespace HuanTian.Service;
 
 /// <summary>
 /// 系统租户表输入参数
 /// </summary>
-public class SysTenantInput : PageInput
+public class SysTenantInput : IPageInput
 {
     /// <summary>
     /// 租户名字

@@ -22,7 +22,7 @@ namespace HuanTian.Service;
 /// <summary>
 /// SysRole输入参数
 /// </summary>
-public class SysRoleInput : PageInput
+public class SysRoleInput : IPageInput
 {
     /// <summary>
     /// RoleId

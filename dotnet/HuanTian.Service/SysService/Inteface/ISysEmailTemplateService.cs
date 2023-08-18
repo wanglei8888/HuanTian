@@ -54,4 +54,10 @@ public interface ISysEmailTemplateService
     /// <param name="input"></param>
     /// <returns></returns>
     Task<IEnumerable<SysEmailTemplateDO>> Get(SysEmailTemplateInput input);
+    /// <summary>
+    /// 获取邮件模板的信息
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<string> GetTemplate(SysEmailTemplateInput input);
 }

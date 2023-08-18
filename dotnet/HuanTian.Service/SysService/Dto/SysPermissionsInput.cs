@@ -15,12 +15,13 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+
 namespace HuanTian.Service;
 
 /// <summary>
 /// SysPermissions输入参数
 /// </summary>
-public class SysPermissionsInput : PageInput
+public class SysPermissionsInput : IPageInput
 {
     /// <summary>
     /// RoleId

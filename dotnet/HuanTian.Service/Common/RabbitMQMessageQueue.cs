@@ -1,4 +1,5 @@
-﻿using RabbitMQ.Client;
+﻿using Newtonsoft.Json.Linq;
+using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Collections.Concurrent;
 using System.Text;
@@ -21,7 +22,7 @@ namespace HuanTian.Service
             _connectionString = connectionString;
         }
         public RabbitMQMessageQueue(string connectionString, string queueName)
-            :this(connectionString)
+            : this(connectionString)
         {
             _queueName = queueName;
             var factory = new ConnectionFactory
@@ -75,8 +76,19 @@ namespace HuanTian.Service
             consumer.Received += async (model, ea) =>
             {
                 var body = ea.Body.ToArray();
-                var message = System.Text.Encoding.UTF8.GetString(body);
-                var success = await Task.Run(() => processMessage(message));
+                var message = Encoding.UTF8.GetString(body);
+                var success = false;
+                var errorMsg = "";
+                try
+                {
+                    success = await Task.Run(() => processMessage(message));
+                }
+                catch (Exception ex)
+                {
+                    errorMsg = $"消息队列-{_queueName}-处理异常:异常信息为:{ex.Message}";
+                    Console.WriteLine(errorMsg);
+                    App.GetService<ILogger<RabbitMQMessageQueue>>().LogError(errorMsg);
+                }
                 // 如果成功则确认消息
                 if (success)
                 {
@@ -98,8 +110,14 @@ namespace HuanTian.Service
                     else
                     {
                         finishNum++;
-                        // 消息拒绝 不再进入队列
+                        // 初始的消息拒绝 不再进入队列
                         _channel.BasicReject(ea.DeliveryTag, false);
+                        // 统一存放到错误消息队列
+                        var erroeQueue = SelectQueue(MsgQConst.FailMsg);
+                        // 错误消息添加实体中
+                        JObject jsonObject = JObject.Parse(message);
+                        jsonObject["ErrorMsg"] = errorMsg;
+                        erroeQueue.Enqueue(jsonObject.ToString());
                     }
                     // 如果finishClose 设置true 消息处理完成则关闭连接
                     if (messageCount == finishNum && finishClose)
@@ -156,8 +174,10 @@ namespace HuanTian.Service
         /// 检查队列
         /// </summary>
         /// <exception cref="ArgumentException"></exception>
-        private void CheckQueue() { 
-            if(string.IsNullOrEmpty(_queueName)) throw new ArgumentException("队列名称不能为空,清先调用 SelectQueue 方法,选择队列");
+        private void CheckQueue()
+        {
+            if (string.IsNullOrEmpty(_queueName)) 
+                throw new ArgumentException("队列名称不能为空,清先调用 SelectQueue 方法,选择队列");
         }
     }
 }

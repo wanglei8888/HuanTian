@@ -94,11 +94,16 @@ public class SysEmailTemplateService : ISysEmailTemplateService, IDynamicApiCont
         return list;
     }
     [HttpGet]
-    public async Task<string> GetTemplate([FromQuery] IdInput input)
+    public async Task<string> GetTemplate([FromQuery] SysEmailTemplateInput input)
     {
-        var emailInfo = await _sysEmailTemplate
-            .FirstOrDefaultAsync(t => t.Id == input.Id.ToLong());
-        var filePath = Path.Combine(App.WebHostEnvironment.WebRootPath, "Template", "Email", emailInfo.Name + ".html");
+        var templateName = input.Name;
+        if (string.IsNullOrEmpty(templateName))
+        {
+            var emailInfo = await _sysEmailTemplate
+            .FirstOrDefaultAsync(t => t.Id == input.Id);
+            templateName = emailInfo?.Name;
+        }
+        var filePath = Path.Combine(App.WebHostEnvironment.WebRootPath, "Template", "Email", templateName + ".html");
         try
         {
             string htmlContent = File.ReadAllText(filePath);

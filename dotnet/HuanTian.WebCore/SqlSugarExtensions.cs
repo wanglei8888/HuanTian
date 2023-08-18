@@ -82,24 +82,33 @@ namespace HuanTian.WebCore
                     // 打印输出Sql
                     db.Aop.OnLogExecuting = (sql, pars) =>
                     {
-                       if (sql.StartsWith("SELECT"))
-                       {
-                           Console.ForegroundColor = ConsoleColor.Green;
-                       }
-                       if (sql.StartsWith("UPDATE") || sql.StartsWith("INSERT"))
-                       {
-                           Console.ForegroundColor = ConsoleColor.White;
-                       }
-                       if (sql.StartsWith("DELETE"))
-                       {
-                           Console.ForegroundColor = ConsoleColor.Blue;
-                       }
-                       Console.WriteLine(SqlProfiler.ParameterFormat(sql, pars));
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.WriteLine("--------------------------------------------------------------");
+                        if (sql.StartsWith("SELECT"))
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                        }
+                        if (sql.StartsWith("UPDATE") || sql.StartsWith("INSERT"))
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }
+                        if (sql.StartsWith("DELETE"))
+                        {
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                        }
+                        Console.WriteLine(SqlProfiler.ParameterFormat(sql, pars));
                     };
 
+                    // 添加全局过滤器
                     var types = AssemblyHelper.GetAssemblyAllTypeList().Where(t => t.FullName.EndsWith("DO"));
                     foreach (var entityType in types)
                     {
+                        // 忽略的实体类
+                        var ignoreEntity = new string[] { "SysUserDO" };
+                        if (ignoreEntity.Contains(entityType.Name))
+                        {
+                            continue;
+                        }
                         //判断实体类中包含Deleted属性
                         if (entityType.GetProperty("Deleted") != null)
                         {

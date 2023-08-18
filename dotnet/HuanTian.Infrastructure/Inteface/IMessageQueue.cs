@@ -31,4 +31,14 @@
         /// </summary>
         void Purge();
     }
+    /// <summary>
+    /// 消息队列实体约束
+    /// </summary>
+    public interface IMsgQBaseEntity
+    {
+        /// <summary>
+        /// 消息队列报错信息
+        /// </summary>
+        public string ErrorMsg { get; set; }
+    }
 }

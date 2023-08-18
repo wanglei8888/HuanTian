@@ -117,15 +117,15 @@ namespace HuanTian.Infrastructure
         /// <summary>
         /// 对哈希中指定字段的值进行增加
         /// </summary>
-        Task<long> HashIncrementAsync(string key, string field, long value = 1);
+        Task<long> HashIncrementAsync(string key, string field, TimeSpan? expiration = default);
         /// <summary>
         /// 设置哈希中指定字段的值
         /// </summary>
-        Task HashSetAsync(string key, string field, string value);
+        Task HashSetAsync(string key, string field, string value, TimeSpan? expiration = default);
         /// <summary>
         /// 设置哈希中多个字段和值
         /// </summary>
-        Task HashSetAsync(string key, HashEntry[] hashFields);
+        Task HashSetAsync(string key, HashEntry[] hashFields, TimeSpan? expiration = default);
         /// <summary>
         /// 删除哈希中指定字段
         /// </summary>

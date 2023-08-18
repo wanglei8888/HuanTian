@@ -146,6 +146,17 @@ namespace HuanTian.Service
             var bytes = _generateFilesService.RenderTemplatePdf(templatePath, output, setting);
             return new FileContentResult(bytes, "application/pdf") { FileDownloadName = "test.pdf" };
         }
+        /// <summary>
+        /// 发送邮件测试
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task SendEmail()
+        {
+            // 1、需要先配置租户邮件信息    2、确保消息队列地址配置正确，服务已启动
+            var userInfo = await App.GetService<IRepository<SysUserDO>>().FirstOrDefaultAsync(t => t.Id == App.GetUserId());
+            await EmailCommon.SendEmail(userInfo, "用户信息模板", "用户信息提醒邮件", "wangxiaopang8888@163.com");
+        }
     }
     
 }

@@ -51,11 +51,11 @@ namespace HuanTian.Service
         [HttpPost]
         public async Task<dynamic> Login(LoginInput input)
         {
-            var userInfo = await _sysUserInfo.IgnoreFilters().FirstOrDefaultAsync(t => t.UserName == input.UserName && t.Password == EncryptionHelper.SHA1(input.Password));
-            if (userInfo == null)
+            var userInfo = await _sysUserInfo.FirstOrDefaultAsync(t => t.UserName == input.UserName && t.Password == EncryptionHelper.SHA1(input.Password));
+            if (userInfo == null || userInfo.Deleted)
                 throw new Exception("账号密码错误,请修改后再试");
-            if (userInfo.Deleted)
-                throw new Exception("用户已被删除,无法登陆,请联系系统管理员");
+            if (!userInfo.Enable)
+                throw new Exception("用户已被禁用,无法登陆,请联系系统管理员");
             // 储存Jwt数据
             var claims = new[]
             {

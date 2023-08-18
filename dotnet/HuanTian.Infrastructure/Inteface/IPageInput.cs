@@ -23,12 +23,13 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+
 namespace HuanTian.Infrastructure
 {
     /// <summary>
     /// 分页入参
     /// </summary>
-    public interface PageInput
+    public interface IPageInput
     {
         /// <summary>
         /// 每页条数

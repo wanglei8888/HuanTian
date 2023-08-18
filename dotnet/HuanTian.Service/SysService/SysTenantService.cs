@@ -26,10 +26,12 @@ public class SysTenantService : ISysTenantService, IDynamicApiController, IScope
 {
     private readonly IRepository<SysTenantDO> _sysTenant;
     private readonly IRepository<SysUserDO> _user;
-    public SysTenantService(IRepository<SysTenantDO> sysTenant, IRepository<SysUserDO> user)
+    private readonly IRedisCache _redisCache;
+    public SysTenantService(IRepository<SysTenantDO> sysTenant, IRepository<SysUserDO> user, IRedisCache redisCache)
     {
         _sysTenant = sysTenant;
         _user = user;
+        _redisCache = redisCache;
     }
     [HttpGet]
     public async Task<PageData> Page([FromQuery] SysTenantInput input)
@@ -70,11 +72,18 @@ public class SysTenantService : ISysTenantService, IDynamicApiController, IScope
     }
     public async Task<IEnumerable<SysTenantDO>> Get([FromQuery] SysTenantInput input)
     {
-        var list = await _sysTenant
+        // 从缓存中获取
+        var value = await _redisCache.StringGetAsync<IEnumerable<SysTenantDO>>(RedisKeyConst.TenantInfo);
+        if (value == null || !value.Any())
+        {
+            value = await _sysTenant
             .WhereIf(input.Id != 0, t => t.Id == input.Id)
             .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name == input.Name)
             .ToListAsync();
-        return list;
+            // 设置缓存
+            await _redisCache.StringAddAsync(RedisKeyConst.TenantInfo, value);
+        }
+        return value;
     }
 }
 

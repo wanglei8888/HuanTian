@@ -31,48 +31,52 @@ using System.Reflection;
 namespace HuanTian.WebCore
 {
     public class AutofacRegister : Autofac.Module
-	{
-		protected override void Load(ContainerBuilder builder)
-		{
-			// 加载依赖注入
-			RegisterTypes(builder);
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            // 加载依赖注入
+            RegisterTypes(builder);
 
-			// 需要暴露接口所在的程序集
-			var basePath = AppContext.BaseDirectory;
+            // 需要暴露接口所在的程序集
+            var basePath = AppContext.BaseDirectory;
 
-			// 加载目标程序集
-			var Services = Assembly.LoadFrom(Path.Combine(basePath, "HuanTian.Service.dll"));
+            // 加载目标程序集
+            var Services = Assembly.LoadFrom(Path.Combine(basePath, "HuanTian.Service.dll"));
 
-			// 扫描继承 ISingleton 接口的所有类 注入为单例
-			builder.RegisterAssemblyTypes(Services)
-					   .Where(t => typeof(ISingleton).IsAssignableFrom(t)) 
-					   .AsImplementedInterfaces()
-					   .SingleInstance();
-			// 扫描继承 IScoped 接口的所有类 注入为作用域
-			builder.RegisterAssemblyTypes(Services)
-					   .Where(t => typeof(IScoped).IsAssignableFrom(t)) 
-					   .AsImplementedInterfaces()
-					   .InstancePerLifetimeScope();
-			// 扫描继承 ITransient 接口的所有类 注入为瞬时
-			builder.RegisterAssemblyTypes(Services)
-					   .Where(t => typeof(ITransient).IsAssignableFrom(t)) 
-					   .AsImplementedInterfaces()
-					   .InstancePerDependency();
-			//var container = builder.Build();
-			//var registeredServices = container.ComponentRegistry.Registrations;
-			//var container = builder.Build();
+            // 扫描继承 ISingleton 接口的所有类 注入为单例
+            builder.RegisterAssemblyTypes(Services)
+                       .Where(t => typeof(ISingleton).IsAssignableFrom(t))
+                       .AsImplementedInterfaces()
+                       .SingleInstance();
+            // 扫描继承 IScoped 接口的所有类 注入为作用域
+            builder.RegisterAssemblyTypes(Services)
+                       .Where(t => typeof(IScoped).IsAssignableFrom(t))
+                       .AsImplementedInterfaces()
+                       .InstancePerLifetimeScope();
+            // 扫描继承 ITransient 接口的所有类 注入为瞬时
+            builder.RegisterAssemblyTypes(Services)
+                       .Where(t => typeof(ITransient).IsAssignableFrom(t))
+                       .AsImplementedInterfaces()
+                       .InstancePerDependency();
+            //var container = builder.Build();
+            //var registeredServices = container.ComponentRegistry.Registrations;
+            //var container = builder.Build();
 
-		}
-		private void RegisterTypes(Autofac.ContainerBuilder builder)
-		{
+        }
+        private void RegisterTypes(Autofac.ContainerBuilder builder)
+        {
 
-			// 注册生命周期为单例   Singleton 的类 builder.RegisterType(type).AsImplementedInterfaces().SingleInstance();
-			// 注册生命周期为作用域 Scoped    的类 builder.RegisterType(type).AsImplementedInterfaces().InstancePerLifetimeScope();
-			// 注册生命周期为瞬时   Transient 的类 builder.RegisterType(type).AsImplementedInterfaces().InstancePerDependency();
-			builder.RegisterGeneric(typeof(SqlSugarRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
-			builder.RegisterType<StartupFilter>().As<IStartupFilter>().InstancePerDependency();
+            // 注册生命周期为单例   Singleton 的类 builder.RegisterType(type).AsImplementedInterfaces().SingleInstance();
+            // 注册生命周期为作用域 Scoped    的类 builder.RegisterType(type).AsImplementedInterfaces().InstancePerLifetimeScope();
+            // 注册生命周期为瞬时   Transient 的类 builder.RegisterType(type).AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterGeneric(typeof(SqlSugarRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+            builder.RegisterType<StartupFilter>().As<IStartupFilter>().InstancePerDependency();
+            builder.RegisterType<RabbitMQMessageQueue>().As<IMessageQueue>()
+                .WithParameter("connectionString", App.Configuration["ConnectionStrings:RabbitMQ"]).InstancePerLifetimeScope();
+            builder.RegisterType<RedisCache>().As<IRedisCache>()
+                .WithParameter("connectionString", App.Configuration["ConnectionStrings:Redis"]).SingleInstance();
 
-		}
+        }
 
-	}
+    }
 }

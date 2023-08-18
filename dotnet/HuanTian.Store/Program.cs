@@ -1,17 +1,14 @@
 ﻿using Autofac;
 using HuanTian.Infrastructure;
 using HuanTian.Service;
-using HuanTian.SqlSugar;
 using HuanTian.WebCore;
-using Mapster;
-using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Huangtian.Store
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -60,7 +57,6 @@ namespace Huangtian.Store
             builder.Services.AddEntityFrameworkService();
             // SqlSugar
             builder.Services.AddSqlSugarService();
-
             #endregion
 
             #region Autofac - 自动依赖注入
@@ -76,25 +72,25 @@ namespace Huangtian.Store
             //builder.Services.AddScoped(typeof(IRepository<>), typeof(SqlSugarRepository<>));
             //builder.Services.AddSingleton<IStartupFilter, StartupFilter>();
             //builder.Services.AddAutoInjection();
+            //// 注册Redis缓存服务
+            //builder.Services.AddSingleton<IRedisCache>(provider =>
+            //    new RedisCache(builder.Configuration["ConnectionStrings:Redis"]));
+            //// 注册RabbitMQ服务
+            //builder.Services.AddScoped<IMessageQueue>(provider =>
+            //   new RabbitMQMessageQueue(builder.Configuration["ConnectionStrings:RabbitMQ"]));
             #endregion
 
-            // 注册Redis缓存服务
-            builder.Services.AddSingleton<IRedisCache>(provider =>
-                new RedisCache(builder.Configuration["ConnectionStrings:Redis"]));
-            // 注册RabbitMQ服务
-            builder.Services.AddScoped<IMessageQueue>(provider =>
-               new RabbitMQMessageQueue(builder.Configuration["ConnectionStrings:RabbitMQ"]));
             // 注册JWT服务
             builder.Services.AddJwt(true);
             // 注册Http服务
             builder.Services.AddHttpContextAccessor();
-
+            
             var app = builder.Build();
             // 自定义中间件
             app.UseMiddleware<CustomMiddleware>();
-
-            App.WebHostEnvironment = app.Environment; // 静态类存储
-
+            // 注册生命周期方法
+            app.RegisterHostApplicationLifetime();
+            
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

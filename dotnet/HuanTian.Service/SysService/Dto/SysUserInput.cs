@@ -26,7 +26,7 @@
 
 namespace HuanTian.Service
 {
-    public class SysUserInput : PageInput
+    public class SysUserInput : IPageInput
     {
         public long Id { get; set; }
         public string Name { get; set; }

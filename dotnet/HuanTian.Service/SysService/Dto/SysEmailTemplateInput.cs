@@ -15,12 +15,13 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+
 namespace HuanTian.Service;
 
 /// <summary>
 /// 系统邮箱模板表输入参数
 /// </summary>
-public class SysEmailTemplateInput : PageInput
+public class SysEmailTemplateInput : IPageInput
 {
     /// <summary>
     /// 名字
