@@ -1,15 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server Type    : MySQL
- Source Server Version : 50742 (5.7.42)
- Source Schema         : store_db
-
- Target Server Type    : MySQL
- Target Server Version : 50742 (5.7.42)
- File Encoding         : 65001
-
- Date: 01/08/2023 15:53:01
+ Date: 18/08/2023 14:02:45
 */
 
 SET NAMES utf8mb4;
@@ -23,7 +15,7 @@ CREATE TABLE `__EFMigrationsHistory`  (
   `MigrationId` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `ProductVersion` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`MigrationId`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of __EFMigrationsHistory
@@ -45,14 +37,17 @@ CREATE TABLE `sys_apps`  (
   `create_on` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` bigint(20) NULL DEFAULT NULL COMMENT '修改人',
   `update_on` datetime(6) NULL DEFAULT NULL COMMENT '修改时间',
+  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 439691352649888 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统应用表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 439691352649890 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统应用表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_apps
 -- ----------------------------
-INSERT INTO `sys_apps` VALUES (439691352649886, '系统应用', 'System', 5, 1, '展示系统设置菜单', 0, NULL, NULL, NULL, NULL);
-INSERT INTO `sys_apps` VALUES (439691352649887, '业务应用', 'Business', 1, 1, '展示业务菜单', 0, NULL, NULL, NULL, NULL);
+INSERT INTO `sys_apps` VALUES (439691352649886, '系统应用', 'System', 5, 1, '展示系统设置菜单', 0, NULL, NULL, NULL, NULL, 449900948840517);
+INSERT INTO `sys_apps` VALUES (439691352649887, '业务应用', 'Business', 1, 1, '展示业务菜单', 0, NULL, NULL, NULL, NULL, 449900948840517);
+INSERT INTO `sys_apps` VALUES (439691352649888, '系统应用', 'System', 5, 1, '展示系统设置菜单', 0, NULL, NULL, NULL, NULL, 450236590075973);
+INSERT INTO `sys_apps` VALUES (439691352649889, '业务应用', 'Business', 1, 1, '展示业务菜单', 0, NULL, NULL, NULL, NULL, 450236590075973);
 
 -- ----------------------------
 -- Table structure for sys_code_gen
@@ -68,7 +63,7 @@ CREATE TABLE `sys_code_gen`  (
   `create_by` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
   `create_on` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 443511585738822 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成数据表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 448837533311046 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成数据表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_code_gen
@@ -77,6 +72,8 @@ INSERT INTO `sys_code_gen` VALUES (417244902194618, '系统角色页面', 'sys_r
 INSERT INTO `sys_code_gen` VALUES (417244902194619, '系统权限页面', 'sys_permissions', 0, 1, 0, NULL, NULL);
 INSERT INTO `sys_code_gen` VALUES (436088202891333, '系统部门列表', 'sys_dept', 0, 1, 0, 417244902117446, '2023-07-06 16:27:31.415000');
 INSERT INTO `sys_code_gen` VALUES (443511585738821, '菜单应用列表', 'sys_apps', 417244902117898, 0, 0, 417244902117446, '2023-07-27 15:53:19.319000');
+INSERT INTO `sys_code_gen` VALUES (447769655644229, '邮件模板', 'sys_email_template', 0, 0, 0, 417244902117446, '2023-08-08 16:39:25.643413');
+INSERT INTO `sys_code_gen` VALUES (448837533311045, '租户列表', 'sys_tenant', 417244902117898, 0, 0, 417244902117446, '2023-08-11 17:04:37.975251');
 
 -- ----------------------------
 -- Table structure for sys_code_gen_detail
@@ -98,7 +95,7 @@ CREATE TABLE `sys_code_gen_detail`  (
   `frontend_type` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '前端显示类型',
   `order` int(11) NOT NULL DEFAULT 0 COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 443511599190090 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成数据详情表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 448837533794378 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成数据详情表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_code_gen_detail
@@ -127,6 +124,13 @@ INSERT INTO `sys_code_gen_detail` VALUES (443511599190086, 443511585738821, 'var
 INSERT INTO `sys_code_gen_detail` VALUES (443511599190087, 443511585738821, 'int', 'order', '排序', NULL, 0, 0, 417244902117446, '2023-07-27 15:53:21.041541', NULL, 0, 'textBox', 3);
 INSERT INTO `sys_code_gen_detail` VALUES (443511599190088, 443511585738821, 'tinyint', 'enable', '启用', NULL, 0, 0, 417244902117446, '2023-07-27 15:53:21.041548', NULL, 0, 'radio', 4);
 INSERT INTO `sys_code_gen_detail` VALUES (443511599190089, 443511585738821, 'varchar', 'describe', '描述', NULL, 0, 0, 417244902117446, '2023-07-27 15:53:21.041553', NULL, 0, 'textBox', 5);
+INSERT INTO `sys_code_gen_detail` VALUES (447769655984197, 447769655644229, 'varchar', 'name', '名称', NULL, 1, 0, 417244902117446, '2023-08-08 16:39:25.688000', 'like', 1, 'textBox', 1);
+INSERT INTO `sys_code_gen_detail` VALUES (447769655984198, 447769655644229, 'tinyint', 'enable', '是否启用', NULL, 0, 0, 417244902117446, '2023-08-08 16:39:25.688000', NULL, 0, 'radio', 2);
+INSERT INTO `sys_code_gen_detail` VALUES (448837533794373, 448837533311045, 'bigint', 'tenant_admin', '租户管理员', NULL, 0, 0, 417244902117446, '2023-08-11 17:04:38.044000', NULL, 1, 'textBox', 1);
+INSERT INTO `sys_code_gen_detail` VALUES (448837533794374, 448837533311045, 'varchar', 'name', '租户名字', NULL, 1, 0, 417244902117446, '2023-08-11 17:04:38.044000', NULL, 1, 'textBox', 2);
+INSERT INTO `sys_code_gen_detail` VALUES (448837533794375, 448837533311045, 'varchar', 'email_config', '邮件配置', NULL, 0, 0, 417244902117446, '2023-08-11 17:04:38.044000', NULL, 1, 'textBox', 3);
+INSERT INTO `sys_code_gen_detail` VALUES (448837533794376, 448837533311045, 'tinyint', 'enable', '是否启用', NULL, 0, 0, 417244902117446, '2023-08-11 17:04:38.044000', NULL, 0, 'radio', 4);
+INSERT INTO `sys_code_gen_detail` VALUES (448837533794377, 448837533311045, 'varchar', 'describe', '描述', NULL, 0, 0, 417244902117446, '2023-08-11 17:04:38.044000', NULL, 0, 'textBox', 5);
 
 -- ----------------------------
 -- Table structure for sys_dept
@@ -141,16 +145,20 @@ CREATE TABLE `sys_dept`  (
   `deleted` tinyint(1) NOT NULL COMMENT '软删除',
   `create_by` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
   `create_on` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
+  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户ID',
+  `update_by` bigint(20) NULL DEFAULT NULL COMMENT '修改人',
+  `update_on` datetime(6) NULL DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 437221302702150 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统部门表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 450244612444230 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统部门表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_dept
 -- ----------------------------
-INSERT INTO `sys_dept` VALUES (417244902119461, 0, '财务部门', '财务部门管理公司财务', 1, 0, NULL, NULL);
-INSERT INTO `sys_dept` VALUES (417244902119462, 0, '人事部门', '财务部门管理所有公司人事信息', 1, 0, NULL, NULL);
-INSERT INTO `sys_dept` VALUES (417244902119463, 0, 'IT部门', '财务部门管理公司IT有关事宜', 1, 0, NULL, NULL);
-INSERT INTO `sys_dept` VALUES (437221302702149, 417244902119463, '设计部', '负责IT设计功能', 1, 0, 417244902117446, '2023-07-09 21:18:04.125393');
+INSERT INTO `sys_dept` VALUES (417244902119461, 0, '财务部门', '财务部门管理公司财务', 1, 0, NULL, NULL, 450236590075973, NULL, NULL);
+INSERT INTO `sys_dept` VALUES (417244902119462, 0, '人事部门', '财务部门管理所有公司人事信息', 1, 0, NULL, NULL, 449900948840517, NULL, NULL);
+INSERT INTO `sys_dept` VALUES (417244902119463, 0, 'IT部门', '财务部门管理公司IT有关事宜', 1, 0, NULL, NULL, 449900948840517, NULL, NULL);
+INSERT INTO `sys_dept` VALUES (437221302702149, 417244902119463, '设计部', '负责IT设计功能', 1, 0, 417244902117446, '2023-07-09 21:18:04.125393', 449900948840517, NULL, NULL);
+INSERT INTO `sys_dept` VALUES (450244612444229, 0, '公关部门', '管理公司所有公关业务', 1, 0, 417244902117456, '2023-08-15 16:30:03.105822', 450236590075973, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for sys_dic
@@ -163,7 +171,7 @@ CREATE TABLE `sys_dic`  (
   `enable` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否启用',
   `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '系统字典表',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 435082462924870 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统字典表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 435082462924870 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统字典表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_dic
@@ -188,7 +196,7 @@ CREATE TABLE `sys_dic_detail`  (
   `create_by` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
   `create_on` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 435104934633546 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统字典详情表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 435104934633546 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统字典详情表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_dic_detail
@@ -204,6 +212,29 @@ INSERT INTO `sys_dic_detail` VALUES (435104934633541, 435033088540741, 'textBox'
 INSERT INTO `sys_dic_detail` VALUES (435104934633542, 435033088540741, 'radio', '单选框(true/false)', 3, 1, 0, 417244902117446, '2023-07-03 21:46:32.702000');
 INSERT INTO `sys_dic_detail` VALUES (435104934633544, 435033088540741, 'numBox', '数字输入框', 5, 1, 0, 417244902117446, '2023-07-03 21:46:32.702000');
 INSERT INTO `sys_dic_detail` VALUES (435104934633545, 435033088540741, 'datetime', '时间选择框', 6, 1, 0, 417244902117446, '2023-07-03 21:46:32.702000');
+
+-- ----------------------------
+-- Table structure for sys_email_template
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_email_template`;
+CREATE TABLE `sys_email_template`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
+  `deleted` tinyint(1) NOT NULL COMMENT '软删除',
+  `create_by` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
+  `create_on` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` bigint(20) NULL DEFAULT NULL COMMENT '修改人',
+  `update_on` datetime(6) NULL DEFAULT NULL COMMENT '修改时间',
+  `tenant_id` bigint(20) NOT NULL COMMENT '租户ID',
+  `enable` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否启用',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 450924337745990 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统邮箱模板表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_email_template
+-- ----------------------------
+INSERT INTO `sys_email_template` VALUES (447766716219461, '客户回答模板', 0, 417244902117446, '2023-08-08 16:27:27.972000', 417244902117446, '2023-08-08 16:50:55.103000', 449900948840517, 1);
+INSERT INTO `sys_email_template` VALUES (450924337745989, '用户信息模板', 0, 417244902117446, '2023-08-17 14:35:51.665000', 417244902117446, '2023-08-17 15:11:29.255000', 449900948840517, 1);
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -227,56 +258,89 @@ CREATE TABLE `sys_menu`  (
   `create_by` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
   `create_on` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
   `rout_path` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '路由标识',
+  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户ID',
+  `update_by` bigint(20) NULL DEFAULT NULL COMMENT '修改人',
+  `update_on` datetime(6) NULL DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 444148029263942 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统菜单表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 449883901079622 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统菜单表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_menu
 -- ----------------------------
-INSERT INTO `sys_menu` VALUES (417244902117886, 0, 'dashboard', NULL, 'menu.dashboard', 0, 'dashboard', 1, '/dashboard/workplace', 0, 'RouteView', 'Business', 1000, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117887, 417244902117886, 'Analysis', '/dashboard/analysis', 'menu.dashboard.analysis', 0, 'none', 1, '', 0, 'Analysis', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117889, 417244902117886, 'monitor', 'https://www.baidu.com/', 'menu.dashboard.workplace', 0, 'none', 1, '', 0, '', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117890, 417244902117894, 'advanced-form', NULL, 'menu.form.advanced-form', 0, 'none', 1, '', 0, 'AdvanceForm', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117891, 417244902117894, 'step-form', NULL, 'menu.form.step-form', 0, 'none', 1, '', 0, 'StepForm', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117892, 417244902117894, 'basic-form', NULL, 'menu.form.basic-form', 0, 'none', 1, '', 0, 'BasicForm', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117893, 417244902117886, 'workplace', NULL, 'menu.dashboard.monitor', 0, 'none', 1, '', 0, 'Workplace', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117894, 0, 'form', NULL, 'menu.form', 0, 'form', 1, '/form/base-form', 0, 'RouteView', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117895, 417244902117896, 'settings', NULL, 'menu.account.settings', 0, 'none', 1, '/account/settings/basic', 0, 'AccountSettings', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117896, 0, 'account', NULL, 'menu.account', 0, 'user', 1, '/account/center', 0, 'RouteView', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117897, 0, 'exception', NULL, 'menu.exception', 0, 'warning', 1, '/exception/403', 0, 'RouteView', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117898, 0, '系统管理', '/system', 'menu.system', 0, 'tool', 1, '/sysManage/menuList', 0, 'RouteView', 'System', 900, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117899, 0, 'result', NULL, 'menu.result', 0, 'check-circle-o', 1, '/result/success', 0, 'PageView', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117901, 417244902117902, 'search', NULL, 'menu.list.search-list', 0, 'none', 1, '/list/search/article', 0, 'SearchLayout', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117902, 0, 'list', NULL, 'menu.list', 0, 'table', 1, '/list/table-list', 0, 'RouteView', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117903, 0, 'profile', NULL, 'menu.profile', 0, 'profile', 1, '/profile/basic', 0, 'RouteView', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117907, 417244902117898, '角色列表', '/system/roleList', 'menu.system.roleList', 0, 'none', 1, '', 0, 'system/role/roleList', 'System', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117908, 417244902117898, '权限列表', '/system/permList', 'menu.system.permissionList', 0, 'none', 1, '', 0, 'system/perm/permList', 'System', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117909, 417244902117898, '用户列表', '/system/userList', 'menu.system.userList', 0, 'none', 1, '', 0, 'system/user/userList', 'System', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117910, 417244902117904, 'edit-table', NULL, '内联编辑表格', 0, 'none', 1, '', 0, 'TableInnerEditList', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117911, 417244902117902, 'table-list', '/list/table-list/:pageNo([1-9]\\\\d*)?', 'menu.list.table-list', 0, 'none', 1, '', 0, 'TableList', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117912, 417244902117902, 'basic-list', NULL, 'menu.list.basic-list', 0, 'none', 1, '', 0, 'StandardList', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117913, 417244902117902, 'card', NULL, 'menu.list.card-list', 0, 'none', 1, '', 0, 'CardList', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117914, 417244902117901, 'article', NULL, 'menu.list.search-list.articles', 0, 'none', 1, '', 0, 'SearchArticles', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117915, 417244902117901, 'project', NULL, 'menu.list.search-list.projects', 0, 'none', 1, '', 0, 'SearchProjects', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117916, 417244902117901, 'application', NULL, 'menu.list.search-list.applications', 0, 'none', 1, '', 0, 'SearchApplications', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117917, 417244902117903, 'basic', NULL, 'menu.profile.basic', 0, 'none', 1, '', 0, 'ProfileBasic', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117918, 417244902117903, 'advanced', NULL, 'menu.profile.advanced', 0, 'none', 1, '', 0, 'ProfileAdvanced', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117919, 417244902117899, 'success', NULL, 'menu.result.success', 0, 'none', 1, '', 0, 'ResultSuccess', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117920, 417244902117899, 'fail', NULL, 'menu.result.fail', 0, 'none', 1, '', 0, 'ResultFail', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117921, 417244902117897, '403', NULL, 'menu.exception.not-permission', 0, 'none', 1, '', 0, 'Exception403', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117922, 417244902117897, '404', NULL, 'menu.exception.not-find', 0, 'none', 1, '', 0, 'Exception404', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117923, 417244902117896, 'center', NULL, 'menu.account.center', 0, 'none', 1, '', 0, 'AccountCenter', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117924, 417244902117895, 'BasicSettings', '/account/settings/basic', 'account.settings.menuMap.basic', 0, 'none', 1, '', 0, 'BasicSetting', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117925, 417244902117895, 'SecuritySettings', '/account/settings/security', 'account.settings.menuMap.security', 0, 'none', 1, '', 0, 'SecuritySettings', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117926, 417244902117895, 'CustomSettings', '/account/settings/custom', 'account.settings.menuMap.custom', 0, 'none', 1, '', 0, 'CustomSettings', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117927, 417244902117895, 'BindingSettings', '/account/settings/binding', 'account.settings.menuMap.binding', 0, 'none', 1, '', 0, 'BindingSettings', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117928, 417244902117895, 'NotificationSettings', '/account/settings/notification', 'account.settings.menuMap.notification', 0, 'none', 1, '', 0, 'NotificationSettings', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117967, 417244902117897, 'error', '', 'menu.exception.server-error', 0, 'none', 1, '', 0, 'Exception500', 'Business', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902117999, 417244902117898, '菜单列表', '/system/menuList', 'menu.system.menuList', 0, 'none', 1, '', 0, 'system/menu/menuList', 'System', 50, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902194761, 417244902117898, '字典列表', '/system/dicList', 'menu.system.dicList', 0, 'none', 1, '', 0, 'system/dic/dicList', 'System', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (417244902194762, 417244902117898, '代码生成', '/system/codeGen', 'menu.system.codeGen', 0, 'none', 1, '', 0, 'system/codeGen/codeGen', 'System', 0, 0, NULL, NULL, '');
-INSERT INTO `sys_menu` VALUES (435823827857477, 417244902117898, '部门信息', '/system/deptList', 'menu.system.dept', 0, 'none', 1, NULL, 0, 'system/dept/deptList', 'System', 100, 0, 417244902117446, '2023-07-05 22:31:43.743230', '');
-INSERT INTO `sys_menu` VALUES (444148029263941, 417244902117898, '应用列表', '/system/sysApps', 'menu.system.sysApps', 0, 'none', 1, NULL, 0, 'system/sysApps/sysAppsList', 'System', 100, 0, 417244902117446, '2023-07-29 11:02:59.478041', '');
+INSERT INTO `sys_menu` VALUES (417244902117886, 0, 'dashboard', NULL, 'menu.dashboard', 1, 'dashboard', 1, '/dashboard/workplace', 0, 'RouteView', 'Business', 1000, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117887, 417244902117886, 'Analysis', '/dashboard/analysis', 'menu.dashboard.analysis', 1, 'none', 1, '', 0, 'Analysis', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117889, 417244902117886, 'monitor', 'https://www.baidu.com/', 'menu.dashboard.workplace', 1, 'none', 1, '', 0, '', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117890, 417244902117894, 'advanced-form', NULL, 'menu.form.advanced-form', 1, 'none', 1, '', 0, 'AdvanceForm', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117891, 417244902117894, 'step-form', NULL, 'menu.form.step-form', 1, 'none', 1, '', 0, 'StepForm', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117892, 417244902117894, 'basic-form', NULL, 'menu.form.basic-form', 1, 'none', 1, '', 0, 'BasicForm', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117893, 417244902117886, 'workplace', NULL, 'menu.dashboard.monitor', 1, 'none', 1, '', 0, 'Workplace', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117894, 0, 'form', NULL, 'menu.form', 1, 'form', 1, '/form/base-form', 0, 'RouteView', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117895, 417244902117896, 'settings', NULL, 'menu.account.settings', 1, 'none', 1, '/account/settings/basic', 0, 'AccountSettings', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117896, 0, 'account', NULL, 'menu.account', 1, 'user', 1, '/account/center', 0, 'RouteView', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117897, 0, 'exception', NULL, 'menu.exception', 1, 'warning', 1, '/exception/403', 0, 'PageView', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117898, 0, '系统管理', '/system', 'menu.system', 1, 'tool', 1, '/system/menuList', 0, 'RouteView', 'System', 900, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117899, 0, 'result', NULL, 'menu.result', 1, 'check-circle-o', 1, '/result/success', 0, 'PageView', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117901, 417244902117902, 'search', NULL, 'menu.list.search-list', 1, 'none', 1, '/list/search/article', 0, 'SearchLayout', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117902, 0, 'list', NULL, 'menu.list', 1, 'table', 1, '/list/table-list', 0, 'RouteView', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117903, 0, 'profile', NULL, 'menu.profile', 1, 'profile', 1, '/profile/basic', 0, 'RouteView', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117907, 417244902117898, '角色列表', '/system/roleList', 'menu.system.roleList', 1, 'none', 1, '', 0, 'system/role/roleList', 'System', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117908, 417244902117898, '权限列表', '/system/permList', 'menu.system.permissionList', 1, 'none', 1, '', 0, 'system/perm/permList', 'System', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117909, 417244902117898, '用户列表', '/system/userList', 'menu.system.userList', 1, 'none', 1, '', 0, 'system/user/userList', 'System', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117910, 417244902117904, 'edit-table', NULL, '内联编辑表格', 1, 'none', 1, '', 0, 'TableInnerEditList', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117911, 417244902117902, 'table-list', '/list/table-list/:pageNo([1-9]\\\\d*)?', 'menu.list.table-list', 1, 'none', 1, '', 0, 'TableList', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117912, 417244902117902, 'basic-list', NULL, 'menu.list.basic-list', 1, 'none', 1, '', 0, 'StandardList', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117913, 417244902117902, 'card', NULL, 'menu.list.card-list', 1, 'none', 1, '', 0, 'CardList', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117914, 417244902117901, 'article', NULL, 'menu.list.search-list.articles', 1, 'none', 1, '', 0, 'SearchArticles', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117915, 417244902117901, 'project', NULL, 'menu.list.search-list.projects', 1, 'none', 1, '', 0, 'SearchProjects', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117916, 417244902117901, 'application', NULL, 'menu.list.search-list.applications', 1, 'none', 1, '', 0, 'SearchApplications', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117917, 417244902117903, 'basic', NULL, 'menu.profile.basic', 1, 'none', 1, '', 0, 'ProfileBasic', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117918, 417244902117903, 'advanced', NULL, 'menu.profile.advanced', 1, 'none', 1, '', 0, 'ProfileAdvanced', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117919, 417244902117899, 'success', NULL, 'menu.result.success', 1, 'none', 1, '', 0, 'ResultSuccess', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117920, 417244902117899, 'fail', NULL, 'menu.result.fail', 1, 'none', 1, '', 0, 'ResultFail', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117921, 417244902117897, '403', NULL, 'menu.exception.not-permission', 1, 'none', 1, '', 0, 'Exception403', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117922, 417244902117897, '404', NULL, 'menu.exception.not-find', 1, 'none', 1, '', 0, 'Exception404', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117923, 417244902117896, 'center', NULL, 'menu.account.center', 1, 'none', 1, '', 0, 'AccountCenter', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117924, 417244902117895, 'BasicSettings', '/account/settings/basic', 'account.settings.menuMap.basic', 1, 'none', 1, '', 0, 'BasicSetting', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117925, 417244902117895, 'SecuritySettings', '/account/settings/security', 'account.settings.menuMap.security', 1, 'none', 1, '', 0, 'SecuritySettings', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117926, 417244902117895, 'CustomSettings', '/account/settings/custom', 'account.settings.menuMap.custom', 1, 'none', 1, '', 0, 'CustomSettings', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117927, 417244902117895, 'BindingSettings', '/account/settings/binding', 'account.settings.menuMap.binding', 1, 'none', 1, '', 0, 'BindingSettings', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117928, 417244902117895, 'NotificationSettings', '/account/settings/notification', 'account.settings.menuMap.notification', 1, 'none', 1, '', 0, 'NotificationSettings', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117967, 417244902117897, 'error', NULL, 'menu.exception.server-error', 1, 'none', 1, '', 0, 'Exception500', 'Business', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902117999, 417244902117898, '菜单列表', '/system/menuList', 'menu.system.menuList', 1, 'none', 1, '', 0, 'system/menu/menuList', 'System', 50, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902194761, 448839443734598, '字典列表', '/system/dicList', 'menu.system.dicList', 1, 'none', 1, '', 0, 'system/dic/dicList', 'System', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (417244902194762, 0, '代码生成', '/system/codeGen', 'menu.system.codeGen', 1, 'desktop', 1, '', 1, 'system/codeGen/codeGen', 'System', 0, 0, NULL, NULL, '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (435823827857477, 417244902117898, '部门信息', '/system/deptList', 'menu.system.dept', 1, 'none', 1, NULL, 0, 'system/dept/deptList', 'System', 100, 0, 417244902117446, '2023-07-05 22:31:43.743230', '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (444148029263941, 448839443734598, '应用列表', '/system/apps', 'menu.system.apps', 1, 'none', 1, NULL, 0, 'system/apps/appsList', 'System', 100, 0, 417244902117446, '2023-07-29 11:02:59.478041', '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (447421929099333, 448839443734598, '邮件模板', '/system/emailTemplate', 'menu.system.emailTemplate', 1, 'none', 1, NULL, 0, 'system/emailTemplate/emailTemplateList', 'System', 100, 0, 417244902117446, '2023-08-07 17:04:31.429647', '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443734597, 0, '租户列表', '/system/tenant', 'menu.system.tenant', 1, 'cluster', 1, NULL, 1, 'system/tenant/tenantList', 'System', 100, 0, 417244902117446, '2023-08-11 17:12:24.338422', '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443734598, 0, '项目配置', '/setting', 'menu.setting', 0, 'setting', 1, '/system/emailTemplate', 0, 'RouteView', 'System', 200, 0, 417244902117446, '2023-08-14 16:02:20.899362', '', 449900948840517, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789157, 0, 'dashboard', NULL, 'menu.dashboard', 1, 'dashboard', 1, '/dashboard/workplace', 0, 'RouteView', 'Business', 1000, 0, NULL, NULL, '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789158, 448839443789157, 'Analysis', '/dashboard/analysis', 'menu.dashboard.analysis', 1, 'none', 1, NULL, 0, 'Analysis', 'Business', 0, 0, NULL, NULL, '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789159, 448839443789157, 'monitor', 'https://www.baidu.com/', 'menu.dashboard.workplace', 1, 'none', 1, NULL, 0, NULL, 'Business', 0, 0, NULL, NULL, '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789160, 448839443789164, 'advanced-form', NULL, 'menu.form.advanced-form', 1, 'none', 1, NULL, 0, 'AdvanceForm', 'Business', 0, 0, NULL, NULL, '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789161, 448839443789164, 'step-form', NULL, 'menu.form.step-form', 1, 'none', 1, NULL, 0, 'StepForm', 'Business', 0, 0, NULL, NULL, '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789162, 448839443789164, 'basic-form', NULL, 'menu.form.basic-form', 1, 'none', 1, NULL, 0, 'BasicForm', 'Business', 0, 0, NULL, NULL, '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789163, 448839443789157, 'workplace', NULL, 'menu.dashboard.monitor', 1, 'none', 1, NULL, 0, 'Workplace', 'Business', 0, 0, NULL, NULL, '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789164, 0, 'form', NULL, 'menu.form', 1, 'form', 1, '/form/base-form', 0, 'RouteView', 'Business', 0, 0, NULL, NULL, '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789165, 448839443789166, 'settings', NULL, 'menu.account.settings', 1, 'none', 1, '/account/settings/basic', 0, 'AccountSettings', 'Business', 0, 0, NULL, NULL, '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789166, 0, 'account', NULL, 'menu.account', 1, 'user', 1, '/account/center', 0, 'RouteView', 'Business', 0, 0, NULL, NULL, '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789167, 0, 'exception', NULL, 'menu.exception', 1, 'warning', 1, '/exception/403', 0, 'PageView', 'Business', 0, 0, NULL, NULL, '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789168, 0, '系统管理', '/system', 'menu.system', 1, 'tool', 1, '/system/menuList', 0, 'RouteView', 'System', 900, 0, NULL, NULL, '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789169, 0, 'result', NULL, 'menu.result', 1, 'check-circle-o', 1, '/result/success', 0, 'PageView', 'Business', 0, 0, NULL, NULL, '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789170, 448839443789171, 'search', NULL, 'menu.list.search-list', 1, 'none', 1, '/list/search/article', 0, 'SearchLayout', 'Business', 0, 0, NULL, NULL, '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789171, 0, 'list', NULL, 'menu.list', 1, 'table', 1, '/list/table-list', 0, 'RouteView', 'Business', 0, 0, NULL, NULL, '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789172, 0, 'profile', NULL, 'menu.profile', 1, 'profile', 1, '/profile/basic', 0, 'RouteView', 'Business', 0, 0, NULL, NULL, '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789173, 448839443789168, '角色列表', '/system/roleList', 'menu.system.roleList', 1, 'none', 1, NULL, 0, 'system/role/roleList', 'System', 0, 0, NULL, NULL, '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789174, 448839443789168, '权限列表', '/system/permList', 'menu.system.permissionList', 1, 'none', 1, NULL, 0, 'system/perm/permList', 'System', 0, 0, NULL, NULL, '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789175, 448839443789168, '用户列表', '/system/userList', 'menu.system.userList', 1, 'none', 1, NULL, 0, 'system/user/userList', 'System', 0, 0, NULL, NULL, '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789196, 448839443789168, '菜单列表', '/system/menuList', 'menu.system.menuList', 1, 'none', 1, NULL, 0, 'system/menu/menuList', 'System', 50, 0, NULL, NULL, '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789197, 448839443789203, '字典列表', '/system/dicList', 'menu.system.dicList', 1, 'none', 1, NULL, 0, 'system/dic/dicList', 'System', 0, 0, NULL, NULL, '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789198, 0, '代码生成', '/system/codeGen', 'menu.system.codeGen', 1, 'desktop', 1, NULL, 1, 'system/codeGen/codeGen', 'System', 0, 0, NULL, NULL, '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789199, 448839443789168, '部门信息', '/system/deptList', 'menu.system.dept', 1, 'none', 1, NULL, 0, 'system/dept/deptList', 'System', 100, 0, 417244902117446, '2023-08-16 22:31:43.743230', '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789200, 448839443789203, '应用列表', '/system/apps', 'menu.system.apps', 1, 'none', 1, NULL, 0, 'system/apps/appsList', 'System', 100, 0, 417244902117446, '2023-08-16 11:02:59.478041', '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789201, 448839443789203, '邮件模板', '/system/emailTemplate', 'menu.system.emailTemplate', 1, 'none', 1, NULL, 0, 'system/emailTemplate/emailTemplateList', 'System', 100, 0, 417244902117446, '2023-08-16 17:04:31.429647', '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789202, 0, '租户列表', '/system/tenant', 'menu.system.tenant', 1, 'cluster', 1, NULL, 1, 'system/tenant/tenantList', 'System', 100, 0, 417244902117446, '2023-08-16 17:12:24.338422', '', 450236590075973, NULL, NULL);
+INSERT INTO `sys_menu` VALUES (448839443789203, 0, '项目配置', '/setting', 'menu.setting', 0, 'setting', 1, '/system/emailTemplate', 0, 'RouteView', 'System', 200, 0, 417244902117446, '2023-08-16 16:02:20.899362', '', 450236590075973, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for sys_menu_role
@@ -290,19 +354,11 @@ CREATE TABLE `sys_menu_role`  (
   `create_by` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
   `create_on` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 444213516976239 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统菜单角色表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 450243269607509 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统菜单角色表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_menu_role
 -- ----------------------------
-INSERT INTO `sys_menu_role` VALUES (440952917856325, 417244902117898, 417244902134579, 0, 417244902117446, '2023-07-20 10:22:02.981000');
-INSERT INTO `sys_menu_role` VALUES (440952917868613, 417244902117907, 417244902134579, 0, 417244902117446, '2023-07-20 10:22:02.984000');
-INSERT INTO `sys_menu_role` VALUES (440952917868614, 417244902117908, 417244902134579, 0, 417244902117446, '2023-07-20 10:22:02.984000');
-INSERT INTO `sys_menu_role` VALUES (440952917868615, 417244902117909, 417244902134579, 0, 417244902117446, '2023-07-20 10:22:02.984000');
-INSERT INTO `sys_menu_role` VALUES (440952917868616, 417244902117999, 417244902134579, 0, 417244902117446, '2023-07-20 10:22:02.984000');
-INSERT INTO `sys_menu_role` VALUES (440952917868617, 417244902194761, 417244902134579, 0, 417244902117446, '2023-07-20 10:22:02.984000');
-INSERT INTO `sys_menu_role` VALUES (440952917868618, 417244902194762, 417244902134579, 0, 417244902117446, '2023-07-20 10:22:02.984000');
-INSERT INTO `sys_menu_role` VALUES (440952917868619, 435823827857477, 417244902134579, 0, 417244902117446, '2023-07-20 10:22:02.984000');
 INSERT INTO `sys_menu_role` VALUES (444213516972101, 417244902117886, 424046126026821, 0, 417244902117446, '2023-07-29 15:29:27.688000');
 INSERT INTO `sys_menu_role` VALUES (444213516976197, 417244902117887, 424046126026821, 0, 417244902117446, '2023-07-29 15:29:27.688000');
 INSERT INTO `sys_menu_role` VALUES (444213516976198, 417244902117889, 424046126026821, 0, 417244902117446, '2023-07-29 15:29:27.688000');
@@ -346,6 +402,22 @@ INSERT INTO `sys_menu_role` VALUES (444213516976235, 417244902117913, 4240461260
 INSERT INTO `sys_menu_role` VALUES (444213516976236, 417244902117903, 424046126026821, 0, 417244902117446, '2023-07-29 15:29:27.688000');
 INSERT INTO `sys_menu_role` VALUES (444213516976237, 417244902117917, 424046126026821, 0, 417244902117446, '2023-07-29 15:29:27.688000');
 INSERT INTO `sys_menu_role` VALUES (444213516976238, 417244902117918, 424046126026821, 0, 417244902117446, '2023-07-29 15:29:27.688000');
+INSERT INTO `sys_menu_role` VALUES (450243269607493, 448839443789157, 417244902134579, 0, 417244902117456, '2023-08-15 16:24:35.264122');
+INSERT INTO `sys_menu_role` VALUES (450243269607494, 448839443789158, 417244902134579, 0, 417244902117456, '2023-08-15 16:24:35.264202');
+INSERT INTO `sys_menu_role` VALUES (450243269607495, 448839443789159, 417244902134579, 0, 417244902117456, '2023-08-15 16:24:35.264217');
+INSERT INTO `sys_menu_role` VALUES (450243269607496, 448839443789163, 417244902134579, 0, 417244902117456, '2023-08-15 16:24:35.264227');
+INSERT INTO `sys_menu_role` VALUES (450243269607497, 448839443789168, 417244902134579, 0, 417244902117456, '2023-08-15 16:24:35.264232');
+INSERT INTO `sys_menu_role` VALUES (450243269607498, 448839443789173, 417244902134579, 0, 417244902117456, '2023-08-15 16:24:35.264241');
+INSERT INTO `sys_menu_role` VALUES (450243269607499, 448839443789174, 417244902134579, 0, 417244902117456, '2023-08-15 16:24:35.264250');
+INSERT INTO `sys_menu_role` VALUES (450243269607500, 448839443789175, 417244902134579, 0, 417244902117456, '2023-08-15 16:24:35.264255');
+INSERT INTO `sys_menu_role` VALUES (450243269607501, 448839443789196, 417244902134579, 0, 417244902117456, '2023-08-15 16:24:35.264264');
+INSERT INTO `sys_menu_role` VALUES (450243269607502, 448839443789199, 417244902134579, 0, 417244902117456, '2023-08-15 16:24:35.264282');
+INSERT INTO `sys_menu_role` VALUES (450243269607503, 448839443789198, 417244902134579, 0, 417244902117456, '2023-08-15 16:24:35.264287');
+INSERT INTO `sys_menu_role` VALUES (450243269607504, 448839443789202, 417244902134579, 0, 417244902117456, '2023-08-15 16:24:35.264295');
+INSERT INTO `sys_menu_role` VALUES (450243269607505, 448839443789203, 417244902134579, 0, 417244902117456, '2023-08-15 16:24:35.264299');
+INSERT INTO `sys_menu_role` VALUES (450243269607506, 448839443789197, 417244902134579, 0, 417244902117456, '2023-08-15 16:24:35.264308');
+INSERT INTO `sys_menu_role` VALUES (450243269607507, 448839443789200, 417244902134579, 0, 417244902117456, '2023-08-15 16:24:35.264317');
+INSERT INTO `sys_menu_role` VALUES (450243269607508, 448839443789201, 417244902134579, 0, 417244902117456, '2023-08-15 16:24:35.264321');
 
 -- ----------------------------
 -- Table structure for sys_permissions
@@ -361,7 +433,7 @@ CREATE TABLE `sys_permissions`  (
   `create_on` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
   `type` int(11) NULL DEFAULT NULL COMMENT '权限类型',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 443608172056649 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 443608172056649 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_permissions
@@ -388,13 +460,13 @@ DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE `sys_role`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `role_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '角色名字',
-  `describe` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '角色描述',
+  `describe` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '角色描述',
   `enable` tinyint(1) NOT NULL COMMENT '角色启用',
   `deleted` tinyint(1) NOT NULL COMMENT '软删除',
   `create_by` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
   `create_on` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 445269808595014 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统角色信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 449891358490694 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统角色信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_role
@@ -414,7 +486,7 @@ CREATE TABLE `sys_role_permissions`  (
   `create_by` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
   `create_on` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 445269757755462 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 445269757755462 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_role_permissions
@@ -446,6 +518,31 @@ INSERT INTO `sys_role_permissions` VALUES (445269757751377, 417244902134579, 443
 INSERT INTO `sys_role_permissions` VALUES (445269757755461, 417244902134579, 443608172056648, 0, 417244902117446, '2023-08-01 15:07:18.972000');
 
 -- ----------------------------
+-- Table structure for sys_tenant
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_tenant`;
+CREATE TABLE `sys_tenant`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `tenant_admin` bigint(20) NOT NULL COMMENT '租户管理员',
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '租户名字',
+  `email_config` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '邮件配置',
+  `enable` tinyint(1) NOT NULL COMMENT '是否启用',
+  `describe` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '描述',
+  `deleted` tinyint(1) NOT NULL COMMENT '软删除',
+  `create_by` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
+  `create_on` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` bigint(20) NULL DEFAULT NULL COMMENT '修改人',
+  `update_on` datetime(6) NULL DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 450236590075974 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统租户表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_tenant
+-- ----------------------------
+INSERT INTO `sys_tenant` VALUES (449900948840517, 417244902117446, 'HuanTian项目', '271976304@qq.com;tigxqcwmuqblbhgg;smtp.qq.com;587', 1, '测试用途账套', 0, 417244902117446, '2023-08-15 15:57:24.519421', 417244902117446, '2023-08-15 15:57:46.919194');
+INSERT INTO `sys_tenant` VALUES (450236590075973, 417244902117456, '测试租户', 'wangxiaopang8888@163.com;SXFDBHBLUKDQVWDR;smtp.163.com;25', 1, '主要用于测试租户', 0, 417244902117446, '2023-08-15 15:57:24.519421', NULL, NULL);
+
+-- ----------------------------
 -- Table structure for sys_user
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user`;
@@ -469,14 +566,14 @@ CREATE TABLE `sys_user`  (
   `dept_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '所属部门Id',
   `type` int(11) NOT NULL DEFAULT 0 COMMENT '账号类型',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 417244902117457 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 417244902117457 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (417244902117445, 'Api测试系统管理员', '/avatar2.jpg', 'test', '40BD001563085FC35165329EA1FF5C5ECBDBBEEF', 1, '123456789', '192.168.0.1', '2022-03-31 10:00:00.000000', 0, 0, 417244902117446, '2022-03-31 10:00:00.000000', NULL, NULL, 417244902117458, 417244902119463, 0);
-INSERT INTO `sys_user` VALUES (417244902117446, '系统管理员', '/avatar1.jpg', 'admin', 'ADCD7048512E64B48DA55B027577886EE5A36350', 1, '15675117404', '192.168.0.2', '2022-03-31 11:00:00.000000', 0, 0, 417244902117446, '2022-03-31 11:00:00.000000', 417244902117446, '2023-07-25 09:41:45.085217', 417244902117458, 417244902119463, 2);
-INSERT INTO `sys_user` VALUES (417244902117456, 'Sarah Lee', '', 'humin', 'ADCD7048512E64B48DA55B027577886EE5A36350', 1, '111111111', '192.168.0.50', '2022-03-31 23:00:00.000000', 1, 0, 417244902117446, '2022-03-31 23:00:00.000000', NULL, NULL, 417244902117458, 417244902119462, 0);
+INSERT INTO `sys_user` VALUES (417244902117445, 'Api测试系统管理员', '/avatar2.jpg', 'test', '40BD001563085FC35165329EA1FF5C5ECBDBBEEF', 1, '123456789', '192.168.0.1', '2022-03-31 10:00:00.000000', 0, 0, 417244902117446, '2022-03-31 10:00:00.000000', NULL, NULL, 449900948840517, 417244902119463, 0);
+INSERT INTO `sys_user` VALUES (417244902117446, '系统管理员', '/avatar1.jpg', 'admin', 'ADCD7048512E64B48DA55B027577886EE5A36350', 1, '15675117404', '192.168.0.2', '2022-03-31 11:00:00.000000', 0, 0, 417244902117446, '2022-03-31 11:00:00.000000', 417244902117446, '2023-07-25 09:41:45.085217', 449900948840517, 417244902119463, 2);
+INSERT INTO `sys_user` VALUES (417244902117456, 'Sarah Lee', '/asd.jpg', 'wanglei', 'ADCD7048512E64B48DA55B027577886EE5A36350', 1, '111111111', '192.168.0.50', '2022-03-31 23:00:00.000000', 1, 0, 417244902117446, '2022-03-31 23:00:00.000000', NULL, NULL, 450236590075973, 417244902119462, 0);
 
 -- ----------------------------
 -- Table structure for sys_user_role
@@ -490,11 +587,12 @@ CREATE TABLE `sys_user_role`  (
   `create_by` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
   `create_on` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 417244902194816 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统用户权限表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 417244902194816 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统用户权限表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_user_role
 -- ----------------------------
+INSERT INTO `sys_user_role` VALUES (417244902149164, 417244902117456, 417244902134579, 0, NULL, NULL);
 INSERT INTO `sys_user_role` VALUES (417244902194813, 417244902117446, 417244902134579, 0, NULL, '2023-05-30 21:47:54.000000');
 INSERT INTO `sys_user_role` VALUES (417244902194814, 417244902117445, 424046126026821, 0, NULL, '2023-05-30 21:47:54.000000');
 INSERT INTO `sys_user_role` VALUES (417244902194815, 417244902117446, 424046126026821, 0, NULL, '2023-05-30 21:47:54.000000');

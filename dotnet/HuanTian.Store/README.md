@@ -69,16 +69,22 @@
 九: 消息队列、Redis 仓储
     
     1、新增消息队列仓储，暂时实现为RabbitMQ 用字符串去判断使用哪个队列 通过 SelectQueue 方法
-    2、Redis仓储如果只是想看项目效果的话,没有安装Redis环境的话,推荐把 Redis相关代码都注释 
+    2、Redis仓储如果只是想看项目效果的话,没有安装Redis环境的话,建议把 Redis 相关代码都注释 
 
-十：项目中已经实现的功能
+十: 多租户模式
+
+    1、利用ORM的过滤器实现了多租户模式
+    2、清楚过滤器可以用仓储中的 IgnoreFilters 方法,查询数据
+    3、可以参考 HuanTian.EntityFrameworkCore、EfSqlContext.cs 中的方法 和 HuanTian.WebCore、SqlSugarExtensions、SqlSugar 
+
+十一：项目中已经实现的功能
 
     1、防止Token已经失效依然被请求，使用Redis加JWT，缓存已经注销的用户Token，生成黑名单在鉴权过滤器中查询存在就显示未认证
     2、增加了友好的异常处理，使用友好异常处理，返回200状态码。
        示例:throw new FriendlyException("测试异常");  
        建议只在需要的情况下使用，不然出问题排查不到问题错在哪里
-    3、实现了多租户模式，可以参考 HuanTian.EntityFrameworkCore、EfSqlContext.cs 中的方法 和 SqlSugar 
-    4、前端已经全局拦截后端异常信息包括文件信息 详情可以参考前端文件 Src、utils、request.js 中
+    3、前端已经全局拦截后端异常信息包括文件信息 详情可以参考前端文件 Src、utils、request.js 中
+    4、项目SqlData有sql文件，直接加载就可以获得初始化项目SQL，或者通过Ef Core Code First 生成数据库(不过只有数据结构没有数据)
     5、更多功能正在实现中,敬请期待 ····   
        个人开发精力有限,还请谅解   ···· 
        本人也是一个小菜鸡,遇到的问题解决的方式都是自己找文档、论坛一步步解决的。 ····

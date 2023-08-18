@@ -37,8 +37,6 @@ namespace HuanTian.EntityFrameworkCore
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // 获取所有实体类型
-            var entityTypes = modelBuilder.Model.GetEntityTypes();
-
             foreach (IMutableEntityType entity in modelBuilder.Model.GetEntityTypes())
             {
                 if (App.Configuration["SqlSettings:GlobalSettingsTableName"] == "True")
@@ -62,9 +60,10 @@ namespace HuanTian.EntityFrameworkCore
                     }
                 }
 
+                entity.AppendAllQueryFilter(t => !EF.Property<bool>(t, "Deleted"), "Deleted");
+                entity.AppendAllQueryFilter(t => EF.Property<long>(t, "TenantId") == _tenantService.GetCurrentTenantId(), "TenantId");
             }
-            modelBuilder.AppendAllQueryFilter(t => !EF.Property<bool>(t, "Deleted"), "Deleted");
-            modelBuilder.AppendAllQueryFilter(t => EF.Property<long>(t, "TenantId") == _tenantService.GetCurrentTenantId(), "TenantId");
+
             // modelBuilder.Entity<SysDeptDO>().HasQueryFilter(t => EF.Property<long>(t, "TenantId") == _tenantService.GetCurrentTenantId());
             // modelBuilder.AppendQueryFilter<SysDeptDO>(t => EF.Property<long>(t, "TenantId") == _tenantService.GetCurrentTenantId());
         }
@@ -79,29 +78,25 @@ namespace HuanTian.EntityFrameworkCore
         /// <typeparam name="T"></typeparam>
         /// <param name="modelBuilder"></param>
         /// <param name="expression"></param>
-        public static void AppendQueryFilter<T>(this ModelBuilder modelBuilder,
+        public static void AppendQueryFilter<T>(this IMutableEntityType entityType,
             Expression<Func<T, bool>> expression)
         {
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            if (!typeof(T).IsAssignableFrom(entityType.ClrType))
+                return;
+            var parameterType = Expression.Parameter(entityType.ClrType);
+            var expressionFilter = ReplacingExpressionVisitor.Replace(
+                expression.Parameters.Single(), parameterType, expression.Body);
+
+            var currentQueryFilter = entityType.GetQueryFilter();
+            if (currentQueryFilter != null)
             {
-                if (!typeof(T).IsAssignableFrom(entityType.ClrType))
-                    continue;
-
-                var parameterType = Expression.Parameter(entityType.ClrType);
-                var expressionFilter = ReplacingExpressionVisitor.Replace(
-                    expression.Parameters.Single(), parameterType, expression.Body);
-
-                var currentQueryFilter = entityType.GetQueryFilter();
-                if (currentQueryFilter != null)
-                {
-                    var currentExpressionFilter = ReplacingExpressionVisitor.Replace(
-                        currentQueryFilter.Parameters.Single(), parameterType, currentQueryFilter.Body);
-                    expressionFilter = Expression.AndAlso(currentExpressionFilter, expressionFilter);
-                }
-
-                var lambdaExpression = Expression.Lambda(expressionFilter, parameterType);
-                entityType.SetQueryFilter(lambdaExpression);
+                var currentExpressionFilter = ReplacingExpressionVisitor.Replace(
+                    currentQueryFilter.Parameters.Single(), parameterType, currentQueryFilter.Body);
+                expressionFilter = Expression.AndAlso(currentExpressionFilter, expressionFilter);
             }
+
+            var lambdaExpression = Expression.Lambda(expressionFilter, parameterType);
+            entityType.SetQueryFilter(lambdaExpression);
         }
         /// <summary>
         /// 为所有实体附加全局过滤器 
@@ -109,32 +104,29 @@ namespace HuanTian.EntityFrameworkCore
         /// </summary>
         /// <param name="modelBuilder"></param>
         /// <param name="expression"></param>
-        public static void AppendAllQueryFilter(this ModelBuilder modelBuilder,
+        public static void AppendAllQueryFilter(this IMutableEntityType entityType,
             Expression<Func<object, bool>> expression, string columnName)
         {
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            var hasTenantIdProperty = entityType.GetProperties().Any(property => property.Name == columnName);
+            if (!hasTenantIdProperty)
+                return;
+            var ignoreEntity = new string[] { "SysUserDO" };
+            if (ignoreEntity.Contains(entityType.ClrType.Name))
+                return;
+            var parameterType = Expression.Parameter(entityType.ClrType);
+            var expressionFilter = ReplacingExpressionVisitor.Replace(
+                expression.Parameters.Single(), parameterType, expression.Body);
+
+            var currentQueryFilter = entityType.GetQueryFilter();
+            if (currentQueryFilter != null)
             {
-                var hasTenantIdProperty = entityType.GetProperties().Any(property => property.Name == columnName);
-                if (!hasTenantIdProperty)
-                    continue;
-                var ignoreEntity = new string[] { "SysUserDO" };
-                if (ignoreEntity.Contains(entityType.ClrType.Name))
-                    continue;
-                var parameterType = Expression.Parameter(entityType.ClrType);
-                var expressionFilter = ReplacingExpressionVisitor.Replace(
-                    expression.Parameters.Single(), parameterType, expression.Body);
-
-                var currentQueryFilter = entityType.GetQueryFilter();
-                if (currentQueryFilter != null)
-                {
-                    var currentExpressionFilter = ReplacingExpressionVisitor.Replace(
-                        currentQueryFilter.Parameters.Single(), parameterType, currentQueryFilter.Body);
-                    expressionFilter = Expression.AndAlso(currentExpressionFilter, expressionFilter);
-                }
-
-                var lambdaExpression = Expression.Lambda(expressionFilter, parameterType);
-                entityType.SetQueryFilter(lambdaExpression);
+                var currentExpressionFilter = ReplacingExpressionVisitor.Replace(
+                    currentQueryFilter.Parameters.Single(), parameterType, currentQueryFilter.Body);
+                expressionFilter = Expression.AndAlso(currentExpressionFilter, expressionFilter);
             }
+
+            var lambdaExpression = Expression.Lambda(expressionFilter, parameterType);
+            entityType.SetQueryFilter(lambdaExpression);
         }
     }
 }
