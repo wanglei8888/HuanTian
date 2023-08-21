@@ -278,7 +278,7 @@ namespace HuanTian.WebCore
         private static IEnumerable<string> ReadGroups()
         {
             // 获取所有的控制器和动作方法
-            var assemblies = AssemblyHelper.GetAssemblyList();
+            var assemblies = AssemblyHelper.GetAssemblyArray();
             // 扫描所有类的特性
             var attributeList = new List<ApiDescriptionSettingsAttribute>();
             foreach (var assembly in assemblies)

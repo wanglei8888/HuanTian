@@ -36,7 +36,7 @@
           <a-dropdown v-if="selectedRowKeys.length > 0">
             <a-menu slot="overlay">
               <a-menu-item key="1">
-                <a-popconfirm title="是否要批量删除？" @confirm="remove(selectedRowKeys.join(','), true)">
+                <a-popconfirm title="是否要批量删除？" @confirm="remove(selectedRowKeys)">
                   <a-icon type="delete" />删除
                 </a-popconfirm></a-menu-item>
             </a-menu>
@@ -144,15 +144,12 @@ export default {
     }
   },
   methods: {
-    remove (key, multipleChoice) {
-      this.$http.delete('/sysCodeGen', { data: { Id: key.toString() } }).then(res => {
+    remove (key) {
+      this.$http.delete('/sysCodeGen', { data: { Ids: !key.length ? [key] : key } }).then(res => {
         if (res.code === 200) {
           this.$message.success('删除成功')
           this.$refs.table.refresh()
-          // 是否多选
-          if (multipleChoice) {
-            this.$refs.table.clearSelected()
-          }
+          this.$refs.table.clearSelected()
         }
       })
     },

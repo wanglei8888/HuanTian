@@ -88,7 +88,7 @@ public class SysPermissionsService : ISysPermissionsService, IDynamicApiControll
     }
     public async Task<int> Delete(IdInput input)
     {
-        var count = await _sysPermissions.DeleteAsync(input.Id.Split(',').Adapt<long[]>());
+        var count = await _sysPermissions.DeleteAsync(input.Ids);
         return count;
     }
     public async Task<IEnumerable<SysPermissionsDO>> Get([FromQuery] SysPermissionsInput input)

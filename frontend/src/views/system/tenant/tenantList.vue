@@ -28,7 +28,7 @@
         <a-dropdown v-if="selectedRowKeys.length > 0">
           <a-menu slot="overlay">
             <a-menu-item key="1">
-              <a-popconfirm title="是否要批量删除？" @confirm="remove(selectedRowKeys.join(','), true)">
+              <a-popconfirm title="是否要批量删除？" @confirm="remove(selectedRowKeys)">
                 <a-icon type="delete" />删除
               </a-popconfirm></a-menu-item>
           </a-menu>
@@ -107,15 +107,12 @@ export default {
     }
   },
   methods: {
-    remove (key, multipleChoice) {
-      this.$http.delete('/sysTenant', { data: { Id: key.toString() } }).then(res => {
+    remove (key) {
+      this.$http.delete('/sysTenant', { data: { Ids: !key.length ? [key] : key } }).then(res => {
         if (res.code === 200) {
           this.$message.success('删除成功')
           this.$refs.table.refresh()
-          // 是否多选
-          if (multipleChoice) {
-            this.$refs.table.clearSelected()
-          }
+          this.$refs.table.clearSelected()
         }
       })
     },
@@ -141,12 +138,12 @@ export default {
 }
 const columns = [
   {
-    title: '租户管理员',
-    dataIndex: 'tenantAdminName'
-  },
-  {
     title: '租户名字',
     dataIndex: 'name'
+  },
+  {
+    title: '租户管理员',
+    dataIndex: 'tenantAdminName'
   },
   {
     title: '邮件配置',

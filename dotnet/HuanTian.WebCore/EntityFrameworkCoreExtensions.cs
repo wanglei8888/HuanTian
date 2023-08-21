@@ -39,12 +39,17 @@ namespace HuanTian.WebCore
         /// <returns></returns>
         public static IServiceCollection AddEntityFrameworkService(this IServiceCollection services)
         {
+            //var loggerFactory = LoggerFactory.Create(builder =>
+            //{
+            //    builder.AddConsole(); // 将日志输出到控制台
+            //});
             DbType dbType = (DbType)Enum.Parse(typeof(DbType), App.Configuration["SqlSettings:SqlType"]);
             var ConnectionStrings = App.Configuration[$"ConnectionStrings:{dbType}"];
             switch (dbType)
             {
                 case DbType.MySql:
                     services.AddDbContext<EfSqlContext>(options => {
+                        // options.UseLoggerFactory(loggerFactory);
                         options.UseMySql(ConnectionStrings, ServerVersion.AutoDetect(ConnectionStrings));
                         options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking); 
                     });

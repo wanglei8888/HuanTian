@@ -84,7 +84,7 @@ namespace HuanTian.Service
                 });
             userInfo.Role = distinctPermissionList;
             userInfo.App = await _app.OrderBy(t => t.Order).ToListAsync();
-            userInfo.Menu = await _sysMenuService.GetUserMenuOutput(null);
+            userInfo.Menu = await _sysMenuService.GetUserMenuOutput(default);
             return userInfo;
         }
         public async Task<int> Add(SysUserDO input)
@@ -115,7 +115,13 @@ namespace HuanTian.Service
         }
         public async Task<int> Delete(IdInput input)
         {
-            var count = await _userInfo.DeleteAsync(input.Id.Split(',').Adapt<long[]>());
+            var count = await _userInfo.DeleteAsync(input.Ids);
+            // 删除用户角色关联
+            var roleIdList = (await _sysRoleService.UserRole(input.Ids)).Select(t => t.Id);
+            if (roleIdList != null && roleIdList.Any())
+            {
+                await _sysRoleService.DeleteUserRole(input.Ids);
+            }
             return count;
         }
         /// <summary>

@@ -70,7 +70,7 @@ public class SysRoleService : ISysRoleService, IDynamicApiController, IScoped
         var entity = input.Adapt<SysRoleDO>();
         var count = await _sysRole.InitTable(entity)
             .CallEntityMethod(t => t.CreateFunc())
-            .AddAsync(); ;
+            .AddAsync(); 
         return count;
     }
     public async Task<int> Update(SysRoleFormInput input)
@@ -82,7 +82,7 @@ public class SysRoleService : ISysRoleService, IDynamicApiController, IScoped
     }
     public async Task<int> Delete(IdInput input)
     {
-        var count = await _sysRole.DeleteAsync(input.Id.Split(',').Adapt<long[]>());
+        var count = await _sysRole.DeleteAsync(input.Ids);
         return count;
     }
     public async Task<IEnumerable<SysRoleDO>> Get([FromQuery] SysRoleInput input)
@@ -129,30 +129,47 @@ public class SysRoleService : ISysRoleService, IDynamicApiController, IScoped
             .AddAsync();
         return count;
     }
-    /// <summary>
-    /// 获取用户权限
-    /// </summary>
-    /// <returns></returns>
     [HttpGet]
-    public async Task<dynamic> UserRole()
+    public async Task<IEnumerable<SysRoleDO>> UserRole([FromQuery]params long[] userId)
     {
-        var jsonString = File.ReadAllText(Path.Combine(App.WebHostEnvironment.WebRootPath, "UserRole.json"));
-        var role = JsonConvert.DeserializeObject<List<UserPermission>>(jsonString);
-        var pageData = new PageData();
-        pageData.Data = role;
-        pageData.PageNo = 1;
-        pageData.PageSize = 10;
-        pageData.TotalCount = 5;
-        return await Task.FromResult(role);
+        if (userId.Length == 0)
+        {
+            // 不传值就赋默认值
+            userId = App.GetUserId().Adapt<long[]>();
+        }
+        // 获取用户角色
+        var userRole = await _sysUserRole.Where(t => userId.Contains(t.UserId)).ToListAsync();
+        var roleList = await _sysRole.Where(t => userRole.Select(x => x.RoleId).Contains(t.Id)).ToListAsync();
+        return roleList;
     }
-
+    [HttpPost("UserRole")]
+    public async Task<int> AddUserRole(SysUserRoleInput input)
+    {
+        var userRoleList = new List<SysUserRoleDO>();
+        foreach (var item in input.RoleId)
+        {
+            var perms = new SysUserRoleDO();
+            perms.UserId = input.UserId;
+            perms.RoleId = item;
+            userRoleList.Add(perms);
+        }
+        // 删除已经有数据
+        var deleteCount = await _sysUserRole.DeleteAsync(t => t.UserId == input.UserId);
+        var count = await _sysUserRole.InitTable(userRoleList)
+            .CallEntityMethod(t => t.CreateFunc())
+            .AddAsync();
+        return count;
+    }
+    [NonAction]
+    public async Task<int> DeleteUserRole(params long[] userId)
+    {
+        var deleteCount = await _sysUserRole.DeleteAsync(t => userId.Contains(t.UserId));
+        return deleteCount;
+    }
     [NonAction]
     public async Task<IEnumerable<Role>> UserGetRoleButton(long userId, bool ignoreNull = true)
     {
-        // 获取用户角色
-        var userRole = await _sysUserRole.Where(t => t.UserId == userId).ToListAsync();
-        var roleList = await _sysRole.Where(t => userRole.Select(x => x.RoleId).Contains(t.Id)).ToListAsync();
-
+        var roleList = await UserRole(userId);
         return await RolePermisionButton(roleList, ignoreNull);
     }
 

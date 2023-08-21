@@ -29,6 +29,6 @@ namespace HuanTian.Infrastructure
     public class IdInput
     {
         [Required(ErrorMessage ="Id必须提供")]
-        public string Id { get; set; }
+        public long[] Ids { get; set; }
     }
 }

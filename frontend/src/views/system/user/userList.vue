@@ -92,7 +92,7 @@
             <a-dropdown v-if="selectedRowKeys.length > 0">
               <a-menu slot="overlay">
                 <a-menu-item key="1">
-                  <a-popconfirm title="是否要批量删除？" @confirm="remove(selectedRowKeys.join(','), true)">
+                  <a-popconfirm title="是否要批量删除？" @confirm="remove(selectedRowKeys)">
                     <a-icon type="delete" />删除
                   </a-popconfirm></a-menu-item>
               </a-menu>
@@ -136,12 +136,16 @@
                     <a-menu-item>
                       <a href="javascript:;" @click="$message.success('修改密码')">修改密码</a>
                     </a-menu-item>
+                    <a-menu-item>
+                      <a href="javascript:;" @click="$refs.userRoleModal.create(record.id)">授权角色</a>
+                    </a-menu-item>
                   </a-menu>
                 </a-dropdown>
               </template>
             </span>
           </s-table>
           <user-modal ref="userModal" @ok="handleOk" />
+          <user-role-modal ref="userRoleModal" @ok="handleOk" />
         </a-card>
       </a-col>
     </a-row>
@@ -152,12 +156,13 @@
 import moment from 'moment'
 import { STable } from '@/components'
 import UserModal from './modules/userModal'
-
+import userRoleModal from './modules/userRoleModal'
 export default {
   name: 'UserList',
   components: {
     STable,
-    UserModal
+    UserModal,
+    userRoleModal
   },
   data () {
     this.columns = columns
@@ -196,15 +201,12 @@ export default {
       this.queryParam.deptId = e[0]
       this.$refs.table.refresh()
     },
-    remove (key, multipleChoice) {
-      this.$http.delete('/sysUser', { data: { Id: key.toString() } }).then(res => {
+    remove (key) {
+      this.$http.delete('/sysUser', { data: { Ids: !key.length ? [key] : key } }).then(res => {
         if (res.code === 200) {
           this.$message.success('删除成功')
           this.$refs.table.refresh()
-          // 是否多选
-          if (multipleChoice) {
-            this.$refs.table.clearSelected()
-          }
+          this.$refs.table.clearSelected()
         }
       })
     },
@@ -217,6 +219,9 @@ export default {
     },
     toggleAdvanced () {
       this.advanced = !this.advanced
+    },
+    authRole () {
+      this.$message.success('授权角色')
     }
   },
   created () {

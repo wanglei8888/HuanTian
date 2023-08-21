@@ -89,7 +89,7 @@ export default {
   },
   methods: {
     remove (key) {
-      this.$http.delete('/sysDic', { data: { id: key.toString() } }).then(res => {
+      this.$http.delete('/sysDic', { data: { Ids: !key.length ? [key] : key } }).then(res => {
         if (res.code === 200) {
           this.$message.success('删除成功')
           this.$refs.table.refresh()

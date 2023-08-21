@@ -24,6 +24,7 @@
         </a-row>
         <a-row>
           <a-divider>邮件模板</a-divider>
+          <a-alert :message="message" banner closable type="info" how-icon />
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item prop="emailHtml" :wrapperCol="{ span: 24 }" hasFeedback>
               <div>
@@ -63,6 +64,7 @@ export default {
       visible: false,
       confirmLoading: false,
       viewMode: false,
+      message: '绑定实体值为全部为小写  示例: UserName - {{username}}',
       rules: {
           name: [{ required: true, message: '请输入名字！' }],
           emailHtml: [{ required: true, message: '请输入邮件模板！' }]

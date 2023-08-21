@@ -54,7 +54,7 @@ public class SysAppsService : ISysAppsService, IDynamicApiController, IScoped
     }
     public async Task<int> Delete(IdInput input)
     {
-        var count = await _sysApps.DeleteAsync(input.Id.Split(',').Adapt<long[]>());
+        var count = await _sysApps.DeleteAsync(input.Ids);
         return count;
     }
     public async Task<IEnumerable<SysAppsDO>> Get([FromQuery] SysAppsInput input)

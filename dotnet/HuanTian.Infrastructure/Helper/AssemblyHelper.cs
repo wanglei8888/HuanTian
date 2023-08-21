@@ -55,13 +55,13 @@ namespace HuanTian.Infrastructure
         /// 获取项目启动目录下所有的Assembly类型
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<Assembly> GetAssemblyList() 
+        public static Assembly[] GetAssemblyArray() 
         {
             var dependencyContext = DependencyContext.Default;
             var assembliesList = dependencyContext
                 .RuntimeLibraries
                 .Where(library => !library.Serviceable && library.Type != "package")
-                .Select(library => Assembly.Load(library.Name));
+                .Select(library => Assembly.Load(library.Name)).ToArray();
             return assembliesList;
         }
         /// <summary>
@@ -70,7 +70,7 @@ namespace HuanTian.Infrastructure
         /// <returns></returns>
         public static IEnumerable<Type> GetAssemblyAllTypeList()
         {
-            var assemblyList = GetAssemblyList();
+            var assemblyList = GetAssemblyArray();
             var typeList = new List<Type>();
             foreach (var item in assemblyList)
             {

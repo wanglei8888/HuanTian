@@ -55,7 +55,7 @@ namespace HuanTian.Service
             }
             var list = await _sysDicDetail
                 .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name == input.Name)
-                .WhereIf(!string.IsNullOrEmpty(input.Code),t => t.MasterId == masterId)
+                .WhereIf(!string.IsNullOrEmpty(input.Code), t => t.MasterId == masterId)
                 .OrderBy(t => t.Order)
                 .ToListAsync();
             return list;
@@ -105,10 +105,9 @@ namespace HuanTian.Service
         }
         public async Task<int> Delete(IdInput input)
         {
-            var count = await _sysDic.DeleteAsync(input.Id.Split(',').Adapt<long[]>());
+            var count = await _sysDic.DeleteAsync(input.Ids);
             // 删除从表数据
-            count += await _sysDicDetail.DeleteAsync(t => t.MasterId == long.Parse(input.Id));
-
+            count += await _sysDicDetail.DeleteAsync(t => input.Ids.Contains(t.MasterId));
             return count;
         }
         /// <summary>
@@ -134,7 +133,7 @@ namespace HuanTian.Service
                 throw new Exception("存在相同字典名称,请修改后再试");
             }
             // 删除数据
-            await _sysDicDetail.DeleteAsync(t=> t.MasterId == input.MasterId);
+            await _sysDicDetail.DeleteAsync(t => t.MasterId == input.MasterId);
             // 添加数据
             if (input.SysDicDetail.Any())
             {

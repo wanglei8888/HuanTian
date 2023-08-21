@@ -67,7 +67,7 @@ public class SysTenantService : ISysTenantService, IDynamicApiController, IScope
     }
     public async Task<int> Delete(IdInput input)
     {
-        var count = await _sysTenant.DeleteAsync(input.Id.Split(',').Adapt<long[]>());
+        var count = await _sysTenant.DeleteAsync(input.Ids);
         return count;
     }
     public async Task<IEnumerable<SysTenantDO>> Get([FromQuery] SysTenantInput input)

@@ -44,6 +44,13 @@ public class SysRoleFormInput : SysRoleDO
 {
        
 }
+public class SysUserRoleInput
+{
+    [Required(ErrorMessage = "RoleId不能为空")]
+    public long[] RoleId { get; set; }
+    [Required(ErrorMessage = "UserId不能为空")]
+    public long UserId { get; set; }
+}
 /// <summary>
 /// 角色菜单入参
 /// </summary>

@@ -45,7 +45,7 @@ namespace HuanTian.WebCore
             // 雪花ID
             YitIdHelper.SetIdGenerator(new IdGeneratorOptions(1));
             // Mapster加载全局设计
-            var assemblies = AssemblyHelper.GetAssemblyList();
+            var assemblies = AssemblyHelper.GetAssemblyArray();
             foreach (var assembly in assemblies)
             {
                 TypeAdapterConfig.GlobalSettings.Scan(assembly);

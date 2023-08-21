@@ -71,8 +71,7 @@ public class SysEmailTemplateService : ISysEmailTemplateService, IDynamicApiCont
     public async Task<int> Delete(IdInput input)
     {
         // 删除模板文件
-        var idCount = input.Id.Split(',');
-        var collection = await _sysEmailTemplate.Where(t => idCount.Contains(t.Id.ToString())).ToListAsync();
+        var collection = await _sysEmailTemplate.Where(t => input.Ids.Contains(t.Id)).ToListAsync();
         foreach (var item in collection)
         {
             var filePath = Path.Combine(App.WebHostEnvironment.WebRootPath, "Template", "Email", item.Name + ".html");
@@ -82,7 +81,7 @@ public class SysEmailTemplateService : ISysEmailTemplateService, IDynamicApiCont
                 File.Delete(filePath);
             }
         }
-        var count = await _sysEmailTemplate.DeleteAsync(input.Id.Split(',').Adapt<long[]>());
+        var count = await _sysEmailTemplate.DeleteAsync(input.Ids);
         return count;
     }
     public async Task<IEnumerable<SysEmailTemplateDO>> Get([FromQuery] SysEmailTemplateInput input)

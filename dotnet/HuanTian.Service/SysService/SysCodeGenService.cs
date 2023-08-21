@@ -99,7 +99,7 @@ namespace HuanTian.Service
             }
             var id = YitIdHelper.NextId();
             // 详细表数据
-            var ignoreColumn = new string[] { "id", "create_by", "create_on", "update_by", "update_on", "deleted","tenant_id" }; //忽略基础数据
+            var ignoreColumn = new string[] { "id", "create_by", "create_on", "update_by", "update_on", "deleted", "tenant_id" }; //忽略基础数据
             var columnList = _db.DbMaintenance.GetColumnInfosByTableName($"{input.TableName}").Where(t => !ignoreColumn.Contains(t.DbColumnName));
             var detailList = new List<SysCodeGenDetailDO>();
             foreach (var (item, index) in columnList.Select((value, index) => (value, index)))
@@ -149,10 +149,9 @@ namespace HuanTian.Service
         }
         public async Task<int> Delete(IdInput input)
         {
-            var count = await _codeGen.DeleteAsync(long.Parse(input.Id));
+            var count = await _codeGen.DeleteAsync(input.Ids);
             // 删除从表
-            count += await _codeGenDetail.DeleteAsync(x => x.MasterId == long.Parse(input.Id));
-
+            count += await _codeGenDetail.DeleteAsync(x => input.Ids.Contains(x.MasterId));
             return count;
         }
         [HttpPut("Detail")]
@@ -209,8 +208,8 @@ namespace HuanTian.Service
                 throw new Exception("表格在数据库中不存在,请修改后再试");
             }
             // 获取模板信息
-            var templatePathList = GetTemplatePathList(new SysCodeGenFileInput 
-                { ApplicationName = applicationName, TableName = masterInfo.TableName, FrontPath = parentMenu.Path ?? "a" }); // FrontPath为Null 赋默认值，防止报错
+            var templatePathList = GetTemplatePathList(new SysCodeGenFileInput
+            { ApplicationName = applicationName, TableName = masterInfo.TableName, FrontPath = parentMenu.Path ?? "a" }); // FrontPath为Null 赋默认值，防止报错
             // 生成方式为生成到项目 && 不强制执行
             if (masterInfo.GenerationWay == GenerationWayEnum.GenToProj
                 && input.Enforcement == false)

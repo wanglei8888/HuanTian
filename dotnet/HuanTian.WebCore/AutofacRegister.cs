@@ -41,7 +41,7 @@ namespace HuanTian.WebCore
             var basePath = AppContext.BaseDirectory;
 
             // 加载目标程序集
-            var Services = Assembly.LoadFrom(Path.Combine(basePath, "HuanTian.Service.dll"));
+            var Services = AssemblyHelper.GetAssemblyArray(); 
 
             // 扫描继承 ISingleton 接口的所有类 注入为单例
             builder.RegisterAssemblyTypes(Services)
@@ -69,7 +69,7 @@ namespace HuanTian.WebCore
             // 注册生命周期为单例   Singleton 的类 builder.RegisterType(type).AsImplementedInterfaces().SingleInstance();
             // 注册生命周期为作用域 Scoped    的类 builder.RegisterType(type).AsImplementedInterfaces().InstancePerLifetimeScope();
             // 注册生命周期为瞬时   Transient 的类 builder.RegisterType(type).AsImplementedInterfaces().InstancePerDependency();
-            builder.RegisterGeneric(typeof(SqlSugarRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
             builder.RegisterType<StartupFilter>().As<IStartupFilter>().InstancePerDependency();
             builder.RegisterType<RabbitMQMessageQueue>().As<IMessageQueue>()
                 .WithParameter("connectionString", App.Configuration["ConnectionStrings:RabbitMQ"]).InstancePerLifetimeScope();

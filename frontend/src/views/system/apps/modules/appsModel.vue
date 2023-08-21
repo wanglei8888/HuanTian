@@ -25,7 +25,7 @@
         <a-row :gutter="gutter">
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item label="排序" prop="order" hasFeedback>
-              <a-input v-model="form.order" placeholder="" />
+              <a-input-number v-model="form.order" placeholder="" />
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -133,7 +133,7 @@ export default {
 }
 function createForm () {
   return {
-
+    enable: true
   }
 }
 </script>

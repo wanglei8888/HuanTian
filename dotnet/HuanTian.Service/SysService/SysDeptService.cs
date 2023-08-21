@@ -59,7 +59,7 @@ public class SysDeptService : ISysDeptService, IDynamicApiController, IScoped
     }
     public async Task<int> Delete(IdInput input)
     {
-        var count = await _sysDept.DeleteAsync(input.Id.Split(',').Adapt<long[]>());
+        var count = await _sysDept.DeleteAsync(input.Ids);
         return count;
     }
     public async Task<IEnumerable<SysDeptDO>> Get([FromQuery] SysDeptInput input)

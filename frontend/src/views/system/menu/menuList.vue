@@ -154,7 +154,7 @@ export default {
       }
     },
     remove (key) {
-      this.$http.delete('/sysMenu', { data: { id: `${key}` } }).then(res => {
+      this.$http.delete('/sysMenu', { data: { Ids: !key.length ? [key] : key } }).then(res => {
         if (res.code === 200) {
           this.$message.success('删除成功')
           this.handSerach()
