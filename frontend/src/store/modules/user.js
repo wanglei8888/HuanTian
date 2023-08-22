@@ -1,10 +1,10 @@
 import storage from 'store'
 import store from '@/store'
+import { message } from 'ant-design-vue'
 import expirePlugin from 'store/plugins/expire'
 import { login, getInfo, logout } from '@/api/login'
 import { ACCESS_TOKEN, ALL_APP_MENU } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
-import router, { resetRouter } from '@/router'
 
 storage.addPlugin(expirePlugin)
 const user = {
@@ -106,10 +106,11 @@ const user = {
         // 缓存获取所有应用
         const allAppMenu = storage.get(ALL_APP_MENU)
         // 切换应用
-        const appMenu = allAppMenu.filter(item => item.menuType == appCode)
+        const appMenu = allAppMenu.filter(item => item.menuType === appCode)
         // 如果找不到
-        if (!appMenu) {
-          reject(new Error(`找不到应用: ${appCode}`))
+        if (!appMenu || appMenu.length === 0) {
+          message.error(`找不到应用: ${application.name} - 应用下没有菜单`)
+          reject(new Error(`找不到应用: ${application.name} - 应用下没有菜单`))
           return
         }
         resolve(appMenu)

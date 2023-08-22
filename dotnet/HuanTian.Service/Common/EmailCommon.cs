@@ -1,6 +1,5 @@
 ﻿using Scriban;
 using SqlSugar.Extensions;
-using System.Linq.Expressions;
 using System.Net;
 using System.Net.Mail;
 using System.Text.Json;
@@ -16,17 +15,18 @@ namespace HuanTian.Service
         /// <summary>
         /// 发送邮件将信息存到消息队列中
         /// </summary>
+        /// <param name="value">实体值</param>
         /// <param name="templateName">模板名称</param>
         /// <param name="emailSubject">邮件名称</param>
         /// <param name="email">发送的邮箱</param>
         public async static Task SendEmail<TEntity>(TEntity value, string templateName, string emailSubject, params string[] email)
         {
-            ////vendorportal@163.com
-            ////FIATXKLUDHLDNWWL
-            ////"smtp.163.com", 465
             var filePath = Path.Combine(App.WebHostEnvironment.WebRootPath, "Template", "Email", templateName + ".html");
             // 租户信息
             var tenantInfo = (await App.GetService<ISysTenantService>().Get(new SysTenantInput() { Id = App.GetTenantId() })).ToList()[0];
+            if (string.IsNullOrWhiteSpace(tenantInfo.EmailConfig) || tenantInfo.EmailConfig.Split(';').Length != 4)
+                throw new ArgumentNullException("租户邮箱配置错误,请修改后再试");
+            
             var htmlContent = File.ReadAllText(filePath);
             // 替换其中的占位符
             var template = Template.Parse(htmlContent);

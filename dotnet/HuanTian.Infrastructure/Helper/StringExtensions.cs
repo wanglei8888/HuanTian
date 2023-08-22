@@ -24,6 +24,7 @@
 #endregion << 版 本 注 释 >>
 
 using HuanTian.Infrastructure;
+using SqlSugar.Extensions;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -161,7 +162,11 @@ namespace HuanTian.Infrastructure
             var sumMinuts = 0;
             foreach (var item in array)
             {
-                sumMinuts += Convert.ToInt32(item);
+                if (sumMinuts == 0) {
+                    sumMinuts = array[0].ObjToInt();
+                    continue;
+                }
+                sumMinuts *= item.ObjToInt();
             }
             return type switch
             {

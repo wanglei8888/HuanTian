@@ -16,6 +16,7 @@
 #endregion << 版 本 注 释 >>
 
 using Microsoft.EntityFrameworkCore;
+using SqlSugar;
 
 namespace HuanTian.Service;
 
@@ -63,17 +64,21 @@ public class SysTenantService : ISysTenantService, IDynamicApiController, IScope
         var count = await _sysTenant.InitTable(entity)
             .CallEntityMethod(t => t.UpdateFunc())
             .UpdateAsync();
+        await _redisCache.StringDeleteAsync(RedisKeyConst.TenantInfo);
         return count;
     }
     public async Task<int> Delete(IdInput input)
     {
         var count = await _sysTenant.DeleteAsync(input.Ids);
+        await _redisCache.StringDeleteAsync(RedisKeyConst.TenantInfo);
         return count;
     }
     public async Task<IEnumerable<SysTenantDO>> Get([FromQuery] SysTenantInput input)
     {
         // 从缓存中获取
         var value = await _redisCache.StringGetAsync<IEnumerable<SysTenantDO>>(RedisKeyConst.TenantInfo);
+        value = value.WhereIF(input.Id != 0, t => t.Id == input.Id)
+                     .WhereIF(!string.IsNullOrEmpty(input.Name), t => t.Name == input.Name);
         if (value == null || !value.Any())
         {
             value = await _sysTenant
