@@ -36,7 +36,7 @@ namespace Huangtian.Store
 
             #region 日志服务
             //开发环境不需要写入日志
-#if !DEBUG
+#if DEBUG
             builder.Logging.AddLocalFileLogger(options => options.SaveDays = 7);
 #endif
             #endregion
@@ -100,7 +100,7 @@ namespace Huangtian.Store
 
             app.UseCors("cors");
             app.UseRouting();
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             app.UseAuthentication();
             app.UseAuthorization();

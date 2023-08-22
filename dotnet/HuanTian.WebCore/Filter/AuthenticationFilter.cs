@@ -71,7 +71,7 @@ namespace HuanTian.WebCore
         }
         private async Task CheckRoutPerms(AuthorizationFilterContext context)
         {
-            if (App.Configuration["AppSettings:RoutPermsEnable"].ObjToBool())
+            if (!App.Configuration["AppSettings:RoutPermsEnable"].ObjToBool())
                 return;
             
             // 去掉路由前缀获取路由
