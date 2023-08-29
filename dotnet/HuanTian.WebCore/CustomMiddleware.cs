@@ -53,38 +53,7 @@ namespace HuanTian.WebCore
         /// <returns></returns>
         public async Task Invoke(HttpContext context, IServiceProvider serviceProvider)
         {
-            // 记录接口时间
-            var watch = new Stopwatch();
-            watch.Start();
             await _requestDelegate(context);
-            watch.Stop();
-            await ApiLogging(context, watch.ElapsedMilliseconds);
-        }
-        private async Task ApiLogging(HttpContext context,long time)
-        {
-            var logLevel = App.Configuration["AppSettings:ApiLogLevel"];
-            var path = context.Request.Path;
-            var message = "";
-            switch (logLevel)
-            {
-                case "1":
-                    var paramas = context.Request.QueryString.ToString();
-                    // 先读取QueryString 再读取Body
-                    if (string.IsNullOrEmpty(paramas))
-                    {
-                        using (var reader = new StreamReader(context.Request.Body))
-                        {
-                            paramas = await reader.ReadToEndAsync();
-                        }
-                    }
-                    paramas = paramas.Substring(1);
-                    message = $"接口:{path}       用户:{App.GetUserId()}       时间:{time}ms       参数:{paramas}";
-                    break;
-                default:
-                    message = $"接口:{path}       用户:{App.GetUserId()}       时间:{time}ms";
-                    break;
-            }
-            _logger.LogInformation(message);
         }
     }
 }

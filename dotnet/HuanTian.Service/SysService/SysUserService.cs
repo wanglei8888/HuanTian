@@ -24,18 +24,14 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-using RabbitMQ.Client;
 using SqlSugar.Extensions;
-using System.Net.Mail;
-using System.Net;
-using System.Net.Mime;
 
 namespace HuanTian.Service
 {
     /// <summary>
     /// 用户信息服务
     /// </summary>
-    public class SysUserService : ISysUserService, IDynamicApiController
+    public class SysUserService : ISysUserService, IScoped, IDynamicApiController
     {
         private readonly ILogger<SysUserService> _logger;
         private readonly IRepository<SysUserDO> _userInfo;
@@ -131,6 +127,7 @@ namespace HuanTian.Service
         [HttpGet]
         public async Task<PageData> Page([FromQuery] SysUserInput input)
         {
+            var service2 = App.GetService<IRepository<SysLogInfoDO>>();
             var pageData = await _userInfo
                 .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name.Contains(input.Name))
                 .WhereIf(!string.IsNullOrEmpty(input.UserName), t => t.UserName.Contains(input.UserName))

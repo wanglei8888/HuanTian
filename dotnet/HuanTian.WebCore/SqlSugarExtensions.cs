@@ -82,8 +82,11 @@ namespace HuanTian.WebCore
                     // 打印输出Sql
                     db.Aop.OnLogExecuting = (sql, pars) =>
                     {
+                        // 测试环境下打印Sql
+#if DEBUG
                         Console.ForegroundColor = ConsoleColor.Blue;
                         Console.WriteLine("--------------------------------------------------------------");
+
                         if (sql.StartsWith("SELECT"))
                         {
                             Console.ForegroundColor = ConsoleColor.Green;
@@ -97,6 +100,7 @@ namespace HuanTian.WebCore
                             Console.ForegroundColor = ConsoleColor.Blue;
                         }
                         Console.WriteLine(SqlProfiler.ParameterFormat(sql, pars));
+#endif
                     };
 
                     // 添加全局过滤器

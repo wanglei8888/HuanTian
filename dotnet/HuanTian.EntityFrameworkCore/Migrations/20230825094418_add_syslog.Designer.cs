@@ -3,6 +3,7 @@ using System;
 using HuanTian.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HuanTian.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(EfSqlContext))]
-    partial class EfSqlContextModelSnapshot : ModelSnapshot
+    [Migration("20230825094418_add_syslog")]
+    partial class add_syslog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -469,11 +472,6 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
-                    b.Property<DateTime>("CreateOn")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("create_on")
-                        .HasComment("日志时间");
-
                     b.Property<int>("Level")
                         .HasColumnType("int")
                         .HasColumnName("level")
@@ -497,11 +495,6 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnName("tenant_id")
                         .HasComment("租户ID");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("user_id")
-                        .HasComment("用户ID");
-
                     b.HasKey("Id");
 
                     b.ToTable("sys_log_error", t =>
@@ -516,11 +509,6 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasColumnName("id");
-
-                    b.Property<DateTime>("CreateOn")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("create_on")
-                        .HasComment("日志时间");
 
                     b.Property<int>("Level")
                         .HasColumnType("int")
@@ -537,11 +525,6 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("tenant_id")
                         .HasComment("租户ID");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("user_id")
-                        .HasComment("用户ID");
 
                     b.HasKey("Id");
 

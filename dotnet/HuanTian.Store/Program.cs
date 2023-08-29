@@ -1,14 +1,19 @@
 ﻿using Autofac;
+using Autofac.Core;
+using Autofac.Core.Lifetime;
+using Autofac.Extensions.DependencyInjection;
 using HuanTian.Infrastructure;
 using HuanTian.Service;
 using HuanTian.WebCore;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 
 namespace Huangtian.Store
 {
     public class Program
     {
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -35,7 +40,7 @@ namespace Huangtian.Store
             #endregion
 
             #region 日志服务
-            //开发环境不需要写入日志
+            // 开发环境不写入日志
 #if DEBUG
             builder.Logging.AddLocalFileLogger(options => options.SaveDays = 7);
 #endif
@@ -64,19 +69,21 @@ namespace Huangtian.Store
             builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
             {
                 containerBuilder.RegisterModule(new AutofacRegister()); // Autofac
+
             });
             builder.Host.UseServiceProviderFactory(new Autofac.Extensions.DependencyInjection.AutofacServiceProviderFactory());
 
             // 自动依赖注入,手写的 如果不符合需求，可以注释，使用autofac
             // .NET Core 的原生 DI 容器中不允许作用域注入在单例服务中
-            //builder.Services.AddScoped(typeof(IRepository<>), typeof(SqlSugarRepository<>));
+            //builder.Services.AddScoped(typeof(IRepository<>), typeof(HuanTian.SqlSugar.SqlSugarRepository<>));
             //builder.Services.AddSingleton<IStartupFilter, StartupFilter>();
+            //builder.Services.AddScoped<IQueryFilter, QueryFilter>();
             //builder.Services.AddAutoInjection();
             //// 注册Redis缓存服务
             //builder.Services.AddSingleton<IRedisCache>(provider =>
             //    new RedisCache(builder.Configuration["ConnectionStrings:Redis"]));
             //// 注册RabbitMQ服务
-            //builder.Services.AddScoped<IMessageQueue>(provider =>
+            //builder.Services.AddSingleton<IMessageQueue>(provider =>
             //   new RabbitMQMessageQueue(builder.Configuration["ConnectionStrings:RabbitMQ"]));
             #endregion
 
@@ -84,13 +91,13 @@ namespace Huangtian.Store
             builder.Services.AddJwt(true);
             // 注册Http服务
             builder.Services.AddHttpContextAccessor();
-            
+
             var app = builder.Build();
             // 自定义中间件
             app.UseMiddleware<CustomMiddleware>();
             // 注册生命周期方法
             app.RegisterHostApplicationLifetime();
-            
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

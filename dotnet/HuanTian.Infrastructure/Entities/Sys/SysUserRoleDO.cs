@@ -7,7 +7,7 @@ namespace HuanTian.Infrastructure
     /// 系统用户权限表
     /// </summary>
     [Comment("系统用户权限表")]
-    public class SysUserRoleDO: BaseEntityCreate
+    public class SysUserRoleDO : BaseEntityCreate
     {
         /// <summary>
         /// 用户ID

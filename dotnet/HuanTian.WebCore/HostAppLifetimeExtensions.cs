@@ -24,12 +24,17 @@ namespace HuanTian.WebCore
     /// </summary>
     public class AppLeftTime
     {
+        public AppLeftTime()
+        {
+
+        }
         /// <summary>
         /// 项目加载完毕之后执行
         /// </summary>
         public void ApplicationStarted()
         {
-             EmailCommon.OpenEmailConsumer();
+            EmailMQ.OpenConsumer();
+            LogMQ.OpenConsumer();
         }
     }
 }

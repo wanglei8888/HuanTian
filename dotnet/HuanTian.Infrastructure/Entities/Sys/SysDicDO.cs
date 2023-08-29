@@ -34,7 +34,7 @@ namespace HuanTian.Infrastructure
     /// 系统字典表
     /// </summary>
     [Comment("系统字典表")]
-    public class SysDicDO: BaseEntity
+    public class SysDicDO : BaseEntity
     {
         /// <summary>
         /// 字典名字

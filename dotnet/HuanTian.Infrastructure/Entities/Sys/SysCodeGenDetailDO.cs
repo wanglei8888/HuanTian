@@ -92,6 +92,6 @@ namespace HuanTian.Infrastructure
         /// </summary>
         [Comment("是否必填")]
         public bool Required { get; set; }
-        
+
     }
 }

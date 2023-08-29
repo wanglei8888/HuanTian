@@ -10,6 +10,10 @@
         /// </summary>
         public const string Email = "email";
         /// <summary>
+        /// 日志队列
+        /// </summary>
+        public const string Log = "log";
+        /// <summary>
         /// 发送失败队列
         /// </summary>
         public const string FailMsg = "failMsg";

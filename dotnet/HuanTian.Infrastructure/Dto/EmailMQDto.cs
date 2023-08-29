@@ -1,11 +1,13 @@
-﻿namespace HuanTian.Infrastructure
+﻿using HuanTian.Infrastructure;
+
+namespace HuanTian.Infrastructure.Dto
 {
     /// <summary>
     /// 发送邮件实体
     /// </summary>
-    public class EmailQueueDto: IMsgQBaseEntity
+    public class EmailMQDto : IMsgQBaseEntity
     {
-        public EmailQueueDto(string subject, string[] to, string data, SysTenantDO tenant)
+        public EmailMQDto(string subject, string[] to, string data, SysTenantDO tenant)
         {
             //为实体赋值
             Subject = subject;

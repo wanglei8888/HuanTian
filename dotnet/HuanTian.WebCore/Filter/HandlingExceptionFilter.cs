@@ -23,9 +23,8 @@
  * 版本：V1.0.1
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
 using System.Net;
 
 namespace HuanTian.WebCore
@@ -35,9 +34,10 @@ namespace HuanTian.WebCore
     /// </summary>
     public class HandlingExceptionFilter : IAsyncExceptionFilter
     {
-        public HandlingExceptionFilter() 
+        private ILogger<HandlingExceptionFilter> _logger;
+        public HandlingExceptionFilter(ILogger<HandlingExceptionFilter> logger) 
         {
-            
+            _logger = logger;
         }
         public async Task OnExceptionAsync(ExceptionContext context)
         {
@@ -59,6 +59,7 @@ namespace HuanTian.WebCore
             }
             // 设置为true，表示异常已经被处理了
             context.ExceptionHandled = true;
+            _logger.LogError($"异常位置:[{context.ActionDescriptor.DisplayName}]    {context.Exception.Message}");
             await Task.CompletedTask;
 
         }

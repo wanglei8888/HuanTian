@@ -23,6 +23,7 @@
  * 版本：V1.0.1
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
+using HuanTian.Infrastructure;
 using Newtonsoft.Json;
 
 namespace HuanTian.Service
@@ -155,7 +156,7 @@ namespace HuanTian.Service
         {
             // 1、需要先配置租户邮件信息    2、确保消息队列地址配置正确，服务已启动
             var userInfo = await App.GetService<IRepository<SysUserDO>>().FirstOrDefaultAsync(t => t.Id == App.GetUserId());
-            await EmailCommon.SendEmail(userInfo, "用户信息模板", "用户信息提醒邮件", "wangxiaopang8888@163.com");
+            await EmailMQ.SendEmail(userInfo, "用户信息模板", "用户信息提醒邮件", "wangxiaopang8888@163.com");
         }
     }
     

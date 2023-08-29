@@ -1,4 +1,5 @@
-﻿using Scriban;
+﻿using HuanTian.Infrastructure.Dto;
+using Scriban;
 using SqlSugar.Extensions;
 using System.Net;
 using System.Net.Mail;
@@ -8,9 +9,9 @@ using System.Text.RegularExpressions;
 namespace HuanTian.Service
 {
     /// <summary>
-    /// 邮件公共类
+    /// 邮件消息队列
     /// </summary>
-    public class EmailCommon
+    public class EmailMQ
     {
         /// <summary>
         /// 发送邮件将信息存到消息队列中
@@ -31,7 +32,7 @@ namespace HuanTian.Service
             // 替换其中的占位符
             var template = Template.Parse(htmlContent);
             var result = template.Render(value);
-            var emailModel = new EmailQueueDto(emailSubject, email, result, tenantInfo);
+            var emailModel = new EmailMQDto(emailSubject, email, result, tenantInfo);
             // 送邮件将信息存到消息队列中
             var emailQueue = App.GetService<IMessageQueue>();
             emailQueue.SelectQueue(MsgQConst.Email)
@@ -40,13 +41,13 @@ namespace HuanTian.Service
         /// <summary>
         /// 打开邮件消息队列消费端
         /// </summary>
-        public static void OpenEmailConsumer()
+        public static void OpenConsumer()
         {
             var messageQueue = App.GetService<IMessageQueue>().SelectQueue(MsgQConst.Email);
-            messageQueue.StartConsuming(async (message) =>
+            messageQueue.StartConsumingAsync(async (message) =>
             {
                 // 处理接收到的消息
-                var emailInfo = JsonSerializer.Deserialize<EmailQueueDto>(message);
+                var emailInfo = JsonSerializer.Deserialize<EmailMQDto>(message);
                 var emailConfig = emailInfo.Tenant.EmailConfig.Split(';');
                 // 创建MailMessage对象 设置发件人邮箱
                 using MailMessage mail = new MailMessage();

@@ -22,10 +22,15 @@
         /// <returns></returns>
         TValue Dequeue<TValue>();
         /// <summary>
-        /// 开始消费端,消费完后是否关闭
+        /// 异步开始消费端,消费完后是否关闭
         /// </summary>
         /// <param name="processMessage"></param>
-        void StartConsuming(Func<string, Task<bool>> processMessage, bool finishClose = false);
+        void StartConsumingAsync(Func<string, Task<bool>> processMessage, bool finishClose = false);
+        /// <summary>
+        /// 同步开始消费端,消费完后是否关闭
+        /// </summary>
+        /// <param name="processMessage"></param>
+        void StartConsuming(Func<string, bool> processMessage, bool finishClose = false);
         /// <summary>
         /// 清除队列
         /// </summary>

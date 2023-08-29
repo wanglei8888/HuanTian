@@ -15,10 +15,7 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-using Newtonsoft.Json;
-using NPOI.SS.Formula.Functions;
 using SqlSugar.Extensions;
-using Yitter.IdGenerator;
 
 namespace HuanTian.Service;
 
@@ -70,7 +67,7 @@ public class SysRoleService : ISysRoleService, IDynamicApiController, IScoped
         var entity = input.Adapt<SysRoleDO>();
         var count = await _sysRole.InitTable(entity)
             .CallEntityMethod(t => t.CreateFunc())
-            .AddAsync(); 
+            .AddAsync();
         return count;
     }
     public async Task<int> Update(SysRoleFormInput input)
@@ -130,12 +127,12 @@ public class SysRoleService : ISysRoleService, IDynamicApiController, IScoped
         return count;
     }
     [HttpGet]
-    public async Task<IEnumerable<SysRoleDO>> UserRole([FromQuery]params long[] userId)
+    public async Task<IEnumerable<SysRoleDO>> UserRole([FromQuery] params long[] userId)
     {
         if (userId.Length == 0)
         {
             // 不传值就赋默认值
-            userId = App.GetUserId().Adapt<long[]>();
+            userId = new long[] { App.GetUserId() };
         }
         // 获取用户角色
         var userRole = await _sysUserRole.Where(t => userId.Contains(t.UserId)).ToListAsync();

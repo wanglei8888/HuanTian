@@ -1,6 +1,6 @@
 ﻿namespace HuanTian.Service
 {
-    public class QueryFilter : IQueryFilter, IScoped
+    public class QueryFilter : IQueryFilter, ISingleton
     {
         /// <summary>
         /// 获取租户Id 

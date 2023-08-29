@@ -66,7 +66,7 @@ namespace HuanTian.Service
             }
             return default;
         }
-        public void StartConsuming(Func<string, Task<bool>> processMessage, bool finishClose = false)
+        public void StartConsumingAsync(Func<string, Task<bool>> processMessage, bool finishClose = false)
         {
             CheckQueue();
             var maxRetryCount = 3;
@@ -86,7 +86,68 @@ namespace HuanTian.Service
                 catch (Exception ex)
                 {
                     errorMsg = $"消息队列-{_queueName}-处理异常:异常信息为:{ex.Message}";
-                    Console.WriteLine(errorMsg);
+                    App.GetService<ILogger<RabbitMQMessageQueue>>().LogError(errorMsg);
+                }
+                // 如果成功则确认消息
+                if (success)
+                {
+                    finishNum++;
+                    _channel.BasicAck(ea.DeliveryTag, false);
+                }
+                else
+                {
+                    var retryCount = GetRetryCount(ea.BasicProperties);
+                    if (retryCount < maxRetryCount)
+                    {
+                        retryCount++;
+                        SetRetryCount(ea.BasicProperties, retryCount);
+                        // 初始的消息确认
+                        _channel.BasicAck(ea.DeliveryTag, false);
+                        // 带着重试次数重新排队
+                        _channel.BasicPublish(exchange: "", routingKey: _queueName, basicProperties: ea.BasicProperties, body: body);
+                    }
+                    else
+                    {
+                        finishNum++;
+                        // 初始的消息拒绝 不再进入队列
+                        _channel.BasicReject(ea.DeliveryTag, false);
+                        // 统一存放到错误消息队列
+                        var erroeQueue = SelectQueue(MsgQConst.FailMsg);
+                        // 错误消息添加实体中
+                        JObject jsonObject = JObject.Parse(message);
+                        jsonObject["ErrorMsg"] = errorMsg;
+                        erroeQueue.Enqueue(jsonObject.ToString());
+                    }
+                    // 如果finishClose 设置true 消息处理完成则关闭连接
+                    if (messageCount == finishNum && finishClose)
+                    {
+                        Dispose();
+                    }
+                }
+            };
+            _channel.BasicConsume(queue: _queueName, autoAck: false, consumer: consumer);
+        }
+
+        public void StartConsuming(Func<string, bool> processMessage, bool finishClose = false)
+        {
+            CheckQueue();
+            var maxRetryCount = 3;
+            var messageCount = _channel.MessageCount(_queueName);
+            var finishNum = 0;
+            var consumer = new EventingBasicConsumer(_channel);
+            consumer.Received +=  (model, ea) =>
+            {
+                var body = ea.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
+                var success = false;
+                var errorMsg = "";
+                try
+                {
+                    success =  processMessage(message);
+                }
+                catch (Exception ex)
+                {
+                    errorMsg = $"消息队列-{_queueName}-处理异常:异常信息为:{ex.Message}";
                     App.GetService<ILogger<RabbitMQMessageQueue>>().LogError(errorMsg);
                 }
                 // 如果成功则确认消息
@@ -137,9 +198,11 @@ namespace HuanTian.Service
 
         public void Dispose()
         {
+            Console.WriteLine($"消息队列{_queueName}需要关闭连接");
             // 默认队列名称为null  不需要关闭连接
             if (!string.IsNullOrEmpty(_queueName))
             {
+                Console.WriteLine($"{_queueName}正在关闭连接");
                 _queues.TryRemove(_queueName, out var _);
                 _channel.Close();
                 _connection.Close();

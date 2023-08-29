@@ -1,4 +1,5 @@
 ﻿using HuanTian.Infrastructure;
+using HuanTian.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query;
@@ -26,6 +27,8 @@ namespace HuanTian.EntityFrameworkCore
         public DbSet<SysAppsDO> SysAppDO { get; set; }
         public DbSet<SysEmailTemplateDO> SysEmailTemplateDO { get; set; }
         public DbSet<SysTenantDO> SysTenantDO { get; set; }
+        public DbSet<SysLogInfoDO> SysLogInfoDO { get; set; }
+        public DbSet<SysLogErrorDO> SysLogErrorDO { get; set; }
 
         #region 配置文件
         private readonly IQueryFilter _tenantService;

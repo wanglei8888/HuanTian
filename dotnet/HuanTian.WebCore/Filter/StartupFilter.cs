@@ -23,9 +23,9 @@
  * 版本：V1.0.1
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
-using HuanTian.WebCore;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace HuanTian.WebCore
 {
@@ -34,6 +34,11 @@ namespace HuanTian.WebCore
     /// </summary>
     public class StartupFilter : IStartupFilter
     {
+        private readonly ILogger<StartupFilter> _logger;
+        public StartupFilter(ILogger<StartupFilter> logger)
+        {
+            _logger = logger;
+        }
         /// <summary>
         /// 配置中间件
         /// </summary>
@@ -48,10 +53,14 @@ namespace HuanTian.WebCore
                 
                 app.Use(async (context, next) =>
                 {
-
+                    // 记录接口时间
+                    var watch = new Stopwatch();
+                    watch.Start();
                     // 执行下一个中间件
                     await next.Invoke();
-
+                    watch.Stop();
+                    // 记录接口日志
+                    await ApiLogging(context, watch.ElapsedMilliseconds);
                     // 释放所有未托管的服务提供器
                     App.DisposeUnmanagedObjects();
                 
@@ -60,6 +69,36 @@ namespace HuanTian.WebCore
                 // 调用启动层的 Startup
                 next(app);
             };
+        }
+        private async Task ApiLogging(HttpContext context, long time)
+        {
+            var logLevel = App.Configuration["AppSettings:ApiLogLevel"];
+            // 0 不加载接口日志
+            if (string.IsNullOrEmpty(logLevel) || logLevel == "0")
+                return;
+
+            var path = context.Request.Path + "/" + context.Request.Method;
+            var message = "";
+            switch (logLevel)
+            {
+                case "2":
+                    var paramas = context.Request.QueryString.ToString();
+                    // 先读取QueryString 再读取Body
+                    if (string.IsNullOrEmpty(paramas))
+                    {
+                        using (var reader = new StreamReader(context.Request.Body))
+                        {
+                            paramas = await reader.ReadToEndAsync();
+                        }
+                    }
+                    paramas = paramas.Length > 0 ? paramas.Substring(1) : paramas;
+                    message = $"接口:{path}       用户:{App.GetUserId()}       时间:{time}ms       参数:{paramas}";
+                    break;
+                default:
+                    message = $"接口:{path}       用户:{App.GetUserId()}       时间:{time}ms";
+                    break;
+            }
+            _logger.LogInformation(message);
         }
     }
 }
