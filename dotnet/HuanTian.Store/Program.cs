@@ -1,13 +1,6 @@
 ﻿using Autofac;
-using Autofac.Core;
-using Autofac.Core.Lifetime;
-using Autofac.Extensions.DependencyInjection;
-using HuanTian.Infrastructure;
-using HuanTian.Service;
 using HuanTian.WebCore;
-using Mapster;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
 
 namespace Huangtian.Store
 {
@@ -41,7 +34,7 @@ namespace Huangtian.Store
 
             #region 日志服务
             // 开发环境不写入日志
-#if DEBUG
+#if !DEBUG
             builder.Logging.AddLocalFileLogger(options => options.SaveDays = 7);
 #endif
             #endregion

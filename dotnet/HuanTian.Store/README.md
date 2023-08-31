@@ -69,15 +69,29 @@
 九: 消息队列、Redis 仓储
     
     1、新增消息队列仓储，暂时实现为RabbitMQ 用字符串去判断使用哪个队列 通过 SelectQueue 方法
-    2、Redis仓储如果只是想看项目效果的话,没有安装Redis环境的话,建议把 Redis 相关代码都注释 
+    2、消息队列打开消费端，消息如果成功接受就 ack确认 如果失败就 nack 重新入队列 失败次数大于3次就存进死信队列了
+    3、Redis现在暂时支持 String、Set、Hash 三种类型 (因为只用到这三种类型)
+    4、Redis仓储如果只是想看项目效果的话,没有安装Redis环境的话,建议把 Redis 相关代码都注释 
 
 十: 多租户模式
 
     1、利用ORM的过滤器实现了多租户模式
     2、清楚过滤器可以用仓储中的 IgnoreFilters 方法,查询数据
-    3、可以参考 HuanTian.EntityFrameworkCore、EfSqlContext.cs 中的方法 和 HuanTian.WebCore、SqlSugarExtensions、SqlSugar 
+    3、可以参考 HuanTian.EntityFrameworkCore、EfSqlContext.cs 中的方法 和 HuanTian.WebCore、SqlSugarExtensions、SqlSugar
+    4、多租户用户体验 (仅限提供的数据库)  账号密码: admin 123  、 huantian 123
 
-十一：项目中已经实现的功能
+十一: 邮件发送
+
+    1、邮件发送是利用RabbitMQ消息队列实现的 实现代码可以参考HuanTian.Service、TestData、SendEmail
+    2、通过读取当前用户的租户信息，获得邮箱配置，发送前需要先设置 SysTenant 表用户相关的租户信息邮箱配置 EmailConfig
+
+十二: 日志功能
+    
+    1、项目已配置好 日志生成File还是Sql 在 Appsettings 中 [AppSettings:LogPath]配置
+    2、日志功能已更改为通过RabbitMQ消息队列实现的 控制打开消费端代码在 HuanTian.WebCore、HostAppLifetimeExtensions(AppLeftTime)、ApplicationStarted
+    3、日志记录等级也可以通过 Appsetting 中 [AppSettings:ApiLogLevel] 设置记录 Web Api 记录信息
+
+十三: 项目中已经实现的功能
 
     1、防止Token已经失效依然被请求，使用Redis加JWT，缓存已经注销的用户Token，生成黑名单在鉴权过滤器中查询存在就显示未认证
     2、增加了友好的异常处理，使用友好异常处理，返回200状态码。
