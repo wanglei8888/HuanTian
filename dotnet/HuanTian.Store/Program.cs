@@ -1,4 +1,7 @@
 ﻿using Autofac;
+using Hangfire.HttpJob.Agent.Config;
+using Hangfire.HttpJob.Agent.MysqlConsole;
+using HuanTian.Infrastructure;
 using HuanTian.WebCore;
 using Microsoft.AspNetCore.Mvc;
 
@@ -84,8 +87,15 @@ namespace Huangtian.Store
             builder.Services.AddJwt(true);
             // 注册Http服务
             builder.Services.AddHttpContextAccessor();
+            // 注册Hangfire服务 Agent自动注入的项目
+            JobAgentServiceConfigurer hangFire = new JobAgentServiceConfigurer(builder.Services);
+            hangFire.AddJobAgent(AssemblyHelper.GetAssembly("HuanTian.Service"));
+            builder.Services.AddHangfireJobAgent();
 
             var app = builder.Build();
+           
+            app.UseHangfireJobAgent();
+
             // 自定义中间件
             app.UseMiddleware<CustomMiddleware>();
             // 注册生命周期方法
@@ -114,4 +124,5 @@ namespace Huangtian.Store
             app.Run();
         }
     }
+
 }

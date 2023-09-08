@@ -76,8 +76,12 @@ namespace HuanTian.WebCore
             // 0 不加载接口日志
             if (string.IsNullOrEmpty(logLevel) || logLevel == "0")
                 return;
-
             var path = context.Request.Path + "/" + context.Request.Method;
+            // 忽略的接口 让控制台打印日志更简洁
+            var ignoreApi = new string[] { "/jobagent/POST" };
+            if (ignoreApi.Contains(path))
+                return;
+            
             var message = "";
             switch (logLevel)
             {

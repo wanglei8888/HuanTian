@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace HuanTian.WebCore
+namespace HuanTian.Infrastructure
 {
     /// <summary>
     /// 接口描述设置
@@ -32,7 +32,7 @@ namespace HuanTian.WebCore
         /// <param name="groups">分组列表</param>
         public ApiDescriptionSettingsAttribute(params string[] groups) : base()
         {
-            GroupName = string.Join(Penetrates.GroupSeparator, groups);
+            GroupName = string.Join("@", groups);
             Groups = groups;
             Order = 0;
         }

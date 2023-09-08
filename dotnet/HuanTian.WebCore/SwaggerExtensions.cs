@@ -123,9 +123,9 @@ namespace HuanTian.WebCore
             // 配置UI地址（处理二级虚拟目录）
             //if (!string.IsNullOrEmpty(_swaggerSettings.RoutePrefix))
             //{
-               swaggerUIOptions.RoutePrefix = _swaggerSettings.RoutePrefix ?? routePrefix ?? "api";
+            swaggerUIOptions.RoutePrefix = _swaggerSettings.RoutePrefix ?? routePrefix ?? "api";
             //}
-            
+
             // 文档展开设置
             swaggerUIOptions.DocExpansion(_swaggerSettings.DocExpansionState ?? DocExpansion.None);
 
@@ -212,7 +212,7 @@ namespace HuanTian.WebCore
                                     memberNotInheritdocElementList[i].Attribute("name").Value = serviceName;
                                 }
                             }
-                        } 
+                        }
                         #endregion
 
                         // 创建一个新的 XDocument，将两个 XElement 列表合并到一起
@@ -239,7 +239,7 @@ namespace HuanTian.WebCore
                         swaggerGenOptions.IncludeXmlComments(() => new XPathDocument(newXmlDoc.CreateReader()), true);
                     }
                 }
-                
+
             }
         }
         /// <summary>
@@ -277,6 +277,7 @@ namespace HuanTian.WebCore
         /// <returns></returns>
         private static IEnumerable<string> ReadGroups()
         {
+            var defaultGroupName = "default";
             // 获取所有的控制器和动作方法
             var assemblies = AssemblyHelper.GetAssemblyArray();
             // 扫描所有类的特性
@@ -289,12 +290,12 @@ namespace HuanTian.WebCore
             var groupName = new List<string>();
             foreach (var item in attributeList)
             {
-                groupName.Add(item.GroupName);
+                groupName.Add(item.GroupName ?? defaultGroupName);
             }
             // 如果没有设置分组信息,则默认分组
             if (groupName.Count == 0)
             {
-                groupName.Add("default");
+                groupName.Add(defaultGroupName);
             }
             return groupName;
         }

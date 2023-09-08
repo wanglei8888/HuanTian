@@ -14,7 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="DynamicApi\Attribute\ApiDescriptionSettingsAttribute.cs" />
     <Compile Include="DynamicApi\Attribute\ApiSeatAttribute.cs" />
     <Compile Include="DynamicApi\Attribute\DynamicApiControllerAttribute.cs" />
     <Compile Include="DynamicApi\Attribute\MapSettingsAttribute.cs" />

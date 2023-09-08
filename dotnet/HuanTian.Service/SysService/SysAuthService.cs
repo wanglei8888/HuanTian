@@ -31,6 +31,7 @@ namespace HuanTian.Service
     /// <summary>
     /// 登陆服务
     /// </summary>
+    [ApiDescriptionSettings(Order = 146)]
     public class SysAuthService : ISysAuthService, IDynamicApiController
     {
         private readonly IRepository<SysUserDO> _sysUserInfo;
@@ -63,11 +64,7 @@ namespace HuanTian.Service
                 new Claim(JwtClaimConst.TenantId,EncryptionHelper.Encrypt(userInfo.TenantId.ToString(),CommonConst.TenantToken)),
             };
 
-            var output = new LoginOutput()
-            {
-                Token = JWTHelper.GetToken(claims)
-            };
-            return output;
+            return JWTHelper.GetToken(claims);
         }
         /// <summary>
         /// 用户登出

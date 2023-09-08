@@ -15,6 +15,8 @@
         <PackageReference Include="Autofac" Version="7.0.0" />
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
         <PackageReference Include="EPPlus" Version="6.2.4" />
+        <PackageReference Include="Hangfire.HttpJob.Agent" Version="1.5.0" />
+        <PackageReference Include="Hangfire.HttpJob.Agent.MysqlConsole" Version="1.4.7" />
         <PackageReference Include="itext7.pdfhtml" Version="5.0.0" />
         <PackageReference Include="Mapster" Version="7.3.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.11" />

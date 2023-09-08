@@ -25,6 +25,7 @@
 #endregion << 版 本 注 释 >>
 
 using SqlSugar.Extensions;
+using StackExchange.Redis;
 
 namespace HuanTian.Service
 {
