@@ -1,9 +1,21 @@
-# .Net6 + Ant Design of Vue 前后端分离项目
+<div align="center"><h1>HuanTian</h1></div>
+<div align="center"><h3>.Net6 + Ant Design of Vue 前后端分离项目</h3></div>
 
-#### 🎁项目介绍
+<div align="center">
+
+[![star](https://gitee.com/wanglei6688/huantian/badge/star.svg?theme=dark)](https://gitee.com/wanglei6688/huantian/stargazers)
+
+</div>
+#### 🎁涉及技术
+
+* **后端实现的功能**
+1. 基于.Net6 框架开发使用 Mapster 对象映射、Autofac 自动依赖注入、Jwt 权限认证、Redis 缓存、动态生成 API Controle、Swagger 动态配置、Excel PDF 按模板导出等等
+2. 基于 RabbitMQ 消息队列 实现的邮件发送和 Logging 日志生成(支持写入文件或者数据库)
+3. 基于 EF Core 、SqlSugar ORM框架搭建的仓储层,支持多租户模式,数据库（暂时) SqlServer、MySql
+4. 基于 Razor 模板 实现自动生成代码,减少业务代码工作量实现高效率开发
+5. 基于 Hangfire.HttpJob 实现分布式定时任务调度,实现业务和调度之间解耦
+
 * 前端基于ant design vue 的模板而搭建的服务器 （前端模板微小改动主要涉及后端）
-
-* 后端涉及技术 .Net6框架、Mapster对象映射、Autofac自动依赖注入、Jwt权限认证、Logging缓存写入文件夹、继承接口动态生成API Controle、Swagger动态配置等等技术、Excel PDF 按模板导出、自动生成代码、Redis缓存、RabbitMQ消息队列、仓储层支持 EF Core 、SqlSugar 支持多租户模式、数据库（暂时) SqlServer、MySql
 
 #### 👀前端页面展示
 
@@ -15,7 +27,7 @@
 
 * 启动后台：打开dotnet\Huangtian.Store.sln解决方案，直接运行（F5）即可启动
 * 启动前端：(建议参考文档)打开frontend文件夹，进行依赖下载，运行yarn install 再运行 yarn run serve
-* 数据库: 表数据 sqldata 文件夹 、表结构使用EF Core 生成 详情可参考 [Ef Core 简单教程](https://gitee.com/wanglei6688/wanglei/blob/master/dotnet/HuanTian.Store/README.md)
+* 数据库: 表数据 [数据库文件](https://gitee.com/wanglei6688/huantian/blob/master/sqldata/store_db.sql) 、也可以使用EF Core 生成 
 * 浏览器访问：`http://localhost:8000` （默认前端端口为：8000，后台端口为：8080）
 ### 体验地址
 地址:      http://175.178.42.232    
@@ -25,6 +37,7 @@
 1. [Ant Design Pro of Vue 官方文档](https://pro.antdv.com/docs/getting-started)
 
 👉后端文档：
+1. [项目文档](https://gitee.com/wanglei6688/wanglei/blob/master/dotnet/HuanTian.Store/README.md)
 1. [EF Core  官方文档](https://learn.microsoft.com/zh-cn/ef/core/get-started/overview/first-app?tabs=netcore-cli)
 2. [SqlSugar 官方文档](https://www.donet5.com/Home/Doc)
 
