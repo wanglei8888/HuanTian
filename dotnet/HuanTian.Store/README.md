@@ -91,7 +91,20 @@
     2、日志功能已更改为通过RabbitMQ消息队列实现的 控制打开消费端代码在 HuanTian.WebCore、HostAppLifetimeExtensions(AppLeftTime)、ApplicationStarted
     3、日志记录等级也可以通过 Appsetting 中 [AppSettings:ApiLogLevel] 设置记录 Web Api 记录信息
 
-十三: 项目中已经实现的功能
+十三: 定时任务
+
+    1、项目中 HuanTian.ScheduledTasks 为调度端 推荐单独部署,因为是测试项目所以我放在一个解决方案中
+    2、Hangfire 支持 
+        (1):项目内调度 耦合度太高不适用大型项目和分布式项目,项目中没有使用
+        (2):Hangfire.HttpJob 方式通过Http方式调用 让业务跟调度分离 实现解耦 但是考虑到安全性和鉴权 等等 建议使用 Hangfire.HttpJob.Agent
+        (3):Hangfire.HttpJob.Agent 方式通过Http方式调用 通过中间件截取 更适用于项目开发 所以项目中使用的是这种方式
+    3、Hangfire.HttpJob 就是定时调用接口 通过接口的参数就能直接调度 注入方式在调度端直接添加
+    4、Hangfire.HttpJob.Agent 跟HttpJob 类似需要配置 AgentClass 详情可以参考官方文档 或者我提供的实例、 也支持自动注入 在appsettings.json 中配置 JobAgent:EnableAutoRegister 设置为 true
+       再配置好调度端和服务端地址等等启动项目就可以自动注入了、还支持回调函数 类似于 ajax 的success、error回调,详情可以参考官方文档
+    5、示例代码 HuanTian.Service、Job、DeleteDataJob 
+    6、详情可以参考 HttpJob 官方文档 https://github.com/yuzd/Hangfire.HttpJob/wiki/03.HttpJob.Agent%E7%BB%84%E4%BB%B6%E4%BB%8B%E7%BB%8D%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8
+
+十四: 项目中已经实现的功能
 
     1、防止Token已经失效依然被请求，使用Redis加JWT，缓存已经注销的用户Token，生成黑名单在鉴权过滤器中查询存在就显示未认证
     2、增加了友好的异常处理，使用友好异常处理，返回200状态码。

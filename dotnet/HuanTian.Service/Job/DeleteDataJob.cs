@@ -53,7 +53,7 @@ namespace HuanTian.Service.Job
             foreach (var item in param.TableName.Split(","))
             {
                 var count = await _db.Deleteable<object>().AS(item).Where("deleted=@value", new { value = true }).ExecuteCommandAsync();
-                jobContext.Console.Info($"{item}删除 {count} 条数据");
+                jobContext.Console.Info($"{item} 删除 {count} 条数据");
                 sumCount += count;
             }
 
