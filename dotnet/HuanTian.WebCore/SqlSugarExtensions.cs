@@ -26,6 +26,7 @@
 using HuanTian.SqlSugar;
 using Microsoft.Extensions.DependencyInjection;
 using SqlSugar;
+using SqlSugar.Extensions;
 using System.Data;
 using System.Linq.Dynamic.Core;
 using DbType = SqlSugar.DbType;
@@ -102,6 +103,8 @@ namespace HuanTian.WebCore
                         Console.WriteLine(SqlProfiler.ParameterFormat(sql, pars));
 #endif
                     };
+                    if (!App.Configuration["SqlSettings:GlobalFilter"].ObjToBool())
+                        return;
 
                     // 添加全局过滤器
                     var types = AssemblyHelper.GetAssemblyAllTypeList().Where(t => t.FullName.EndsWith("DO"));

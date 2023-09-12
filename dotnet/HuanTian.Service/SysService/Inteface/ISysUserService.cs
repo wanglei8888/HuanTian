@@ -28,6 +28,40 @@ namespace HuanTian.Service
 {
     public interface ISysUserService
     {
+        /// <summary>
+        /// 获取当前登录用户的用户信息
+        /// </summary>
+        /// <returns></returns>
         Task<dynamic> Info();
+        /// <summary>
+        /// 获取分页数据
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<PageData> Page(SysUserInput input);
+        /// <summary>
+        /// 新增数据
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<int> Add(SysUserDO input);
+        /// <summary>
+        /// 修改数据
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<int> Update(SysUserDO input);
+        /// <summary>
+        /// 删除数据
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<int> Delete(IdInput input);
+        /// <summary>
+        /// 查询数据
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<IEnumerable<SysUserDO>> Get(SysUserInput input);
     }
 }

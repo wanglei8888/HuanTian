@@ -23,6 +23,7 @@
  * 版本：V1.0.1
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
+using Hangfire.HttpJob.Agent.Config;
 using Mapster;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,9 @@ using Yitter.IdGenerator;
 
 namespace HuanTian.WebCore
 {
+    /// <summary>
+    /// 依赖注入拓展
+    /// </summary>
     public static class InjectionExtensions
 	{
         /// <summary>
@@ -50,20 +54,30 @@ namespace HuanTian.WebCore
             {
                 TypeAdapterConfig.GlobalSettings.Scan(assembly);
             }
-            
+            // 注册Hangfire服务 Agent自动注入的项目
+            JobAgentServiceConfigurer hangFire = new JobAgentServiceConfigurer(services);
+            hangFire.AddJobAgent(AssemblyHelper.GetAssembly("HuanTian.Service"));
+
             return services;
         }
         /// <summary>
-        /// Mvc 注入基础配置（带Swagger）
+        /// 依赖注入服务
         /// </summary>
-        /// <param name="mvcBuilder">Mvc构建器</param>
-        /// <param name="configure"></param>
-        /// <returns>IMvcBuilder</returns>
-        public static IMvcBuilder AddInject(this IMvcBuilder mvcBuilder)
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddDependencyInject(this IServiceCollection services, IConfiguration configuration)
         {
-            mvcBuilder.Services.AddDynamicApiControllers();
-            mvcBuilder.Services.AddSwaggerGen(options => SwaggerExtensions.BuildSwaggerService(options));
-            return mvcBuilder;
+            services.AddSingleton<IStartupFilter, StartupFilter>();
+            services.AddScoped(typeof(IRepository<>), typeof(HuanTian.SqlSugar.SqlSugarRepository<>));
+            services.AddScoped<IQueryFilter, QueryFilter>();
+            // 注册Redis缓存服务
+            services.AddSingleton<IRedisCache>(provider =>
+                new RedisCache(configuration["ConnectionStrings:Redis"]));
+            // 注册RabbitMQ服务
+            services.AddSingleton<IMessageQueue>(provider =>
+               new RabbitMQMessageQueue(configuration["ConnectionStrings:RabbitMQ"]));
+
+            return services;
         }
     }
 }

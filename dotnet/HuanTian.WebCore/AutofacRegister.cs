@@ -73,13 +73,13 @@ namespace HuanTian.WebCore
             // 注册生命周期为单例   Singleton 的类 builder.RegisterType(type).AsImplementedInterfaces().SingleInstance();
             // 注册生命周期为作用域 Scoped    的类 builder.RegisterType(type).AsImplementedInterfaces().InstancePerLifetimeScope();
             // 注册生命周期为瞬时   Transient 的类 builder.RegisterType(type).AsImplementedInterfaces().InstancePerDependency();
-            builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
-            builder.RegisterType<StartupFilter>().As<IStartupFilter>().InstancePerDependency();
-            builder.RegisterType<SysUserService>().As<ISysUserService>().SingleInstance();
-            builder.RegisterType<RabbitMQMessageQueue>().As<IMessageQueue>()
-                .WithParameter("connectionString", App.Configuration["ConnectionStrings:RabbitMQ"]).SingleInstance();
-            builder.RegisterType<RedisCache>().As<IRedisCache>()
-                .WithParameter("connectionString", App.Configuration["ConnectionStrings:Redis"]).SingleInstance();
+            //builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+            //builder.RegisterType<StartupFilter>().As<IStartupFilter>().InstancePerDependency();
+            //builder.RegisterType<SysUserService>().As<ISysUserService>().SingleInstance();
+            //builder.RegisterType<RabbitMQMessageQueue>().As<IMessageQueue>()
+            //    .WithParameter("connectionString", App.Configuration["ConnectionStrings:RabbitMQ"]).SingleInstance();
+            //builder.RegisterType<RedisCache>().As<IRedisCache>()
+            //    .WithParameter("connectionString", App.Configuration["ConnectionStrings:Redis"]).SingleInstance();
 
         }
 

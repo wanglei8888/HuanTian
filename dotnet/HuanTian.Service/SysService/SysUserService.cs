@@ -129,7 +129,7 @@ namespace HuanTian.Service
         public async Task<PageData> Page([FromQuery] SysUserInput input)
         {
             var pageData = await _userInfo
-                .Where(t => t.Deleted == false && t.TenantId == App.GetTenantId())
+                .Where(t => t.Deleted == false)
                 .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name.Contains(input.Name))
                 .WhereIf(!string.IsNullOrEmpty(input.UserName), t => t.UserName.Contains(input.UserName))
                 .WhereIf(input.DeptId != 0, t => t.DeptId == input.DeptId)

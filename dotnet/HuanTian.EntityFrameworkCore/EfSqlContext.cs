@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query;
 using NPOI.SS.Formula.Functions;
+using SqlSugar.Extensions;
 using System.IO.Pipelines;
 using System.Linq.Expressions;
 using Expression = System.Linq.Expressions.Expression;
@@ -42,7 +43,7 @@ namespace HuanTian.EntityFrameworkCore
             // 获取所有实体类型
             foreach (IMutableEntityType entity in modelBuilder.Model.GetEntityTypes())
             {
-                if (App.Configuration["SqlSettings:GlobalSettingsTableName"] == "True")
+                if (App.Configuration["SqlSettings:GlobalSettingsTableName"].ObjToBool())
                 {
                     // 全局设置表名生成规则
                     if (entity.ClrType.Name.EndsWith("DO"))
@@ -53,7 +54,7 @@ namespace HuanTian.EntityFrameworkCore
                     }
                 }
 
-                if (App.Configuration["SqlSettings:GlobalSettingsColumnName"] == "True")
+                if (App.Configuration["SqlSettings:GlobalSettingsColumnName"].ObjToBool())
                 {
                     // 全局设置列名生成规则
                     foreach (var property in entity.GetProperties())
@@ -62,6 +63,9 @@ namespace HuanTian.EntityFrameworkCore
                         property.SetColumnName(property.Name.ToLowerHump());
                     }
                 }
+
+                if (!App.Configuration["SqlSettings:GlobalFilter"].ObjToBool())
+                    return;
 
                 entity.AppendAllQueryFilter(t => !EF.Property<bool>(t, "Deleted"), "Deleted");
                 entity.AppendAllQueryFilter(t => EF.Property<long>(t, "TenantId") == _tenantService.GetCurrentTenantId(), "TenantId");

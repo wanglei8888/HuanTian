@@ -2,6 +2,7 @@
 using Hangfire.HttpJob.Agent.Config;
 using Hangfire.HttpJob.Agent.MysqlConsole;
 using HuanTian.Infrastructure;
+using HuanTian.Service;
 using HuanTian.WebCore;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,10 +17,8 @@ namespace Huangtian.Store
             // 静态类存储
             builder.Services.AddInject(builder.Configuration);
             // 动态Congtrole注入
-            builder.Services.AddControllers(options =>
-            {
-            }).AddInject();
-
+            builder.Services.AddControllers().Services.AddDynamicApiControllers();
+            builder.Services.AddSwaggerGen(options => SwaggerExtensions.BuildSwaggerService(options));
             builder.Services.AddEndpointsApiExplorer();
 
             #region 配置跨域服务
@@ -65,31 +64,21 @@ namespace Huangtian.Store
             builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
             {
                 containerBuilder.RegisterModule(new AutofacRegister()); // Autofac
-
             });
             builder.Host.UseServiceProviderFactory(new Autofac.Extensions.DependencyInjection.AutofacServiceProviderFactory());
 
             // 自动依赖注入,手写的 如果不符合需求，可以注释，使用autofac
-            // .NET Core 的原生 DI 容器中不允许作用域注入在单例服务中
-            //builder.Services.AddScoped(typeof(IRepository<>), typeof(HuanTian.SqlSugar.SqlSugarRepository<>));
-            //builder.Services.AddSingleton<IStartupFilter, StartupFilter>();
-            //builder.Services.AddScoped<IQueryFilter, QueryFilter>();
-            //builder.Services.AddAutoInjection();
-            //// 注册Redis缓存服务
-            //builder.Services.AddSingleton<IRedisCache>(provider =>
-            //    new RedisCache(builder.Configuration["ConnectionStrings:Redis"]));
-            //// 注册RabbitMQ服务
-            //builder.Services.AddSingleton<IMessageQueue>(provider =>
-            //   new RabbitMQMessageQueue(builder.Configuration["ConnectionStrings:RabbitMQ"]));
+            // .NET Core 的原生 DI 容器中不允许作用域、瞬发注入在单例服务中
+            // builder.Services.AddAutoInjection();
             #endregion
 
+            // 添加依赖注入服务
+            builder.Services.AddDependencyInject(builder.Configuration);
             // 注册JWT服务
             builder.Services.AddJwt(true);
             // 注册Http服务
             builder.Services.AddHttpContextAccessor();
-            // 注册Hangfire服务 Agent自动注入的项目
-            JobAgentServiceConfigurer hangFire = new JobAgentServiceConfigurer(builder.Services);
-            hangFire.AddJobAgent(AssemblyHelper.GetAssembly("HuanTian.Service"));
+           
             builder.Services.AddHangfireJobAgent();
 
             var app = builder.Build();
