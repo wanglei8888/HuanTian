@@ -13,18 +13,20 @@ namespace HuanTian.Service
     public class RabbitMQMessageQueue : IMessageQueue
     {
         private readonly IConnection _connection;
-        private readonly RabbitMQ.Client.IModel _channel;
+        private readonly IModel _channel;
         private readonly string _queueName;
         private readonly string _connectionString;
         private readonly static ConcurrentDictionary<string, IMessageQueue> _queues = new ConcurrentDictionary<string, IMessageQueue>();
-        public RabbitMQMessageQueue(string connectionString)
+        private readonly ILogger<RabbitMQMessageQueue> _logger;
+        public RabbitMQMessageQueue(ILogger<RabbitMQMessageQueue> logger)
         {
-            _connectionString = connectionString;
+            _logger = logger;
         }
-        public RabbitMQMessageQueue(string connectionString, string queueName)
-            : this(connectionString)
+        public RabbitMQMessageQueue(ILogger<RabbitMQMessageQueue> logger, string queueName)
+            : this(logger)
         {
             _queueName = queueName;
+            _connectionString = App.Configuration["ConnectionStrings:RabbitMQ"];
             var factory = new ConnectionFactory
             {
                 Uri = new Uri(_connectionString)
@@ -42,7 +44,7 @@ namespace HuanTian.Service
             }
             else
             {
-                var queue = new RabbitMQMessageQueue(_connectionString, queueName);
+                var queue = new RabbitMQMessageQueue(_logger, queueName);
                 _queues[queueName] = queue;
                 return queue;
             }
@@ -86,7 +88,7 @@ namespace HuanTian.Service
                 catch (Exception ex)
                 {
                     errorMsg = $"消息队列-{_queueName}-处理异常:异常信息为:{ex.Message}";
-                    App.GetService<ILogger<RabbitMQMessageQueue>>().LogError(errorMsg);
+                    _logger.LogError(errorMsg, ex);
                 }
                 // 如果成功则确认消息
                 if (success)
@@ -135,7 +137,7 @@ namespace HuanTian.Service
             var messageCount = _channel.MessageCount(_queueName);
             var finishNum = 0;
             var consumer = new EventingBasicConsumer(_channel);
-            consumer.Received +=  (model, ea) =>
+            consumer.Received += (model, ea) =>
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
@@ -143,7 +145,7 @@ namespace HuanTian.Service
                 var errorMsg = "";
                 try
                 {
-                    success =  processMessage(message);
+                    success = processMessage(message);
                 }
                 catch (Exception ex)
                 {
@@ -198,7 +200,6 @@ namespace HuanTian.Service
 
         public void Dispose()
         {
-            Console.WriteLine($"消息队列{_queueName}需要关闭连接");
             // 默认队列名称为null  不需要关闭连接
             if (!string.IsNullOrEmpty(_queueName))
             {
@@ -239,7 +240,7 @@ namespace HuanTian.Service
         /// <exception cref="ArgumentException"></exception>
         private void CheckQueue()
         {
-            if (string.IsNullOrEmpty(_queueName)) 
+            if (string.IsNullOrEmpty(_queueName))
                 throw new ArgumentException("队列名称不能为空,清先调用 SelectQueue 方法,选择队列");
         }
     }

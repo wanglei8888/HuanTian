@@ -65,7 +65,7 @@ namespace HuanTian.EntityFrameworkCore
                 }
 
                 if (!App.Configuration["SqlSettings:GlobalFilter"].ObjToBool())
-                    return;
+                    continue;
 
                 entity.AppendAllQueryFilter(t => !EF.Property<bool>(t, "Deleted"), "Deleted");
                 entity.AppendAllQueryFilter(t => EF.Property<long>(t, "TenantId") == _tenantService.GetCurrentTenantId(), "TenantId");

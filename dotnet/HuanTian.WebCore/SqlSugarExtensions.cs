@@ -76,8 +76,9 @@ namespace HuanTian.WebCore
             };
             services.AddScoped<ISqlSugarClient>(s =>
             {
-                // Scoped用SqlSugarClient 
-                SqlSugarClient sqlSugar = new SqlSugarClient(config,
+                // Scoped 用 SqlSugarClient 
+                // Singleton 用 SqlSugarScope
+                var sqlSugar = new SqlSugarClient(config,
                 db =>
                 {
                     // 打印输出Sql

@@ -24,6 +24,7 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 using Hangfire.HttpJob.Agent.Config;
+using HuanTian.EntityFrameworkCore;
 using Mapster;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -74,8 +75,9 @@ namespace HuanTian.WebCore
             services.AddSingleton<IRedisCache>(provider =>
                 new RedisCache(configuration["ConnectionStrings:Redis"]));
             // 注册RabbitMQ服务
-            services.AddSingleton<IMessageQueue>(provider =>
-               new RabbitMQMessageQueue(configuration["ConnectionStrings:RabbitMQ"]));
+            services.AddSingleton<IMessageQueue, RabbitMQMessageQueue>();
+            //services.AddSingleton<IMessageQueue, RabbitMQMessageQueue>(provider =>
+            //   new RabbitMQMessageQueue(configuration["ConnectionStrings:RabbitMQ"]));
 
             return services;
         }

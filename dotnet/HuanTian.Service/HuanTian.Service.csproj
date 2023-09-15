@@ -6,7 +6,6 @@
 		<Nullable>enable</Nullable>
 		<Platforms>AnyCPU;x64</Platforms>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<DocumentationFile>HuanTian.Service.xml</DocumentationFile>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
