@@ -4,7 +4,11 @@ using Hangfire.HttpJob.Agent.MysqlConsole;
 using HuanTian.Infrastructure;
 using HuanTian.Service;
 using HuanTian.WebCore;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using System.Globalization;
+using static Dapper.SqlMapper;
 
 namespace Huangtian.Store
 {
@@ -98,6 +102,19 @@ namespace Huangtian.Store
             }
 
             app.UseCors("cors");
+            // 中英文支持
+            var supportedCultures = new List<CultureInfo>
+            {
+                new CultureInfo("en-US"),
+                new CultureInfo("zh-CN"),
+            };
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("zh-CN"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
+            });
+
             app.UseRouting();
             // app.UseHttpsRedirection();
 

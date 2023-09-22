@@ -25,6 +25,7 @@
 #endregion << 版 本 注 释 >>
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Localization;
 using SqlSugar.Extensions;
 using System.Net;
 
@@ -49,7 +50,7 @@ namespace HuanTian.WebCore
                 .Any(metadata => metadata.GetType() == typeof(AllowAnonymousAttribute));
             if (allowAnonymous)
                 return;
-            
+
             // 检测用户的token是否为黑名单用户,如果是则返回401
             await CheckToken(context);
             // 检测用户是否有权限访问当前路由
@@ -64,7 +65,7 @@ namespace HuanTian.WebCore
                 var userId = App.HttpContext.User.Claims.FirstOrDefault(u => u.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sid)?.Value;
                 if ((await _redisCache.SetContainsAsync($"LoginUserInfoWhitelist", token.ToString())))
                 {
-                    context.Result = RequestHelper.RequestInfo("用户未授权,请登录后再操作", HttpStatusCode.Unauthorized);
+                    context.Result = RequestHelper.RequestInfo(App.I18n.GetString("用户未授权,请登录后再操作"), HttpStatusCode.Unauthorized);
                     context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                 }
             }
@@ -73,7 +74,7 @@ namespace HuanTian.WebCore
         {
             if (!App.Configuration["AppSettings:RoutPermsEnable"].ObjToBool())
                 return;
-            
+
             // 去掉路由前缀获取路由
             var prefix = App.Configuration["DynamicApiControllerSettings:DefaultRoutePrefix"];
             var prefixLength = prefix?.Length == 0 ? 0 : prefix?.Length + 2;
@@ -82,13 +83,20 @@ namespace HuanTian.WebCore
             var method = context.HttpContext.Request.Method.ToLower();
             var methodPath = method switch { "post" => "add", "put" => "update", _ => method };
             // 检测是否为有效请求 从缓存中获取用户路由与当前路由进行匹配
-            var userRoute = (await _sysPermService.UserPermission(App.GetUserId())).Where(t => t.Type == PermissionTypeEnum.Router);
-            if (!userRoute.Any(t => t.Code.ToLower() == path) &&
-                !userRoute.Any(t => t.Code.ToLower() == path + "/" + methodPath))
+            var userPerms = (await _sysPermService.UserPermission(App.GetUserId())).Where(t => t.Type == PermissionTypeEnum.Router);
+            var userRoute = userPerms.Select(t => t.Code.ToLower()).ToList();
+            // 忽略判断的路由
+            var ignoreRouts = new List<string>
+            {
+                "sysAuth/login","sysUser/info","list/search/projects","workplace/radar","workplace/activity","workplace/teams","sysAuth/logout"
+            };
+            userRoute.AddRange(ignoreRouts);
+            if (!userRoute.Any(t => t.ToLower() == path) &&
+                !userRoute.Any(t => t.ToLower() == path + "/" + methodPath))
             {
                 // 直接判断一遍  再加接口方式判断一次 增删改查路由不带后缀
-                context.Result = RequestHelper.RequestInfo("用户未授权页面,请修改后再操作", HttpStatusCode.Unauthorized);
-                context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                context.Result = RequestHelper.RequestInfo(App.I18n.GetString("用户未授权页面,请联系系统管理员"), HttpStatusCode.MethodNotAllowed);
+                context.HttpContext.Response.StatusCode = (int)HttpStatusCode.MethodNotAllowed;
             }
         }
     }

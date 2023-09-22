@@ -28,6 +28,7 @@ using HuanTian.EntityFrameworkCore;
 using Mapster;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using Yitter.IdGenerator;
 
 namespace HuanTian.WebCore
@@ -55,6 +56,7 @@ namespace HuanTian.WebCore
             {
                 TypeAdapterConfig.GlobalSettings.Scan(assembly);
             }
+            
             // 注册Hangfire服务 Agent自动注入的项目
             JobAgentServiceConfigurer hangFire = new JobAgentServiceConfigurer(services);
             hangFire.AddJobAgent(AssemblyHelper.GetAssembly("HuanTian.Service"));
@@ -76,6 +78,9 @@ namespace HuanTian.WebCore
                 new RedisCache(configuration["ConnectionStrings:Redis"]));
             // 注册RabbitMQ服务
             services.AddSingleton<IMessageQueue, RabbitMQMessageQueue>();
+            // 注册多语言
+            services.AddSingleton<IStringLocalizerFactory, CustomStringLocalizerFactory>();
+            services.AddTransient<IStringLocalizer, CustomStringLocalizer>();
             //services.AddSingleton<IMessageQueue, RabbitMQMessageQueue>(provider =>
             //   new RabbitMQMessageQueue(configuration["ConnectionStrings:RabbitMQ"]));
 

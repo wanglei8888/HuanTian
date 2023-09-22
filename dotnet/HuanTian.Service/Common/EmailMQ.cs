@@ -1,4 +1,5 @@
 ﻿using HuanTian.Infrastructure.Dto;
+using Microsoft.Extensions.Localization;
 using Scriban;
 using SqlSugar.Extensions;
 using System.Net;
@@ -26,7 +27,7 @@ namespace HuanTian.Service
             // 租户信息
             var tenantInfo = (await App.GetService<ISysTenantService>().Get(new SysTenantInput() { Id = App.GetTenantId() })).ToList()[0];
             if (string.IsNullOrWhiteSpace(tenantInfo.EmailConfig) || tenantInfo.EmailConfig.Split(';').Length != 4)
-                throw new ArgumentNullException("租户邮箱配置错误,请修改后再试");
+                throw new ArgumentNullException(App.I18n.GetString("租户邮箱配置错误,请修改后再试"));
             
             var htmlContent = File.ReadAllText(filePath);
             // 替换其中的占位符

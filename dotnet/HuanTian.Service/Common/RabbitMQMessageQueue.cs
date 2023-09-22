@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.Extensions.Localization;
+using Newtonsoft.Json.Linq;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Collections.Concurrent;
@@ -241,7 +242,7 @@ namespace HuanTian.Service
         private void CheckQueue()
         {
             if (string.IsNullOrEmpty(_queueName))
-                throw new ArgumentException("队列名称不能为空,清先调用 SelectQueue 方法,选择队列");
+                throw new ArgumentException(App.I18n.GetString("队列名称不能为空,请先调用 SelectQueue 方法,选择队列"));
         }
     }
 }

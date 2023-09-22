@@ -25,6 +25,7 @@
 #endregion << 版 本 注 释 >>
 
 using HuanTian.Infrastructure;
+using Microsoft.Extensions.Localization;
 using SqlSugar;
 using System.Linq.Expressions;
 
@@ -77,11 +78,11 @@ namespace HuanTian.SqlSugar
         {
             if (!(method.Body is MethodCallExpression callExpresion))
             {
-                throw new ArgumentException("Expression must be a method call.", nameof(method));
+                throw new ArgumentException(App.I18n.GetString("表达式必须是方法调用"));
             }
             if (_entityList == null)
             {
-                throw new ArgumentException("使用CallEntityMethod必须先调用InitTable", nameof(method));
+                throw new ArgumentException(App.I18n.GetString("使用CallEntityMethod必须先调用InitTable"));
             }
             var action = method.Compile();
             foreach (var item in _entityList)

@@ -1,8 +1,10 @@
 ﻿using Autofac;
+using MathNet.Numerics.Statistics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using NPOI.POIFS.Crypt;
 using System.Collections.Concurrent;
 
@@ -41,7 +43,10 @@ namespace HuanTian.Infrastructure
         /// 未托管的对象集合
         /// </summary>
         public static readonly ConcurrentBag<IDisposable> UnmanagedObjects;
-
+        /// <summary>
+        /// 国际化 多语言
+        /// </summary>
+        public static IStringLocalizer I18n => CatchOrDefault(() => RootServices?.GetService<IStringLocalizer>());
         /// <summary>
         /// GC 回收默认间隔
         /// </summary>

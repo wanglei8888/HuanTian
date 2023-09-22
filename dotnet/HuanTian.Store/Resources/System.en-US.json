@@ -1,0 +1,18 @@
+{
+    "使用CallEntityMethod必须先调用InitTable": "To use CallEntityMethod, InitTable must be called first",
+    "表达式必须是方法调用": "Expression must be a method call",
+    "账号密码错误,请修改后再试": "The account password is incorrect. Please modify it and try again",
+    "用户已被禁用,无法登陆,请联系系统管理员": "The user has been disabled and cannot log in. Please contact the system administrator",
+    "租户邮箱配置错误,请修改后再试": "Tenant email configuration error, please modify and try again",
+    "收件人邮箱配置错误,请修改后再试": "Recipient email configuration error, please modify and try again",
+    "队列名称不能为空,请先调用 SelectQueue 方法,选择队列": "The queue name cannot be empty. Please call the SelectQueue method first to select the queue",
+    "该表格名字已经存在,请修改后再试": "The table name already exists. Please modify it and try again",
+    "表格列属性重复,请修改后再试": "Table column attributes are duplicate. Please modify and try again",
+    "用户未授权页面,请联系系统管理员": "User unauthorized page, please contact system administrator",
+    "用户未授权,请登录后再操作": "User not authorized, please log in before proceeding",
+    "表格列属性暂未录入,请修改后再试": "Table column attributes have not been entered yet. Please modify and try again",
+    "表格在数据库中不存在,请修改后再试": "The table does not exist in the database. Please modify it and try again",
+    "执行失败,该后端代码文件已经存在": "Execution failed, the backend code file already exists",
+    "执行失败,该前端代码文件已经存在": "Execution failed, the front-end code file already exists",
+    "中文注释": "english"
+}   

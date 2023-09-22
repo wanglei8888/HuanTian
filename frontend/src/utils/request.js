@@ -24,10 +24,10 @@ const errorHandler = (error) => {
         description: data.message
       })
     }
-    if (error.response.status === 401 && !(data.result && data.result.isLogin)) {
+    if (error.response.status === 401) {
       notification.error({
         message: i18nRender('Unauthorized'),
-        description: i18nRender('Authorization verification failed')
+        description: data.message
       })
       if (token) {
         store.dispatch('Logout').then(() => {
@@ -36,6 +36,12 @@ const errorHandler = (error) => {
           }, 1500)
         })
       }
+    }
+    if (error.response.status === 405) {
+      notification.error({
+        message: i18nRender('MethodNotAllowed'),
+        description: data.message
+      })
     }
     if (error.response.status === 500) {
       // 如果是获取文件返回错误信息
@@ -70,10 +76,15 @@ const errorHandler = (error) => {
 // request interceptor
 request.interceptors.request.use(config => {
   const token = storage.get(ACCESS_TOKEN)
+  const lang = storage.get('lang')
   // 如果 token 存在
   // 让每个请求携带自定义 token 请根据实际情况自行修改
   if (token) {
     config.headers[ACCESS_TOKEN] = token
+  }
+  // 如果语言存在
+  if (lang) {
+    config.headers['Accept-Language'] = lang
   }
   return config
 }, errorHandler)
