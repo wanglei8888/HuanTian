@@ -117,18 +117,15 @@ namespace HuanTian.WebCore
                         {
                             continue;
                         }
+                        StaticConfig.DynamicExpressionParserType = typeof(DynamicExpressionParser);
                         //判断实体类中包含Deleted属性
                         if (entityType.GetProperty("Deleted") != null)
                         {
-                            //构建动态Lambda
-                            var lambda = DynamicExpressionParser.ParseLambda(entityType, typeof(bool), "Deleted == @0", false);
-                            db.QueryFilter.Add(new TableFilterItem<object>(entityType, lambda)); //将Lambda传入过滤器
+                            db.QueryFilter.AddTableFilter(entityType, "it", $"it => it.Deleted = {false}");
                         }
                         if (entityType.GetProperty("TenantId") != null)
                         {
-                            //构建动态Lambda
-                            var lambda = DynamicExpressionParser.ParseLambda(entityType, typeof(bool), "TenantId == @0", App.GetTenantId());
-                            db.QueryFilter.Add(new TableFilterItem<object>(entityType, lambda)); //将Lambda传入过滤器
+                            db.QueryFilter.AddTableFilter(entityType, "it", $"it => it.TenantId = {App.GetTenantId()}");
                         }
                     }
                 });
