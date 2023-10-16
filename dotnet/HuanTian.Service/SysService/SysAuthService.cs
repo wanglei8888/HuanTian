@@ -24,6 +24,7 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Localization;
 using System.Security.Claims;
 
 namespace HuanTian.Service
@@ -31,6 +32,7 @@ namespace HuanTian.Service
     /// <summary>
     /// 登陆服务
     /// </summary>
+    [ApiDescriptionSettings(Order = 146)]
     public class SysAuthService : ISysAuthService, IDynamicApiController
     {
         private readonly IRepository<SysUserDO> _sysUserInfo;
@@ -52,19 +54,18 @@ namespace HuanTian.Service
         public async Task<dynamic> Login(LoginInput input)
         {
             var userInfo = await _sysUserInfo.FirstOrDefaultAsync(t => t.UserName == input.UserName && t.Password == EncryptionHelper.SHA1(input.Password));
-            if (userInfo == null) throw new Exception("用户账号密码错误");
-
+            if (userInfo == null || userInfo.Deleted)
+                throw new Exception(App.I18n.GetString("账号密码错误,请修改后再试"));
+            if (!userInfo.Enable)
+                throw new Exception(App.I18n.GetString("用户已被禁用,无法登陆,请联系系统管理员"));
             // 储存Jwt数据
             var claims = new[]
             {
                 new Claim(JwtClaimConst.UserId,EncryptionHelper.Encrypt(userInfo.Id.ToString(),CommonConst.UserToken)),
-                new Claim(JwtClaimConst.TenantId,userInfo.TenantId.ToString()),
+                new Claim(JwtClaimConst.TenantId,EncryptionHelper.Encrypt(userInfo.TenantId.ToString(),CommonConst.TenantToken)),
             };
 
-            var output = new LoginOutput() {
-                Token = JWTHelper.GetToken(claims)
-            };
-            return output;
+            return JWTHelper.GetToken(claims);
         }
         /// <summary>
         /// 用户登出

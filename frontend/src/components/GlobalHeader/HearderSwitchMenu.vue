@@ -6,7 +6,7 @@
         v-for="(item) in appList"
         :key="item.code"
         @click="switchApp(item.code)">
-        {{ item.name }}
+        {{ $t(item.name) }}
       </a-menu-item>
     </a-menu>
   </div>
@@ -41,7 +41,6 @@ export default {
       const applicationData = this.appList.filter(item => item.code === code)
       this.$store.dispatch('MenuChange', applicationData[0]).then(res => {
         this.$store.commit('SET_APPCODE', code)
-        // this.$message.success(`切换到应用: ${applicationData[0].name}`)
       })
     }
   },

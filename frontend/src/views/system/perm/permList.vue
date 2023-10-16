@@ -64,10 +64,10 @@
           </a-form-model-item>
           <a-form-model-item :labelCol="labelCol" prop="type" :wrapperCol="wrapperCol" label="权限类型">
             <a-radio-group v-model="form.type" :disabled="readonly">
-              <a-radio-button :value=1>
+              <a-radio-button :value="1">
                 按钮
               </a-radio-button>
-              <a-radio-button :value=2>
+              <a-radio-button :value="2">
                 路由
               </a-radio-button>
             </a-radio-group>
@@ -87,7 +87,7 @@ export default {
   components: {
     STable
   },
-  data() {
+  data () {
     return {
       description: '列表使用场景：后台管理中的权限管理以及角色管理，可用于基于 RBAC 设计的角色权限控制，颗粒度细到每一个操作类型。',
       visible: false,
@@ -150,7 +150,7 @@ export default {
     }
   },
   methods: {
-    handleEdit(record, readonly) {
+    handleEdit (record, readonly) {
       this.form = Object.assign({}, record)
       this.visible = true
       if (readonly) {
@@ -162,7 +162,7 @@ export default {
 
       this.confirmLoading = false
     },
-    handleOk() {
+    handleOk () {
       if (this.readonly) {
         this.visible = false
         return
@@ -184,11 +184,11 @@ export default {
         }
       })
     },
-    onChange(selectedRowKeys, selectedRows) {
+    onChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
-    toggleAdvanced() {
+    toggleAdvanced () {
       this.advanced = !this.advanced
     }
   },

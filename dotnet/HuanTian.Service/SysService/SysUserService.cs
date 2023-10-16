@@ -24,43 +24,36 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-using HuanTian.EntityFrameworkCore;
-using HuanTian.Infrastructure;
-using MathNet.Numerics.Statistics.Mcmc;
-using Microsoft.EntityFrameworkCore;
 using SqlSugar.Extensions;
-using System.Linq.Expressions;
+using StackExchange.Redis;
 
 namespace HuanTian.Service
 {
     /// <summary>
     /// 用户信息服务
     /// </summary>
-    public class SysUserService : ISysUserService, IDynamicApiController
+    public class SysUserService : ISysUserService, IScoped, IDynamicApiController
     {
         private readonly ILogger<SysUserService> _logger;
         private readonly IRepository<SysUserDO> _userInfo;
         private readonly IRepository<SysAppsDO> _app;
         private readonly ISysRoleService _sysRoleService;
         private readonly ISysMenuService _sysMenuService;
-        private readonly IRedisCache _redisCache;
-        private readonly EfSqlContext _db;
+        private readonly IMessageQueue _messageQueue;
         public SysUserService(
             ILogger<SysUserService> logger,
             IRepository<SysUserDO> userInfo,
             ISysRoleService sysRoleService,
             IRepository<SysAppsDO> app,
             ISysMenuService sysMenuService,
-            IRedisCache redisCache,
-            EfSqlContext db)
+            IMessageQueue messageQueue)
         {
             _logger = logger;
             _userInfo = userInfo;
             _sysRoleService = sysRoleService;
             _app = app;
             _sysMenuService = sysMenuService;
-            _redisCache = redisCache;
-            _db = db;
+            _messageQueue = messageQueue;
         }
         /// <summary>
         /// 获取用户信息跟用户权限信息
@@ -88,7 +81,7 @@ namespace HuanTian.Service
                 });
             userInfo.Role = distinctPermissionList;
             userInfo.App = await _app.OrderBy(t => t.Order).ToListAsync();
-            userInfo.Menu = await _sysMenuService.GetUserMenuOutput(null);
+            userInfo.Menu = await _sysMenuService.GetUserMenuOutput(default);
             return userInfo;
         }
         public async Task<int> Add(SysUserDO input)
@@ -119,7 +112,13 @@ namespace HuanTian.Service
         }
         public async Task<int> Delete(IdInput input)
         {
-            var count = await _userInfo.DeleteAsync(input.Id.Split(',').Adapt<long[]>());
+            var count = await _userInfo.DeleteAsync(input.Ids);
+            // 删除用户角色关联
+            var roleIdList = (await _sysRoleService.UserRole(input.Ids)).Select(t => t.Id);
+            if (roleIdList != null && roleIdList.Any())
+            {
+                await _sysRoleService.DeleteUserRole(input.Ids);
+            }
             return count;
         }
         /// <summary>
@@ -127,9 +126,10 @@ namespace HuanTian.Service
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<PageData> Page([FromQuery] UserInput input)
+        public async Task<PageData> Page([FromQuery] SysUserInput input)
         {
             var pageData = await _userInfo
+                .Where(t => t.Deleted == false)
                 .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name.Contains(input.Name))
                 .WhereIf(!string.IsNullOrEmpty(input.UserName), t => t.UserName.Contains(input.UserName))
                 .WhereIf(input.DeptId != 0, t => t.DeptId == input.DeptId)
@@ -138,9 +138,16 @@ namespace HuanTian.Service
             return pageData;
         }
         [HttpGet]
-        public async Task<SysUserDO> Get([FromQuery] IdInput input)
+        public async Task<IEnumerable<SysUserDO>> Get([FromQuery] SysUserInput input)
         {
-            var userInfo = await _userInfo.FirstOrDefaultAsync(t => t.Id == input.Id.ToLong());
+            var userInfo = await _userInfo
+                .Where(t => t.Deleted == false && t.Enable == true)
+                .WhereIf(input.Id != 0, t => t.Id == input.Id)
+                .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name.Contains(input.Name))
+                .WhereIf(!string.IsNullOrEmpty(input.UserName), t => t.UserName.Contains(input.UserName))
+                .WhereIf(input.DeptId != 0, t => t.DeptId == input.DeptId)
+                .WhereIf(!string.IsNullOrEmpty(input.Enable), t => t.Enable == input.Enable.ObjToBool())
+                .ToListAsync();
             return userInfo;
         }
     }

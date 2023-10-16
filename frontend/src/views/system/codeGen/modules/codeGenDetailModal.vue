@@ -138,8 +138,7 @@ export default {
       this.$http.put('/sysCodeGen/detail', paramas).then(res => {
         this.tableLoading = false
         if (res.code === 200) {
-          this.$message.success('编辑成功')
-          this.handleCancel()
+          this.$message.success('保存成功')
         }
       }).finally(() => {
         this.tableLoading = false

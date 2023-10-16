@@ -30,7 +30,7 @@ namespace HuanTian.Service
     /// <summary>
     /// SysMenuInput 入参
     /// </summary>
-    public class SysMenuInput : PageInput
+    public class SysMenuInput : IPageInput
     {
         public int PageSize { get; set; }
         public int PageNo { get; set; }

@@ -1,10 +1,10 @@
 import storage from 'store'
 import store from '@/store'
+import { message } from 'ant-design-vue'
 import expirePlugin from 'store/plugins/expire'
 import { login, getInfo, logout } from '@/api/login'
 import { ACCESS_TOKEN, ALL_APP_MENU } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
-import router, { resetRouter } from '@/router'
 
 storage.addPlugin(expirePlugin)
 const user = {
@@ -38,12 +38,12 @@ const user = {
 
   actions: {
     // 登录
-    Login({ commit }, userInfo) {
+    Login ({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
           const result = response.result
-          storage.set(ACCESS_TOKEN, result.token)
-          commit('SET_TOKEN', result.token)
+          storage.set(ACCESS_TOKEN, result)
+          commit('SET_TOKEN', result)
           resolve()
         }).catch(error => {
           reject(error)
@@ -52,7 +52,7 @@ const user = {
     },
 
     // 获取用户信息
-    GetInfo({ commit }) {
+    GetInfo ({ commit }) {
       return new Promise((resolve, reject) => {
         // 请求后端获取用户信息 /api/user/info
         getInfo().then(response => {
@@ -85,7 +85,7 @@ const user = {
     },
 
     // 登出
-    Logout({ commit, state }) {
+    Logout ({ commit, state }) {
       return new Promise((resolve) => {
         logout(state.token).then(() => {
           commit('SET_TOKEN', '')
@@ -100,16 +100,17 @@ const user = {
       })
     },
     // 切换应用菜单
-    MenuChange({ commit }, application) {
+    MenuChange ({ commit }, application) {
       return new Promise((resolve, reject) => {
         const appCode = application.code
         // 缓存获取所有应用
         const allAppMenu = storage.get(ALL_APP_MENU)
         // 切换应用
-        let appMenu = allAppMenu.filter(item => item.menuType == appCode)
+        const appMenu = allAppMenu.filter(item => item.menuType === appCode)
         // 如果找不到
-        if (!appMenu) {
-          reject(new Error(`找不到应用: ${appCode}`))
+        if (!appMenu || appMenu.length === 0) {
+          message.error(`找不到应用: ${application.name} - 应用下没有菜单`)
+          reject(new Error(`找不到应用: ${application.name} - 应用下没有菜单`))
           return
         }
         resolve(appMenu)

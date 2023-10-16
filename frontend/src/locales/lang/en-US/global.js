@@ -4,7 +4,7 @@ export default {
   'submit.ok': 'Submit successfully',
   'save.ok': 'Saved successfully',
   'Unauthorized': 'Unauthorized',
-  'Authorization verification failed': 'Authorization verification failed',
+  'MethodNotAllowed': 'Method Not Allowed',
   'Error message': 'Error message',
   'The server is abnormal. Please try again later!': 'The server is abnormal. Please try again later!',
   'Tips message': 'Tips message'

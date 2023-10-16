@@ -23,6 +23,7 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+
 namespace HuanTian.Service
 {
     public class SysDicInput
@@ -40,7 +41,7 @@ namespace HuanTian.Service
         public long MasterId { get; set; }
         public List<SysDicDetailDO> SysDicDetail { get; set; }
     }
-    public class SysDicPageInput : PageInput
+    public class SysDicPageInput : IPageInput
     {
         public string Code { get; set; }
         public string Name { get; set; }

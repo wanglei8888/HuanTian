@@ -35,5 +35,9 @@ namespace HuanTian.Infrastructure
         /// 用户路由
         /// </summary>
         public const string UserRouts = "UserRouts";
+        /// <summary>
+        /// 租户信息
+        /// </summary>
+        public const string TenantInfo = "TenantInfo";
     }
 }

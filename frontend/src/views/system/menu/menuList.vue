@@ -34,7 +34,7 @@
                     :style="advanced && { float: 'right', overflow: 'hidden' } || {}">
                     <a-button type="primary" @click="handSerach()">查询</a-button>
                     <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
-                    <!-- <a @click="toggleAdvanced" style="margin-left: 8px">
+                  <!-- <a @click="toggleAdvanced" style="margin-left: 8px">
                   {{ advanced ? '收起' : '展开' }}
                   <a-icon :type="advanced ? 'up' : 'down'"/>
                 </a> -->
@@ -94,7 +94,6 @@
         </a-card>
       </a-col>
     </a-row>
-
   </page-header-wrapper>
 </template>
 
@@ -155,7 +154,7 @@ export default {
       }
     },
     remove (key) {
-      this.$http.delete('/sysMenu', { data: { id: `${key}` } }).then(res => {
+      this.$http.delete('/sysMenu', { data: { Ids: !key.length ? [key] : key } }).then(res => {
         if (res.code === 200) {
           this.$message.success('删除成功')
           this.handSerach()

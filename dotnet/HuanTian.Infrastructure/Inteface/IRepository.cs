@@ -20,7 +20,7 @@ namespace HuanTian.Infrastructure
         /// </summary>
         /// <param name="predicate">筛选条件+whereif</param>
         /// <returns></returns>
-        Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> predicate = default);
+        Task<IEnumerable<TEntity>> ToListAsync();
         /// <summary>
         /// 分页获取所有数据 通过WhereIf筛选条件
         /// </summary>
@@ -102,6 +102,11 @@ namespace HuanTian.Infrastructure
         /// <param name="entityList"></param>
         /// <returns></returns>
         IReposityoryInit<TEntity> InitTable(IEnumerable<TEntity> entityList);
+        /// <summary>
+        /// 忽略全局过滤器
+        /// </summary>
+        /// <returns></returns>
+        IRepository<TEntity> IgnoreFilters();
 
 
     }

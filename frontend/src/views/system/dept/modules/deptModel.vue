@@ -148,7 +148,7 @@ export default {
 }
 function createForm () {
   return {
-
+    enable: true
   }
 }
 </script>

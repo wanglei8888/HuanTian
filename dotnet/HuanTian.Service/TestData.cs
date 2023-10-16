@@ -23,7 +23,10 @@
  * 版本：V1.0.1
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
+using System.Globalization;
 
 namespace HuanTian.Service
 {
@@ -33,12 +36,29 @@ namespace HuanTian.Service
     [Route("api/")]
     public class TestData : IDynamicApiController
     {
+        private readonly IStringLocalizer _localizer;
         private readonly IRepository<SysMenuDO> _sysMenu;
         private readonly IGenerateFilesService _generateFilesService;
-        public TestData(IRepository<SysMenuDO> sysMenu, IGenerateFilesService generateFilesService)
+        public TestData(IRepository<SysMenuDO> sysMenu, IGenerateFilesService generateFilesService, IStringLocalizer localizer)
         {
             _sysMenu = sysMenu;
             _generateFilesService = generateFilesService;
+            _localizer = localizer;
+        }
+        /// <summary>
+        /// 多语言测试
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public dynamic LanguageTest()
+        {
+            var regionCode = CultureInfo.CurrentCulture.Name;
+            var value = _localizer.GetString("中文注释").Value + "--"+ App.I18n.GetString("中文注释");
+            // 支持URL http://localhost:8080/api/TestData/LanguageTest?ui-culture=zh-CN
+            // Cookie 在当前网页中添加一个Cookie，名称为.AspNetCore.Culture，值为c=zh-CN|uic=zh-CN，输出结果为中文
+            // Header 添加头部信息  accept-language :  en-US
+            return value;
         }
         [HttpGet("list/search/projects")]
         public dynamic GetProjects()
@@ -145,6 +165,17 @@ namespace HuanTian.Service
             var templatePath = Path.Combine(App.WebHostEnvironment.WebRootPath, "template", "PdfTemplate.html");
             var bytes = _generateFilesService.RenderTemplatePdf(templatePath, output, setting);
             return new FileContentResult(bytes, "application/pdf") { FileDownloadName = "test.pdf" };
+        }
+        /// <summary>
+        /// 发送邮件测试
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task SendEmail()
+        {
+            // 1、需要先配置租户邮件信息    2、确保消息队列地址配置正确，服务已启动
+            var userInfo = await App.GetService<IRepository<SysUserDO>>().FirstOrDefaultAsync(t => t.Id == App.GetUserId());
+            await EmailMQ.SendEmail(userInfo, "用户信息模板", "用户信息提醒邮件", "wangxiaopang8888@163.com");
         }
     }
     

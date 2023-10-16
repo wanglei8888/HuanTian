@@ -90,7 +90,7 @@ namespace HuanTian.Service
         {
             RedisValue[] redisValues = values.Select(x => (RedisValue)x).ToArray();
             var value =  await _database.SetAddAsync(key, redisValues);
-            _database.KeyExpire(key, expiration ?? App.Configuration["AppSettings:RedisExpirationTime"].ToTimeSpan());
+            await _database.KeyExpireAsync(key, expiration ?? App.Configuration["AppSettings:RedisExpirationTime"].ToTimeSpan());
             return value;
         }
 
@@ -123,7 +123,8 @@ namespace HuanTian.Service
         /// </summary>
         public async Task<bool> HashExistsAsync(string key, string field)
         {
-            return await _database.HashExistsAsync(key, field);
+            var value = await _database.HashExistsAsync(key, field);
+            return value;
         }
 
         /// <summary>
@@ -156,25 +157,29 @@ namespace HuanTian.Service
         /// <summary>
         /// 对哈希中指定字段的值进行增加
         /// </summary>
-        public async Task<long> HashIncrementAsync(string key, string field, long value = 1)
+        public async Task<long> HashIncrementAsync(string key, string field, TimeSpan? expiration = default)
         {
-            return await _database.HashIncrementAsync(key, field, value);
+            var value =  await _database.HashIncrementAsync(key, field);
+            await _database.KeyExpireAsync(key, expiration ?? App.Configuration["AppSettings:RedisExpirationTime"].ToTimeSpan());
+            return value;
         }
 
         /// <summary>
         /// 设置哈希中指定字段的值
         /// </summary>
-        public async Task HashSetAsync(string key, string field, string value)
+        public async Task HashSetAsync(string key, string field, string value, TimeSpan? expiration = default)
         {
             await _database.HashSetAsync(key, field, value);
+            await _database.KeyExpireAsync(key, expiration ?? App.Configuration["AppSettings:RedisExpirationTime"].ToTimeSpan());
         }
 
         /// <summary>
         /// 设置哈希中多个字段和值
         /// </summary>
-        public async Task HashSetAsync(string key, HashEntry[] hashFields)
+        public async Task HashSetAsync(string key, HashEntry[] hashFields, TimeSpan? expiration = default)
         {
             await _database.HashSetAsync(key, hashFields);
+            await _database.KeyExpireAsync(key, expiration ?? App.Configuration["AppSettings:RedisExpirationTime"].ToTimeSpan());
         }
 
         /// <summary>

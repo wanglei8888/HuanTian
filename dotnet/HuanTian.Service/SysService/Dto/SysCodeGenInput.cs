@@ -24,13 +24,6 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-using Microsoft.AspNetCore.Routing.Template;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace HuanTian.Service
 {
@@ -54,7 +47,7 @@ namespace HuanTian.Service
         public string ApplicationName { get; set; }
         public string FrontPath { get; set; }
     }
-    public class SysCodeGenTableInput : PageInput
+    public class SysCodeGenTableInput : IPageInput
     {
         /// <summary>
         /// 表格名字

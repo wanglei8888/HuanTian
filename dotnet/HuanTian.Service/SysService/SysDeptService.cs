@@ -15,7 +15,6 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-using NPOI.Util;
 
 namespace HuanTian.Service;
 
@@ -24,7 +23,7 @@ namespace HuanTian.Service;
 /// </summary>
 public class SysDeptService : ISysDeptService, IDynamicApiController, IScoped
 {
-    private readonly IRepository<SysDeptDO> _sysDept;
+    private readonly IRepository<SysDeptDO> _sysDept;    
     public SysDeptService(IRepository<SysDeptDO> sysDept)
     {
         _sysDept = sysDept;
@@ -59,7 +58,7 @@ public class SysDeptService : ISysDeptService, IDynamicApiController, IScoped
     }
     public async Task<int> Delete(IdInput input)
     {
-        var count = await _sysDept.DeleteAsync(input.Id.Split(',').Adapt<long[]>());
+        var count = await _sysDept.DeleteAsync(input.Ids);
         return count;
     }
     public async Task<IEnumerable<SysDeptDO>> Get([FromQuery] SysDeptInput input)

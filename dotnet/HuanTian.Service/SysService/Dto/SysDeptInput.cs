@@ -15,12 +15,13 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+
 namespace HuanTian.Service;
 
 /// <summary>
 /// 系统部门表输入参数
 /// </summary>
-public class SysDeptInput : PageInput
+public class SysDeptInput : IPageInput
 {
     /// <summary>
     /// 父级部门id

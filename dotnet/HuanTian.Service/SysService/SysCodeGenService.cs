@@ -24,17 +24,12 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-using EnumsNET;
-using NPOI.HPSF;
-using NPOI.SS.Formula.Functions;
+using Microsoft.Extensions.Localization;
 using NPOI.Util;
 using RazorEngine;
 using RazorEngine.Templating;
 using SqlSugar;
-using System.Configuration;
-using System.IO.Compression;
 using System.Net;
-using System.Text;
 using System.Text.Encodings.Web;
 using Yitter.IdGenerator;
 
@@ -95,11 +90,11 @@ namespace HuanTian.Service
             var firtst = await _codeGen.FirstOrDefaultAsync(x => x.TableName == entity.TableName);
             if (firtst != null)
             {
-                throw new Exception("该表格名字已经存在,请修改后再试");
+                throw new Exception(App.I18n.GetString("该表格名字已经存在,请修改后再试"));
             }
             var id = YitIdHelper.NextId();
             // 详细表数据
-            var ignoreColumn = new string[] { "id", "create_by", "create_on", "update_by", "update_on", "deleted" }; //忽略基础数据
+            var ignoreColumn = new string[] { "id", "create_by", "create_on", "update_by", "update_on", "deleted", "tenant_id" }; //忽略基础数据
             var columnList = _db.DbMaintenance.GetColumnInfosByTableName($"{input.TableName}").Where(t => !ignoreColumn.Contains(t.DbColumnName));
             var detailList = new List<SysCodeGenDetailDO>();
             foreach (var (item, index) in columnList.Select((value, index) => (value, index)))
@@ -141,7 +136,7 @@ namespace HuanTian.Service
             var firtst = await _codeGen.FirstOrDefaultAsync(x => x.TableName == entity.TableName && x.Id != input.Id);
             if (firtst != null)
             {
-                throw new Exception("该表格名字已经存在,请修改后再试");
+                throw new Exception(App.I18n.GetString("该表格名字已经存在,请修改后再试"));
             }
             var count = await _codeGen.InitTable(entity)
                 .UpdateAsync();
@@ -149,10 +144,9 @@ namespace HuanTian.Service
         }
         public async Task<int> Delete(IdInput input)
         {
-            var count = await _codeGen.DeleteAsync(long.Parse(input.Id));
+            var count = await _codeGen.DeleteAsync(input.Ids);
             // 删除从表
-            count += await _codeGenDetail.DeleteAsync(x => x.MasterId == long.Parse(input.Id));
-
+            count += await _codeGenDetail.DeleteAsync(x => input.Ids.Contains(x.MasterId));
             return count;
         }
         [HttpPut("Detail")]
@@ -161,7 +155,7 @@ namespace HuanTian.Service
             var checkGroup = input.Detail.GroupBy(x => x.DbColumnName).Count() != input.Detail.Count();
             if (checkGroup)
             {
-                throw new Exception("表格列属性重复,请修改后再试");
+                throw new Exception(App.I18n.GetString("表格列属性重复,请修改后再试"));
             }
             var count = await _codeGenDetail.InitTable(input.Detail)
                 .UpdateAsync();
@@ -194,7 +188,7 @@ namespace HuanTian.Service
             var parentMenu = (await _menuService.Get(new SysMenuTypeInput() { Id = masterInfo.MenuId })).ToList()[0];
             if (columnInfo == null)
             {
-                throw new Exception("表格列属性暂未录入,请修改后再试");
+                throw new Exception(App.I18n.GetString("表格列属性暂未录入,请修改后再试"));
             }
             // 更换命名方式
             columnInfo.ForEach(item => { item.DbColumnName = item.DbColumnName.ToPascalCase(); });
@@ -206,22 +200,22 @@ namespace HuanTian.Service
             var tableInfo = _db.DbMaintenance.GetTableInfoList().FirstOrDefault(t => t.Name == tableName);
             if (tableInfo == null)
             {
-                throw new Exception("表格在数据库中不存在,请修改后再试");
+                throw new Exception(App.I18n.GetString("表格在数据库中不存在,请修改后再试"));
             }
             // 获取模板信息
-            var templatePathList = GetTemplatePathList(new SysCodeGenFileInput 
-                { ApplicationName = applicationName, TableName = masterInfo.TableName, FrontPath = parentMenu.Path ?? "a" }); // FrontPath为Null 赋默认值，防止报错
+            var templatePathList = GetTemplatePathList(new SysCodeGenFileInput
+            { ApplicationName = applicationName, TableName = masterInfo.TableName, FrontPath = parentMenu.Path ?? "a" }); // FrontPath为Null 赋默认值，防止报错
             // 生成方式为生成到项目 && 不强制执行
             if (masterInfo.GenerationWay == GenerationWayEnum.GenToProj
                 && input.Enforcement == false)
             {
                 if (Directory.Exists(templatePathList[0].FilePath.GetParentPath()))
                 {
-                    throw new Exception("执行失败,该后端代码文件已经存在");
+                    throw new Exception(App.I18n.GetString("执行失败,该后端代码文件已经存在"));
                 }
                 if (Directory.Exists(templatePathList[4].FilePath.GetParentPath()))
                 {
-                    throw new Exception("执行失败,该前端代码文件已经存在");
+                    throw new Exception(App.I18n.GetString("执行失败,该前端代码文件已经存在"));
                 }
             }
             #endregion

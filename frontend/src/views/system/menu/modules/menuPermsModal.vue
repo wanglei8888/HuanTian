@@ -8,6 +8,20 @@
     @cancel="handleCancel">
     <a-spin :spinning="confirmLoading">
       <div class="table-page-search-wrapper">
+        <a-row>
+          <a-col :md="12" :sm="24">
+            <a-form-model-item :label-col="labelCol" :wrapper-col="wrapperCol">
+              <span slot="label">
+                <a-tooltip
+                  title="如果填写此值, + 常规路由将会带上此值">
+                  <a-icon type="question-circle-o" />
+                </a-tooltip>&nbsp;
+                路由编码
+              </span>
+              <a-input v-model="routCode" placeholder="" />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
         <a-row style="margin-bottom: 8px;">
           <a-button
             @click="handleAdd()"
@@ -26,6 +40,14 @@
               icon="plus"
               style="margin-left: 8px"
               type="primary">常规路由</a-button>
+          </a-tooltip>
+          <a-tooltip placement="topLeft">
+            <a-popconfirm title="确定要删除全部数据吗？" @confirm="handleDelete()">
+              <a-button
+                icon="minus"
+                style="margin-left: 8px"
+                type="danger">全部删除</a-button>
+            </a-popconfirm>
           </a-tooltip>
         </a-row>
         <a-row>
@@ -68,9 +90,9 @@
                   <div class="editable-row-operations">
                     <span v-if="record.editable" style="display: flex;">
                       <a @click="() => save(record.id)" style="padding-right: 20px;">保存</a>
-                      <a-popconfirm title="确定取消吗?" @confirm="() => cancel(record.id)">
-                        <a style="margin-right: 10px;">取消</a>
-                      </a-popconfirm>
+                      <!-- <a-popconfirm title="确定取消吗?" @confirm="() => cancel(record.id)"> -->
+                      <a @click="cancel(record.id)" style="margin-right: 10px;">取消</a>
+                      <!-- </a-popconfirm> -->
                     </span>
                     <span v-else style="display: flex;">
                       <a
@@ -109,13 +131,14 @@ export default {
         sm: { span: 4 }
       },
       wrapperCol: {
-        md: { span: 14 },
+        md: { span: 16 },
         sm: { span: 20 }
       },
       visible: false,
       queryParam: {},
       form: { data: [] },
       confirmLoading: false,
+      routCode: '',
       info: {},
       data: [],
       columns: columns,
@@ -211,7 +234,7 @@ export default {
       const newData = [
         {
         id: this.generateUniqueId(),
-        name: '增加按钮',
+        name: this.info.name + '-增加按钮',
         code: 'add',
         menuId: this.info.id,
         type: 1,
@@ -219,7 +242,7 @@ export default {
       },
       {
         id: this.generateUniqueId(),
-        name: '修改按钮',
+        name: this.info.name + '-修改按钮',
         code: 'update',
         menuId: this.info.id,
         type: 1,
@@ -227,7 +250,7 @@ export default {
       },
       {
         id: this.generateUniqueId(),
-        name: '删除按钮',
+        name: this.info.name + '-删除按钮',
         code: 'delete',
         menuId: this.info.id,
         type: 1,
@@ -235,7 +258,7 @@ export default {
       },
       {
         id: this.generateUniqueId(),
-        name: '查询按钮',
+        name: this.info.name + '-查询按钮',
         code: 'get',
         menuId: this.info.id,
         type: 1,
@@ -245,49 +268,56 @@ export default {
       this.form.data = [...this.form.data, ...newData]
     },
     handleRouteAdd () {
+      let path = ''
+      if (this.routCode) {
+        path = this.routCode + '/'
+      }
       const newData = [
         {
         id: this.generateUniqueId(),
-        name: '增加路由',
-        code: 'add',
+        name: this.info.name + '-增加路由',
+        code: path + 'add',
         menuId: this.info.id,
         type: 2,
         isNew: false
       },
       {
         id: this.generateUniqueId(),
-        name: '修改路由',
-        code: 'update',
+        name: this.info.name + '-修改路由',
+        code: path + 'update',
         menuId: this.info.id,
-        type: 1,
+        type: 2,
         isNew: false
       },
       {
         id: this.generateUniqueId(),
-        name: '删除路由',
-        code: 'delete',
+        name: this.info.name + '-删除路由',
+        code: path + 'delete',
         menuId: this.info.id,
-        type: 1,
+        type: 2,
         isNew: false
       },
       {
         id: this.generateUniqueId(),
-        name: '查询路由',
-        code: 'get',
+        name: this.info.name + '-查询路由',
+        code: path + 'get',
         menuId: this.info.id,
-        type: 1,
+        type: 2,
         isNew: false
       },
       {
         id: this.generateUniqueId(),
-        name: '分页路由',
-        code: 'page',
+        name: this.info.name + '-分页路由',
+        code: path + 'page',
         menuId: this.info.id,
-        type: 1,
+        type: 2,
         isNew: false
       }
     ]
       this.form.data = [...this.form.data, ...newData]
+    },
+    handleDelete () {
+      this.form.data = []
     },
     // 初始化方法
     detail (record) {

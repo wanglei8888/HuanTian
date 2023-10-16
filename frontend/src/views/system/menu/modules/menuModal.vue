@@ -15,19 +15,6 @@
             </a-form-model-item>
           </a-col>
           <a-col :md="mdSize" :sm="smSize">
-            <a-form-model-item name="routs" label="菜单层级">
-              <a-radio-group v-model="menuType">
-                <a-radio
-                  v-for="(item, index) in typeData"
-                  :key="index"
-                  :value="item.value"
-                  @click="meneTypeFunc(item.value)">{{ item.name }} </a-radio>
-              </a-radio-group>
-            </a-form-model-item>
-          </a-col>
-        </a-row>
-        <a-row :gutter="gutter">
-          <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item label="所属应用" prop="menuType">
               <a-select style="width: 100%" v-model="form.menuType" placeholder="请选择应用分类">
                 <a-select-option
@@ -38,53 +25,55 @@
               </a-select>
             </a-form-model-item>
           </a-col>
-          <a-col :md="mdSize" :sm="smSize">
-            <div v-if="pidShow">
-              <a-form-model-item label="父级菜单" prop="parentId">
-                <!-- v-decorator="['id', {rules: [{ required: true, message: '请选择父级菜单！' }]}]"  -->
-                <a-tree-select
-                  style="width: 100%"
-                  v-model="form.parentId"
-                  :dropdownStyle="{ maxHeight: '300px', overflow: 'auto' }"
-                  :treeData="menuTreeData"
-                  :replaceFields="{
-                    key: 'id',
-                    title: 'name',
-                    value: 'id'
-                  }"
-                  placeholder="请选择父级菜单"
-                  treeDefaultExpandAll>
-                  <span slot="title" slot-scope="{ title }">{{ title }}
-                  </span>
-                </a-tree-select>
-              </a-form-model-item>
-            </div>
-            <div v-else>
-              <a-form-model-item prop="redirect" hasFeedback>
-                <span slot="label">
-                  <a-tooltip title="如需打开首页加载此目录下菜单，请填写加载菜单路由，设为首页后其他设置的主页将被替代">
-                    <a-icon type="question-circle-o" />
-                  </a-tooltip>&nbsp;
-                  重定向
-                </span>
-                <a-input prop="redirect" placeholder="请输入重定向地址" v-model="form.redirect" />
-              </a-form-model-item>
-            </div>
-          </a-col>
         </a-row>
         <a-row :gutter="gutter">
           <a-col :md="mdSize" :sm="smSize">
+            <a-form-model-item label="父级菜单" prop="parentId">
+              <!-- v-decorator="['id', {rules: [{ required: true, message: '请选择父级菜单！' }]}]"  -->
+              <a-tree-select
+                style="width: 100%"
+                v-model="form.parentId"
+                :dropdownStyle="{ maxHeight: '300px', overflow: 'auto' }"
+                :treeData="menuTreeData"
+                :replaceFields="{
+                  key: 'id',
+                  title: 'name',
+                  value: 'id'
+                }"
+                @change="menuTreeChange"
+                placeholder="请选择父级菜单">
+                <span slot="title" slot-scope="{ title }">{{ title }}
+                </span>
+              </a-tree-select>
+            </a-form-model-item>
+          </a-col>
+          <a-col :md="mdSize" :sm="smSize" >
             <a-form-model-item prop="component" hasFeedback>
               <span slot="label">
                 <a-tooltip
-                  title="前端vue组件 views文件夹下路径，例：system/menu/index。注：目录级填写：RouteView(不带面包屑)，PageView(带面包屑)，菜单级内链打开http链接填写：Iframe">
+                  title="顶级(目录)菜单填写：RouteView(不带面包屑)，PageView(带面包屑),子级(菜单级)内链打开http链接填写：menu/menuList">
                   <a-icon type="question-circle-o" />
                 </a-tooltip>&nbsp;
                 前端组件
               </span>
-              <a-input placeholder="请输入前端组件" v-model="form.component" :disabled="!pidShow" />
+              <a-input placeholder="请输入前端组件" v-model="form.component" :disabled="componentDisabled" />
             </a-form-model-item>
           </a-col>
+        </a-row>
+        <a-row :gutter="gutter">
+          <a-col :md="mdSize" :sm="smSize">
+            <a-form-model-item prop="redirect" hasFeedback>
+              <span slot="label">
+                <a-tooltip title="如需打开首页加载此目录下菜单，请填写加载菜单路由，设为首页后其他设置的主页将被替代">
+                  <a-icon type="question-circle-o" />
+                </a-tooltip>&nbsp;
+                重定向
+              </span>
+              <a-input prop="redirect" placeholder="请输入重定向地址" :disabled="redirectDisabled" v-model="form.redirect" />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+        <a-row :gutter="gutter">
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item prop="path" hasFeedback>
               <span slot="label">
@@ -96,7 +85,15 @@
               <a-input placeholder="请输入路由" v-model="form.path" />
             </a-form-model-item>
           </a-col>
+          <a-col :md="mdSize" :sm="smSize">
+            <a-form-model-item label="图标">
+              <a-input placeholder="请选择图标" v-model="form.icon" :disabled="true" v-decorator="['icon']">
+                <a-icon slot="addonAfter" @click="openIconSele()" type="setting" />
+              </a-input>
+            </a-form-model-item>
+          </a-col>
         </a-row>
+        <a-divider />
         <a-row :gutter="gutter">
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item prop="title" hasFeedback>
@@ -110,31 +107,32 @@
             </a-form-model-item>
           </a-col>
           <a-col :md="mdSize" :sm="smSize">
+            <a-form-model-item label="排序" prop="order" hasFeedback>
+              <a-input-number style="width: 100%" v-model="form.order" />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+        <a-row :gutter="gutter">
+          <!-- <a-col :md="mdSize" :sm="smSize">
+            <a-form-model-item label="是否缓存">
+              <a-switch checkedChildren="是" v-model="form.keepAlive" unCheckedChildren="否" />
+            </a-form-model-item>
+          </a-col> -->
+          <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item label="是否可见">
               <a-switch checkedChildren="是" v-model="form.show" unCheckedChildren="否" />
             </a-form-model-item>
           </a-col>
-        </a-row>
-        <a-row :gutter="gutter">
           <a-col :md="mdSize" :sm="smSize">
-            <div v-show="iconShow">
-              <a-form-model-item label="图标">
-                <a-input placeholder="请选择图标" v-model="form.icon" :disabled="true" v-decorator="['icon']">
-                  <a-icon slot="addonAfter" @click="openIconSele()" type="setting" />
-                </a-input>
-              </a-form-model-item>
-            </div>
-          </a-col>
-          <a-col :md="mdSize" :sm="smSize">
-            <a-form-model-item label="是否缓存">
-              <a-switch checkedChildren="是" v-model="form.keepAlive" unCheckedChildren="否" />
-            </a-form-model-item>
-          </a-col>
-        </a-row>
-        <a-row :gutter="gutter">
-          <a-col :md="mdSize" :sm="smSize">
-            <a-form-model-item label="排序" prop="order" hasFeedback>
-              <a-input-number style="width: 100%" v-model="form.order" />
+            <a-form-model-item>
+              <span slot="label">
+                <a-tooltip
+                  title="为True,则不显示子菜单,只显示当前菜单">
+                  <a-icon type="question-circle-o" />
+                </a-tooltip>&nbsp;
+                隐藏子类
+              </span>
+              <a-switch checkedChildren="是" v-model="form.hideChildren" unCheckedChildren="否" @change="hidChildrenChange" />
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -173,6 +171,8 @@ function createForm () {
   return {
     menuType: 'Business',
     icon: 'none',
+    hideChildren: false,
+    component: '',
     show: true
   }
 }
@@ -193,14 +193,13 @@ export default {
       mdSize: 12,
       smSize: 24,
       formLoading: false,
-      iconShow: true,
-      pidShow: true,
       title: '添加菜单',
       visible: false,
+      componentDisabled: false,
+      redirectDisabled: true,
       formType: 'add',
       visibleIcon: false,
       confirmLoading: false,
-      menuType: 'Child',
       typeData: [],
       appData: [],
       menuTreeData: [],
@@ -209,9 +208,9 @@ export default {
         name: [{ required: true, min: 1, message: '请输入菜单名称！' }],
         menuType: [{ required: true, message: '请选择应用分类' }],
         parentId: [{ required: true, message: '请选择父级菜单！' }],
-        component: [{ required: true, min: 1, message: '请输入前端组件！' }],
+        component: [{ required: true, validator: this.componentValidator }],
         order: [{ required: true, message: '请输入排序值！' }],
-        redirect: [{ required: true, message: '请输入重定向！' }],
+        redirect: [{ required: true, validator: this.redirectValidator }],
         title: [{ required: true, message: '请输入多语言值！' }]
       },
       form: {}
@@ -223,23 +222,24 @@ export default {
       // 获取下拉数据
       this.getDropdown()
       if (value) {
-        this.form = JSON.parse(JSON.stringify(value))
+        this.form = { ...createForm(), ...JSON.parse(JSON.stringify(value)) }
         this.formType = 'edit'
         // 如果是父级菜单
         if (value.parentId === 0) {
-          this.menuType = 'Parent'
-          this.pidShow = false
+          this.redirectDisabled = false
+          this.componentDisabled = true
         } else {
-          this.menuType = 'Child'
-          this.pidShow = true
+          this.redirectDisabled = true
+          this.componentDisabled = false
         }
+        this.hidChildrenChange(this.form.hideChildren)
         this.title = '编辑菜单'
       } else {
         this.form = createForm()
         this.title = '新增菜单'
       }
-      this.visible = true
       this.changeApplication(this.form.menuType)
+      this.visible = true
     },
     // 获取下拉数据
     async getDropdown () {
@@ -256,24 +256,59 @@ export default {
       })
     },
     // 切换父子类菜单
-    meneTypeFunc (value) {
-      if (value === 'Child') {
-        this.form.component = ''
-        this.pidShow = true
-      } else {
+    menuTreeChange (value) {
+      if (value === 0 && this.form.hideChildren === false) {
         this.form.component = 'RouteView'
-        this.pidShow = false
+        this.redirectDisabled = false
+        this.componentDisabled = true
+      } else {
+        this.redirectDisabled = true
+        this.componentDisabled = false
       }
-      this.$refs.form.clearValidate()
+      if (this.$refs.form) {
+        this.$refs.form.clearValidate()
+      }
+    },
+    hidChildrenChange (value) {
+      if (value) {
+        this.redirectDisabled = true
+        this.componentDisabled = false
+      }
     },
     changeApplication (value) {
       this.$http.get('/sysMenu/tree', { params: { menuType: value } }).then(res => {
         if (res.code === 200) {
+          const parentMenu = {
+            id: 0,
+            name: '顶级菜单',
+            children: []
+          }
+          res.result.unshift(parentMenu)
           this.menuTreeData = res.result
-        } else {
-          this.$message.warning(res.message)
         }
       })
+    },
+    componentValidator (rule, value, callback) {
+      if (!this.componentDisabled) {
+        if (!value) {
+          return callback(new Error('请输入前端组件！'))
+        } else {
+          return callback()
+        }
+      } else {
+        return callback()
+      }
+    },
+    redirectValidator (rule, value, callback) {
+      if (!this.redirectDisabled) {
+        if (!value) {
+          return callback(new Error('请输入重定向！'))
+        } else {
+          return callback()
+        }
+      } else {
+        return callback()
+      }
     },
     openIconSele () {
       this.visibleIcon = true

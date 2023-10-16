@@ -26,6 +26,10 @@
 using HuanTian.SqlSugar;
 using Microsoft.Extensions.DependencyInjection;
 using SqlSugar;
+using SqlSugar.Extensions;
+using System.Data;
+using System.Linq.Dynamic.Core;
+using DbType = SqlSugar.DbType;
 
 namespace HuanTian.WebCore
 {
@@ -43,7 +47,7 @@ namespace HuanTian.WebCore
             var config = new ConnectionConfig()
             {
                 DbType = dbType, //数据库切换，需要改
-                ConnectionString = App.Configuration[$"ConnectionStrings:{dbType}Connection"],
+                ConnectionString = App.Configuration[$"ConnectionStrings:{dbType}"],
                 IsAutoCloseConnection = true,
                 ConfigureExternalServices = new ConfigureExternalServices()
                 {
@@ -59,7 +63,7 @@ namespace HuanTian.WebCore
                             }
                         }
                     },
-                    EntityService = (property, column) => 
+                    EntityService = (property, column) =>
                     {
                         //全局设置列名
                         if (App.Configuration["SqlSettings:GlobalSettingsColumnName"] == "True")
@@ -72,31 +76,63 @@ namespace HuanTian.WebCore
             };
             services.AddScoped<ISqlSugarClient>(s =>
             {
-               // Scoped用SqlSugarClient 
-               SqlSugarClient sqlSugar = new SqlSugarClient(config,
-               db =>
-               {
-                   // 打印输出Sql
-                   db.Aop.OnLogExecuting = (sql, pars) =>
-                   {
-                       if (sql.StartsWith("SELECT"))
-                       {
-                           Console.ForegroundColor = ConsoleColor.Green;
-                       }
-                       if (sql.StartsWith("UPDATE") || sql.StartsWith("INSERT"))
-                       {
-                           Console.ForegroundColor = ConsoleColor.White;
-                       }
-                       if (sql.StartsWith("DELETE"))
-                       {
-                           Console.ForegroundColor = ConsoleColor.Blue;
-                       }
-                       Console.WriteLine(SqlProfiler.ParameterFormat(sql, pars));
-                   };
-               });
+                // Scoped 用 SqlSugarClient 
+                // Singleton 用 SqlSugarScope
+                var sqlSugar = new SqlSugarClient(config,
+                db =>
+                {
+                    // 打印输出Sql
+                    db.Aop.OnLogExecuting = (sql, pars) =>
+                    {
+                        // 测试环境下打印Sql
+#if DEBUG
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.WriteLine("--------------------------------------------------------------");
+
+                        if (sql.StartsWith("SELECT"))
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                        }
+                        if (sql.StartsWith("UPDATE") || sql.StartsWith("INSERT"))
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }
+                        if (sql.StartsWith("DELETE"))
+                        {
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                        }
+                        Console.WriteLine(SqlProfiler.ParameterFormat(sql, pars));
+#endif
+                    };
+                    if (!App.Configuration["SqlSettings:GlobalFilter"].ObjToBool())
+                        return;
+
+                    // 添加全局过滤器
+                    var types = AssemblyHelper.GetAssemblyAllTypeList().Where(t => t.FullName.EndsWith("DO"));
+                    foreach (var entityType in types)
+                    {
+                        // 忽略的实体类
+                        var ignoreEntity = new string[] { "SysUserDO" };
+                        if (ignoreEntity.Contains(entityType.Name))
+                        {
+                            continue;
+                        }
+                        StaticConfig.DynamicExpressionParserType = typeof(DynamicExpressionParser);
+                        //判断实体类中包含Deleted属性
+                        if (entityType.GetProperty("Deleted") != null)
+                        {
+                            db.QueryFilter.AddTableFilter(entityType, "it", $"it => it.Deleted = {false}");
+                        }
+                        if (entityType.GetProperty("TenantId") != null)
+                        {
+                            db.QueryFilter.AddTableFilter(entityType, "it", $"it => it.TenantId = {App.GetTenantId()}");
+                        }
+                    }
+                });
                 return sqlSugar;
             });
             return services;
         }
     }
+
 }

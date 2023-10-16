@@ -15,12 +15,13 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+
 namespace HuanTian.Service;
 
 /// <summary>
 /// 系统应用表输入参数
 /// </summary>
-public class SysAppsInput : PageInput
+public class SysAppsInput : IPageInput
 {
     /// <summary>
     /// 应用名称

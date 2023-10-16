@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Autofac;
+using MathNet.Numerics.Statistics;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using NPOI.POIFS.Crypt;
 using System.Collections.Concurrent;
 
@@ -25,6 +28,10 @@ namespace HuanTian.Infrastructure
         public static IServiceProvider RootServices => InternalApp.RootServices;
 
         /// <summary>
+        /// 存储根服务，可能为空
+        /// </summary>
+        public static ILifetimeScope RootServicesAutofac;
+        /// <summary>
         /// 获取请求上下文
         /// </summary>
         public static HttpContext HttpContext => CatchOrDefault(() => RootServices?.GetService<IHttpContextAccessor>()?.HttpContext);
@@ -36,7 +43,10 @@ namespace HuanTian.Infrastructure
         /// 未托管的对象集合
         /// </summary>
         public static readonly ConcurrentBag<IDisposable> UnmanagedObjects;
-
+        /// <summary>
+        /// 国际化 多语言
+        /// </summary>
+        public static IStringLocalizer I18n => CatchOrDefault(() => RootServices?.GetService<IStringLocalizer>());
         /// <summary>
         /// GC 回收默认间隔
         /// </summary>
@@ -78,6 +88,7 @@ namespace HuanTian.Infrastructure
             //// 处理控制台应用程序
             //if (HostEnvironment == default) return RootServices;
 
+            // InternalApp.InternalServices 为IServiceCollection 类型
             // 第一选择，判断是否是单例注册且单例服务不为空，如果是直接返回根服务提供器
             if (RootServices != null && InternalApp.InternalServices.Where(u => u.ServiceType == (serviceType.IsGenericType ? serviceType.GetGenericTypeDefinition() : serviceType))
                                                                     .Any(u => u.Lifetime == ServiceLifetime.Singleton)) return RootServices;
@@ -87,7 +98,7 @@ namespace HuanTian.Infrastructure
             if (httpContext?.RequestServices != null) return httpContext.RequestServices;
             // 第三选择，创建新的作用域并返回服务提供器
             else if (RootServices != null)
-            {
+            {   
                 var scoped = RootServices.CreateScope();
                 UnmanagedObjects.Add(scoped);
                 return scoped.ServiceProvider;
@@ -187,6 +198,8 @@ namespace HuanTian.Infrastructure
         {
             try
             {
+                if (HttpContext == null)
+                    return default;
                 return EncryptionHelper.Decrypt(HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtClaimConst.UserId)?.Value, CommonConst.UserToken).ToLong();
             }
             catch (Exception)
@@ -202,7 +215,9 @@ namespace HuanTian.Infrastructure
         {
             try
             {
-                return long.Parse(HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtClaimConst.TenantId)?.Value);
+                if (HttpContext == null)
+                    return default;
+                return EncryptionHelper.Decrypt(HttpContext.User.Claims.FirstOrDefault(u => u.Type == JwtClaimConst.TenantId)?.Value, CommonConst.TenantToken).ToLong();
             }
             catch (Exception)
             {
@@ -226,5 +241,5 @@ namespace HuanTian.Infrastructure
         /// </summary>
         public static IConfiguration Configuration;
     }
-  
+
 }

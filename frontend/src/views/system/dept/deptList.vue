@@ -22,7 +22,8 @@
               </a-form-item>
             </a-col>
             <a-col :md="!advanced && mdSize || 24" :sm="24">
-              <span class="table-page-search-submitButtons"
+              <span
+                class="table-page-search-submitButtons"
                 :style="advanced && { float: 'right', overflow: 'hidden' } || {}">
                 <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
                 <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
@@ -37,11 +38,11 @@
       </div>
 
       <div class="table-operator">
-        <a-button type="primary" icon="plus" @click="$refs.infoModel.detail()">新建</a-button>        
+        <a-button type="primary" icon="plus" @click="$refs.infoModel.detail()">新建</a-button>
         <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
           <a-menu slot="overlay">
             <a-menu-item key="1">
-              <a-popconfirm title="是否要批量删除？" @confirm="remove(selectedRowKeys.join(','), true)">
+              <a-popconfirm title="是否要批量删除？" @confirm="remove(selectedRowKeys)">
                 <a-icon type="delete" />删除
               </a-popconfirm></a-menu-item>
           </a-menu>
@@ -50,8 +51,13 @@
           </a-button>
         </a-dropdown>
       </div>
-
-      <s-table ref="table" size="default" rowKey="id" :columns="columns" :data="loadData" :alert="false"
+      <s-table
+        ref="table"
+        size="default"
+        rowKey="id"
+        :columns="columns"
+        :data="loadData"
+        :alert="false"
         :showPagination="false">
         <span slot="enableRadio" slot-scope="text">
           <a-tag :color="text ? 'green' : 'red'">{{ text == 1 ? '启用' : '禁用' }}</a-tag>
@@ -63,7 +69,7 @@
             <a-popconfirm title="是否要删除此行？" @confirm="remove(record.id)">
               <a>删除</a>
             </a-popconfirm>
-            <!-- <a-divider type="vertical" />
+          <!-- <a-divider type="vertical" />
             <a-dropdown>
               <a class="ant-dropdown-link">
                 更多 <a-icon type="down" />
@@ -93,7 +99,7 @@ export default {
     STable,
     infoModel
   },
-  data() {
+  data () {
     this.columns = columns
     return {
       // 高级搜索 展开/关闭
@@ -115,31 +121,28 @@ export default {
     }
   },
   methods: {
-    remove(key, multipleChoice) {
-      this.$http.delete('/sysDept', { data: { Id: key.toString() } }).then(res => {
+    remove (key) {
+      this.$http.delete('/sysDept', { data: { Ids: !key.length ? [key] : key } }).then(res => {
         if (res.code === 200) {
           this.$message.success('删除成功')
           this.$refs.table.refresh()
-          // 是否多选
-          if (multipleChoice) {
-            this.$refs.table.clearSelected()
-          }
+          this.$refs.table.clearSelected()
         }
       })
     },
-    handleOk() {
+    handleOk () {
       this.$refs.table.refresh()
     },
-    onSelectChange(selectedRowKeys, selectedRows) {
+    onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
-    toggleAdvanced() {
+    toggleAdvanced () {
       this.advanced = !this.advanced
     }
   },
   computed: {
-    rowSelection() {
+    rowSelection () {
       return {
         selectedRowKeys: this.selectedRowKeys,
         onChange: this.onSelectChange

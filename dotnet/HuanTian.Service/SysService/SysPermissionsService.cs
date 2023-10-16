@@ -15,8 +15,6 @@
 *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-using NPOI.Util;
-using System.Collections.Generic;
 using Yitter.IdGenerator;
 
 namespace HuanTian.Service;
@@ -61,22 +59,22 @@ public class SysPermissionsService : ISysPermissionsService, IDynamicApiControll
     {
         var entityList = input.Adapt<List<SysPermissionsDO>>();
         var count = 0;
-        foreach (var item in entityList.GroupBy(t => new { t.MenuId, t.Type }))
+        foreach (var item in entityList.GroupBy(t =>  t.MenuId))
         {
-            var codeGroup = item.Where(t => t.MenuId == item.Key.MenuId && t.Type == item.Key.Type).GroupBy(t => t.Code);
+            var codeGroup = item.Where(t => t.MenuId == item.Key).GroupBy(t =>new { t.Code ,t.Type});
             // 过滤是否有重复code
             if (codeGroup.Count() != item.Count())
             {
                 throw new Exception($"权限编码重复,请修改后再试");
             }
             // 先删除数据
-            await _sysPermissions.DeleteAsync(t => t.MenuId == item.Key.MenuId);
+            await _sysPermissions.DeleteAsync(t => t.MenuId == item.Key);
+            var codeList = codeGroup.SelectMany(group => group).ToList(); ;
             // 再添加数据
-            count += await _sysPermissions.InitTable(entityList.Where(t => t.MenuId == item.Key.MenuId))
+            count += await _sysPermissions.InitTable(codeList)
                 .CallEntityMethod(t => t.CreateFunc())
                 .AddAsync();
         }
-
         return count;
     }
     public async Task<int> Update(SysPermissionsFormInput input)
@@ -88,7 +86,7 @@ public class SysPermissionsService : ISysPermissionsService, IDynamicApiControll
     }
     public async Task<int> Delete(IdInput input)
     {
-        var count = await _sysPermissions.DeleteAsync(input.Id.Split(',').Adapt<long[]>());
+        var count = await _sysPermissions.DeleteAsync(input.Ids);
         return count;
     }
     public async Task<IEnumerable<SysPermissionsDO>> Get([FromQuery] SysPermissionsInput input)

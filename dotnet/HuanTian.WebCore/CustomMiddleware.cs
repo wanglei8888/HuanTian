@@ -24,6 +24,9 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
+
 namespace HuanTian.WebCore
 {
     /// <summary>
@@ -32,15 +35,15 @@ namespace HuanTian.WebCore
     public class CustomMiddleware
     {
         private readonly RequestDelegate _requestDelegate;
-
+        private readonly ILogger<CustomMiddleware> _logger;
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="requestDelegate">请求委托</param>
-        public CustomMiddleware(RequestDelegate requestDelegate)
+        public CustomMiddleware(RequestDelegate requestDelegate, ILogger<CustomMiddleware> logger)
         {
             _requestDelegate = requestDelegate;
-
+            _logger = logger;
         }
 
         /// <summary>
@@ -50,17 +53,7 @@ namespace HuanTian.WebCore
         /// <returns></returns>
         public async Task Invoke(HttpContext context, IServiceProvider serviceProvider)
         {
-            //try
-            //{
             await _requestDelegate(context);
-            //}
-            //catch (Exception ex)
-            //{
-            //    context.Response.StatusCode = 500;
-
-            //    //_log.Error("服务器错误:" + ex.Message);
-            //    //await ResponseHelper.HandleExceptionAsync(500, "服务器错误:" + ex.Message);
-            //}
         }
     }
 }

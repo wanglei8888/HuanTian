@@ -71,6 +71,11 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnName("order")
                         .HasComment("排序");
 
+                    b.Property<long>("TenantId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("tenant_id")
+                        .HasComment("租户ID");
+
                     b.Property<long?>("UpdateBy")
                         .HasColumnType("bigint")
                         .HasColumnName("update_by")
@@ -279,6 +284,21 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnName("parent_id")
                         .HasComment("父级部门id");
 
+                    b.Property<long>("TenantId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("tenant_id")
+                        .HasComment("租户ID");
+
+                    b.Property<long?>("UpdateBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("update_by")
+                        .HasComment("修改人");
+
+                    b.Property<DateTime?>("UpdateOn")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("update_on")
+                        .HasComment("修改时间");
+
                     b.HasKey("Id");
 
                     b.ToTable("sys_dept", t =>
@@ -385,6 +405,152 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         });
                 });
 
+            modelBuilder.Entity("HuanTian.Infrastructure.SysEmailTemplateDO", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<long?>("CreateBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("create_by")
+                        .HasComment("创建人");
+
+                    b.Property<DateTime?>("CreateOn")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("create_on")
+                        .HasComment("创建时间");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("deleted")
+                        .HasComment("软删除");
+
+                    b.Property<bool>("Enable")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("enable")
+                        .HasComment("是否启用");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("name")
+                        .HasComment("名称");
+
+                    b.Property<long>("TenantId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("tenant_id")
+                        .HasComment("租户ID");
+
+                    b.Property<long?>("UpdateBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("update_by")
+                        .HasComment("修改人");
+
+                    b.Property<DateTime?>("UpdateOn")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("update_on")
+                        .HasComment("修改时间");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("sys_email_template", t =>
+                        {
+                            t.HasComment("系统邮箱模板表");
+                        });
+                });
+
+            modelBuilder.Entity("HuanTian.Infrastructure.SysLogErrorDO", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreateOn")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("create_on")
+                        .HasComment("日志时间");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("int")
+                        .HasColumnName("level")
+                        .HasComment("日志等级 trace0、Debug1、Information2、Warning3、Error4、Critical5、None6");
+
+                    b.Property<string>("Msg")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("msg")
+                        .HasComment("日志信息");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("path")
+                        .HasComment("错误地址");
+
+                    b.Property<long>("TenantId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("tenant_id")
+                        .HasComment("租户ID");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id")
+                        .HasComment("用户ID");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("sys_log_error", t =>
+                        {
+                            t.HasComment("错误日志");
+                        });
+                });
+
+            modelBuilder.Entity("HuanTian.Infrastructure.SysLogInfoDO", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreateOn")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("create_on")
+                        .HasComment("日志时间");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("int")
+                        .HasColumnName("level")
+                        .HasComment("日志等级 trace0、Debug1、Information2、Warning3、Error4、Critical5、None6");
+
+                    b.Property<string>("Msg")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("msg")
+                        .HasComment("日志信息");
+
+                    b.Property<long>("TenantId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("tenant_id")
+                        .HasComment("租户ID");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id")
+                        .HasComment("用户ID");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("sys_log_info", t =>
+                        {
+                            t.HasComment("普通日志");
+                        });
+                });
+
             modelBuilder.Entity("HuanTian.Infrastructure.SysMenuDO", b =>
                 {
                     b.Property<long>("Id")
@@ -468,11 +634,26 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnName("show")
                         .HasComment("是否显示菜单");
 
+                    b.Property<long>("TenantId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("tenant_id")
+                        .HasComment("租户ID");
+
                     b.Property<string>("Title")
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)")
                         .HasColumnName("title")
                         .HasComment("菜单标题");
+
+                    b.Property<long?>("UpdateBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("update_by")
+                        .HasComment("修改人");
+
+                    b.Property<DateTime?>("UpdateOn")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("update_on")
+                        .HasComment("修改时间");
 
                     b.HasKey("Id");
 
@@ -594,8 +775,8 @@ namespace HuanTian.EntityFrameworkCore.Migrations
 
                     b.Property<string>("Describe")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("describe")
                         .HasComment("角色描述");
 
@@ -652,6 +833,76 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("sys_role_permissions");
+                });
+
+            modelBuilder.Entity("HuanTian.Infrastructure.SysTenantDO", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<long?>("CreateBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("create_by")
+                        .HasComment("创建人");
+
+                    b.Property<DateTime?>("CreateOn")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("create_on")
+                        .HasComment("创建时间");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("deleted")
+                        .HasComment("软删除");
+
+                    b.Property<string>("Describe")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("describe")
+                        .HasComment("描述");
+
+                    b.Property<string>("EmailConfig")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("email_config")
+                        .HasComment("邮件配置");
+
+                    b.Property<bool>("Enable")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("enable")
+                        .HasComment("是否启用");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("name")
+                        .HasComment("租户名字");
+
+                    b.Property<long>("TenantAdmin")
+                        .HasColumnType("bigint")
+                        .HasColumnName("tenant_admin")
+                        .HasComment("租户管理员");
+
+                    b.Property<long?>("UpdateBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("update_by")
+                        .HasComment("修改人");
+
+                    b.Property<DateTime?>("UpdateOn")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("update_on")
+                        .HasComment("修改时间");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("sys_tenant", t =>
+                        {
+                            t.HasComment("系统租户表");
+                        });
                 });
 
             modelBuilder.Entity("HuanTian.Infrastructure.SysUserDO", b =>

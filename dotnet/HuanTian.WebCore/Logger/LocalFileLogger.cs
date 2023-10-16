@@ -42,7 +42,7 @@ namespace HuanTian.WebCore
 
             basePath = Directory.GetCurrentDirectory().Replace("\\", "/") + "/Logs/";
 
-            if (Directory.Exists(basePath +"/Info/") == false)
+            if (Directory.Exists(basePath + "/Info/") == false)
             {
                 Directory.CreateDirectory(basePath + "/Info/");
                 Directory.CreateDirectory(basePath + "/Error/");
@@ -68,36 +68,16 @@ namespace HuanTian.WebCore
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
         {
-            if (IsEnabled(logLevel))
-            {   
-                if (state != null && state.ToString() != null)
-                {
-                    var logContent = state.ToString();
-
-                    if (logContent != null)
-                    {
-                        if (exception != null)
-                        {
-                            logContent = $"【报错信息 {logContent}】\r\n【报错内容 {exception?.Message}】\r\n【报错详情 {exception?.StackTrace}】";
-                        }
-                        var log = new
-                        {
-                            CreateTime = DateTime.UtcNow,
-                            Category = categoryName,
-                            Level = logLevel,
-                            Content = $"【时间】{DateTime.Now.ToString("HH-mm-ss-fff")} 【等级】{logLevel} 【内容】{logContent}"
-                        };
-
-                        //区分报错日志
-                        var logPath = basePath + "/Info/" + DateTime.UtcNow.ToString("yyyyMMdd") + ".log";
-                        if (log.Level == LogLevel.Error || log.Level == LogLevel.Debug)
-                        {
-                            logPath = basePath + "/Error/" + DateTime.UtcNow.ToString("yyyyMMdd") + ".log";
-                        }
-                        File.AppendAllText(logPath, log.Content + Environment.NewLine, Encoding.UTF8);
-                    }
-                }
-            }
+            var logInfo = new LogMQDto();
+            logInfo.Level = logLevel;
+            logInfo.Msg = state.ToString();
+            logInfo.Exception = exception;
+            logInfo.Path = categoryName;
+            logInfo.CreateOn = DateTime.Now;
+            logInfo.UserId = App.GetUserId();
+            logInfo.TenantId = App.GetTenantId();
+            // 发送到消息队列
+            LogMQ.SendMQ(logInfo.ToJsonString());
         }
     }
 }

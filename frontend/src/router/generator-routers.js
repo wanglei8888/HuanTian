@@ -51,7 +51,7 @@ const constantRouterComponents = {
 
   // Other
   IconSelectorView: () => import('@/views/other/IconSelectorView'),
-  TableInnerEditList: () => import('@/views/other/TableInnerEditList'),
+  TableInnerEditList: () => import('@/views/other/TableInnerEditList')
 }
 
 // 前端未找到页面路由（固定不用改）
@@ -114,7 +114,7 @@ export const generator = (routerMap, parent) => {
       // 如果路由设置了 path，则作为默认 path，否则 路由地址 动态拼接生成如 /dashboard/workplace
       path: item.path || `${(parent && parent.path) || ''}/${item.key}`,
       // 路由名称，建议唯一
-      name: item.name || item.key || '',
+      name: item.key || item.name || '',
       appCode: item.menuType,
       // 该路由对应页面的 组件 :方案1
       // component: constantRouterComponents[item.component || item.key],
@@ -127,7 +127,7 @@ export const generator = (routerMap, parent) => {
         hiddenHeaderContent: hiddenHeaderContent,
         target: target,
         permission: item.id,
-        keepAlive: false
+        keepAlive: item.meta.keepAlive
       }
     }
     // 是否设置了隐藏菜单
@@ -144,6 +144,12 @@ export const generator = (routerMap, parent) => {
     }
     // 重定向
     item.redirect && (currentRouter.redirect = item.redirect)
+    if (item.name === '系统管理') {
+      console.log('系统管理', item)
+    }
+    if (item.name === 'result') {
+      console.log('result', item)
+    }
     // 是否有子菜单，并递归处理
     if (item.children && item.children.length > 0) {
       // Recursion

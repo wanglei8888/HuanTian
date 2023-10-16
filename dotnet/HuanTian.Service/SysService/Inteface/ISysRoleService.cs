@@ -53,6 +53,36 @@ public interface ISysRoleService
     /// <returns></returns>
     Task<IEnumerable<SysRoleDO>> Get(SysRoleInput input);
     /// <summary>
+    /// 新增角色权限
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<int> AddRolePerms(RolePermsInput input);
+    /// <summary>
+    /// 新增角色菜单
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<int> AddRoleMenu(RoleMenuInput input);
+    /// <summary>
+    /// 获取用户角色
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    Task<IEnumerable<SysRoleDO>> UserRole(params long[] userId);
+    /// <summary>
+    /// 删除用户角色权限
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    Task<int> DeleteUserRole(params long[] userId);
+    /// <summary>
+    /// 新增用户角色
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<int> AddUserRole(SysUserRoleInput input);
+    /// <summary>
     /// 获取角色权限-按钮格式
     /// </summary>
     /// <param name="input"></param>

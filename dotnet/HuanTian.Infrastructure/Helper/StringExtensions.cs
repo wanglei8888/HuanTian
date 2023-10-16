@@ -24,6 +24,7 @@
 #endregion << 版 本 注 释 >>
 
 using HuanTian.Infrastructure;
+using SqlSugar.Extensions;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -161,7 +162,11 @@ namespace HuanTian.Infrastructure
             var sumMinuts = 0;
             foreach (var item in array)
             {
-                sumMinuts += Convert.ToInt32(item);
+                if (sumMinuts == 0) {
+                    sumMinuts = array[0].ObjToInt();
+                    continue;
+                }
+                sumMinuts *= item.ObjToInt();
             }
             return type switch
             {
@@ -194,6 +199,26 @@ namespace HuanTian.Infrastructure
             }
 
             return result.ToString();
+        }
+        /// <summary>
+        /// 表格实体类去除前后缀
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string EntityRemovePrefixAndSuffix(this string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+
+            var words = Regex.Split(input.Substring(0, input.Length - 2), @"(?<!^)(?=[A-Z])|_"); // 使用正则表达式拆分单词
+            var newWords = words.ToList();
+            newWords.RemoveAt(0);
+
+            var result = string.Join("", words.ToList());
+
+            return result;
         }
         /// <summary>
         /// 字符串转换为驼峰命名方式

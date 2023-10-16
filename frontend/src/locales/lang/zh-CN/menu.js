@@ -21,6 +21,8 @@ export default {
     'menu.list.search-list.projects': '搜索列表（项目）',
     'menu.list.search-list.applications': '搜索列表（应用）',
     // 新加
+    '业务应用': '业务应用',
+    '系统应用': '系统应用',
     'menu.system': '系统管理',
     'menu.system.menuList': '菜单列表',
     'menu.system.permissionList': '权限列表',
@@ -28,8 +30,11 @@ export default {
     'menu.system.userList': '用户列表',
     'menu.system.dicList': '字典列表',
     'menu.system.codeGen': '代码生成',
-    'menu.system.sysApps': '应用列表',
+    'menu.system.tenant': '租户列表',
+    'menu.setting': '项目配置',
+    'menu.system.apps': '应用列表',
     'menu.system.dept': '部门列表',
+    'menu.system.emailTemplate': '邮件模板',
     'menu.other.IconSelector': '图标列表',
     // 新加
     'menu.profile': '详情页',

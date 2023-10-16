@@ -22,7 +22,7 @@ namespace HuanTian.Service;
 /// <summary>
 /// SysRole输入参数
 /// </summary>
-public class SysRoleInput : PageInput
+public class SysRoleInput : IPageInput
 {
     /// <summary>
     /// RoleId
@@ -43,6 +43,13 @@ public class SysRoleInput : PageInput
 public class SysRoleFormInput : SysRoleDO
 {
        
+}
+public class SysUserRoleInput
+{
+    [Required(ErrorMessage = "RoleId不能为空")]
+    public long[] RoleId { get; set; }
+    [Required(ErrorMessage = "UserId不能为空")]
+    public long UserId { get; set; }
 }
 /// <summary>
 /// 角色菜单入参

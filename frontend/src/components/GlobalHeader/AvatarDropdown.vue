@@ -49,8 +49,8 @@ export default {
     handleToSettings () {
       this.$router.push({ path: '/account/settings' })
     },
-    loadError(){
-      this.currentUser.avatar= "https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png"
+    loadError () {
+      this.currentUser.avatar = 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png'
     },
     handleLogout (e) {
       Modal.confirm({

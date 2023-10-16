@@ -11,7 +11,9 @@ export default {
     return {}
   },
   render () {
-    const { $route: { meta }, $store: { getters } } = this
+    const { $route: { meta, name }, $store: { getters } } = this
+    console.log('meta.keepAlive', meta)
+    console.log('meta.keepAlive2', name)
     const inKeep = (
       <keep-alive>
         <router-view />
@@ -26,7 +28,7 @@ export default {
     if (!getters.multiTab && !meta.keepAlive) {
       return notKeep
     }
-    return this.keepAlive || getters.multiTab || meta.keepAlive ? inKeep : notKeep
+    return meta.keepAlive ? inKeep : notKeep
   }
 }
 </script>

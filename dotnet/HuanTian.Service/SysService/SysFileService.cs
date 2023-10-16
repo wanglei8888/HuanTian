@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace HuanTian.Service
+﻿namespace HuanTian.Service
 {
     public class SysFileService : IDynamicApiController
     {

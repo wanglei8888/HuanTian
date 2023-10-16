@@ -66,7 +66,7 @@ export default {
     dicModal,
     dicDetailModal
   },
-  data() {
+  data () {
     return {
       // 查询参数
       queryParam: {},
@@ -84,32 +84,31 @@ export default {
       statusDict: []
     }
   },
-  created() {
+  created () {
 
   },
   methods: {
-    remove(key) {
-      this.$http.delete('/sysDic', { data: { id: key.toString() } }).then(res => {
+    remove (key) {
+      this.$http.delete('/sysDic', { data: { Ids: !key.length ? [key] : key } }).then(res => {
         if (res.code === 200) {
           this.$message.success('删除成功')
           this.$refs.table.refresh()
         }
       })
     },
-    handleOk() {
+    handleOk () {
       this.$refs.table.refresh()
     }
   },
   filters: {
-    enableFilter(type) {
+    enableFilter (type) {
       if (type === true) {
         return '启用'
-      }
-      else {
+      } else {
         return '禁用'
       }
     }
-  },
+  }
 }
 const columns = [
   {
