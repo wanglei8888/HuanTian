@@ -136,7 +136,7 @@ namespace HuanTian.Service
             {
                 count += await _sysDicDetail.InitTable(input.SysDicDetail)
                 .CallEntityMethod(t => t.CreateFunc())
-                .CallEntityMethod(t => t.SetPropertyValue<SysDicDetailDO, long>(q => q.MasterId, input.MasterId))
+                .CallEntityMethod(t => t.SetValue<SysDicDetailDO>(q => q.MasterId == input.MasterId))
                 .AddAsync();
             }
             return count;

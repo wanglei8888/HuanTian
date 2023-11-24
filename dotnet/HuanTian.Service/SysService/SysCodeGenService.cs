@@ -122,7 +122,7 @@ namespace HuanTian.Service
             // 保存数据
             var count = await _codeGen.InitTable(entity)
                 .CallEntityMethod(t => t.CreateFunc())
-                .CallEntityMethod(t => t.SetPropertyValue<SysCodeGenDO, long>(t => t.Id, id))
+                .CallEntityMethod(t => t.SetValue<SysCodeGenDO>(t => t.Id == id))
                 .AddAsync();
             count += await _codeGenDetail.InitTable(detailList)
                .CallEntityMethod(t => t.CreateFunc())

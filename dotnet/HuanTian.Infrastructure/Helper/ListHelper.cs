@@ -27,6 +27,7 @@ using NPOI.Util;
 using NPOI.XSSF.UserModel;
 using System.Collections;
 using System.Data;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
@@ -241,6 +242,68 @@ namespace HuanTian.Infrastructure
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             workbook.Write(stream);
             return stream;
+        }
+
+        /// <summary>
+        /// 为集合里的所有实体赋值
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="propertyExpression"></param>
+        public static void SetValue<TEntity>(this IEnumerable<TEntity> list, Expression<Func<TEntity, bool>> propertyExpression)
+        {
+            foreach (var item in list)
+            {
+                // 切割lamboda表达式
+                var conditions = new List<Expression>();
+                if (propertyExpression.Body is BinaryExpression binaryExpression1)
+                {
+                    ExtractConditionsRecursively(binaryExpression1, conditions);
+                }
+                // 循环设置属性值
+                foreach (var condition in conditions)
+                {
+                    if (condition is BinaryExpression binaryExpression)
+                    {
+                        if (binaryExpression.Left is MemberExpression memberExpression)
+                        {
+                            var propertyValue = Expression.Lambda(binaryExpression.Right).Compile().DynamicInvoke();
+                            var propertyInfo = memberExpression.Member as PropertyInfo;
+                            if (propertyInfo != null)
+                            {
+                                // Assuming 'this' refers to the current instance of the class
+                                propertyInfo.SetValue(item, propertyValue);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        /// <summary>
+        /// 切割lamboda表达式
+        /// </summary>
+        /// <param name="binaryExpression"></param>
+        /// <param name="conditions"></param>
+        private static void ExtractConditionsRecursively(BinaryExpression binaryExpression, List<Expression> conditions)
+        {
+            if (binaryExpression == null)
+            {
+                return;
+            }
+            if (binaryExpression.Left is MemberExpression memberExpression)
+            {
+                conditions.Add(binaryExpression);
+            }
+
+            if (binaryExpression.Left is BinaryExpression leftBinaryExpression)
+            {
+                ExtractConditionsRecursively(leftBinaryExpression, conditions);
+            }
+
+            if (binaryExpression.Right is BinaryExpression rightBinaryExpression)
+            {
+                ExtractConditionsRecursively(rightBinaryExpression, conditions);
+            }
         }
     }
 }

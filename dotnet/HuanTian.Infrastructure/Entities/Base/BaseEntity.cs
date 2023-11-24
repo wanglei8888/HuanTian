@@ -2,6 +2,7 @@
 using SqlSugar;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
+using System.Reflection;
 using Yitter.IdGenerator;
 
 namespace HuanTian.Infrastructure
@@ -29,21 +30,60 @@ namespace HuanTian.Infrastructure
             Deleted = false;
         }
         /// <summary>
-        /// 设置属性的值-大量数据请勿使用,性能较差
+        /// 设定属性值，支持多列与符号隔开
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="propertyExpression"></param>
-        /// <param name="value"></param>
-        public virtual void SetPropertyValue<T, TValue>(Expression<Func<T, TValue>> propertyExpression, TValue value)
+        public virtual void SetValue<TValue>(Expression<Func<TValue, bool>> propertyExpression)
         {
-            if (propertyExpression.Body is MemberExpression memberExpression)
+            // 切割lamboda表达式
+            var conditions = new List<Expression>();
+            if (propertyExpression.Body is BinaryExpression binaryExpression1)
             {
-                var propertyInfo = memberExpression.Member as System.Reflection.PropertyInfo;
-                if (propertyInfo != null)
+                ExtractConditionsRecursively(binaryExpression1, conditions);
+            }
+            // 循环设置属性值
+            foreach (var condition in conditions)
+            {
+                if (condition is BinaryExpression binaryExpression)
                 {
-                    propertyInfo.SetValue(this, value);
+                    if (binaryExpression.Left is MemberExpression memberExpression)
+                    {
+                        var propertyValue = Expression.Lambda(binaryExpression.Right).Compile().DynamicInvoke();
+                        var propertyInfo = memberExpression.Member as PropertyInfo;
+                        if (propertyInfo != null)
+                        {
+                            // Assuming 'this' refers to the current instance of the class
+                            propertyInfo.SetValue(this, propertyValue);
+                        }
+                    }
                 }
+            }
+        }
+        /// <summary>
+        /// 切割lamboda表达式
+        /// </summary>
+        /// <param name="binaryExpression"></param>
+        /// <param name="conditions"></param>
+        private void ExtractConditionsRecursively(BinaryExpression binaryExpression, List<Expression> conditions)
+        {
+            if (binaryExpression == null)
+            {
+                return;
+            }
+            if (binaryExpression.Left is MemberExpression memberExpression)
+            {
+                conditions.Add(binaryExpression);
+            }
+
+            if (binaryExpression.Left is BinaryExpression leftBinaryExpression)
+            {
+                ExtractConditionsRecursively(leftBinaryExpression, conditions);
+            }
+
+            if (binaryExpression.Right is BinaryExpression rightBinaryExpression)
+            {
+                ExtractConditionsRecursively(rightBinaryExpression, conditions);
             }
         }
     }
