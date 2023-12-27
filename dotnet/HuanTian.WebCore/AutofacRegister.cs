@@ -24,11 +24,6 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 using Autofac;
-using Autofac.Core.Lifetime;
-using Autofac.Core;
-using HuanTian.EntityFrameworkCore;
-using HuanTian.SqlSugar;
-using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HuanTian.WebCore

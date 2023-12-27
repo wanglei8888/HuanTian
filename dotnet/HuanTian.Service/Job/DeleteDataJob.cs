@@ -44,6 +44,7 @@ namespace HuanTian.Service.Job
         }
         public override async Task OnStart(JobContext jobContext)
         {
+            var test1 = App.HttpContext.Request;
             var param = JsonSerializer.Deserialize<DeleteDataInput>(jobContext.Param);
             if (string.IsNullOrEmpty(param?.TableName))
             {

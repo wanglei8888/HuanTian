@@ -27,6 +27,7 @@ using NPOI.Util;
 using NPOI.XSSF.UserModel;
 using System.Collections;
 using System.Data;
+using System.Dynamic;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
@@ -304,6 +305,95 @@ namespace HuanTian.Infrastructure
             {
                 ExtractConditionsRecursively(rightBinaryExpression, conditions);
             }
+        }
+        /// <summary>
+        /// 行转列
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TColumn"></typeparam>
+        /// <typeparam name="TRow"></typeparam>
+        /// <typeparam name="TData"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="columnSelector">根据此列转换</param>
+        /// <param name="rowSelector">显示的字段</param>
+        /// <param name="dataSelector">分组的值处理</param>
+        /// <returns></returns>
+        public static List<dynamic> ToPivotArray<T, TColumn, TRow, TData>(this IEnumerable<T> source,
+            Func<T, TColumn> columnSelector,
+            Expression<Func<T, TRow>> rowSelector,
+            Func<IEnumerable<T>, TData> dataSelector)
+        {
+            var arr = new List<object>();
+            var cols = new List<string>();
+            var rowNames = GetMemberNames(rowSelector.Body);
+            var columns = source.Select(columnSelector).Distinct();
+            cols = (rowNames).Concat(columns.Select(x => x.ToString())).ToList();
+
+            var rows = source.GroupBy(rowSelector.Compile())
+                             .Select(rowGroup => new
+                             {
+                                 Key = rowGroup.Key,
+                                 Values = columns.GroupJoin(
+                                     rowGroup,
+                                     c => c,
+                                     r => columnSelector(r),
+                                     (c, columnGroup) => dataSelector(columnGroup))
+                             }).ToArray();
+
+            foreach (var row in rows)
+            {
+                var items = row.Values.Cast<object>().ToList();
+                var param = GetParamaas(row.Key.ToString());
+                items.InsertRange(0, param);
+                var obj = GetAnonymousObject(cols, items);
+                arr.Add(obj);
+            }
+            return arr;
+        }
+        private static IEnumerable<string> GetMemberNames(Expression expression)
+        {
+            if (expression is NewExpression newExpression)
+            {
+                return newExpression.Members.Select(m => m.Name);
+            }
+            else if (expression is MemberInitExpression memberInitExpression)
+            {
+                return memberInitExpression.Bindings.Select(b => b.Member.Name);
+            }
+            else
+            {
+                throw new ArgumentException("Invalid expression type. Only NewExpression and MemberInitExpression are supported.");
+            }
+        }
+        private static List<object> GetParamaas(string paramasString)
+        {
+            // 去除字符串中的空格和大括号
+            string trimmedInput = paramasString.Replace("{", "").Replace("}", "").Trim();
+
+            // 分割字符串成键值对数组
+            string[] keyValuePairs = trimmedInput.Split(',');
+
+            // 创建结果集合
+            List<object> result = new List<object>();
+
+            // 遍历键值对数组，提取值部分并去除空格
+            foreach (string keyValuePair in keyValuePairs)
+            {
+                string[] parts = keyValuePair.Split('=');
+                string value = parts[1].Trim();
+                result.Add(value);
+            }
+            return result;
+        }
+        private static dynamic GetAnonymousObject(IEnumerable<string> columns, IEnumerable<object> values)
+        {
+            IDictionary<string, object> eo = new ExpandoObject() as IDictionary<string, object>;
+            int i;
+            for (i = 0; i < columns.Count(); i++)
+            {
+                eo.Add(columns.ElementAt<string>(i), values.ElementAt<object>(i));
+            }
+            return eo;
         }
     }
 }
