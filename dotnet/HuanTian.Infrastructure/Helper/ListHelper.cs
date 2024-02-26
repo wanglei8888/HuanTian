@@ -246,33 +246,48 @@ namespace HuanTian.Infrastructure
         }
 
         /// <summary>
-        /// 为集合里的所有实体赋值
+        /// 为集合里的所有实体赋值   
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="list"></param>
         /// <param name="propertyExpression"></param>
         public static void SetValue<TEntity>(this IEnumerable<TEntity> list, Expression<Func<TEntity, bool>> propertyExpression)
         {
-            foreach (var item in list)
+
+            // 示例:
+            // list.SetValue(t => t.ApprovalStatus == RfqApprovalStatusEnum.NotSent && t.Name == "张三");
+            // item.Detail.Where(t => string.IsNullOrEmpty(t.SupplierCode)).SetValue(t => t.ApprovalStatus == RfqApprovalStatusEnum.NoSupplier);
+
+            foreach (var item in list) // 遍历集合
             {
                 // 切割lamboda表达式
                 var conditions = new List<Expression>();
-                if (propertyExpression.Body is BinaryExpression binaryExpression1)
-                {
-                    ExtractConditionsRecursively(binaryExpression1, conditions);
-                }
-                // 循环设置属性值
-                foreach (var condition in conditions)
+                ExtractConditionsRecursively(propertyExpression.Body, conditions);
+                
+                foreach (var condition in conditions) // 循环表达式
                 {
                     if (condition is BinaryExpression binaryExpression)
                     {
-                        if (binaryExpression.Left is MemberExpression memberExpression)
+                        var memberExpression = GetMemberExpression(binaryExpression.Left);
+                        if (memberExpression != null)
                         {
-                            var propertyValue = Expression.Lambda(binaryExpression.Right).Compile().DynamicInvoke();
+                            var propertyValue = GetValueFromExpression(binaryExpression.Right);
                             var propertyInfo = memberExpression.Member as PropertyInfo;
                             if (propertyInfo != null)
                             {
-                                // Assuming 'this' refers to the current instance of the class
+                                // 判断枚举类型
+                                Type propertyType = propertyInfo.PropertyType;
+                                if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>) &&
+                                    Nullable.GetUnderlyingType(propertyType).IsEnum)
+                                {
+                                    // 如果是枚举类型，转换成枚举
+                                    propertyType = Nullable.GetUnderlyingType(propertyType);
+                                    if (propertyType.IsEnum)
+                                    {
+                                        propertyValue = Enum.ToObject(propertyType, propertyValue);
+                                    }
+                                }
+                                // 赋值
                                 propertyInfo.SetValue(item, propertyValue);
                             }
                         }
@@ -283,31 +298,44 @@ namespace HuanTian.Infrastructure
         /// <summary>
         /// 切割lamboda表达式
         /// </summary>
-        /// <param name="binaryExpression"></param>
+        /// <param name="expression"></param>
         /// <param name="conditions"></param>
-        private static void ExtractConditionsRecursively(BinaryExpression binaryExpression, List<Expression> conditions)
+        private static void ExtractConditionsRecursively(Expression expression, List<Expression> conditions)
         {
-            if (binaryExpression == null)
+            if (expression is BinaryExpression binaryExpression)
             {
-                return;
+                conditions.Add(expression);
+                ExtractConditionsRecursively(binaryExpression.Left, conditions);
+                ExtractConditionsRecursively(binaryExpression.Right, conditions);
             }
-            if (binaryExpression.Left is MemberExpression memberExpression)
-            {
-                conditions.Add(binaryExpression);
-            }
+        }
 
-            if (binaryExpression.Left is BinaryExpression leftBinaryExpression)
+        private static MemberExpression GetMemberExpression(Expression expression)
+        {
+            if (expression is MemberExpression memberExpression)
             {
-                ExtractConditionsRecursively(leftBinaryExpression, conditions);
+                return memberExpression;
             }
-
-            if (binaryExpression.Right is BinaryExpression rightBinaryExpression)
+            else if (expression is UnaryExpression unaryExpression && unaryExpression.Operand is MemberExpression nestedMemberExpression)
             {
-                ExtractConditionsRecursively(rightBinaryExpression, conditions);
+                return nestedMemberExpression;
+            }
+            return null;
+        }
+
+        private static object GetValueFromExpression(Expression expression)
+        {
+            if (expression is ConstantExpression constantExpression)
+            {
+                return constantExpression.Value;
+            }
+            else
+            {
+                return Expression.Lambda(expression).Compile().DynamicInvoke();
             }
         }
         /// <summary>
-        /// 行转列
+        /// 行转列  
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TColumn"></typeparam>
@@ -323,10 +351,16 @@ namespace HuanTian.Infrastructure
             Expression<Func<T, TRow>> rowSelector,
             Func<IEnumerable<T>, TData> dataSelector)
         {
+            // 示例 :  
+            // var data = dataList.ToPivotArray(t => t.ApprovalStatus,
+            // t => new { t.RfqNo, t.RfqStatus, t.SupplierName, t.SupplierCode, t.CreatedTime, t.Id },
+            // t => t.Any() ? t.Sum(item => item.Count.ParseToLong()) : 0);
+
             var arr = new List<object>();
             var cols = new List<string>();
             var rowNames = GetMemberNames(rowSelector.Body);
             var columns = source.Select(columnSelector).Distinct();
+
             cols = (rowNames).Concat(columns.Select(x => x.ToString())).ToList();
 
             var rows = source.GroupBy(rowSelector.Compile())
