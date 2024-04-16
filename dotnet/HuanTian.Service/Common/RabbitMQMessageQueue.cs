@@ -88,7 +88,7 @@ namespace HuanTian.Service
                 }
                 catch (Exception ex)
                 {
-                    errorMsg = $"消息队列-{_queueName}-处理异常:异常信息为:{ex.Message}";
+                    errorMsg = $"异步消息队列-{_queueName}-处理异常:异常信息为:{ex.Message}";
                     _logger.LogError(errorMsg, ex);
                 }
                 // 如果成功则确认消息
@@ -150,7 +150,7 @@ namespace HuanTian.Service
                 }
                 catch (Exception ex)
                 {
-                    errorMsg = $"消息队列-{_queueName}-处理异常:异常信息为:{ex.Message}";
+                    errorMsg = $"同步消息队列-{_queueName}-处理异常:异常信息为:{ex.Message}";
                     App.GetService<ILogger<RabbitMQMessageQueue>>().LogError(errorMsg);
                 }
                 // 如果成功则确认消息

@@ -86,9 +86,11 @@ namespace HuanTian.WebCore
                     {
                         // 测试环境下打印Sql
 #if DEBUG
+                        if (sql.Contains("sys_log_info"))
+                            return;
                         Console.ForegroundColor = ConsoleColor.Blue;
                         Console.WriteLine("--------------------------------------------------------------");
-
+                          
                         if (sql.StartsWith("SELECT"))
                         {
                             Console.ForegroundColor = ConsoleColor.Green;

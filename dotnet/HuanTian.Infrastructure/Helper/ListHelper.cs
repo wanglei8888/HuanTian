@@ -337,7 +337,7 @@ namespace HuanTian.Infrastructure
         /// <summary>
         /// 行转列  
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TColumn"></typeparam>
         /// <typeparam name="TRow"></typeparam>
         /// <typeparam name="TData"></typeparam>
@@ -346,10 +346,10 @@ namespace HuanTian.Infrastructure
         /// <param name="rowSelector">显示的字段</param>
         /// <param name="dataSelector">分组的值处理</param>
         /// <returns></returns>
-        public static List<dynamic> ToPivotArray<T, TColumn, TRow, TData>(this IEnumerable<T> source,
-            Func<T, TColumn> columnSelector,
-            Expression<Func<T, TRow>> rowSelector,
-            Func<IEnumerable<T>, TData> dataSelector)
+        public static List<dynamic> ToPivotArray<TEntity, TColumn, TRow, TData>(this IEnumerable<TEntity> source,
+            Func<TEntity, TColumn> columnSelector,
+            Expression<Func<TEntity, TRow>> rowSelector,
+            Func<IEnumerable<TEntity>, TData> dataSelector)
         {
             // 示例 :  
             // var data = dataList.ToPivotArray(t => t.ApprovalStatus,
@@ -377,13 +377,19 @@ namespace HuanTian.Infrastructure
             foreach (var row in rows)
             {
                 var items = row.Values.Cast<object>().ToList();
-                var param = GetParamaas(row.Key.ToString());
+                var param = GetParamaas<TEntity>(row.Key.ToString());
                 items.InsertRange(0, param);
                 var obj = GetAnonymousObject(cols, items);
                 arr.Add(obj);
             }
             return arr;
         }
+        /// <summary>
+        /// 获取成员名称
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         private static IEnumerable<string> GetMemberNames(Expression expression)
         {
             if (expression is NewExpression newExpression)
@@ -399,7 +405,13 @@ namespace HuanTian.Infrastructure
                 throw new ArgumentException("Invalid expression type. Only NewExpression and MemberInitExpression are supported.");
             }
         }
-        private static List<object> GetParamaas(string paramasString)
+        /// <summary>
+        /// 获取参数值
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="paramasString"></param>
+        /// <returns></returns>
+        private static List<object> GetParamaas<TEntity>(string paramasString)
         {
             // 去除字符串中的空格和大括号
             string trimmedInput = paramasString.Replace("{", "").Replace("}", "").Trim();
@@ -414,11 +426,32 @@ namespace HuanTian.Infrastructure
             foreach (string keyValuePair in keyValuePairs)
             {
                 string[] parts = keyValuePair.Split('=');
+                string key = parts[0].Trim();
                 string value = parts[1].Trim();
+
+                // 根据属性名检查是否为枚举类型，如果是，尝试将值转换为枚举数值表示
+                var property = typeof(TEntity).GetProperty(key);
+                if (property != null && property.PropertyType.IsEnum)
+                {
+                    // 尝试将值转换为枚举数值表示
+                    if (Enum.TryParse(property.PropertyType, value, out object enumValue))
+                    {
+                        result.Add(Convert.ChangeType(enumValue, Enum.GetUnderlyingType(property.PropertyType)));
+                        continue;
+                    }
+                }
+
+                // 如果不是枚举类型，或者转换失败，则保持原始值
                 result.Add(value);
             }
             return result;
         }
+        /// <summary>
+        /// 获取匿名对象值
+        /// </summary>
+        /// <param name="columns"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
         private static dynamic GetAnonymousObject(IEnumerable<string> columns, IEnumerable<object> values)
         {
             IDictionary<string, object> eo = new ExpandoObject() as IDictionary<string, object>;
