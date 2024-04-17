@@ -11,7 +11,7 @@
  Target Server Version : 50742 (5.7.42)
  File Encoding         : 65001
 
- Date: 31/08/2023 14:45:02
+ Date: 17/04/2024 09:09:15
 */
 
 SET NAMES utf8mb4;
@@ -37,6 +37,30 @@ INSERT INTO `__EFMigrationsHistory` VALUES ('20230814135811_update_business', '7
 INSERT INTO `__EFMigrationsHistory` VALUES ('20230825094418_add_syslog', '7.0.5');
 INSERT INTO `__EFMigrationsHistory` VALUES ('20230828022415_add_log_table', '7.0.5');
 INSERT INTO `__EFMigrationsHistory` VALUES ('20230828085804_add_log_table2', '7.0.5');
+INSERT INTO `__EFMigrationsHistory` VALUES ('20230914025342_test_product', '7.0.5');
+
+-- ----------------------------
+-- Table structure for product
+-- ----------------------------
+DROP TABLE IF EXISTS `product`;
+CREATE TABLE `product`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '商品名称',
+  `price` decimal(65, 30) NOT NULL COMMENT '商品价格',
+  `inventory` int(11) NOT NULL COMMENT '商品库存',
+  `deleted` tinyint(1) NOT NULL COMMENT '软删除',
+  `create_by` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
+  `create_on` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` bigint(20) NULL DEFAULT NULL COMMENT '修改人',
+  `update_on` datetime(6) NULL DEFAULT NULL COMMENT '修改时间',
+  `tenant_id` bigint(20) NOT NULL COMMENT '租户ID',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 123124 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成数据详情表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of product
+-- ----------------------------
+INSERT INTO `product` VALUES (123123, 'iphone14', 6999.000000000000000000000000000000, 3, 0, NULL, NULL, NULL, NULL, 449900948840517);
 
 -- ----------------------------
 -- Table structure for sys_apps
@@ -80,17 +104,11 @@ CREATE TABLE `sys_code_gen`  (
   `create_by` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
   `create_on` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 448837533311046 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成数据表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 516743354974278 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成数据表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_code_gen
 -- ----------------------------
-INSERT INTO `sys_code_gen` VALUES (417244902194618, '系统角色页面', 'sys_role', 0, 0, 0, NULL, NULL);
-INSERT INTO `sys_code_gen` VALUES (417244902194619, '系统权限页面', 'sys_permissions', 0, 1, 0, NULL, NULL);
-INSERT INTO `sys_code_gen` VALUES (436088202891333, '系统部门列表', 'sys_dept', 0, 1, 0, 417244902117446, '2023-07-06 16:27:31.415000');
-INSERT INTO `sys_code_gen` VALUES (443511585738821, '菜单应用列表', 'sys_apps', 417244902117898, 0, 0, 417244902117446, '2023-07-27 15:53:19.319000');
-INSERT INTO `sys_code_gen` VALUES (447769655644229, '邮件模板', 'sys_email_template', 0, 0, 0, 417244902117446, '2023-08-08 16:39:25.643413');
-INSERT INTO `sys_code_gen` VALUES (448837533311045, '租户列表', 'sys_tenant', 417244902117898, 0, 0, 417244902117446, '2023-08-11 17:04:37.975251');
 
 -- ----------------------------
 -- Table structure for sys_code_gen_detail
@@ -112,42 +130,11 @@ CREATE TABLE `sys_code_gen_detail`  (
   `frontend_type` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '前端显示类型',
   `order` int(11) NOT NULL DEFAULT 0 COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 448837533794378 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成数据详情表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 458637251932231 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成数据详情表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_code_gen_detail
 -- ----------------------------
-INSERT INTO `sys_code_gen_detail` VALUES (417244902111091, 417244902194618, 'bigint', 'id', 'Id', '', 1, 0, NULL, NULL, '', 0, '', 0);
-INSERT INTO `sys_code_gen_detail` VALUES (417244902111092, 417244902194618, 'varchar', 'role_name', '角色名字', '', 1, 0, NULL, NULL, '', 0, '', 0);
-INSERT INTO `sys_code_gen_detail` VALUES (417244902111093, 417244902194618, 'varchar', 'describe', '角色描述', '', 0, 0, NULL, NULL, '', 0, '', 0);
-INSERT INTO `sys_code_gen_detail` VALUES (417244902111094, 417244902194618, 'int', 'status', '角色状态', '', 0, 0, NULL, NULL, '', 0, '', 0);
-INSERT INTO `sys_code_gen_detail` VALUES (417244902111095, 417244902194618, 'tinyint', 'deleted', '软删除', '', 0, 0, NULL, NULL, '', 0, '', 0);
-INSERT INTO `sys_code_gen_detail` VALUES (417244902111096, 417244902194618, 'bigint', 'create_by', '创建人', '', 0, 0, NULL, NULL, '', 0, '', 0);
-INSERT INTO `sys_code_gen_detail` VALUES (417244902111097, 417244902194618, 'datetime', 'create_on', '创建时间', '', 0, 0, NULL, NULL, '', 0, '', 0);
-INSERT INTO `sys_code_gen_detail` VALUES (417244902111098, 417244902194619, 'bigint', 'id', 'Id', '', 1, 0, NULL, NULL, '', 0, '', 0);
-INSERT INTO `sys_code_gen_detail` VALUES (417244902111099, 417244902194619, 'varchar', 'code', '权限code', '', 1, 0, NULL, NULL, '', 0, '', 0);
-INSERT INTO `sys_code_gen_detail` VALUES (417244902111100, 417244902194619, 'varchar', 'name', '权限名称', '', 1, 0, NULL, NULL, '', 0, '', 0);
-INSERT INTO `sys_code_gen_detail` VALUES (417244902111101, 417244902194619, 'tinyint', 'deleted', '软删除', '', 0, 0, NULL, NULL, '', 0, '', 0);
-INSERT INTO `sys_code_gen_detail` VALUES (417244902111102, 417244902194619, 'bigint', 'create_by', '创建人', '', 0, 0, NULL, NULL, '', 0, '', 0);
-INSERT INTO `sys_code_gen_detail` VALUES (417244902111103, 417244902194619, 'datetime', 'create_on', '创建时间', '', 0, 0, NULL, NULL, '', 0, '', 0);
-INSERT INTO `sys_code_gen_detail` VALUES (417244902111104, 417244902194619, 'bigint', 'menu_id', '菜单id', '', 0, 0, NULL, NULL, '', 0, '', 0);
-INSERT INTO `sys_code_gen_detail` VALUES (417244902111105, 417244902194619, 'int', 'type', '权限类型', '', 0, 0, NULL, NULL, '', 0, '', 0);
-INSERT INTO `sys_code_gen_detail` VALUES (436088221413445, 436088202891333, 'bigint', 'parent_id', '父级部门id', NULL, 0, 0, 417244902117446, '2023-07-06 16:27:32.951000', NULL, 1, 'textBox', 0);
-INSERT INTO `sys_code_gen_detail` VALUES (436088221413446, 436088202891333, 'varchar', 'name', '部门名字', '', 1, 0, 417244902117446, '2023-07-06 16:27:32.951000', 'like', 1, 'textBox', 1);
-INSERT INTO `sys_code_gen_detail` VALUES (436088221413447, 436088202891333, 'varchar', 'describe', '部门描述', NULL, 0, 0, 417244902117446, '2023-07-06 16:27:32.951000', NULL, 1, 'textBox', 2);
-INSERT INTO `sys_code_gen_detail` VALUES (436088221413448, 436088202891333, 'tinyint', 'enable', '部门启用', NULL, 1, 0, 417244902117446, '2023-07-06 16:27:32.951000', NULL, 1, 'radio', 3);
-INSERT INTO `sys_code_gen_detail` VALUES (443511599190085, 443511585738821, 'varchar', 'name', '应用名称', NULL, 1, 0, 417244902117446, '2023-07-27 15:53:21.041477', 'equal', 0, 'textBox', 1);
-INSERT INTO `sys_code_gen_detail` VALUES (443511599190086, 443511585738821, 'varchar', 'code', '应用编码', NULL, 1, 0, 417244902117446, '2023-07-27 15:53:21.041536', 'equal', 0, 'textBox', 2);
-INSERT INTO `sys_code_gen_detail` VALUES (443511599190087, 443511585738821, 'int', 'order', '排序', NULL, 0, 0, 417244902117446, '2023-07-27 15:53:21.041541', NULL, 0, 'textBox', 3);
-INSERT INTO `sys_code_gen_detail` VALUES (443511599190088, 443511585738821, 'tinyint', 'enable', '启用', NULL, 0, 0, 417244902117446, '2023-07-27 15:53:21.041548', NULL, 0, 'radio', 4);
-INSERT INTO `sys_code_gen_detail` VALUES (443511599190089, 443511585738821, 'varchar', 'describe', '描述', NULL, 0, 0, 417244902117446, '2023-07-27 15:53:21.041553', NULL, 0, 'textBox', 5);
-INSERT INTO `sys_code_gen_detail` VALUES (447769655984197, 447769655644229, 'varchar', 'name', '名称', NULL, 1, 0, 417244902117446, '2023-08-08 16:39:25.688000', 'like', 1, 'textBox', 1);
-INSERT INTO `sys_code_gen_detail` VALUES (447769655984198, 447769655644229, 'tinyint', 'enable', '是否启用', NULL, 0, 0, 417244902117446, '2023-08-08 16:39:25.688000', NULL, 0, 'radio', 2);
-INSERT INTO `sys_code_gen_detail` VALUES (448837533794373, 448837533311045, 'bigint', 'tenant_admin', '租户管理员', NULL, 0, 0, 417244902117446, '2023-08-11 17:04:38.044000', NULL, 1, 'textBox', 1);
-INSERT INTO `sys_code_gen_detail` VALUES (448837533794374, 448837533311045, 'varchar', 'name', '租户名字', NULL, 1, 0, 417244902117446, '2023-08-11 17:04:38.044000', NULL, 1, 'textBox', 2);
-INSERT INTO `sys_code_gen_detail` VALUES (448837533794375, 448837533311045, 'varchar', 'email_config', '邮件配置', NULL, 0, 0, 417244902117446, '2023-08-11 17:04:38.044000', NULL, 1, 'textBox', 3);
-INSERT INTO `sys_code_gen_detail` VALUES (448837533794376, 448837533311045, 'tinyint', 'enable', '是否启用', NULL, 0, 0, 417244902117446, '2023-08-11 17:04:38.044000', NULL, 0, 'radio', 4);
-INSERT INTO `sys_code_gen_detail` VALUES (448837533794377, 448837533311045, 'varchar', 'describe', '描述', NULL, 0, 0, 417244902117446, '2023-08-11 17:04:38.044000', NULL, 0, 'textBox', 5);
 
 -- ----------------------------
 -- Table structure for sys_dept
@@ -267,7 +254,7 @@ CREATE TABLE `sys_log_error`  (
   `create_on` datetime(6) NOT NULL COMMENT '日志时间',
   `user_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '用户ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 66 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '错误日志' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 429 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '错误日志' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_log_error
@@ -285,7 +272,7 @@ CREATE TABLE `sys_log_info`  (
   `create_on` datetime(6) NOT NULL COMMENT '日志时间',
   `user_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '用户ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 333 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '普通日志' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 831 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '普通日志' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_log_info
@@ -317,7 +304,7 @@ CREATE TABLE `sys_menu`  (
   `update_by` bigint(20) NULL DEFAULT NULL COMMENT '修改人',
   `update_on` datetime(6) NULL DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 449883901079622 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统菜单表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 516751159025734 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统菜单表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -643,13 +630,13 @@ CREATE TABLE `sys_tenant`  (
   `update_by` bigint(20) NULL DEFAULT NULL COMMENT '修改人',
   `update_on` datetime(6) NULL DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 452281128587334 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统租户表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 491539585003590 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统租户表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_tenant
 -- ----------------------------
-INSERT INTO `sys_tenant` VALUES (449900948840517, 417244902117446, 'HuanTian项目', '27197@qq.com;tigxg;smtp.qq.com;587', 1, '测试用途账套', 0, 417244902117446, '2023-08-15 15:57:24.519421', 417244902117446, '2023-08-15 15:57:46.919194');
-INSERT INTO `sys_tenant` VALUES (450236590075973, 417244902117456, '测试租户', 'wangxi@163.com;SXFDBDR;smtp.163.com;25', 1, '主要用于测试租户', 0, 417244902117446, '2023-08-15 15:57:24.519421', NULL, NULL);
+INSERT INTO `sys_tenant` VALUES (449900948840517, 417244902117446, 'HuanTian项目', '271976304@qq.com;tigxqcwmuqblbhgg;smtp.qq.com;587', 1, '测试用途账套', 0, 417244902117446, '2023-08-15 15:57:24.519421', 417244902117446, '2023-08-15 15:57:46.919194');
+INSERT INTO `sys_tenant` VALUES (450236590075973, 417244902117456, '测试租户', 'wangxiaopang8888@163.com;SXFDBHBLUKDQVWDR;smtp.163.com;25', 1, '主要用于测试租户', 0, 417244902117446, '2023-08-15 15:57:24.519421', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -675,7 +662,7 @@ CREATE TABLE `sys_user`  (
   `dept_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '所属部门Id',
   `type` int(11) NOT NULL DEFAULT 0 COMMENT '账号类型',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 451317208789062 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 4172449021174946 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_user
