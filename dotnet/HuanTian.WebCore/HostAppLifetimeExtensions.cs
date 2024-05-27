@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SqlSugar.Extensions;
 
 namespace HuanTian.WebCore
 {
@@ -33,6 +34,9 @@ namespace HuanTian.WebCore
         /// </summary>
         public void ApplicationStarted()
         {
+            if (!App.Configuration["AppSettings:MiddlewareEnable"].ObjToBool())
+                return;
+            // 打开消息队列消费者
             EmailMQ.OpenConsumer();
             LogMQ.OpenConsumer();
         }

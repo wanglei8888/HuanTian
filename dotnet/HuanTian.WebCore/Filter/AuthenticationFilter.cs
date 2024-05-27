@@ -38,11 +38,23 @@ namespace HuanTian.WebCore
     {
         private readonly IRedisCache _redisCache;
         private readonly ISysPermissionsService _sysPermService;
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="redisCache">Redis缓存服务</param>
+        /// <param name="sysPermService">系统权限服务</param>
         public AuthenticationFilter(IRedisCache redisCache, ISysPermissionsService sysPermService)
         {
             _redisCache = redisCache;
             _sysPermService = sysPermService;
         }
+
+        /// <summary>
+        /// 异步授权过滤器
+        /// </summary>
+        /// <param name="context">授权过滤器上下文</param>
+        /// <returns></returns>
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
             // 判断方法是否允许匿名访问 AllowAnonymous
@@ -57,22 +69,36 @@ namespace HuanTian.WebCore
             await CheckRoutPerms(context);
         }
 
+        /// <summary>
+        /// 检查Token
+        /// </summary>
+        /// <param name="context">授权过滤器上下文</param>
+        /// <returns></returns>
         private async Task CheckToken(AuthorizationFilterContext context)
         {
             // 判断是否为有效token
             if (App.HttpContext.Request.Headers.TryGetValue(App.Configuration["AppSettings:ApiHeard"] ?? "", out var token))
             {
                 var userId = App.HttpContext.User.Claims.FirstOrDefault(u => u.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sid)?.Value;
-                if ((await _redisCache.SetContainsAsync($"LoginUserInfoWhitelist", token.ToString())))
+                if (App.Configuration["AppSettings:MiddlewareEnable"].ObjToBool() &&
+                    (await _redisCache.SetContainsAsync($"LoginUserInfoWhitelist", token.ToString())))
                 {
                     context.Result = RequestHelper.RequestInfo(App.I18n.GetString("用户未授权,请登录后再操作"), HttpStatusCode.Unauthorized);
                     context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                 }
             }
         }
+
+        /// <summary>
+        /// 检查路由权限
+        /// </summary>
+        /// <param name="context">授权过滤器上下文</param>
+        /// <returns></returns>
         private async Task CheckRoutPerms(AuthorizationFilterContext context)
         {
-            if (!App.Configuration["AppSettings:RoutPermsEnable"].ObjToBool())
+            // 判断是否开启路由权限
+            if (!App.Configuration["AppSettings:MiddlewareEnable"].ObjToBool() &&
+                !App.Configuration["AppSettings:RoutPermsEnable"].ObjToBool())
                 return;
 
             // 去掉路由前缀获取路由
@@ -91,10 +117,10 @@ namespace HuanTian.WebCore
                 "sysAuth/login","sysUser/info","list/search/projects","workplace/radar","workplace/activity","workplace/teams","sysAuth/logout"
             };
             userRoute.AddRange(ignoreRouts);
+            // 直接判断一遍  再加接口方式判断一次 增删改查路由不带后缀
             if (!userRoute.Any(t => t.ToLower() == path) &&
                 !userRoute.Any(t => t.ToLower() == path + "/" + methodPath))
             {
-                // 直接判断一遍  再加接口方式判断一次 增删改查路由不带后缀
                 context.Result = RequestHelper.RequestInfo(App.I18n.GetString("用户未授权页面,请联系系统管理员"), HttpStatusCode.MethodNotAllowed);
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.MethodNotAllowed;
             }

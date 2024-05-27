@@ -118,6 +118,7 @@ namespace HuanTian.Service
         }
         #endregion
 
+        #region Hash(哈希)
         /// <summary>
         /// 判断哈希中指定字段是否存在
         /// </summary>
@@ -159,7 +160,7 @@ namespace HuanTian.Service
         /// </summary>
         public async Task<long> HashIncrementAsync(string key, string field, TimeSpan? expiration = default)
         {
-            var value =  await _database.HashIncrementAsync(key, field);
+            var value = await _database.HashIncrementAsync(key, field);
             await _database.KeyExpireAsync(key, expiration ?? App.Configuration["AppSettings:RedisExpirationTime"].ToTimeSpan());
             return value;
         }
@@ -196,7 +197,8 @@ namespace HuanTian.Service
         public async Task<long> HashDeleteAsync(string key, RedisValue[] fields)
         {
             return await _database.HashDeleteAsync(key, fields);
-        }
+        } 
+        #endregion
 
     }
 }
