@@ -36,7 +36,7 @@ namespace Huangtian.Store
             #region 日志服务
             // 开发环境不写入日志
 #if !DEBUG
-            builder.Logging.AddLocalFileLogger(options => options.SaveDays = 7);
+            builder.Services.AddSingleton<ILoggerProvider, LocalFileLoggerProvider>();
 #endif
             #endregion
 

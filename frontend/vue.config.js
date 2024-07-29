@@ -131,6 +131,12 @@ const vueConfig = {
         ws: false,
         changeOrigin: true
       },
+      '/FileCount/': {
+        target: 'http://localhost:8080/',
+        ws: false,
+        changeOrigin: true,
+        pathRewrite: { '^/FileCount': '/FileCount' }
+      }
     },
     client: {
       overlay: false,

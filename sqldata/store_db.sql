@@ -14,8 +14,7 @@
  Date: 17/04/2024 09:09:15
 */
 
-SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
+-- CREATE DATABASE `store_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
 -- ----------------------------
 -- Table structure for __EFMigrationsHistory

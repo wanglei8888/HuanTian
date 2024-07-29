@@ -97,7 +97,7 @@ namespace HuanTian.WebCore
         private async Task CheckRoutPerms(AuthorizationFilterContext context)
         {
             // 判断是否开启路由权限
-            if (!App.Configuration["AppSettings:MiddlewareEnable"].ObjToBool() &&
+            if (!App.Configuration["AppSettings:MiddlewareEnable"].ObjToBool() ||
                 !App.Configuration["AppSettings:RoutPermsEnable"].ObjToBool())
                 return;
 

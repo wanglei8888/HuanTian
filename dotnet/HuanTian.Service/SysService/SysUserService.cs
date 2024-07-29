@@ -69,19 +69,19 @@ namespace HuanTian.Service
 
             // 剔除多个角色重复的权限 如果menuId相同，合并ActionEntitySet
             var distinctPermissionList = roleList
-                .SelectMany(roleItem => roleItem.Permissions)
+                //.Where(roleItem => roleItem.Children != null)
+                .SelectMany(roleItem => roleItem.Permissions ?? new List<Permission>())
                 .GroupBy(t => new { t.PermissionName })
                 .Select(t =>
                 new Permission
                 {
                     PermissionName = t.Key.PermissionName,
                     ActionEntitySet = t.SelectMany(t => t.ActionEntitySet)
-                    .DistinctBy(t => t.Id)
-                    .ToList()
-                });
+                                       .DistinctBy(t => t.Id).ToList()
+                }).ToList();
             userInfo.Role = distinctPermissionList;
             userInfo.App = await _app.OrderBy(t => t.Order).ToListAsync();
-            userInfo.Menu = await _sysMenuService.GetUserMenuOutput(default);
+            userInfo.Menu = await _sysMenuService.GetUserMenuOutput(default!);
             return userInfo;
         }
         public async Task<int> Add(SysUserDO input)
@@ -105,7 +105,7 @@ namespace HuanTian.Service
             }
 
             var count = await _userInfo.InitTable(input)
-                .IgnoreColumns(t => t.Password)
+                .IgnoreColumns(t => new { t.Password })
                 .CallEntityMethod(t => t.UpdateFunc())
                 .UpdateAsync();
             return count;

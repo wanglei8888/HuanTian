@@ -59,22 +59,30 @@ public class SysPermissionsService : ISysPermissionsService, IDynamicApiControll
     {
         var entityList = input.Adapt<List<SysPermissionsDO>>();
         var count = 0;
-        foreach (var item in entityList.GroupBy(t =>  t.MenuId))
-        {
-            var codeGroup = item.Where(t => t.MenuId == item.Key).GroupBy(t =>new { t.Code ,t.Type});
-            // 过滤是否有重复code
-            if (codeGroup.Count() != item.Count())
-            {
-                throw new Exception($"权限编码重复,请修改后再试");
-            }
-            // 先删除数据
-            await _sysPermissions.DeleteAsync(t => t.MenuId == item.Key);
-            var codeList = codeGroup.SelectMany(group => group).ToList(); ;
-            // 再添加数据
-            count += await _sysPermissions.InitTable(codeList)
-                .CallEntityMethod(t => t.CreateFunc())
-                .AddAsync();
-        }
+        var menuGroup = entityList
+            .GroupBy(t => new { t.MenuId });
+        var codeGroup = entityList
+            .GroupBy(t => new { t.Code, t.Type });
+        var nameGroup = entityList
+            .GroupBy(t => new { t.Name, t.Type });
+        // 过滤是否有重复menuId
+        if (menuGroup.Count() != 1)
+            throw new Exception($"只能同时修改一个菜单权限,请修改后再试");
+        // 过滤是否有重复code
+        if (codeGroup.Count() != entityList.Count())
+            throw new Exception($"权限编码重复,请修改后再试");
+        // 过滤是否有重复name
+        if (nameGroup.Count() != entityList.Count())
+            throw new Exception($"权限名称重复,请修改后再试");
+
+        // 先删除数据
+        await _sysPermissions.DeleteAsync(t => t.MenuId == entityList.FirstOrDefault()!.MenuId);
+        var codeList = codeGroup.SelectMany(group => group).ToList(); ;
+        // 再添加数据
+        count += await _sysPermissions.InitTable(codeList)
+            .CallEntityMethod(t => t.CreateFunc())
+            .AddAsync();
+
         return count;
     }
     public async Task<int> Update(SysPermissionsFormInput input)

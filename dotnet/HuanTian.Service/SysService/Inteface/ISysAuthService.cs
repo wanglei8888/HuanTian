@@ -24,15 +24,20 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-namespace HuanTian.Infrastructure
+namespace HuanTian.Service;
+
+public interface ISysAuthService
 {
-    public interface ISysAuthService
-    {
-        /// <summary>
-        /// 登陆
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        Task<dynamic> Login(LoginInput input);
-    }
+    /// <summary>
+    /// 登陆
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    Task<dynamic> Login(LoginInput input);
+    /// <summary>
+    /// 用户登出
+    /// </summary>
+    /// <returns></returns>
+    Task Logout();
 }
+

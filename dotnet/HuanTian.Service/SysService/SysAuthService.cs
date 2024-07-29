@@ -25,6 +25,7 @@
 #endregion << 版 本 注 释 >>
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Localization;
+using SqlSugar.Extensions;
 using System.Security.Claims;
 
 namespace HuanTian.Service
@@ -33,7 +34,7 @@ namespace HuanTian.Service
     /// 登陆服务
     /// </summary>
     [ApiDescriptionSettings(Order = 146)]
-    public class SysAuthService : ISysAuthService, IDynamicApiController
+    public class SysAuthService : ISysAuthService, IScoped,IDynamicApiController
     {
         private readonly IRepository<SysUserDO> _sysUserInfo;
         private readonly IRedisCache _redisCache;
@@ -76,7 +77,8 @@ namespace HuanTian.Service
         public async Task Logout()
         {
             // 登出操作，利用Redis缓存进行黑名单验证,防止失效Token依然使用
-            if (App.HttpContext.Request.Headers.TryGetValue(App.Configuration["AppSettings:ApiHeard"], out var token))
+            if (App.Configuration["AppSettings:MiddlewareEnable"].ObjToBool() && 
+                App.HttpContext.Request.Headers.TryGetValue(App.Configuration["AppSettings:ApiHeard"]!, out var token))
             {
                 await _redisCache.SetAddAsync($"LoginUserInfoWhitelist", token.ToString());
             }

@@ -21,7 +21,7 @@ namespace HuanTian.Service;
 /// <summary>
 /// 系统应用表服务
 /// </summary>
-public class SysAppsService : ISysAppsService, IDynamicApiController, IScoped
+public class SysAppsService : ISysAppsService, IDynamicApiController
 {
     private readonly IRepository<SysAppsDO> _sysApps;
     public SysAppsService(IRepository<SysAppsDO> sysApps)

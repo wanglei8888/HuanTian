@@ -118,7 +118,6 @@ namespace HuanTian.Service
 
         private static async Task LogToSql(LogMQDto logInfo)
         {
-
             logInfo.Msg = $"【时间】{logInfo.CreateOn.ToString("HH-mm-ss-fff")} 【等级】{logInfo.Level} 【内容】{logInfo.Msg}";
             switch (logInfo.Level)
             {

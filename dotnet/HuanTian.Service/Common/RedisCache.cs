@@ -23,6 +23,7 @@
  * 版本：V1.0.1
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
+using SqlSugar.Extensions;
 using StackExchange.Redis;
 using System.Text.Json;
 
@@ -38,8 +39,17 @@ namespace HuanTian.Service
 
         public RedisCache(string connectionString)
         {
-            _redis = ConnectionMultiplexer.Connect(connectionString);
-            _database = _redis.GetDatabase();
+            if (!App.Configuration["AppSettings:MiddlewareEnable"].ObjToBool())
+            {
+                _redis = default!; 
+                _database = default!;
+            }
+            else
+            {
+                _redis = ConnectionMultiplexer.Connect(connectionString);
+                _database = _redis.GetDatabase();
+            }
+           
         }
 
         #region String(字符串)

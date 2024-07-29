@@ -222,7 +222,6 @@ export default {
     async handleOk () {
       this.$refs.form.validate(async valid => {
         if (valid) {
-          this.confirmLoading = true
           this.form.password = md5(this.form.password)
           // 如果存在修改文件
           if (this.fileList.length > 0 && this.fileList[0].originFileObj) {
@@ -237,6 +236,7 @@ export default {
               this.form.avatar = res.result.filePath
             })
           }
+          this.confirmLoading = true
           // 修改数据
           if (this.formType === 'edit') {
             await this.$http.put('/sysUser', this.form).then(res => {

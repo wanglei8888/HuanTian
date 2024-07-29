@@ -3,7 +3,6 @@ import store from './store'
 import storage from 'store'
 import NProgress from 'nprogress' // progress bar
 import '@/components/NProgress/nprogress.less' // progress bar custom style
-import notification from 'ant-design-vue/es/notification'
 import { setDocumentTitle, domTitle } from '@/utils/domUtil'
 import { ACCESS_TOKEN, ALL_APP_MENU } from '@/store/mutation-types'
 import { i18nRender } from '@/locales'

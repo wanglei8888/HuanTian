@@ -196,6 +196,7 @@ public class SysRoleService : ISysRoleService, IDynamicApiController, IScoped
         // 菜单表
         var menuList = await _sysMenu
             .Where(t => roleMenuList.Select(x => x.MenuId).Contains(t.Id))
+            .Where(t => t.MenuType == "System") // 方便展示，只取系统菜单
             .ToListAsync();
 
         var roleList = new List<Role>();

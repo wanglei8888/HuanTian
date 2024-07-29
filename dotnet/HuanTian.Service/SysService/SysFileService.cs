@@ -43,7 +43,12 @@
                 }
             }
             output.FileName = Path.GetFileName(path);
-            output.FilePath = App.HttpContext.Request.Scheme + @":\\" + Path.Combine(App.HttpContext.Request.Host.Value, "FileCount", input.FilePath, output.FileName);
+
+            // 固定IP地址  不推荐使用
+            // output.FilePath = (App.HttpContext.Request.Scheme + @"://" + Path.Combine(App.HttpContext.Request.Host.Value, "FileCount", input.FilePath, output.FileName)).Replace("\\", "/");
+
+            // 相对地址  通过前端代理到服务器地址使用
+            output.FilePath = ("\\"+ Path.Combine("FileCount", input.FilePath, output.FileName)).Replace("\\","/");
             return output;
         }
     }

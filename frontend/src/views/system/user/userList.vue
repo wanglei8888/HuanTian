@@ -117,7 +117,7 @@
               {{ text | languageFilter }}
             </span>
             <span slot="avatar" slot-scope="text" style="margin-left: -13px;">
-              <img style="width:75px;heigth:75px" slot="avatar" :src="text" />
+              <img style="width:75px;height:75px" slot="avatar" :src="text" />
             </span>
 
             <span slot="action" slot-scope="text, record">
