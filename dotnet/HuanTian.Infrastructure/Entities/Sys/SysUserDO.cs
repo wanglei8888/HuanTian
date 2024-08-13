@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace HuanTian.Infrastructure;
@@ -22,7 +23,7 @@ public class SysUserDO : BaseEntityBusiness
     [Comment("名字")]
     public string? Name { get; set; }
     /// <summary>
-    /// 名字
+    /// 图片路径
     /// </summary>
     [MaxLength(200)]
     [Comment("图片路径")]
@@ -41,6 +42,18 @@ public class SysUserDO : BaseEntityBusiness
     [MaxLength(50)]
     [Comment("用户密码")]
     public string? Password { get; set; }
+    /// <summary>
+    /// 用户邮箱
+    /// </summary>
+    [MaxLength(50)]
+    [Comment("用户邮箱")]
+    public string Email { get; set; }
+    /// <summary>
+    /// 用户性别
+    /// </summary>
+    [Comment("用户性别")]
+    [DefaultValue(SysUserGenderEnum.Man)]
+    public SysUserGenderEnum Gender { get; set; }
     /// <summary>
     /// 账号类型
     /// </summary>
@@ -77,6 +90,9 @@ public class SysUserDO : BaseEntityBusiness
     [EnumDataType(typeof(SystemLanguageEnum))]
     public SystemLanguageEnum Language { get; set; }
 }
+/// <summary>
+/// 用户类型枚举
+/// </summary>
 public enum SysUserTypeEnum
 {
     /// <summary>
@@ -91,4 +107,26 @@ public enum SysUserTypeEnum
     /// 超级管理员
     /// </summary>
     SuperAdmin = 2
+}
+/// <summary>
+/// 用户性别枚举
+/// </summary>
+public enum SysUserGenderEnum
+{
+    /// <summary>
+    /// 男人
+    /// </summary>
+    Man = 0,
+    /// <summary>
+    /// 女人
+    /// </summary>
+    WoMan = 5,
+    /// <summary>
+    /// 中性
+    /// </summary>
+    Neutral = 10,
+    /// <summary>
+    /// 未知
+    /// </summary>
+    Unknown = 15
 }

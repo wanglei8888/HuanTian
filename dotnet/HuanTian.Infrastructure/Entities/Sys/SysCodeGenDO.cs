@@ -64,6 +64,9 @@ namespace HuanTian.Infrastructure
         [Comment("生成方式")]
         public GenerationWayEnum GenerationWay { get; set; }
     }
+    /// <summary>
+    /// 生成方式
+    /// </summary>
     public enum GenerationWayEnum
     {
         /// <summary>

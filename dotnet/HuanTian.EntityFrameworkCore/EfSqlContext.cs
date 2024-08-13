@@ -1,18 +1,19 @@
 ﻿using HuanTian.Infrastructure;
-using HuanTian.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query;
-using NPOI.SS.Formula.Functions;
 using SqlSugar.Extensions;
-using System.IO.Pipelines;
+using System.ComponentModel;
 using System.Linq.Expressions;
-using Expression = System.Linq.Expressions.Expression;
+using System.Reflection;
+using System.Xml.Linq;
 
 namespace HuanTian.EntityFrameworkCore
 {
     public class EfSqlContext : DbContext
     {
+        #region 表格实体
+
         public DbSet<SysUserDO> UserInfoDO { get; set; }
         public DbSet<SysMenuRoleDO> SysMneuRoleDO { get; set; }
         public DbSet<SysRoleDO> SysRoleInfoDO { get; set; }
@@ -30,6 +31,7 @@ namespace HuanTian.EntityFrameworkCore
         public DbSet<SysTenantDO> SysTenantDO { get; set; }
         public DbSet<SysLogInfoDO> SysLogInfoDO { get; set; }
         public DbSet<SysLogErrorDO> SysLogErrorDO { get; set; }
+        #endregion
 
         #region 配置文件
         private readonly IQueryFilter _tenantService;
@@ -40,9 +42,13 @@ namespace HuanTian.EntityFrameworkCore
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            var xmlFilePath = Path.Combine(AppContext.BaseDirectory, "HuanTian.Infrastructure.xml");
+            // 加载 XML 文件
+            var xmlDoc = XDocument.Load(xmlFilePath);
             // 获取所有实体类型
-            foreach (IMutableEntityType entity in modelBuilder.Model.GetEntityTypes())
+            foreach (var entity in modelBuilder.Model.GetEntityTypes())
             {
+                #region 统一表名、列名生成规则
                 if (App.Configuration["SqlSettings:GlobalSettingsTableName"].ObjToBool())
                 {
                     // 全局设置表名生成规则
@@ -54,6 +60,7 @@ namespace HuanTian.EntityFrameworkCore
                     }
                 }
 
+
                 if (App.Configuration["SqlSettings:GlobalSettingsColumnName"].ObjToBool())
                 {
                     // 全局设置列名生成规则
@@ -63,12 +70,79 @@ namespace HuanTian.EntityFrameworkCore
                         property.SetColumnName(property.Name.ToLowerHump());
                     }
                 }
+                #endregion
+
+                // 获取实体类型的所有属性 
+                foreach (var property in entity.ClrType.GetProperties())
+                {
+                    #region 获取属性上的 [DefaultValue] 特性 修改默认值
+                    var defaultValueAttribute = property.GetCustomAttribute<DefaultValueAttribute>();
+
+                    if (defaultValueAttribute != null)
+                    {
+                        // 获取特性中定义的默认值
+                        var defaultValue = defaultValueAttribute.Value;
+
+                        // 使用 Fluent API 设置数据库列的默认值
+                        modelBuilder.Entity(entity.ClrType)
+                            .Property(property.Name)
+                            .HasDefaultValue(defaultValue);
+                    } 
+                    #endregion
+
+                    #region 自动生成枚举类型的备注
+                    var propertyName = property.Name;
+                    // 实体所属命名空间
+                    var entityTypeFullName = entity.ClrType.FullName;
+                    // 实体类型
+                    var enumType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+
+                    var isEnum = property.PropertyType.IsEnum || (Nullable.GetUnderlyingType(property.PropertyType)?.IsEnum == true);
+                    if (isEnum)
+                    {
+                        var enumName = $"F:{enumType.FullName}";
+                        var enumMasterName = $"P:{entityTypeFullName}.{propertyName}";
+
+                        Console.WriteLine($"FullName:{enumType.FullName},entityTypeFullName:{entityTypeFullName} ");
+                        // 获取枚举的所有成员
+                        var enumValues = xmlDoc.Descendants("member")
+                                               .Where(x => x.Attribute("name")?.Value.StartsWith(enumName) == true)
+                                               .Select(x => new
+                                               {
+                                                   Name = x.Attribute("name")?.Value.Substring(enumName.Length + 1),
+                                                   Summary = x.Element("summary")?.Value.Trim()
+                                               }).ToList();
+                        // 获取实体的备注
+                        var entityComment = xmlDoc.Descendants("member")
+                                                  .FirstOrDefault(x => x.Attribute("name")?.Value == enumMasterName)?
+                                                  .Element("summary")?.Value.Trim();
+
+                        if (enumValues.Any())
+                        {
+                            var enumFieldComment = $"{entityComment} (";
+                            enumFieldComment += string.Join(", ", enumValues.Select(ev =>
+                            {
+                                var enumMember = Enum.Parse(enumType, ev.Name!);
+                                var enumValueNumber = Convert.ToInt32(enumMember);
+                                return $"{enumValueNumber} {ev.Summary}";
+                            }));
+                            enumFieldComment += ")";
+
+                            Console.WriteLine("最终备注:" + enumFieldComment);
+
+                            modelBuilder.Entity(entity.ClrType)
+                                        .Property(property.Name)
+                                        .HasComment(enumFieldComment);
+                        }
+                    } 
+                    #endregion
+                }
 
                 if (!App.Configuration["SqlSettings:GlobalFilter"].ObjToBool())
                     continue;
-
-                entity.AppendAllQueryFilter(t => !EF.Property<bool>(t, "Deleted"), "Deleted");
-                entity.AppendAllQueryFilter(t => EF.Property<long>(t, "TenantId") == _tenantService.GetCurrentTenantId(), "TenantId");
+                // 为所有实体附加全局过滤器
+                entity.AppendQueryFilter(t => !EF.Property<bool>(t, "Deleted"), "Deleted");
+                entity.AppendQueryFilter(t => EF.Property<long>(t, "TenantId") == _tenantService.GetCurrentTenantId(), "TenantId");
             }
 
             // modelBuilder.Entity<SysDeptDO>().HasQueryFilter(t => EF.Property<long>(t, "TenantId") == _tenantService.GetCurrentTenantId());
@@ -80,38 +154,12 @@ namespace HuanTian.EntityFrameworkCore
     public static class EntityFrameworkCoreExtensions
     {
         /// <summary>
-        /// 为一个实体新增全局过滤器 如果之前有过滤器 两个过滤器就会合并 ( EF Core 原始方法不支持多次添加 )
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="modelBuilder"></param>
-        /// <param name="expression"></param>
-        public static void AppendQueryFilter<T>(this IMutableEntityType entityType,
-            Expression<Func<T, bool>> expression)
-        {
-            if (!typeof(T).IsAssignableFrom(entityType.ClrType))
-                return;
-            var parameterType = Expression.Parameter(entityType.ClrType);
-            var expressionFilter = ReplacingExpressionVisitor.Replace(
-                expression.Parameters.Single(), parameterType, expression.Body);
-
-            var currentQueryFilter = entityType.GetQueryFilter();
-            if (currentQueryFilter != null)
-            {
-                var currentExpressionFilter = ReplacingExpressionVisitor.Replace(
-                    currentQueryFilter.Parameters.Single(), parameterType, currentQueryFilter.Body);
-                expressionFilter = Expression.AndAlso(currentExpressionFilter, expressionFilter);
-            }
-
-            var lambdaExpression = Expression.Lambda(expressionFilter, parameterType);
-            entityType.SetQueryFilter(lambdaExpression);
-        }
-        /// <summary>
         /// 为所有实体附加全局过滤器 
         /// 如果之前有过滤器 两个过滤器就会合并 ( EF Core 原始方法不支持多次添加 )
         /// </summary>
         /// <param name="modelBuilder"></param>
         /// <param name="expression"></param>
-        public static void AppendAllQueryFilter(this IMutableEntityType entityType,
+        public static void AppendQueryFilter(this IMutableEntityType entityType,
             Expression<Func<object, bool>> expression, string columnName)
         {
             var hasTenantIdProperty = entityType.GetProperties().Any(property => property.Name == columnName);

@@ -11,15 +11,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HuanTian.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(EfSqlContext))]
-    [Migration("20230825094418_add_syslog")]
-    partial class add_syslog
+    [Migration("20240813091045_init_table")]
+    partial class init_table
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.5")
+                .HasAnnotation("ProductVersion", "7.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("HuanTian.Infrastructure.SysAppsDO", b =>
@@ -122,7 +122,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                     b.Property<int>("GenerationWay")
                         .HasColumnType("int")
                         .HasColumnName("generation_way")
-                        .HasComment("生成方式");
+                        .HasComment("生成方式 (0 生成到项目, 1 打包生成)");
 
                     b.Property<long>("MenuId")
                         .HasColumnType("bigint")
@@ -472,6 +472,11 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
+                    b.Property<DateTime>("CreateOn")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("create_on")
+                        .HasComment("日志时间");
+
                     b.Property<int>("Level")
                         .HasColumnType("int")
                         .HasColumnName("level")
@@ -495,6 +500,11 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnName("tenant_id")
                         .HasComment("租户ID");
 
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id")
+                        .HasComment("用户ID");
+
                     b.HasKey("Id");
 
                     b.ToTable("sys_log_error", t =>
@@ -509,6 +519,11 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasColumnName("id");
+
+                    b.Property<DateTime>("CreateOn")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("create_on")
+                        .HasComment("日志时间");
 
                     b.Property<int>("Level")
                         .HasColumnType("int")
@@ -525,6 +540,11 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("tenant_id")
                         .HasComment("租户ID");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id")
+                        .HasComment("用户ID");
 
                     b.HasKey("Id");
 
@@ -727,7 +747,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                     b.Property<int?>("Type")
                         .HasColumnType("int")
                         .HasColumnName("type")
-                        .HasComment("权限类型");
+                        .HasComment("权限类型 (0 空值, 1 按钮权限, 2 路由权限)");
 
                     b.HasKey("Id");
 
@@ -921,15 +941,29 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                         .HasColumnName("dept_id")
                         .HasComment("所属部门Id");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("email")
+                        .HasComment("用户邮箱");
+
                     b.Property<bool>("Enable")
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("enable")
                         .HasComment("启用");
 
+                    b.Property<int>("Gender")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasColumnName("gender")
+                        .HasComment("用户性别 (0 男人, 5 女人, 10 中性, 15 未知)");
+
                     b.Property<int>("Language")
                         .HasColumnType("int")
                         .HasColumnName("language")
-                        .HasComment("系统语言");
+                        .HasComment("系统语言 (0 中文, 1 英文)");
 
                     b.Property<string>("LastLoginIp")
                         .HasMaxLength(100)
@@ -970,7 +1004,7 @@ namespace HuanTian.EntityFrameworkCore.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int")
                         .HasColumnName("type")
-                        .HasComment("账号类型");
+                        .HasComment("账号类型 (0 普通用户, 1 系统管理员, 2 超级管理员)");
 
                     b.Property<long?>("UpdateBy")
                         .HasColumnType("bigint")
