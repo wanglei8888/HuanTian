@@ -26,7 +26,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
+using NPOI.HSSF.Record.Aggregates;
 using System.Globalization;
+using System.Text.Json.Nodes;
 
 namespace HuanTian.Service
 {
@@ -39,11 +41,13 @@ namespace HuanTian.Service
         private readonly IStringLocalizer _localizer;
         private readonly IRepository<SysMenuDO> _sysMenu;
         private readonly IGenerateFilesService _generateFilesService;
-        public TestData(IRepository<SysMenuDO> sysMenu, IGenerateFilesService generateFilesService, IStringLocalizer localizer)
+        private readonly ISysFileService _sysFileService;
+        public TestData(IRepository<SysMenuDO> sysMenu, IGenerateFilesService generateFilesService, IStringLocalizer localizer, ISysFileService sysFileService)
         {
             _sysMenu = sysMenu;
             _generateFilesService = generateFilesService;
             _localizer = localizer;
+            _sysFileService = sysFileService;
         }
         /// <summary>
         /// 多语言测试
@@ -60,6 +64,67 @@ namespace HuanTian.Service
             // Header 添加头部信息  accept-language :  en-US
             return value;
         }
+        /// <summary>
+        /// 导出excel 模板
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> DownmldExcel()
+        {
+            var menuList = await _sysMenu.ToListAsync();
+            var templatePath = Path.Combine(App.WebHostEnvironment.WebRootPath, "template", "ExcelTemplate.xlsx");
+            var bytes = _generateFilesService.RenderTemplateExcel(templatePath, menuList);
+            return new FileContentResult(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") { FileDownloadName = "test.xlsx" };
+        }
+        /// <summary>
+        /// 导出PDF 模板
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult DownmldPdf()
+        {
+            var output = new BoxInfoOutput()
+            {
+                PartNumber = "DFS.2461513",
+                Version = "abPeole",
+                ProductName = "软件设计",
+                Quantity = "56 PCS",
+                ProductionDate = DateTime.Now.ToString("yyyy-MM-dd"),
+                Supplier = "阿里巴巴事业部",
+                QRCode = Convert.ToBase64String(_generateFilesService.RenderQrCode("这里是二维码内容"))
+            };
+            var setting = new PdfSetting(0, 0, new PdfMargin(0, 0, 0, 0));
+            var templatePath = Path.Combine(App.WebHostEnvironment.WebRootPath, "template", "PdfTemplate.html");
+            var bytes = _generateFilesService.RenderTemplatePdf(templatePath, output, setting);
+            return new FileContentResult(bytes, "application/pdf") { FileDownloadName = "test.pdf" };
+        }
+        /// <summary>
+        /// 发送邮件测试
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task SendEmail()
+        {
+            // 1、需要先配置租户邮件信息    2、确保消息队列地址配置正确，服务已启动
+            var userInfo = await App.GetService<IRepository<SysUserDO>>().FirstOrDefaultAsync(t => t.Id == App.GetUserId());
+            await EmailMQ.SendEmail(userInfo, "用户信息模板", "用户信息提醒邮件", "wangxiaopang8888@163.com");
+        }
+        /// <summary>
+        /// 利用集合数据导出Excel
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> ListDownmlExcel()
+        { 
+            // 如果加了sql 过滤器的话，需要登陆才能查询到
+            var list = await _sysMenu.ToListAsync();
+            var columnsName = new {Name="姓名",Path = "菜单地址", Title = "菜单标题" };
+            var parsedNode = JsonNode.Parse(list.ToJsonString());
+            var jsonA = parsedNode as JsonArray;
+            return _sysFileService.Download(jsonA, "用户集合", columnsName.ToJsonString());
+        }
+
+        #region 系统运行需要测试数据
         [HttpGet("list/search/projects")]
         public dynamic GetProjects()
         {
@@ -131,52 +196,10 @@ namespace HuanTian.Service
                 Department = 40
             });
             return data;
-        }
-        /// <summary>
-        /// 导出excel 模板
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public async Task<IActionResult> DownmldExcel()
-        {
-            var menuList = await _sysMenu.ToListAsync();
-            var templatePath = Path.Combine(App.WebHostEnvironment.WebRootPath, "template", "ExcelTemplate.xlsx");
-            var bytes = _generateFilesService.RenderTemplateExcel(templatePath, menuList);
-            return new FileContentResult(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") { FileDownloadName = "test.xlsx" };
-        }
-        /// <summary>
-        /// 导出PDF 模板
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public IActionResult DownmldPdf()
-        {
-            var output = new BoxInfoOutput()
-            {
-                PartNumber = "DFS.2461513",
-                Version = "abPeole",
-                ProductName = "软件设计",
-                Quantity = "56 PCS",
-                ProductionDate = DateTime.Now.ToString("yyyy-MM-dd"),
-                Supplier = "阿里巴巴事业部",
-                QRCode = Convert.ToBase64String(_generateFilesService.RenderQrCode("这里是二维码内容"))
-            };
-            var setting = new PdfSetting(0,0,new PdfMargin(0,0,0,0));
-            var templatePath = Path.Combine(App.WebHostEnvironment.WebRootPath, "template", "PdfTemplate.html");
-            var bytes = _generateFilesService.RenderTemplatePdf(templatePath, output, setting);
-            return new FileContentResult(bytes, "application/pdf") { FileDownloadName = "test.pdf" };
-        }
-        /// <summary>
-        /// 发送邮件测试
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task SendEmail()
-        {
-            // 1、需要先配置租户邮件信息    2、确保消息队列地址配置正确，服务已启动
-            var userInfo = await App.GetService<IRepository<SysUserDO>>().FirstOrDefaultAsync(t => t.Id == App.GetUserId());
-            await EmailMQ.SendEmail(userInfo, "用户信息模板", "用户信息提醒邮件", "wangxiaopang8888@163.com");
-        }
+        } 
+        #endregion
+
+        
     }
     
 }

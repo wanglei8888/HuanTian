@@ -11,32 +11,48 @@
         <a-row :gutter="gutter">
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item label="账号" prop="userName" hasFeedback>
-              <a-input placeholder="请输入账号" v-model="form.userName" />
+              <a-input v-model="form.userName" />
             </a-form-model-item>
           </a-col>
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item label="密码" prop="password" hasFeedback>
-              <a-input-password v-if="formType === 'edit'" :disabled="true" placeholder="请输入密码" v-model="form.password" />
-              <a-input-password v-else placeholder="请输入密码" v-model="form.password" />
+              <a-input-password v-if="formType === 'edit'" :disabled="true"  v-model="form.password" />
+              <a-input-password v-else  v-model="form.password" />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+        <a-row :gutter="gutter">
+          <a-col :md="mdSize" :sm="smSize">
+            <a-form-model-item label="性别" prop="gender" hasFeedback>
+              <a-select style="width: 100%" v-model="form.gender" >
+                <a-select-option v-for="(item, index) in genderList" :key="index" :value="parseInt(item.value)">
+                  {{ item.name }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </a-col>
+          <a-col :md="mdSize" :sm="smSize">
+            <a-form-model-item label="邮箱" prop="email" hasFeedback>
+              <a-input  v-model="form.email" />
             </a-form-model-item>
           </a-col>
         </a-row>
         <a-row :gutter="gutter">
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item label="用户名称" prop="name" hasFeedback>
-              <a-input placeholder="请输入用户名称" v-model="form.name" />
+              <a-input v-model="form.name" />
             </a-form-model-item>
           </a-col>
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item label="电话号码" prop="telephone" hasFeedback>
-              <a-input placeholder="请输入电话号码" v-model="form.telephone" />
+              <a-input v-model="form.telephone" />
             </a-form-model-item>
           </a-col>
         </a-row>
         <a-row :gutter="gutter">
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item label="所属部门" prop="deptId" hasFeedback>
-              <a-select style="width: 100%" v-model="form.deptId" placeholder="请选择所属部门">
+              <a-select style="width: 100%" v-model="form.deptId">
                 <a-select-option v-for="(item, index) in deptData" :key="index" :value="item.id">
                   {{ item.name }}
                 </a-select-option>
@@ -45,7 +61,7 @@
           </a-col>
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item label="默认语言" prop="language" hasFeedback>
-              <a-select style="width: 100%" v-model="form.language" placeholder="请选择默认语言">
+              <a-select style="width: 100%" v-model="form.language">
                 <a-select-option v-for="(item, index) in languageData" :key="index" :value="parseInt(item.value)">
                   {{ item.name }}
                 </a-select-option>
@@ -94,7 +110,8 @@ import md5 from 'md5'
 function createForm () {
   return {
     language: 0,
-    enable: true
+    enable: true,
+    gender: 0
   }
 }
 export default {
@@ -117,6 +134,7 @@ export default {
       previewImage: '',
       languageData: [],
       deptData: [],
+      genderList:[],
       fileList: [],
       title: '添加角色',
       spinningLoading: false,
@@ -124,14 +142,14 @@ export default {
       confirmLoading: false,
       rules: {
         userName: [{ required: true, min: 1, message: '请输入账号！' }],
+        userName: [{ required: true, min: 1, message: '请输入账号！' }],
         password: [{ required: true, min: 1, message: '请输入密码！' }],
-        telephone: [{ required: true, min: 1, message: '请输入电话号码！' }],
+        telephone: [{ required: true, validator: this.phoneValidator}],
         name: [{ required: true, min: 1, message: '请输入用户名称！' }],
         deptId: [{ required: true, message: '请选择所属部门！' }],
         language: [{ required: true, message: '请选择默认语言！' }],
-        avatar: [{
-          required: true, validator: this.avatarValidator, trigger: ['blur']
-        }]
+        email: [{ required: true, validator: this.emailValidator }],
+        avatar: [{required: true, validator: this.avatarValidator, trigger: ['blur']}]
       },
       form: {}
     }
@@ -144,10 +162,46 @@ export default {
       return true
       // }
     },
+    phoneValidator(rule,value,callback){
+        // 如果为空值，就抛出错误
+        if(!value){
+          callback(new Error("手机号码不能为空"));
+        }else{
+          // 正则判断手机号格式的格式，正则判断失败抛出错误，否则直接callback()
+          if(!/^1[2-9]\d{9}$/.test(value)){
+            callback(new Error("手机号格式不正确!"));
+          }else{
+            callback();
+          }
+        }
+     },
+     /**
+      * 邮箱验证规则
+      * @param rule 
+      * @param value 值
+      * @param callback 
+      */
+    emailValidator(rule,value,callback){
+      var email = value;
+			var reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+      if(!value){
+        callback(new Error("邮箱不能为空"));
+      }
+			if(reg.test(email)){
+				callback();
+			}else{
+				callback(new Error("邮箱格式不正确!"));
+			}
+    },
     dromdownList () {
       sysDict({ code: 'languageType' }).then((res) => {
         if (res.code === 200) {
           this.languageData = res.result
+        }
+      })
+      sysDict({ code: 'userGender' }).then((res) => {
+        if (res.code === 200) {
+          this.genderList = res.result
         }
       })
       this.$http.get('/sysDept').then((res) => {
@@ -190,6 +244,7 @@ export default {
     },
     // 打开页面初始化
     detail (value) {
+      // this.$store.getters.userInfo.avatar
       this.visible = true
       this.confirmLoading = false
       if (this.$refs.form) {

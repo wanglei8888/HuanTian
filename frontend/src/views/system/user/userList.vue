@@ -188,6 +188,7 @@ export default {
   },
   methods: {
     getTreeData () {
+      // this.$store.getters.userInfo.avatar
       this.treeLoading = true
       this.$http.get('/sysDept/tree').then((res) => {
         if (res.code === 200) {
