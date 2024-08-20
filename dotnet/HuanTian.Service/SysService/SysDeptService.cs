@@ -38,7 +38,7 @@ public class SysDeptService : ISysDeptService, IDynamicApiController, IScoped
             .WhereIf(!string.IsNullOrEmpty(input.Describe), t => t.Describe == input.Describe)
             .WhereIf(!string.IsNullOrEmpty(input.Enable), t => t.Enable == Convert.ToBoolean(input.Enable))
             .ToListAsync();
-        var tree = TreeHelper<SysDeptTreeOutput>.DoTreeBuild(list.Adapt<List<SysDeptTreeOutput>>());
+        var tree = TreeHelper.DoTreeBuild(list.Adapt<List<SysDeptTreeOutput>>());
         return tree;
     }
     public async Task<int> Add(SysDeptFormInput input)

@@ -26,6 +26,8 @@
 using HuanTian.Infrastructure;
 using SqlSugar.Extensions;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 
 namespace HuanTian.Infrastructure
@@ -263,6 +265,49 @@ namespace HuanTian.Infrastructure
             }
 
             return new DirectoryInfo(input).Parent.FullName;
+        }
+        /// <summary>
+        /// 是否为 json object 格式字符串
+        /// </summary>
+        /// <param name="input">字符串</param>
+        /// <returns></returns>
+        public static bool IsJsonObJect(this string input)
+        {
+            try
+            {
+                JsonNode.Parse(input)!.AsObject();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+        /// <summary>
+        /// 是否为 json Array 格式字符串
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static bool IsJsonArray(this string input)
+        {
+            try
+            {
+                var parsedNode = JsonNode.Parse(input);
+                return parsedNode is JsonArray;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        /// <summary>
+        /// 判断是否是 json 格式字符串
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static bool IsJson(this string input)
+        {
+            return input.IsJsonArray() || input.IsJsonObJect();
         }
     }
 }

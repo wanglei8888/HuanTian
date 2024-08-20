@@ -29,7 +29,7 @@ namespace HuanTian.Service
                 .WhereIf(!string.IsNullOrEmpty(input.MenuType), t => t.MenuType == input.MenuType)
                 .WhereIf(input.Id != 0, t => t.Id == input.Id)
                 .ToListAsync();
-            var tree = TreeHelper<SysMenuTreeOutput>.DoTreeBuild(allMenu.Adapt<List<SysMenuTreeOutput>>());
+            var tree = TreeHelper.DoTreeBuild(allMenu.Adapt<List<SysMenuTreeOutput>>());
             return tree;
         }
         [HttpGet]

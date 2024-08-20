@@ -11,7 +11,7 @@ namespace HuanTian.WebCore
         /// 注册主机应用程序生命周期
         /// </summary>
         /// <param name="app"></param>
-        public async static void RegisterHostApplicationLifetime(this WebApplication app)
+        public static void RegisterHostApplicationLifetime(this WebApplication app)
         {
             // 静态类存储
             App.WebHostEnvironment = app.Environment;

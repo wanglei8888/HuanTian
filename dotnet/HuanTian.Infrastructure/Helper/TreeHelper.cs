@@ -25,21 +25,21 @@
 #endregion << 版 本 注 释 >>
 
 
-using HuanTian.Infrastructure;
+using System.Text.Json.Nodes;
 
 namespace HuanTian.Infrastructure
 {
     /// <summary>
     /// 构建树
     /// </summary>
-    public static class TreeHelper<TEntity> where TEntity : ITreeBuild
+    public static class TreeHelper
     {
         /// <summary>
         /// 构造树节点
         /// </summary>
         /// <param name="nodes"></param>
         /// <returns></returns>
-        public static List<TEntity> DoTreeBuild(List<TEntity> nodes)
+        public static List<TEntity> DoTreeBuild<TEntity> (List<TEntity> nodes ) where TEntity : ITreeBuild
         {
             nodes.ForEach(u => BuildChildNodes(nodes, u, new List<TEntity>()));
 
@@ -57,7 +57,7 @@ namespace HuanTian.Infrastructure
         /// <param name="totalNodes"></param>
         /// <param name="node"></param>
         /// <param name="childNodeLists"></param>
-        private static void BuildChildNodes(List<TEntity> totalNodes, TEntity node, List<TEntity> childNodeLists)
+        private static void BuildChildNodes<TEntity>(List<TEntity> totalNodes, TEntity node, List<TEntity> childNodeLists) where TEntity : ITreeBuild
         {
             var nodeSubLists = new List<TEntity>();
             totalNodes.ForEach(u =>
@@ -68,6 +68,53 @@ namespace HuanTian.Infrastructure
             nodeSubLists.ForEach(u => BuildChildNodes(totalNodes, u, new List<TEntity>()));
             childNodeLists.AddRange(nodeSubLists);
             node.SetChildren(childNodeLists);
+        }
+        /// <summary>
+        /// 遍历获取 JsonArray 类型中包含Children的数据
+        /// </summary>
+        /// <param name="jsonArray"></param>
+        /// <returns>将包含子类的JsonArray，统一成一个JsonArray返回</returns>
+        public static JsonArray FlattenJsonArray(JsonArray jsonArray)
+        {
+            var result = new JsonArray();
+            foreach (var node in jsonArray)
+            {
+                FlattenNode(node as JsonObject, result);
+            }
+            return result;
+        }
+        /// <summary>
+        /// 遍历 Json 数据
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="result"></param>
+        private static void FlattenNode(JsonObject node, JsonArray result)
+        {
+            if (node == null)
+            {
+                return;
+            }
+
+            // 将 JsonObject 转换为 JsonElement
+            var nodeElement = JsonNode.Parse(node.ToJsonString())!.AsObject();
+
+            // 添加当前节点到结果数组中
+            result.Add(nodeElement);
+
+            // 检查是否包含 "children" 字段
+            if (nodeElement.ContainsKey("children"))
+            {
+                var children = nodeElement["children"] as JsonArray;
+                if (children != null && children.Count > 0)
+                {
+                    foreach (var child in children)
+                    {
+                        FlattenNode(child as JsonObject, result);
+                    }
+                }
+                // 如果需要删除原有的 "children" 字段，可以取消注释以下代码
+                nodeElement.Remove("children");
+            }
         }
     }
 }

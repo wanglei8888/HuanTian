@@ -3,6 +3,7 @@ import get from 'lodash.get'
 import draggable from 'vuedraggable'
 import columnSetting from './columnSetting'
 import './index.less'
+import { downLoadPost } from '@/api/downLoad'
 
 export default {
   components: {
@@ -180,6 +181,7 @@ export default {
             current: r.pageNo, // pageNo, // 返回结果中的当前分页数
             total: r.totalCount, // totalCount, // 返回结果中的总记录数
             showSizeChanger: this.showSizeChanger,
+            pageSizeOptions:['10','20','50','100','1000'],
             pageSize: (pagination && pagination.pageSize) ||
               this.localPagination.pageSize
           }) || false
@@ -311,6 +313,13 @@ export default {
     renderHeader () {
       let tools = [
         {
+          icon: 'download',
+          title: '下载',
+          onClick: () => {
+            this.downloadFile()
+          }
+        },
+        {
           icon: 'reload',
           title: '刷新',
           onClick: () => {
@@ -390,6 +399,9 @@ export default {
         </a-alert>
       )
       */
+    },
+    downloadFile() {
+      downLoadPost({ url: `/sysFile/download?excelName=${this.$route.name}导出`, params: this.$data.localDataSource   })
     }
   },
 

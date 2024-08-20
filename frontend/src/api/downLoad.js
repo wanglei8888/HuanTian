@@ -27,7 +27,10 @@ export function downLoadGet ({ url, params, callback }) {
       navigator.msSaveBlob(blob, fileName)
     } else {
       const elink = document.createElement('a')
-      elink.download = decodeURI(name.split('filename=')[1])
+      elink.download = decodeURI(name.substring(name.indexOf('=') + 1, name.length))
+      if (elink.download.lastIndexOf(';') === elink.download.length - 1) {
+        elink.download = elink.download.substring(0, elink.download.lastIndexOf(';'))
+      }
       elink.style.display = 'none'
       elink.href = URL.createObjectURL(blob)
       document.body.appendChild(elink)
@@ -61,7 +64,10 @@ export function downLoadPost ({ url, params, callback }) {
       navigator.msSaveBlob(blob, fileName)
     } else {
       const elink = document.createElement('a')
-      elink.download = decodeURI(name.substring(name.indexOf('=') + 1, name.lastIndexOf(';')))
+      elink.download = decodeURI(name.substring(name.indexOf('=') + 1, name.length))
+      if (elink.download.lastIndexOf(';') === elink.download.length - 1) {
+        elink.download = elink.download.substring(0, elink.download.lastIndexOf(';'))
+      }
       elink.style.display = 'none'
       elink.href = URL.createObjectURL(blob)
       document.body.appendChild(elink)
