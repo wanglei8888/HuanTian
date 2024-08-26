@@ -11,7 +11,7 @@
  Target Server Version : 90000
  File Encoding         : 65001
 
- Date: 13/08/2024 17:24:07
+ Date: 26/08/2024 09:49:36
 */
 
 SET NAMES utf8mb4;
@@ -31,6 +31,8 @@ CREATE TABLE `__efmigrationshistory`  (
 -- Records of __efmigrationshistory
 -- ----------------------------
 INSERT INTO `__efmigrationshistory` VALUES ('20240813091045_init_table', '7.0.12');
+INSERT INTO `__efmigrationshistory` VALUES ('20240823022217_update_user_table', '7.0.12');
+INSERT INTO `__efmigrationshistory` VALUES ('20240823023501_update_user_table', '7.0.12');
 
 -- ----------------------------
 -- Table structure for sys_apps
@@ -50,7 +52,7 @@ CREATE TABLE `sys_apps`  (
   `update_on` datetime(6) NULL DEFAULT NULL COMMENT '修改时间',
   `tenant_id` bigint NOT NULL COMMENT '租户ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 439691352649889 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统应用表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 439691352649890 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统应用表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_apps
@@ -123,7 +125,7 @@ CREATE TABLE `sys_dept`  (
   `update_on` datetime(6) NULL DEFAULT NULL COMMENT '修改时间',
   `tenant_id` bigint NOT NULL COMMENT '租户ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 452703954657349 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统部门表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 452703954657350 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统部门表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_dept
@@ -146,7 +148,7 @@ CREATE TABLE `sys_dic`  (
   `enable` tinyint(1) NOT NULL COMMENT '是否启用',
   `deleted` tinyint(1) NOT NULL COMMENT '软删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 435082462924869 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统字典表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 581534356561990 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统字典表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_dic
@@ -155,6 +157,7 @@ INSERT INTO `sys_dic` VALUES (4561312346542, '菜单层级', 'MenuLevel', 1, 0);
 INSERT INTO `sys_dic` VALUES (4561312346543, '多语言值', 'languageType', 1, 0);
 INSERT INTO `sys_dic` VALUES (435033088540741, '代码生成-前端类型', 'codeGenFrontendType', 1, 0);
 INSERT INTO `sys_dic` VALUES (435082462924869, '代码生成-查询类型', 'codeGenQueryType', 1, 0);
+INSERT INTO `sys_dic` VALUES (581534356561989, '用户性别', 'userGender', 1, 0);
 
 -- ----------------------------
 -- Table structure for sys_dic_detail
@@ -171,15 +174,13 @@ CREATE TABLE `sys_dic_detail`  (
   `create_by` bigint NULL DEFAULT NULL COMMENT '创建人',
   `create_on` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 435104934633545 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统字典详情表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 582559808266311 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统字典详情表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_dic_detail
 -- ----------------------------
 INSERT INTO `sys_dic_detail` VALUES (4561312346943, 4561312346542, 'Child', '子菜单', 10, 0, 0, NULL, NULL);
 INSERT INTO `sys_dic_detail` VALUES (4561312346944, 4561312346542, 'Parent', '父菜单', 10, 0, 0, NULL, NULL);
-INSERT INTO `sys_dic_detail` VALUES (4561312346945, 4561312346543, '0', '中文', 10, 0, 0, NULL, NULL);
-INSERT INTO `sys_dic_detail` VALUES (4561312346946, 4561312346543, '1', '英语', 10, 0, 0, NULL, NULL);
 INSERT INTO `sys_dic_detail` VALUES (435082928492613, 435082462924869, 'equal', '等于', 1, 1, 0, 417244902117446, '2023-07-03 20:17:00.109000');
 INSERT INTO `sys_dic_detail` VALUES (435082928492614, 435082462924869, 'like', '模糊查询', 2, 1, 0, 417244902117446, '2023-07-03 20:17:00.109000');
 INSERT INTO `sys_dic_detail` VALUES (435104934629445, 435033088540741, 'dropDown', '下拉框', 1, 1, 0, 417244902117446, '2023-07-03 21:46:32.701000');
@@ -187,6 +188,12 @@ INSERT INTO `sys_dic_detail` VALUES (435104934633541, 435033088540741, 'textBox'
 INSERT INTO `sys_dic_detail` VALUES (435104934633542, 435033088540741, 'radio', '单选框(true/false)', 3, 1, 0, 417244902117446, '2023-07-03 21:46:32.702000');
 INSERT INTO `sys_dic_detail` VALUES (435104934633544, 435033088540741, 'numBox', '数字输入框', 5, 1, 0, 417244902117446, '2023-07-03 21:46:32.702000');
 INSERT INTO `sys_dic_detail` VALUES (435104934633545, 435033088540741, 'datetime', '时间选择框', 6, 1, 0, 417244902117446, '2023-07-03 21:46:32.702000');
+INSERT INTO `sys_dic_detail` VALUES (581535475441733, 581534356561989, '0', '男人', 1, 1, 0, 417244902117446, '2024-08-20 16:13:56.454000');
+INSERT INTO `sys_dic_detail` VALUES (581535475441734, 581534356561989, '5', '女人', 2, 1, 0, 417244902117446, '2024-08-20 16:13:56.454000');
+INSERT INTO `sys_dic_detail` VALUES (581535475441735, 581534356561989, '10', '中性', 3, 1, 0, 417244902117446, '2024-08-20 16:13:56.454000');
+INSERT INTO `sys_dic_detail` VALUES (581535475441736, 581534356561989, '15', '未知', 4, 1, 0, 417244902117446, '2024-08-20 16:13:56.454000');
+INSERT INTO `sys_dic_detail` VALUES (582559808266309, 4561312346543, 'zh_CN', '中文', 10, 1, 0, 417244902117446, '2024-08-23 13:41:57.710000');
+INSERT INTO `sys_dic_detail` VALUES (582559808266310, 4561312346543, 'en-US', '英语', 10, 1, 0, 417244902117446, '2024-08-23 13:41:57.710000');
 
 -- ----------------------------
 -- Table structure for sys_email_template
@@ -203,7 +210,7 @@ CREATE TABLE `sys_email_template`  (
   `update_on` datetime(6) NULL DEFAULT NULL COMMENT '修改时间',
   `tenant_id` bigint NOT NULL COMMENT '租户ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 450924337745989 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统邮箱模板表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 450924337745990 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统邮箱模板表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_email_template
@@ -242,7 +249,7 @@ CREATE TABLE `sys_log_info`  (
   `msg` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '日志信息',
   `create_on` datetime(6) NOT NULL COMMENT '日志时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 838 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '普通日志' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '普通日志' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_log_info
@@ -273,7 +280,7 @@ CREATE TABLE `sys_menu`  (
   `update_on` datetime(6) NULL DEFAULT NULL COMMENT '修改时间',
   `tenant_id` bigint NOT NULL COMMENT '租户ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 448839443789203 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统菜单表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 448839443789204 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统菜单表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -365,7 +372,7 @@ CREATE TABLE `sys_menu_role`  (
   `create_by` bigint NULL DEFAULT NULL COMMENT '创建人',
   `create_on` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 572674209042541 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统菜单角色表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 572674209042542 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统菜单角色表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_menu_role
@@ -472,7 +479,7 @@ CREATE TABLE `sys_permissions`  (
   `create_by` bigint NULL DEFAULT NULL COMMENT '创建人',
   `create_on` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 572677616431179 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 572677616431180 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_permissions
@@ -522,7 +529,7 @@ CREATE TABLE `sys_role`  (
   `create_by` bigint NULL DEFAULT NULL COMMENT '创建人',
   `create_on` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 424046126026821 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统角色信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 424046126026822 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统角色信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role
@@ -542,7 +549,7 @@ CREATE TABLE `sys_role_permissions`  (
   `create_by` bigint NULL DEFAULT NULL COMMENT '创建人',
   `create_on` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 572675019567187 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 572675019567188 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role_permissions
@@ -648,7 +655,7 @@ CREATE TABLE `sys_tenant`  (
   `update_by` bigint NULL DEFAULT NULL COMMENT '修改人',
   `update_on` datetime(6) NULL DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 450236590075973 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统租户表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 450236590075974 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统租户表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_tenant
@@ -674,7 +681,7 @@ CREATE TABLE `sys_user`  (
   `telephone` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '电话',
   `last_login_ip` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '最后登陆IP',
   `last_login_time` datetime(6) NULL DEFAULT NULL COMMENT '最后登陆时间',
-  `language` int NOT NULL COMMENT '系统语言 (0 中文, 1 英文)',
+  `language` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'zh_CN' COMMENT '系统语言 (zh_CN 中文, en_US 英文)',
   `deleted` tinyint(1) NOT NULL COMMENT '软删除',
   `create_by` bigint NULL DEFAULT NULL COMMENT '创建人',
   `create_on` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
@@ -682,14 +689,14 @@ CREATE TABLE `sys_user`  (
   `update_on` datetime(6) NULL DEFAULT NULL COMMENT '修改时间',
   `tenant_id` bigint NOT NULL COMMENT '租户ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 417244902117456 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 417244902117457 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (417244902117445, 417244902119463, 'Api测试系统管理员', '/avatar2.jpg', 'test', '40BD001563085FC35165329EA1FF5C5ECBDBBEEF', '', 0, 0, 1, '123456789', '192.168.0.1', '2022-03-31 10:00:00.000000', 0, 0, 417244902117446, '2022-03-31 10:00:00.000000', NULL, NULL, 449900948840517);
-INSERT INTO `sys_user` VALUES (417244902117446, 417244902119463, '系统管理员', '/avatar1.jpg', 'admin', 'ADCD7048512E64B48DA55B027577886EE5A36350', '', 0, 2, 1, '15675117404', '192.168.0.2', '2022-03-31 11:00:00.000000', 1, 0, 417244902117446, '2022-03-31 11:00:00.000000', 417244902117446, '2024-07-26 16:26:17.882000', 449900948840517);
-INSERT INTO `sys_user` VALUES (417244902117456, 417244902119462, 'Sarah Lee', '/FileCount/userAvatar/1000.jfif', 'wanglei', 'ADCD7048512E64B48DA55B027577886EE5A36350', '', 0, 0, 1, '111111111', '192.168.0.50', '2022-03-31 23:00:00.000000', 1, 0, 417244902117446, '2022-03-31 23:00:00.000000', 417244902117446, '2024-07-26 16:07:38.744000', 450236590075973);
+INSERT INTO `sys_user` VALUES (417244902117445, 417244902119463, 'Api测试系统管理员', '/avatar2.jpg', 'test', '40BD001563085FC35165329EA1FF5C5ECBDBBEEF', '271976305@qq.com', 5, 0, 1, '15675661943', '192.168.0.1', '2022-03-31 10:00:00.000000', 'zh_CN', 0, 417244902117446, '2022-03-31 10:00:00.000000', 417244902117446, '2024-08-23 13:19:30.999000', 449900948840517);
+INSERT INTO `sys_user` VALUES (417244902117446, 417244902119463, '系统管理员', '/avatar1.jpg', 'admin', 'ADCD7048512E64B48DA55B027577886EE5A36350', 'wangxiaopang8888@163.com', 0, 2, 1, '15675117406', '192.168.0.2', '2022-03-31 11:00:00.000000', 'en_US', 0, 417244902117446, '2022-03-31 11:00:00.000000', 417244902117446, '2024-08-26 09:42:13.928000', 449900948840517);
+INSERT INTO `sys_user` VALUES (417244902117456, 417244902119462, 'Sarah Lee', '/FileCount/userAvatar/1000.jfif', 'wanglei', '040BD08A4290267535CD247B8BA2ECA129D9FE9F', 'wangxiaopang6688@gmail.com', 0, 0, 1, '18873486868', '192.168.0.50', '2022-03-31 23:00:00.000000', 'zh_CN', 0, 417244902117446, '2022-03-31 23:00:00.000000', 417244902117446, '2024-08-23 16:38:32.256000', 450236590075973);
 
 -- ----------------------------
 -- Table structure for sys_user_role
@@ -703,14 +710,15 @@ CREATE TABLE `sys_user_role`  (
   `create_by` bigint NULL DEFAULT NULL COMMENT '创建人',
   `create_on` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 417244902194815 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统用户权限表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 582608506482758 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统用户权限表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_user_role
 -- ----------------------------
-INSERT INTO `sys_user_role` VALUES (417244902149164, 417244902117456, 417244902134579, 0, NULL, NULL);
 INSERT INTO `sys_user_role` VALUES (417244902194813, 417244902117446, 417244902134579, 0, NULL, '2023-05-30 21:47:54.000000');
 INSERT INTO `sys_user_role` VALUES (417244902194814, 417244902117445, 424046126026821, 0, NULL, '2023-05-30 21:47:54.000000');
 INSERT INTO `sys_user_role` VALUES (417244902194815, 417244902117446, 424046126026821, 0, NULL, '2023-05-30 21:47:54.000000');
+INSERT INTO `sys_user_role` VALUES (582608506478661, 417244902117456, 417244902134579, 0, 417244902117446, '2024-08-23 17:00:06.922000');
+INSERT INTO `sys_user_role` VALUES (582608506482757, 417244902117456, 424046126026821, 0, 417244902117446, '2024-08-23 17:00:06.923000');
 
 SET FOREIGN_KEY_CHECKS = 1;

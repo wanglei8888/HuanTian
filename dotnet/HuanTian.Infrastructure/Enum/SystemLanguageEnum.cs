@@ -35,10 +35,10 @@ namespace HuanTian.Infrastructure
         /// <summary>
         /// 中文
         /// </summary>
-        Chinese,
+        zh_CN,
         /// <summary>
         /// 英文
         /// </summary>
-        English
+        en_US
     }
 }

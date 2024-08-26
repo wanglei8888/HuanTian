@@ -12,8 +12,6 @@ export default {
   },
   render () {
     const { $route: { meta, name }, $store: { getters } } = this
-    console.log('meta.keepAlive', meta)
-    console.log('meta.keepAlive2', name)
     const inKeep = (
       <keep-alive>
         <router-view />

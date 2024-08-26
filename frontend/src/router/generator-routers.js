@@ -144,12 +144,6 @@ export const generator = (routerMap, parent) => {
     }
     // 重定向
     item.redirect && (currentRouter.redirect = item.redirect)
-    if (item.name === '系统管理') {
-      console.log('系统管理', item)
-    }
-    if (item.name === 'result') {
-      console.log('result', item)
-    }
     // 是否有子菜单，并递归处理
     if (item.children && item.children.length > 0) {
       // Recursion

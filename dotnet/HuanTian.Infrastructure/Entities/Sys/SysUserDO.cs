@@ -41,7 +41,7 @@ public class SysUserDO : BaseEntityBusiness
     [Required]
     [MaxLength(50)]
     [Comment("用户密码")]
-    public string? Password { get; set; }
+    public string Password { get; set; }
     /// <summary>
     /// 用户邮箱
     /// </summary>
@@ -87,8 +87,10 @@ public class SysUserDO : BaseEntityBusiness
     /// 系统语言
     /// </summary>
     [Comment("系统语言")]
-    [EnumDataType(typeof(SystemLanguageEnum))]
-    public SystemLanguageEnum Language { get; set; }
+    [MaxLength(20)]
+    [DefaultValue(SystemLanguageEnum.zh_CN)]
+    [EnumShowString(typeof(SystemLanguageEnum))]
+    public string Language { get; set; }
 }
 /// <summary>
 /// 用户类型枚举

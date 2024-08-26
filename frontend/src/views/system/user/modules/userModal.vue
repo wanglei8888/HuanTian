@@ -62,7 +62,7 @@
           <a-col :md="mdSize" :sm="smSize">
             <a-form-model-item label="默认语言" prop="language" hasFeedback>
               <a-select style="width: 100%" v-model="form.language">
-                <a-select-option v-for="(item, index) in languageData" :key="index" :value="parseInt(item.value)">
+                <a-select-option v-for="(item, index) in languageData" :key="index" :value="item.value">
                   {{ item.name }}
                 </a-select-option>
               </a-select>
@@ -109,7 +109,7 @@ import { sysDict } from '@/api/system'
 import md5 from 'md5'
 function createForm () {
   return {
-    language: 0,
+    language: 'zh_CN',
     enable: true,
     gender: 0
   }
@@ -155,6 +155,86 @@ export default {
     }
   },
   methods: {
+    // 打开页面初始化
+    detail (value) {
+      // this.$store.getters.userInfo.avatar
+      this.visible = true
+      this.confirmLoading = false
+      if (this.$refs.form) {
+        this.$refs.form.clearValidate()
+      }
+      this.dromdownList()
+      if (value) {
+        this.form = JSON.parse(JSON.stringify(value))
+        // JSON.parse(JSON.stringify())
+        this.formType = 'edit'
+        this.title = '编辑用户'
+        this.fileList = [{
+          uid: '-1',
+          name: this.form.avatar.substring(this.form.avatar.lastIndexOf('\\') + 1),
+          status: 'done',
+          url: this.form.avatar,
+          thumbUrl: this.form.avatar
+        }]
+      } else {
+        this.fileList = []
+        this.title = '新建用户'
+        this.formType = 'add'
+        this.form = createForm()
+      }
+    },
+    close () {
+      this.$emit('close')
+      this.visible = false
+    },
+    async handleOk () {
+      this.$refs.form.validate(async valid => {
+        if (valid) {
+          this.form.password = md5(this.form.password)
+          // 如果存在修改文件
+          if (this.fileList.length > 0 && this.fileList[0].originFileObj) {
+            const formData = new FormData()
+            formData.append('filePath', 'userAvatar')
+            if (this.formType === 'edit') {
+              formData.append('add', false)
+            }
+            formData.append('file', this.fileList[0].originFileObj)
+            await this.$http.post('/sysFile/upload', formData).then(res => {
+              // 上传保存信息
+              this.form.avatar = res.result.filePath
+            })
+          }
+          this.confirmLoading = true
+          // 修改数据
+          if (this.formType === 'edit') {
+            await this.$http.put('/sysUser', this.form).then(res => {
+              if (res.code === 200) {
+                this.$message.success('保存成功')
+                this.$emit('ok')
+                this.visible = false
+              }
+            }).finally(() => {
+              this.confirmLoading = false
+            })
+          } else {
+            // 保存数据
+            // 先上传文件
+            await this.$http.post('/sysUser', this.form).then(res => {
+              if (res.code === 200) {
+                this.$message.success('保存成功')
+                this.$emit('ok')
+                this.visible = false
+              }
+            }).finally(() => {
+              this.confirmLoading = false
+            })
+          }
+        }
+      })
+    },
+    handleCancel () {
+      this.close()
+    },
     avatarValidator (rule, value, callback) {
       // if (this.fileList.length === 0) {
       //   return callback('请上传用户头像！')
@@ -241,86 +321,6 @@ export default {
         }
       })
       this.fileList = fileList
-    },
-    // 打开页面初始化
-    detail (value) {
-      // this.$store.getters.userInfo.avatar
-      this.visible = true
-      this.confirmLoading = false
-      if (this.$refs.form) {
-        this.$refs.form.clearValidate()
-      }
-      this.dromdownList()
-      if (value) {
-        this.form = JSON.parse(JSON.stringify(value))
-        // JSON.parse(JSON.stringify())
-        this.formType = 'edit'
-        this.title = '编辑用户'
-        this.fileList = [{
-          uid: '-1',
-          name: this.form.avatar.substring(this.form.avatar.lastIndexOf('\\') + 1),
-          status: 'done',
-          url: this.form.avatar,
-          thumbUrl: this.form.avatar
-        }]
-      } else {
-        this.fileList = []
-        this.title = '新建用户'
-        this.formType = 'add'
-        this.form = createForm()
-      }
-    },
-    close () {
-      this.$emit('close')
-      this.visible = false
-    },
-    async handleOk () {
-      this.$refs.form.validate(async valid => {
-        if (valid) {
-          this.form.password = md5(this.form.password)
-          // 如果存在修改文件
-          if (this.fileList.length > 0 && this.fileList[0].originFileObj) {
-            const formData = new FormData()
-            formData.append('filePath', 'userAvatar')
-            if (this.formType === 'edit') {
-              formData.append('add', false)
-            }
-            formData.append('file', this.fileList[0].originFileObj)
-            await this.$http.post('/sysFile/upload', formData).then(res => {
-              // 上传保存信息
-              this.form.avatar = res.result.filePath
-            })
-          }
-          this.confirmLoading = true
-          // 修改数据
-          if (this.formType === 'edit') {
-            await this.$http.put('/sysUser', this.form).then(res => {
-              if (res.code === 200) {
-                this.$message.success('保存成功')
-                this.$emit('ok')
-                this.visible = false
-              }
-            }).finally(() => {
-              this.confirmLoading = false
-            })
-          } else {
-            // 保存数据
-            // 先上传文件
-            await this.$http.post('/sysUser', this.form).then(res => {
-              if (res.code === 200) {
-                this.$message.success('保存成功')
-                this.$emit('ok')
-                this.visible = false
-              }
-            }).finally(() => {
-              this.confirmLoading = false
-            })
-          }
-        }
-      })
-    },
-    handleCancel () {
-      this.close()
     }
   }
 }

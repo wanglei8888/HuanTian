@@ -25,7 +25,6 @@
 #endregion << 版 本 注 释 >>
 
 using SqlSugar.Extensions;
-using StackExchange.Redis;
 
 namespace HuanTian.Service
 {
@@ -91,6 +90,7 @@ namespace HuanTian.Service
             {
                 throw new Exception("登陆名已存在");
             }
+            input.Password = EncryptionHelper.SHA1(input.Password);
             var count = await _userInfo.InitTable(input)
                 .CallEntityMethod(t => t.CreateFunc())
                 .AddAsync();
@@ -149,6 +149,20 @@ namespace HuanTian.Service
                 .WhereIf(!string.IsNullOrEmpty(input.Enable), t => t.Enable == input.Enable.ObjToBool())
                 .ToListAsync();
             return userInfo;
+        }
+
+        public async Task<int> UpdatePwd(SysUserUpdatePwdInput user)
+        {
+            var userInfo = await _userInfo.FirstOrDefaultAsync(t => t.Id == user.Id);
+            if (userInfo == null)
+            {
+                throw new Exception("用户不存在");
+            }
+            userInfo.Password = EncryptionHelper.SHA1(user.Password);
+            var count = await _userInfo.InitTable(userInfo)
+                .CallEntityMethod(t => t.UpdateFunc())
+                .UpdateAsync();
+            return count;
         }
     }
 }

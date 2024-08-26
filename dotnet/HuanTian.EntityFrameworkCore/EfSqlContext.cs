@@ -87,23 +87,31 @@ namespace HuanTian.EntityFrameworkCore
                         modelBuilder.Entity(entity.ClrType)
                             .Property(property.Name)
                             .HasDefaultValue(defaultValue);
-                    } 
+                    }
                     #endregion
 
                     #region 自动生成枚举类型的备注
+                    // 获取属性上的 [EnumShowString] 特性 修改备注 加上枚举的备注
+                    var enumShowStringAttribute = property.GetCustomAttribute<EnumShowStringAttribute>();
                     var propertyName = property.Name;
+                    var showString = false;
                     // 实体所属命名空间
                     var entityTypeFullName = entity.ClrType.FullName;
                     // 实体类型
                     var enumType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-
-                    var isEnum = property.PropertyType.IsEnum || (Nullable.GetUnderlyingType(property.PropertyType)?.IsEnum == true);
+                    if (enumShowStringAttribute != null)
+                    {
+                        enumType = enumShowStringAttribute.EnumType;
+                        showString = true;
+                    }
+                    var isEnum = property.PropertyType.IsEnum || (Nullable.GetUnderlyingType(property.PropertyType)?.IsEnum == true) || enumType.IsEnum;
                     if (isEnum)
                     {
                         var enumName = $"F:{enumType.FullName}";
                         var enumMasterName = $"P:{entityTypeFullName}.{propertyName}";
 
-                        Console.WriteLine($"FullName:{enumType.FullName},entityTypeFullName:{entityTypeFullName} ");
+                        //Console.WriteLine($"FullName:{enumType.FullName},entityTypeFullName:{entityTypeFullName} ");
+
                         // 获取枚举的所有成员
                         var enumValues = xmlDoc.Descendants("member")
                                                .Where(x => x.Attribute("name")?.Value.StartsWith(enumName) == true)
@@ -123,18 +131,22 @@ namespace HuanTian.EntityFrameworkCore
                             enumFieldComment += string.Join(", ", enumValues.Select(ev =>
                             {
                                 var enumMember = Enum.Parse(enumType, ev.Name!);
-                                var enumValueNumber = Convert.ToInt32(enumMember);
+                                var enumValueNumber = enumMember.ToString();//Convert.ToInt32(enumMember);
+                                if (!showString)
+                                {
+                                    enumValueNumber = Convert.ToInt32(enumMember).ToString();
+                                }
                                 return $"{enumValueNumber} {ev.Summary}";
                             }));
                             enumFieldComment += ")";
 
-                            Console.WriteLine("最终备注:" + enumFieldComment);
+                            //Console.WriteLine("最终备注:" + enumFieldComment);
 
                             modelBuilder.Entity(entity.ClrType)
                                         .Property(property.Name)
                                         .HasComment(enumFieldComment);
                         }
-                    } 
+                    }
                     #endregion
                 }
 

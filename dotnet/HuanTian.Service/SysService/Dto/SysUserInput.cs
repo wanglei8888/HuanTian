@@ -36,4 +36,9 @@ namespace HuanTian.Service
         public int PageSize { get; set; }
         public int PageNo { get; set; }
     }
+    public class SysUserUpdatePwdInput
+    {
+        public long Id { get; set; }
+        public string Password { get; set; }
+    }
 }

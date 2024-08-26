@@ -63,5 +63,11 @@ namespace HuanTian.Service
         /// <param name="input"></param>
         /// <returns></returns>
         Task<IEnumerable<SysUserDO>> Get(SysUserInput input);
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        Task<int> UpdatePwd(SysUserUpdatePwdInput user);
     }
 }

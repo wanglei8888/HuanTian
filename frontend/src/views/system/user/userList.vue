@@ -4,15 +4,11 @@
       <a-col :md="3" :sm="24">
         <a-card :bordered="false" :loading="treeLoading">
           <div>
-            <a-tree
-              :treeData="treeData"
-              @select="treeSelect"
-              :defaultExpandAll="true"
-              :replaceFields="{
-                key: 'id',
-                title: 'name',
-                value: 'id'
-              }" />
+            <a-tree :treeData="treeData" @select="treeSelect" :defaultExpandAll="true" :replaceFields="{
+              key: 'id',
+              title: 'name',
+              value: 'id'
+            }" />
           </div>
         </a-card>
       </a-col>
@@ -71,8 +67,7 @@
               </a-col>
             </template> -->
                 <a-col :md="!advanced && 6 || 24" :sm="24">
-                  <span
-                    class="table-page-search-submitButtons"
+                  <span class="table-page-search-submitButtons"
                     :style="advanced && { float: 'right', overflow: 'hidden' } || {}">
                     <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
                     <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
@@ -88,7 +83,7 @@
 
           <div class="table-operator">
             <a-button type="primary" icon="plus" @click="$refs.userModal.detail()">新建</a-button>
-            <a-button type="primary" icon="plus" v-action:Add >新建(测试权限)</a-button>
+            <a-button type="primary" icon="plus" v-action:Add>新建(测试权限)</a-button>
             <a-dropdown v-if="selectedRowKeys.length > 0">
               <a-menu slot="overlay">
                 <a-menu-item key="1">
@@ -102,19 +97,13 @@
             </a-dropdown>
           </div>
 
-          <s-table
-            ref="table"
-            size="default"
-            rowKey="id"
-            :columns="columns"
-            :data="loadData"
-            :alert="true"
+          <s-table ref="table" size="default" rowKey="id" :columns="columns" :data="loadData" :alert="true"
             :rowSelection="rowSelection">
             <span slot="enable" slot-scope="text">
               <a-tag :color="text ? 'green' : 'red'">{{ text == 1 ? '启用' : '禁用' }}</a-tag>
             </span>
             <span slot="language" slot-scope="text">
-              {{ text | languageFilter }}
+              <a-tag color="geekblue">{{ (languageData.find(q => q.value == text) || { name: text }).name }}</a-tag>
             </span>
             <span slot="avatar" slot-scope="text" style="margin-left: -13px;">
               <img style="width:75px;height:75px" slot="avatar" :src="text" />
@@ -134,7 +123,7 @@
                   </a>
                   <a-menu slot="overlay">
                     <a-menu-item>
-                      <a href="javascript:;" @click="$message.success('修改密码')">修改密码</a>
+                      <a href="javascript:;" @click="pwdShowModal(record.id)">修改密码</a>
                     </a-menu-item>
                     <a-menu-item>
                       <a href="javascript:;" @click="$refs.userRoleModal.create(record.id)">授权角色</a>
@@ -146,14 +135,36 @@
           </s-table>
           <user-modal ref="userModal" @ok="handleOk" />
           <user-role-modal ref="userRoleModal" @ok="handleOk" />
+          <a-modal title="修改密码" :visible="pwdVisible" :confirm-loading="confirmLoading" @ok="pwdHandleOk"
+            @cancel="pwdHandleCancel">
+            <a-form-model ref="form" :model="form" :rules="rules">
+              <a-row :gutter="24">
+                <a-col :md="16" :sm="24">
+                  <a-form-model-item label="新密码" prop="password" hasFeedback>
+                    <a-input-password v-model="form.password" />
+                  </a-form-model-item>
+                </a-col>
+              </a-row>
+              <a-row :gutter="24">
+                <a-col :md="16" :sm="24">
+                  <a-form-model-item label="确认密码" prop="passwordAgain" hasFeedback>
+                    <a-input-password v-model="form.passwordAgain" />
+                  </a-form-model-item>
+                </a-col>
+              </a-row>
+            </a-form-model>
+          </a-modal>
         </a-card>
       </a-col>
     </a-row>
   </page-header-wrapper>
+
 </template>
 
 <script>
+import md5 from 'md5'
 import moment from 'moment'
+import { sysDict } from '@/api/system'
 import { STable } from '@/components'
 import UserModal from './modules/userModal'
 import userRoleModal from './modules/userRoleModal'
@@ -164,15 +175,21 @@ export default {
     UserModal,
     userRoleModal
   },
-  data () {
+  data() {
     this.columns = columns
     return {
       treeLoading: false,
       treeData: [],
-      visible: false,
+      pwdVisible: false,
       confirmLoading: false,
       // 高级搜索 展开/关闭
       advanced: false,
+      userId: '',
+      languageData: [],
+      form: {
+        password: '',
+        passwordAgain: ''
+      },
       // 查询参数
       queryParam: {},
       // 加载数据方法 必须为 Promise 对象
@@ -183,11 +200,22 @@ export default {
         })
       },
       selectedRowKeys: [],
-      selectedRows: []
+      selectedRows: [],
+      rules: {
+        password: [{ required: true, validator: this.pwdValidator }],
+        passwordAgain: [{ required: true, validator: this.pwdValidatorAgain }]
+      },
     }
   },
   methods: {
-    getTreeData () {
+    dromdownList() {
+      sysDict({ code: 'languageType' }).then((res) => {
+        if (res.code === 200) {
+          this.languageData = res.result
+        }
+      })
+    },
+    getTreeData() {
       // this.$store.getters.userInfo.avatar
       this.treeLoading = true
       this.$http.get('/sysDept/tree').then((res) => {
@@ -198,11 +226,69 @@ export default {
         this.treeLoading = false
       })
     },
-    treeSelect (e) {
+    pwdValidator(rule, value, callback) {
+      if (!value) {
+        callback(new Error('请输入密码'))
+      }
+      if (value.length < 3) {
+        callback(new Error('密码长度不能小于3位'))
+      }
+      if(this.form.passwordAgain && value !== this.form.passwordAgain){
+        callback(new Error('两次输入密码不一致'))
+      }
+      callback()
+    },
+    pwdValidatorAgain(rule, value, callback) {
+      if (!value) {
+        callback(new Error('请输入重复密码'))
+      }
+      if (value !== this.form.password) {
+        callback(new Error('两次输入密码不一致'))
+      } 
+      callback()
+    },
+    pwdShowModal(id) {
+      this.userId = id
+      this.form = {
+        password: '',
+        passwordAgain: ''
+      }
+      if (this.$refs.form) {
+        this.$refs.form.clearValidate()
+      }
+      this.pwdVisible = true;
+    },
+    async pwdHandleOk(e) {
+      // this.ModalText = 'The modal will be closed after two seconds';
+      this.confirmLoading = true;
+      this.$refs.form.validate(async valid => {
+        if (!valid) {
+          this.confirmLoading = false;
+          return
+        }
+        const data  = {
+          id: this.userId,
+          password: md5(this.form.password)
+        }
+        await this.$http.put('/sysUser/updatePwd', data).then(res => {
+            if (res.code === 200) {
+              this.$message.success('保存成功')
+              this.$emit('ok')
+              this.pwdVisible = false;
+            }})
+        .finally(() => {
+          this.confirmLoading = false;
+        })
+      })
+    },
+    pwdHandleCancel(e) {
+      this.pwdVisible = false;
+    },
+    treeSelect(e) {
       this.queryParam.deptId = e[0]
       this.$refs.table.refresh()
     },
-    remove (key) {
+    remove(key) {
       this.$http.delete('/sysUser', { data: { Ids: !key.length ? [key] : key } }).then(res => {
         if (res.code === 200) {
           this.$message.success('删除成功')
@@ -211,30 +297,28 @@ export default {
         }
       })
     },
-    handleOk () {
+    handleOk() {
       this.$refs.table.refresh()
     },
-    onSelectChange (selectedRowKeys, selectedRows) {
+    onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
-    toggleAdvanced () {
+    toggleAdvanced() {
       this.advanced = !this.advanced
     },
-    authRole () {
+    authRole() {
       this.$message.success('授权角色')
     }
   },
-  created () {
+  created() {
+    this.dromdownList()
     this.getTreeData()
   },
   filters: {
-    languageFilter (type) {
-      return languageMap[type].text
-    }
   },
   computed: {
-    rowSelection () {
+    rowSelection() {
       return {
         selectedRowKeys: this.selectedRowKeys,
         onChange: this.onSelectChange
@@ -284,16 +368,5 @@ const columns = [
     scopedSlots: { customRender: 'action' }
   }
 ]
-
-const languageMap = {
-  0: {
-    status: '0',
-    text: '中文'
-  },
-  1: {
-    status: '1',
-    text: '英语'
-  }
-}
 
 </script>
