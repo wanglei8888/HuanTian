@@ -6,8 +6,9 @@ namespace HuanTian.SqlSugar
 {
     /// <summary>
     /// SqlSugar仓储实现
+    /// <para>更多详细信息,请访问<a href="https://www.donet5.com/Home/Doc">官网</a></para>
     /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TEntity">实体表格</typeparam>
     public class SqlSugarRepository<TEntity> : IRepository<TEntity> where TEntity : class, new()
     {
         private readonly ISqlSugarClient _db;
@@ -40,6 +41,15 @@ namespace HuanTian.SqlSugar
                 value = value.ClearFilter();
             }
             return await value.FirstAsync(predicate);
+        }
+        public Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            var value = _db.Queryable<TEntity>();
+            if (_isIgnoreFilter)
+            {
+                value = value.ClearFilter();
+            }
+            return value.AnyAsync(predicate);
         }
 
         public async Task<IEnumerable<TEntity>> ToListAsync()

@@ -13,8 +13,12 @@ const i18nMixin = {
     async setLang(lang) {
       this.userInfo.language = lang.replace(/-/g, '_')
       await this.$http.put('/sysUser', this.userInfo).then(res => {
+        
+      })
+      .finally(() => {
         this.$store.dispatch('setLang', lang)
-      }).catch(() => {
+      })
+      .catch(() => {
         console.log('setLang error')
       })
     }

@@ -8,8 +8,9 @@ namespace HuanTian.EntityFrameworkCore
 {
     /// <summary>
     /// EF仓储类
+    /// <para>更多详细信息,请访问<a href="https://learn.microsoft.com/zh-cn/ef/core">官网</a></para>
     /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TEntity">实体表格</typeparam>
     public class EfRepository<TEntity> : IRepository<TEntity> where TEntity : class, new()
     {
         private readonly EfSqlContext _db;
@@ -43,6 +44,16 @@ namespace HuanTian.EntityFrameworkCore
             }
 
             return await value.FirstOrDefaultAsync(predicate);
+        }
+        public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            IQueryable<TEntity> value = _db.Set<TEntity>();
+            if (_isIgnoreFilter)
+            {
+                value = value.IgnoreQueryFilters();
+            }
+
+            return await value.AnyAsync(predicate);
         }
 
         public async Task<IEnumerable<TEntity>> ToListAsync()

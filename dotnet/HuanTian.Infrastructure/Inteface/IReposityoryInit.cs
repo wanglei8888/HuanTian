@@ -24,31 +24,29 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace HuanTian.Infrastructure
 {
     /// <summary>
-    /// IReposityoryInit 的摘要说明
+    /// 实体仓储接口-加载实体(集合)进行操作(ORM)
     /// </summary>
+    /// <typeparam name="TEntity">实体表格</typeparam>
     public interface IReposityoryInit<TEntity> where TEntity : class, new()
     {
         /// <summary>
         /// 调用实体方法
+        /// <para>使用示例 : CallEntityMethod(t => t.CreateFunc()) </para>
         /// </summary>
         /// <param name="method"></param>
         /// <returns></returns>
         IReposityoryInit<TEntity> CallEntityMethod(Expression<Action<TEntity>> method);
         /// <summary>
         /// 忽略指定列
+        /// <para>使用示例 : IgnoreColumns(t => new { t.Password }) </para>
         /// </summary>
-        /// <param name="method"></param>
+        /// <param name="expression"></param>
         /// <returns></returns>
         IReposityoryInit<TEntity> IgnoreColumns(Expression<Func<TEntity, object>> expression);
         /// <summary>
@@ -59,12 +57,12 @@ namespace HuanTian.Infrastructure
         /// <summary>
         /// 修改数据
         /// </summary>
-        /// <param name="entity"></param>
+        /// <returns></returns>
         Task<int> UpdateAsync();
         /// <summary>
         /// 删除数据
         /// </summary>
-        /// <param name="entity"></param>
+        /// <returns></returns>
         Task<int> DeleteAsync();
     }
 }

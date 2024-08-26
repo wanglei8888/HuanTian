@@ -3,22 +3,30 @@
 namespace HuanTian.Infrastructure
 {
     /// <summary>
-    /// 仓储接口
+    /// 实体仓储接口(ORM)
     /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TEntity">实体表格</typeparam>
     public interface IRepository<TEntity> where TEntity : class, new()
     {
         #region 增删改查
         /// <summary>
         /// 只查询一条数据
+        /// <para>不支持 where 条件</para>
         /// </summary>
         /// <param name="predicate">筛选条件</param>
         /// <returns></returns>
         Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
         /// <summary>
-        /// 获取所有数据
+        /// 查询值是否存在
+        /// <para>不支持 where 条件</para>
         /// </summary>
-        /// <param name="predicate">筛选条件+whereif</param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate);
+        /// <summary>
+        /// 获取所有数据
+        /// <para>使用 Where 筛选</para>
+        /// </summary>
         /// <returns></returns>
         Task<IEnumerable<TEntity>> ToListAsync();
         /// <summary>
@@ -70,6 +78,7 @@ namespace HuanTian.Infrastructure
         /// <param name="entity"></param>
         Task<int> DeleteAsync(List<TEntity> entity); 
         #endregion
+
         /// <summary>
         /// 数据排序
         /// </summary>
@@ -92,12 +101,14 @@ namespace HuanTian.Infrastructure
         IRepository<TEntity> WhereIf(bool condition, Expression<Func<TEntity, bool>> sqlWhereExpression);
         /// <summary>
         /// 加载表格实体
+        /// <para>不支持跟 IRepository 仓储共用,在此仅提供调用链接</para>
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
         IReposityoryInit<TEntity> InitTable(TEntity entity);
         /// <summary>
         /// 加载表格实体(集合)
+        /// <para>不支持跟 IRepository 仓储共用,在此仅提供调用链接</para>
         /// </summary>
         /// <param name="entityList"></param>
         /// <returns></returns>

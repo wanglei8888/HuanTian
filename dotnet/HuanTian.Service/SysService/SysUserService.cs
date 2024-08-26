@@ -24,6 +24,8 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+using HuanTian.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SqlSugar.Extensions;
 
 namespace HuanTian.Service
@@ -39,13 +41,15 @@ namespace HuanTian.Service
         private readonly ISysRoleService _sysRoleService;
         private readonly ISysMenuService _sysMenuService;
         private readonly IMessageQueue _messageQueue;
+        private readonly EfSqlContext _db;
         public SysUserService(
             ILogger<SysUserService> logger,
             IRepository<SysUserDO> userInfo,
             ISysRoleService sysRoleService,
             IRepository<SysAppsDO> app,
             ISysMenuService sysMenuService,
-            IMessageQueue messageQueue)
+            IMessageQueue messageQueue,
+            EfSqlContext db)
         {
             _logger = logger;
             _userInfo = userInfo;
@@ -53,6 +57,7 @@ namespace HuanTian.Service
             _app = app;
             _sysMenuService = sysMenuService;
             _messageQueue = messageQueue;
+            _db = db;
         }
         /// <summary>
         /// 获取用户信息跟用户权限信息
@@ -128,6 +133,7 @@ namespace HuanTian.Service
         [HttpGet]
         public async Task<PageData> Page([FromQuery] SysUserInput input)
         {
+           
             var pageData = await _userInfo
                 .Where(t => t.Deleted == false)
                 .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name.Contains(input.Name))

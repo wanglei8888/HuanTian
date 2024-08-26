@@ -33,7 +33,9 @@ namespace HuanTian.SqlSugar
 {
     /// <summary>
     /// SqlSugar Init仓储
+    /// <para>更多详细信息,请访问<a href="https://www.donet5.com/Home/Doc">官网</a></para>
     /// </summary>
+    /// <typeparam name="TEntity">实体表格</typeparam>
     public class SqlSugarReposityoryInit<TEntity> : IReposityoryInit<TEntity> where TEntity : class, new()
     {
         private readonly IEnumerable<TEntity> _entityList;

@@ -122,7 +122,37 @@ namespace HuanTian.Service
             var jsonA = parsedNode as JsonArray;
             return _sysFileService.Download(jsonA, "用户集合", columnsName.ToJsonString());
         }
+        /// <summary>
+        /// 备注汇总,鼠标放到方法上面会显示备注信息
+        /// <list>
+        /// <item>
+        /// <description>参数1.</description>
+        /// </item>
+        /// <item>
+        /// <description>参数2.</description>
+        /// </item>
+        /// </list>
+        /// <para>para 1</para>
+        /// <para>para 2</para>
+        /// </summary>
+        /// <param name="a"></param>
+        /// <para>para 2123</para>
+        /// <value>结果备注值.</value>
+        /// <returns>返回分页PageData实体</returns>
+        /// <exception cref="System.Exception">异常值</exception>
+        private void DescriptionTest(int a)
+        {
+            DescriptionTest2(2);
+        }
+        /// <summary>备注汇总,鼠标放到方法上面会显示备注信息
+        /// <para>这是如何在描述中创建第二段内容的示例。有关输出语句的更多信息，请参见 <see cref="System.Console.WriteLine(System.String)"/>。</para>
+        /// <para>更多信息，请访问 <a href="https://example.com">此链接</a>。</para>
+        /// <seealso cref="TestData.DescriptionTest2"/>
+        /// </summary>
+        private void DescriptionTest2(int a)
+        {
 
+        }
         #region 系统运行需要测试数据
         [HttpGet("list/search/projects")]
         public dynamic GetProjects()

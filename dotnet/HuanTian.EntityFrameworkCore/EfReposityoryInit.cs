@@ -35,7 +35,9 @@ namespace HuanTian.EntityFrameworkCore
 {
     /// <summary>
     /// Ef init仓储
+    /// <para>更多详细信息,请访问<a href="https://learn.microsoft.com/zh-cn/ef/core">官网</a></para>
     /// </summary>
+    /// <typeparam name="TEntity">实体表格</typeparam>
     public class EfReposityoryInit<TEntity> : IReposityoryInit<TEntity> where TEntity : class, new()
     {
         private readonly List<Expression<Func<TEntity, object>>> _ignoredColumns = new List<Expression<Func<TEntity, object>>>();
