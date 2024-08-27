@@ -51,11 +51,15 @@ namespace HuanTian.WebCore
 #if DEBUG
                         var loggerFactory = LoggerFactory.Create(builder =>
                         {
+                            //builder.SetMinimumLevel(LogLevel.Information);
                             builder.AddConsole(); // 将日志输出到控制台
+                            //builder.AddProvider(new SqlLoggerProvider());
+                            
                         });
                         options.UseLoggerFactory(loggerFactory);
 #endif
                         options.UseMySql(ConnectionStrings, ServerVersion.AutoDetect(ConnectionStrings));
+                        options.EnableSensitiveDataLogging();
                         options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking); 
                     });
                     break;
@@ -66,10 +70,13 @@ namespace HuanTian.WebCore
                         var loggerFactory = LoggerFactory.Create(builder =>
                         {
                             builder.AddConsole(); // 将日志输出到控制台
+                            //builder.AddProvider(new SqlLoggerProvider());
+                            //builder.SetMinimumLevel(LogLevel.Information);
                         });
                         options.UseLoggerFactory(loggerFactory);
 #endif
                         options.UseSqlServer(ConnectionStrings);
+                        options.EnableSensitiveDataLogging();
                         options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
                     });
                     break;

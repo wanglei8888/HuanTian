@@ -128,7 +128,19 @@ namespace HuanTian.SqlSugar
         {
             return await _db.Insertable(entityList).ExecuteCommandAsync();
         }
-
+        
+        public async Task<int> UpdateAsync(TEntity entity, Expression<Func<TEntity, object>> columnsExpression)
+        {
+            var updateable = _db.Updateable(entity)
+                .UpdateColumns(columnsExpression);
+            return await updateable.ExecuteCommandAsync();
+        }
+        public async Task<int> UpdateAsync(List<TEntity> entityList, Expression<Func<TEntity, object>> columnsExpression)
+        {
+            var updateable = _db.Updateable(entityList)
+                .UpdateColumns(columnsExpression);
+            return await updateable.ExecuteCommandAsync();
+        }
         public async Task<int> UpdateAsync(TEntity entity)
         {
             return await _db.Updateable(entity).ExecuteCommandAsync();

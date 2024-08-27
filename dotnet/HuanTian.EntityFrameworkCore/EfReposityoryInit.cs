@@ -26,6 +26,7 @@
 
 using HuanTian.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.Extensions.Localization;
 using SqlSugar;
 using System.Linq.Expressions;
@@ -118,14 +119,20 @@ namespace HuanTian.EntityFrameworkCore
         public IReposityoryInit<TEntity> IgnoreColumns(Expression<Func<TEntity, object>> expression)
         {
             var ignoredColumns = new List<Expression<Func<TEntity, object>>>();
-            // 将若干个lambda表达式转换成成员表达式  new {a.name,a.pwd} 转换成 a.name,a.pwd
-            if (expression.Body is NewExpression newExpression)
+            // 处理单个属性的情况，例如： q => q.UserName
+            if (expression.Body is MemberExpression memberExpression)
+            {
+                var lambdaExpression = Expression.Lambda<Func<TEntity, object>>(memberExpression, expression.Parameters);
+                ignoredColumns.Add(lambdaExpression);
+            }
+            // 处理多个属性的情况，例如： q => new { q.UserName, q.Email } 将若干个lambda表达式转换成成员表达式  new {a.name,a.pwd} 转换成 a.name,a.pwd
+            else if (expression.Body is NewExpression newExpression)
             {
                 foreach (var argument in newExpression.Arguments)
                 {
-                    if (argument is MemberExpression memberExpression)
+                    if (argument is MemberExpression memberExpr)
                     {
-                        var lambdaExpression = Expression.Lambda<Func<TEntity, object>>(memberExpression, expression.Parameters);
+                        var lambdaExpression = Expression.Lambda<Func<TEntity, object>>(memberExpr, expression.Parameters);
                         ignoredColumns.Add(lambdaExpression);
                     }
                 }

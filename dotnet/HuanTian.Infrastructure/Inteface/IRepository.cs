@@ -57,6 +57,24 @@ namespace HuanTian.Infrastructure
         /// <param name="entity"></param>
         Task<int> UpdateAsync(List<TEntity> entity);
         /// <summary>
+        /// 修改一条数据 只修改指定列
+        /// <para>使用示例 : IgnoreColumns(t => t.Password) </para>
+        /// <para>使用示例 : IgnoreColumns(t => new { t.Password }) </para>
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="columnsExpression"></param>
+        /// <returns></returns>
+        Task<int> UpdateAsync(TEntity entity, Expression<Func<TEntity, object>> columnsExpression);
+        /// <summary>
+        /// 修改多条数据 只修改指定列
+        /// <para>使用示例 : IgnoreColumns(t => t.Password) </para>
+        /// <para>使用示例 : IgnoreColumns(t => new { t.Password }) </para>
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="columnsExpression"></param>
+        /// <returns></returns>
+        Task<int> UpdateAsync(List<TEntity> entity, Expression<Func<TEntity, object>> columnsExpression);
+        /// <summary>
         /// 删除一条数据 
         /// </summary>
         /// <param name="entity"></param>

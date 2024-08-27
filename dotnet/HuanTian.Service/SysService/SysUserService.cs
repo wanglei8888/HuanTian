@@ -133,15 +133,21 @@ namespace HuanTian.Service
         [HttpGet]
         public async Task<PageData> Page([FromQuery] SysUserInput input)
         {
-           
-            var pageData = await _userInfo
-                .Where(t => t.Deleted == false)
-                .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name.Contains(input.Name))
-                .WhereIf(!string.IsNullOrEmpty(input.UserName), t => t.UserName.Contains(input.UserName))
-                .WhereIf(input.DeptId != 0, t => t.DeptId == input.DeptId)
-                .WhereIf(!string.IsNullOrEmpty(input.Enable), t => t.Enable == input.Enable.ObjToBool())
-                .ToPageListAsync(input.PageNo, input.PageSize);
-            return pageData;
+            var userinfo = await _userInfo.ToListAsync();
+            foreach (var item in userinfo)
+            {
+                item.UserName = "test123";
+                item.Telephone = "123456789";
+            }
+            var num2 = await _userInfo.UpdateAsync(userinfo.ToList(), q => q.UserName);
+            //var pageData = await _userInfo
+            //   .Where(t => t.Deleted == false)
+            //   .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name.Contains(input.Name))
+            //   .WhereIf(!string.IsNullOrEmpty(input.UserName), t => t.UserName.Contains(input.UserName))
+            //   .WhereIf(input.DeptId != 0, t => t.DeptId == input.DeptId)
+            //   .WhereIf(!string.IsNullOrEmpty(input.Enable), t => t.Enable == input.Enable.ObjToBool())
+            //   .ToPageListAsync(input.PageNo, input.PageSize);
+            return default;//pageData;
         }
         [HttpGet]
         public async Task<IEnumerable<SysUserDO>> Get([FromQuery] SysUserInput input)

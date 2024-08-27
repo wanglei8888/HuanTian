@@ -1,7 +1,6 @@
 ﻿using HuanTian.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using SqlSugar;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace HuanTian.EntityFrameworkCore
@@ -153,6 +152,39 @@ namespace HuanTian.EntityFrameworkCore
         public async Task<int> UpdateAsync(List<TEntity> entityList)
         {
             _db.Set<TEntity>().UpdateRange(entityList);
+            return await _db.SaveChangesAsync();
+        }
+        public async Task<int> UpdateAsync(TEntity entity, Expression<Func<TEntity, object>> columnsExpression)
+        {
+            return await UpdateAsync(new List<TEntity> { entity },columnsExpression);
+        }
+        public async Task<int> UpdateAsync(List<TEntity> entityList, Expression<Func<TEntity, object>> columnsExpression)
+        {
+            foreach (var entity in entityList)
+            {
+                // 处理单个属性的情况，例如：UpdateAsync(userinfo, q => q.UserName)
+                if (columnsExpression.Body is MemberExpression memberExpression)
+                {
+                    var lambdaExpression = Expression.Lambda<Func<TEntity, object>>(memberExpression, columnsExpression.Parameters);
+                    _db.Entry(entity).Property(lambdaExpression).IsModified = true;
+                }
+                // 处理多个属性的情况，例如：UpdateAsync(userinfo, q => new { q.UserName, q.Email })
+                else if (columnsExpression.Body is NewExpression newExpression)
+                {
+                    foreach (var argument in newExpression.Arguments)
+                    {
+                        if (argument is MemberExpression memberExpr)
+                        {
+                            var lambdaExpression = Expression.Lambda<Func<TEntity, object>>(memberExpr, columnsExpression.Parameters);
+                            _db.Entry(entity).Property(lambdaExpression).IsModified = true;
+                        }
+                    }
+                }
+                else
+                {
+                    throw new ArgumentNullException("columnsExpression 参数异常,请修改后再试");
+                }
+            }
             return await _db.SaveChangesAsync();
         }
         #endregion

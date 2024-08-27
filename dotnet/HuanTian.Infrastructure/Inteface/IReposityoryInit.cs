@@ -44,6 +44,7 @@ namespace HuanTian.Infrastructure
         IReposityoryInit<TEntity> CallEntityMethod(Expression<Action<TEntity>> method);
         /// <summary>
         /// 忽略指定列
+        /// <para>使用示例 : IgnoreColumns(t => t.Password) </para>
         /// <para>使用示例 : IgnoreColumns(t => new { t.Password }) </para>
         /// </summary>
         /// <param name="expression"></param>

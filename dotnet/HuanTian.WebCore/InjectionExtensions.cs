@@ -25,6 +25,7 @@
 #endregion << 版 本 注 释 >>
 using Hangfire.HttpJob.Agent.Config;
 using HuanTian.EntityFrameworkCore;
+using HuanTian.SqlSugar;
 using Mapster;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -71,7 +72,8 @@ namespace HuanTian.WebCore
         public static IServiceCollection AddDependencyInject(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<IStartupFilter, StartupFilter>();
-            services.AddScoped(typeof(IRepository<>), typeof(HuanTian.SqlSugar.SqlSugarRepository<>));
+            //services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+            services.AddScoped(typeof(IRepository<>), typeof(SqlSugarRepository<>));
             services.AddScoped<IQueryFilter, QueryFilter>();
             // 注册Redis缓存服务
             services.AddSingleton<IRedisCache>(provider =>
