@@ -45,7 +45,7 @@ namespace HuanTian.Infrastructure
         /// 新增多条数据
         /// </summary>
         /// <returns></returns>
-        Task<int> AddAsync(List<TEntity> entityList);
+        Task<int> AddAsync(IEnumerable<TEntity> entityList);
         /// <summary>
         /// 修改一条数据 
         /// </summary>
@@ -55,7 +55,7 @@ namespace HuanTian.Infrastructure
         /// 修改多条数据 
         /// </summary>
         /// <param name="entity"></param>
-        Task<int> UpdateAsync(List<TEntity> entity);
+        Task<int> UpdateAsync(IEnumerable<TEntity> entity);
         /// <summary>
         /// 修改一条数据 只修改指定列
         /// <para>使用示例 : IgnoreColumns(t => t.Password) </para>
@@ -73,7 +73,7 @@ namespace HuanTian.Infrastructure
         /// <param name="entity"></param>
         /// <param name="columnsExpression"></param>
         /// <returns></returns>
-        Task<int> UpdateAsync(List<TEntity> entity, Expression<Func<TEntity, object>> columnsExpression);
+        Task<int> UpdateAsync(IEnumerable<TEntity> entity, Expression<Func<TEntity, object>> columnsExpression);
         /// <summary>
         /// 删除一条数据 
         /// </summary>
@@ -94,7 +94,7 @@ namespace HuanTian.Infrastructure
         /// 删除多条数据 
         /// </summary>
         /// <param name="entity"></param>
-        Task<int> DeleteAsync(List<TEntity> entity); 
+        Task<int> DeleteAsync(IEnumerable<TEntity> entity); 
         #endregion
 
         /// <summary>

@@ -108,7 +108,7 @@ namespace HuanTian.SqlSugar
         {
             return await _db.Deleteable<TEntity>(entity).ExecuteCommandAsync();
         }
-        public async Task<int> DeleteAsync(List<TEntity> entityList)
+        public async Task<int> DeleteAsync(IEnumerable<TEntity> entityList)
         {
             return await _db.Deleteable<TEntity>(entityList).ExecuteCommandAsync();
         }
@@ -124,9 +124,9 @@ namespace HuanTian.SqlSugar
         {
             return await _db.Insertable(entity).ExecuteCommandAsync();
         }
-        public async Task<int> AddAsync(List<TEntity> entityList)
+        public async Task<int> AddAsync(IEnumerable<TEntity> entityList)
         {
-            return await _db.Insertable(entityList).ExecuteCommandAsync();
+            return await _db.Insertable(entityList.ToList()).ExecuteCommandAsync();
         }
         
         public async Task<int> UpdateAsync(TEntity entity, Expression<Func<TEntity, object>> columnsExpression)
@@ -135,9 +135,9 @@ namespace HuanTian.SqlSugar
                 .UpdateColumns(columnsExpression);
             return await updateable.ExecuteCommandAsync();
         }
-        public async Task<int> UpdateAsync(List<TEntity> entityList, Expression<Func<TEntity, object>> columnsExpression)
+        public async Task<int> UpdateAsync(IEnumerable<TEntity> entityList, Expression<Func<TEntity, object>> columnsExpression)
         {
-            var updateable = _db.Updateable(entityList)
+            var updateable = _db.Updateable(entityList.ToList())
                 .UpdateColumns(columnsExpression);
             return await updateable.ExecuteCommandAsync();
         }
@@ -145,9 +145,9 @@ namespace HuanTian.SqlSugar
         {
             return await _db.Updateable(entity).ExecuteCommandAsync();
         }
-        public async Task<int> UpdateAsync(List<TEntity> entityList)
+        public async Task<int> UpdateAsync(IEnumerable<TEntity> entityList)
         {
-            return await _db.Updateable(entityList).ExecuteCommandAsync();
+            return await _db.Updateable(entityList.ToList()).ExecuteCommandAsync();
         }
         #endregion
 

@@ -109,7 +109,7 @@ namespace HuanTian.EntityFrameworkCore
             _db.Set<TEntity>().Remove(entity);
             return await _db.SaveChangesAsync();
         }
-        public async Task<int> DeleteAsync(List<TEntity> entityList)
+        public async Task<int> DeleteAsync(IEnumerable<TEntity> entityList)
         {
             _db.Set<TEntity>().RemoveRange(entityList);
             return await _db.SaveChangesAsync();
@@ -138,7 +138,7 @@ namespace HuanTian.EntityFrameworkCore
             await _db.Set<TEntity>().AddAsync(entity);
             return await _db.SaveChangesAsync();
         }
-        public async Task<int> AddAsync(List<TEntity> entityList)
+        public async Task<int> AddAsync(IEnumerable<TEntity> entityList)
         {
             await _db.Set<TEntity>().AddRangeAsync(entityList);
             return await _db.SaveChangesAsync();
@@ -149,7 +149,7 @@ namespace HuanTian.EntityFrameworkCore
             _db.Set<TEntity>().Update(entity);
             return await _db.SaveChangesAsync();
         }
-        public async Task<int> UpdateAsync(List<TEntity> entityList)
+        public async Task<int> UpdateAsync(IEnumerable<TEntity> entityList)
         {
             _db.Set<TEntity>().UpdateRange(entityList);
             return await _db.SaveChangesAsync();
@@ -158,7 +158,7 @@ namespace HuanTian.EntityFrameworkCore
         {
             return await UpdateAsync(new List<TEntity> { entity },columnsExpression);
         }
-        public async Task<int> UpdateAsync(List<TEntity> entityList, Expression<Func<TEntity, object>> columnsExpression)
+        public async Task<int> UpdateAsync(IEnumerable<TEntity> entityList, Expression<Func<TEntity, object>> columnsExpression)
         {
             foreach (var entity in entityList)
             {

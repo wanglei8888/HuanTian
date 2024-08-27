@@ -24,8 +24,6 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-using HuanTian.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 using SqlSugar.Extensions;
 
 namespace HuanTian.Service
@@ -41,15 +39,13 @@ namespace HuanTian.Service
         private readonly ISysRoleService _sysRoleService;
         private readonly ISysMenuService _sysMenuService;
         private readonly IMessageQueue _messageQueue;
-        private readonly EfSqlContext _db;
         public SysUserService(
             ILogger<SysUserService> logger,
             IRepository<SysUserDO> userInfo,
             ISysRoleService sysRoleService,
             IRepository<SysAppsDO> app,
             ISysMenuService sysMenuService,
-            IMessageQueue messageQueue,
-            EfSqlContext db)
+            IMessageQueue messageQueue)
         {
             _logger = logger;
             _userInfo = userInfo;
@@ -57,7 +53,6 @@ namespace HuanTian.Service
             _app = app;
             _sysMenuService = sysMenuService;
             _messageQueue = messageQueue;
-            _db = db;
         }
         /// <summary>
         /// 获取用户信息跟用户权限信息
@@ -133,21 +128,14 @@ namespace HuanTian.Service
         [HttpGet]
         public async Task<PageData> Page([FromQuery] SysUserInput input)
         {
-            var userinfo = await _userInfo.ToListAsync();
-            foreach (var item in userinfo)
-            {
-                item.UserName = "test123";
-                item.Telephone = "123456789";
-            }
-            var num2 = await _userInfo.UpdateAsync(userinfo.ToList(), q => q.UserName);
-            //var pageData = await _userInfo
-            //   .Where(t => t.Deleted == false)
-            //   .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name.Contains(input.Name))
-            //   .WhereIf(!string.IsNullOrEmpty(input.UserName), t => t.UserName.Contains(input.UserName))
-            //   .WhereIf(input.DeptId != 0, t => t.DeptId == input.DeptId)
-            //   .WhereIf(!string.IsNullOrEmpty(input.Enable), t => t.Enable == input.Enable.ObjToBool())
-            //   .ToPageListAsync(input.PageNo, input.PageSize);
-            return default;//pageData;
+            var pageData = await _userInfo
+               .Where(t => t.Deleted == false)
+               .WhereIf(!string.IsNullOrEmpty(input.Name), t => t.Name.Contains(input.Name))
+               .WhereIf(!string.IsNullOrEmpty(input.UserName), t => t.UserName.Contains(input.UserName))
+               .WhereIf(input.DeptId != 0, t => t.DeptId == input.DeptId)
+               .WhereIf(!string.IsNullOrEmpty(input.Enable), t => t.Enable == input.Enable.ObjToBool())
+               .ToPageListAsync(input.PageNo, input.PageSize);
+            return pageData;
         }
         [HttpGet]
         public async Task<IEnumerable<SysUserDO>> Get([FromQuery] SysUserInput input)
