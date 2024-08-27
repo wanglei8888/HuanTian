@@ -24,8 +24,6 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 using Hangfire.HttpJob.Agent.Config;
-using HuanTian.EntityFrameworkCore;
-using HuanTian.SqlSugar;
 using Mapster;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -72,19 +70,17 @@ namespace HuanTian.WebCore
         public static IServiceCollection AddDependencyInject(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<IStartupFilter, StartupFilter>();
-            //services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-            services.AddScoped(typeof(IRepository<>), typeof(SqlSugarRepository<>));
+            services.AddScoped(typeof(IRepository<>), typeof(EntityFrameworkCore.EfRepository<>));
+            services.AddScoped(typeof(IRepository<>), typeof(SqlSugar.SqlSugarRepository<>));
             services.AddScoped<IQueryFilter, QueryFilter>();
             // 注册Redis缓存服务
             services.AddSingleton<IRedisCache>(provider =>
-                new RedisCache(configuration["ConnectionStrings:Redis"]));
+                new RedisCache(configuration["ConnectionStrings:Redis"]!));
             // 注册RabbitMQ服务
             services.AddSingleton<IMessageQueue, RabbitMQMessageQueue>();
             // 注册多语言
             services.AddSingleton<IStringLocalizerFactory, CustomStringLocalizerFactory>();
             services.AddTransient<IStringLocalizer, CustomStringLocalizer>();
-            //services.AddSingleton<IMessageQueue, RabbitMQMessageQueue>(provider =>
-            //   new RabbitMQMessageQueue(configuration["ConnectionStrings:RabbitMQ"]));
 
             return services;
         }

@@ -15,7 +15,7 @@ namespace HuanTian.EntityFrameworkCore
             _categoryName = categoryName;
         }
 
-        public IDisposable BeginScope<TState>(TState state) => null;
+        public IDisposable BeginScope<TState>(TState state) => default;
 
         public bool IsEnabled(LogLevel logLevel) => logLevel >= LogLevel.Information;
 
@@ -26,38 +26,68 @@ namespace HuanTian.EntityFrameworkCore
                 var message = formatter(state, exception);
                 if (message.StartsWith("Executed DbCommand"))
                 {
-                    // 提取 SQL 语句和参数列表
-                    var sqlPattern = new Regex(@"CommandType='Text'\].*\n\s+(?<sql>.*?)\s+SELECT ROW_COUNT", RegexOptions.Singleline);
-                    var paramPattern = new Regex(@"Parameters=\[(?<params>.*?)\], CommandType", RegexOptions.Singleline);
+                    // 匹配从最后一个 `]` 到字符串末尾的部分
+                    var sqlPattern = @"\].*?(\r?\n|\r)(?<sql>.+)$";
+                    var sqlMatch = Regex.Match(message, sqlPattern, RegexOptions.Singleline);
+                    var sqlContent = sqlMatch.Groups["sql"]?.Value ?? "";
 
-                    var sqlMatch = sqlPattern.Match(message);
-                    var paramMatch = paramPattern.Match(message);
+                    // 定义字典用于存储参数键值对
+                    // var parametersDic = new Dictionary<string, string>();
 
-                    if (sqlMatch.Success && paramMatch.Success)
+                    // 使用正则表达式匹配参数部分
+                    var paramsPattern = @"@(?<name>[a-zA-Z0-9_]+)=(?<value>NULL|'[^']*')(?:\s*\((?:Nullable\s*=\s*(?:true|false))?(?:\s*(?:Size|DbType)\s*=\s*[^\)]*)?\))*";
+                    var paramasMatches = Regex.Matches(message, paramsPattern);
+
+                    // 遍历匹配结果并填充字典
+                    foreach (Match paramasMarch in paramasMatches)
                     {
-                        var sql = sqlMatch.Groups["sql"].Value;
-                        var paramList = paramMatch.Groups["params"].Value;
-
-                        // 替换参数值
-                        var paramPatternForReplacement = new Regex(@"@(?<name>\w+)='(?<value>.*?)'", RegexOptions.Singleline);
-                        sql = paramPatternForReplacement.Replace(sql, m =>
+                        string name = paramasMarch.Groups["name"].Value;
+                        string value = paramasMarch.Groups["value"].Value;
+                        
+                        if (sqlContent.Contains($"@{name}"))
                         {
-                            var name = m.Groups["name"].Value;
-                            var value = m.Groups["value"].Value;
-                            return sql.Replace($"@{name}", $"'{value}'");
-                        });
-
-                        // 输出替换后的 SQL
-                        Console.WriteLine("Executed SQL with parameters: ");
-                        Console.WriteLine(sql);
+                            // 判断类型
+                            if (bool.TryParse(value.Replace("'", ""), out bool boolResult))
+                            {
+                                sqlContent = sqlContent.Replace($"@{name}", $"{boolResult}");
+                            }
+                            else
+                            {
+                                sqlContent = sqlContent.Replace($"@{name}", $"{value}");
+                            }
+                            
+                        }
+                        //if (parametersDic.ContainsKey(name))
+                        //    continue;
+                        //parametersDic.Add(name, value);
                     }
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine("--------------------------------------------------------------");
+
+                    if (sqlContent.StartsWith("SELECT"))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                    }
+                    if (sqlContent.StartsWith("UPDATE") || sqlContent.StartsWith("INSERT"))
+                    {
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    if (sqlContent.StartsWith("DELETE"))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                    }
+                    Console.WriteLine(sqlContent);
+
                 }
             }
         }
+
     }
 
-    // 使用自定义日志记录器
-    public class SqlLoggerProvider : ILoggerProvider
+    /// <summary>
+    /// EF Core 日志记录器
+    /// </summary>
+    public class EFLoggerProvider : ILoggerProvider
     {
         public ILogger CreateLogger(string categoryName)
         {

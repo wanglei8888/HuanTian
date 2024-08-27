@@ -51,10 +51,7 @@ namespace HuanTian.WebCore
 #if DEBUG
                         var loggerFactory = LoggerFactory.Create(builder =>
                         {
-                            //builder.SetMinimumLevel(LogLevel.Information);
-                            builder.AddConsole(); // 将日志输出到控制台
-                            //builder.AddProvider(new SqlLoggerProvider());
-                            
+                            builder.AddProvider(new EFLoggerProvider());
                         });
                         options.UseLoggerFactory(loggerFactory);
 #endif
@@ -69,9 +66,7 @@ namespace HuanTian.WebCore
 #if DEBUG
                         var loggerFactory = LoggerFactory.Create(builder =>
                         {
-                            builder.AddConsole(); // 将日志输出到控制台
-                            //builder.AddProvider(new SqlLoggerProvider());
-                            //builder.SetMinimumLevel(LogLevel.Information);
+                            builder.AddProvider(new EFLoggerProvider());
                         });
                         options.UseLoggerFactory(loggerFactory);
 #endif
